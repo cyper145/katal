@@ -1,0 +1,76 @@
+﻿@using katal.conexion.model.entity
+@model List<ResponsableCompra>
+
+
+@{
+    ViewBag.Title = "GridView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageToolbar {
+    @Html.DevExpress().Menu(menuSettings =>
+{
+    menuSettings.Name = "pageToolbarResponsable";
+
+    menuSettings.ItemAutoWidth = false;
+    menuSettings.AllowSelectItem = false;
+    menuSettings.ApplyItemStyleToTemplates = true;
+
+    menuSettings.SettingsAdaptivity.Enabled = true;
+    menuSettings.SettingsAdaptivity.EnableAutoHideRootItems = true;
+    menuSettings.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+    menuSettings.SettingsAdaptivity.CollapseRootItemsToIconsAtWindowInnerWidth = 600;
+
+    menuSettings.Width = Unit.Percentage(100);
+    menuSettings.ControlStyle.SeparatorWidth = Unit.Pixel(0);
+    menuSettings.ControlStyle.CssClass = "page-toolbar";
+
+    menuSettings.Styles.Item.CssClass = "item";
+    menuSettings.Styles.Item.VerticalAlign = VerticalAlign.Middle;
+    menuSettings.Styles.Item.HorizontalAlign = HorizontalAlign.Left;
+    menuSettings.Images.Item.Width = Unit.Pixel(16);
+    menuSettings.Images.Item.Height = Unit.Pixel(16);
+
+    menuSettings.Items.Add(item =>
+    {
+        item.Enabled = false;
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Responsable Compras</h1>"));
+    });
+
+}).GetHtml()
+
+
+}
+
+@section LeftPanelContent {
+    @Html.Partial("~/Views/partialGeneral/LeftPanelPartial.cshtml");
+}
+
+@section RightPanelContent {
+    <div class="settings-content">
+        <h2>Settings</h2>
+        <p>Place your content here</p>
+    </div>
+}
+<script type="text/javascript">
+    function OnToolbarItemClick(s, e) {
+        if (!IsCustomExportToolbarCommand(e.item.name))
+            return;
+        var $exportFormat = $('#customExportCommand');
+        $exportFormat.val(e.item.name);
+        $('form').submit();
+        window.setTimeout(function () {
+            $exportFormat.val("");
+        }, 0);
+    }
+    function IsCustomExportToolbarCommand(command) {
+        return command == "CustomExportToXLS" || command == "CustomExportToXLSX";
+    }
+</script>
+<div class="content master-grid">
+    @Html.Partial("ResponsablePartial", Model)
+</div>
+
+
+
+
+

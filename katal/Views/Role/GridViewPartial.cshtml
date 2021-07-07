@@ -1,0 +1,176 @@
+﻿
+@using katal.conexion.model.entity;
+@using katal.Model;
+@model List<Role>
+
+@{
+    var gridView = Html.DevExpress().GridView(gridViewSettings =>
+    {
+        gridViewSettings.Name = "gridView";
+       
+        gridViewSettings.KeyFieldName = "id";
+
+        gridViewSettings.CallbackRouteValues = new { Controller = "role", Action = "GridViewPartial" };
+        gridViewSettings.CustomActionRouteValues = new { Controller = "role", Action = "GridViewCustomActionPartial" };
+        gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "role", Action = "GridViewAddNewPartial" };
+        gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "role", Action = "GridViewUpdatePartial" };
+
+        gridViewSettings.EnablePagingGestures = AutoBoolean.False;
+
+        gridViewSettings.ControlStyle.CssClass = "grid-view";
+        gridViewSettings.Width = Unit.Percentage(100);
+
+        gridViewSettings.Styles.Cell.Wrap = DefaultBoolean.False;
+        gridViewSettings.Styles.PagerBottomPanel.CssClass = "pager";
+        gridViewSettings.Styles.FocusedRow.CssClass = "focused";
+
+        gridViewSettings.SettingsBehavior.AllowFocusedRow = true;
+        gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+        gridViewSettings.SettingsBehavior.AllowEllipsisInText = true;
+        gridViewSettings.SettingsBehavior.AllowDragDrop = false;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        //gridViewSettings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        gridViewSettings.SettingsEditing.EditFormColumnCount = 2;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        gridViewSettings.Settings.VerticalScrollBarMode = ScrollBarMode.Hidden;
+        gridViewSettings.Settings.HorizontalScrollBarMode = ScrollBarMode.Auto;
+        gridViewSettings.Settings.ShowHeaderFilterButton = true;
+
+        gridViewSettings.SettingsPager.PageSize = 15;
+        gridViewSettings.SettingsPager.EnableAdaptivity = true;
+        gridViewSettings.SettingsPager.PageSizeItemSettings.Visible = true;
+
+        gridViewSettings.SettingsExport.EnableClientSideExportAPI = true;
+        gridViewSettings.SettingsExport.ExportSelectedRowsOnly = true;
+
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 500;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 600;
+
+        gridViewSettings.EditFormLayoutProperties.UseDefaultPaddings = false;
+
+        gridViewSettings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+        gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+
+        gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+        //gridViewSettings.EditFormLayoutProperties.ColCount = 2;
+        gridViewSettings.EditFormLayoutProperties.Items.Add(itemSettings =>
+        {
+            itemSettings.ColumnName = "name";
+
+
+
+
+        }).RequiredMarkDisplayMode = FieldRequiredMarkMode.Required;
+        // gridViewSettings.EditFormLayoutProperties.Items.Add("photo");
+        gridViewSettings.EditFormLayoutProperties.Items.Add(itemSettings =>
+        {
+            itemSettings.ColumnName = "description";
+        }).RequiredMarkDisplayMode = FieldRequiredMarkMode.Required; ;
+
+
+
+
+
+        gridViewSettings.EditFormLayoutProperties.Items.AddCommandItem(itemSettings =>
+        {
+
+            itemSettings.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+        });
+
+        gridViewSettings.CommandColumn.Visible = true;
+        gridViewSettings.CommandColumn.ShowSelectCheckbox = true;
+        gridViewSettings.CommandColumn.SelectAllCheckboxMode = GridViewSelectAllCheckBoxMode.AllPages;
+        gridViewSettings.CommandColumn.VisibleIndex = 0;
+        gridViewSettings.CommandColumn.Width = Unit.Pixel(52);
+
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "name";
+            columnSettings.Caption = "Nombre del Rol";
+
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(300);
+            columnSettings.CellStyle.HorizontalAlign = HorizontalAlign.Left;
+            columnSettings.ExportCellStyle.HorizontalAlign = HorizontalAlign.Left;
+            columnSettings.SetDataItemTemplateContent(c =>
+            {
+                Html.DevExpress().HyperLink(hyperLinkSettings =>
+                {
+                    hyperLinkSettings.Properties.Text = (string)DataBinder.Eval(c.DataItem, "name");
+                    hyperLinkSettings.NavigateUrl = Url.Action("GridViewDetailsPage", "role", new { id = DataBinder.Eval(c.DataItem, "id") });
+                }).Render();
+            });
+
+            columnSettings.Settings.FilterMode = ColumnFilterMode.DisplayText;
+            columnSettings.Settings.SortMode = DevExpress.XtraGrid.ColumnSortMode.DisplayText;
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "description";
+            columnSettings.Width = Unit.Pixel(230);
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+
+            columnSettings.Caption = "Modulos";
+
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(300);
+            columnSettings.CellStyle.HorizontalAlign = HorizontalAlign.Left;
+            columnSettings.ExportCellStyle.HorizontalAlign = HorizontalAlign.Left;
+
+            columnSettings.SetDataItemTemplateContent(c =>
+            {
+
+                Html.DevExpress().HyperLink(hyperLinkSettings =>
+                {
+                    hyperLinkSettings.Properties.Text = "Modulos";
+                    hyperLinkSettings.Properties.ImageUrl= "Content/Images/edit.svg";
+                    hyperLinkSettings.Properties.ImageHeight = Unit.Pixel(15);
+                    hyperLinkSettings.ToolTip = "Editar Funciones";
+
+                    hyperLinkSettings.NavigateUrl = Url.Action("GridViewDetailsPage", "role", new { id = DataBinder.Eval(c.DataItem, "id") });
+                }).Render();
+            });
+
+            columnSettings.Settings.FilterMode = ColumnFilterMode.DisplayText;
+            columnSettings.Settings.SortMode = DevExpress.XtraGrid.ColumnSortMode.DisplayText;
+        });
+
+
+
+
+        gridViewSettings.ClientSideEvents.Init = "onGridViewInit";
+        gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
+        gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
+
+        gridViewSettings.InitNewRow += (s, e) =>
+        {
+            e.NewValues["Kind"] = 1;
+            e.NewValues["Priority"] = 2;
+            e.NewValues["Status"] = 1;
+            e.NewValues["IsDraft"] = true;
+            e.NewValues["IsArchived"] = false;
+        };
+        gridViewSettings.CellEditorInitialize = (s, e) =>
+        {
+            ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
+        };
+    });
+    if (ViewBag.GeneralError != null)
+    {
+        gridView.SetEditErrorText(ViewBag.GeneralError);
+    }
+}
+
+@gridView.Bind(Model).GetHtml()

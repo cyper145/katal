@@ -1,0 +1,266 @@
+﻿@using katal.Model
+@model katal.conexion.model.entity.OrdenCompra
+
+<style>
+    .edit_form .editFormButton {
+        width: calc(20% - 2px);
+    }
+    form.edit_form {
+        margin:30px 20px
+    }
+</style>
+<script>   
+    function CloseGridLookup() {
+        gridLookup.ConfirmCurrentSelection();
+        gridLookup.HideDropDown();
+    }
+    function CloseGridLookupProveedor() {
+        gridLookupProveedor.ConfirmCurrentSelection();
+        gridLookupProveedor.HideDropDown();
+    }
+    function OnClick(s, e) {   
+        if ($("#myForm").valid()) {
+            if (GridView.batchEditApi.HasChanges())
+                GridView.UpdateEdit();
+            else
+                GridView.PerformCallback();
+        }
+    }
+    function OnEndCallback(s, e) {
+        if (s.cpSuccessFlag)
+        {
+            alert("All changes were saved");
+            window.location = "@Url.Action("Success","Test1")";
+        }
+    }
+    function OnBeginCallback(s, e) {
+    	if (e.command == "UPDATEEDIT" || e.command == "CUSTOMCALLBACK")
+    		e.customArgs = $.extend(e.customArgs, GetEditorValues());
+    }
+    function GetEditorValues() {
+    	return MVCxClientUtils.GetSerializedEditorValuesInContainer("myForm");
+    }
+</script>
+@{
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+ //   DemoHelper.Instance.ControlAreaMaxWidth = Unit.Pixel(450);
+}
+
+@section PageToolbar {
+    @Html.DevExpress().Menu(menuSettings =>
+{
+    menuSettings.Name = "pageToolbar";
+
+    menuSettings.ItemAutoWidth = false;
+    menuSettings.AllowSelectItem = false;
+    menuSettings.ApplyItemStyleToTemplates = true;
+
+    menuSettings.SettingsAdaptivity.Enabled = true;
+    menuSettings.SettingsAdaptivity.EnableAutoHideRootItems = true;
+    menuSettings.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+    menuSettings.SettingsAdaptivity.CollapseRootItemsToIconsAtWindowInnerWidth = 600;
+
+    menuSettings.Width = Unit.Percentage(100);
+    menuSettings.ControlStyle.SeparatorWidth = Unit.Pixel(0);
+    menuSettings.ControlStyle.CssClass = "page-toolbar";
+
+    menuSettings.Styles.Item.CssClass = "item";
+    menuSettings.Styles.Item.VerticalAlign = VerticalAlign.Middle;
+    menuSettings.Styles.Item.HorizontalAlign = HorizontalAlign.Left;
+    menuSettings.Images.Item.Width = Unit.Pixel(16);
+    menuSettings.Images.Item.Height = Unit.Pixel(16);
+
+    menuSettings.Items.Add(item =>
+    {
+        item.Enabled = false;
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Orden de compra</h1>"));
+    });
+   
+}).GetHtml()
+}
+@using (Html.BeginForm("ExternalEditFormEdit", "Editing", FormMethod.Post, new { @class = "edit_form" }))
+{
+    @Html.Hidden("OC_CNUMORD")
+    @Html.DevExpress().FormLayout(s =>
+{
+    s.Name = "formLayout";
+    s.Width = Unit.Percentage(100);
+    s.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    s.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+    s.UseDefaultPaddings = false;
+
+    var groupItem = s.Items.AddGroupItem(groupSettings =>
+    {
+
+        groupSettings.ShowCaption = DefaultBoolean.True;
+        groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+        groupSettings.ColumnCount = 3;
+    });
+    groupItem.Items.Add(m => m.OC_CNUMORD, i =>
+    {
+        i.ColumnSpan = 2;
+        i.NestedExtension().TextBox(t =>
+        {
+            t.Properties.ValidationSettings.Display = Display.Dynamic;
+            t.ShowModelErrors = true;
+            t.Width = Unit.Percentage(25);
+        });
+    });
+    groupItem.Items.Add(m => m.EST_NOMBRE, i =>
+    {
+        i.ColumnSpan = 1;
+        i.NestedExtension().TextBox(t =>
+        {
+            t.Properties.ValidationSettings.Display = Display.Dynamic;
+            t.ShowModelErrors = true;
+        });
+    });
+
+
+    groupItem = s.Items.AddGroupItem(groupSettings =>
+    {
+        groupSettings.Caption = "informacion principal";
+        groupSettings.ShowCaption = DefaultBoolean.True;
+        groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+        groupSettings.ColumnCount = 12;
+    });
+
+
+    groupItem.Items.Add(itemSettings =>
+    {
+        itemSettings.ColumnSpan = 2;
+        itemSettings.ShowCaption = DefaultBoolean.False;
+        itemSettings.SetNestedContent(() =>
+        {
+            Html.RenderAction("MultiSelectProveedor");
+        });
+    });
+
+    groupItem.Items.Add(m => m.OC_CRAZSOC, i =>
+
+    {
+        i.ColumnSpan = 4;
+        i.NestedExtension().TextBox(t =>
+        {
+            t.Properties.ValidationSettings.Display = Display.Dynamic;
+            t.ShowModelErrors = true;
+        });
+    });
+    groupItem.Items.Add(m => m.OC_CDIRPRO, i =>
+
+    {
+        i.ColumnSpan = 2;
+        i.NestedExtension().TextBox(t =>
+        {
+            t.Properties.ValidationSettings.Display = Display.Dynamic;
+            t.ShowModelErrors = true;
+        });
+    });
+    groupItem.Items.Add(m => m.OC_CDOCREF, i =>
+
+    {
+        i.ColumnSpan = 2;
+        i.NestedExtension().TextBox(t =>
+        {
+            t.Properties.ValidationSettings.Display = Display.Dynamic;
+            t.ShowModelErrors = true;
+        });
+    });
+    groupItem.Items.Add(m => m.OC_CNRODOCREF, i =>
+
+    {
+        i.ColumnSpan = 2;
+        i.Caption = "";
+        i.NestedExtension().TextBox(t =>
+        {
+            t.Properties.ValidationSettings.Display = Display.Dynamic;
+            t.ShowModelErrors = true;
+        });
+    });
+    groupItem.Items.Add(m => m.OC_CCODMON, i =>
+    {
+        i.Caption = "Category:";
+
+        i.NestedExtension().TextBox(t =>
+        {
+            t.Properties.ValidationSettings.Display = Display.Dynamic;
+            t.ShowModelErrors = true;
+        });
+        
+    });
+
+    groupItem.Items.Add(m => m.OC_CENTREG, i =>
+    {
+        i.NestedExtension().SpinEdit(sp =>
+        {
+            sp.ShowModelErrors = true;
+            sp.Properties.DisplayFormatString = "C";
+            sp.Properties.ValidationSettings.Display = Display.Dynamic;
+        });
+    });
+
+    groupItem.Items.AddGroupItem(groupSettings =>
+    {
+        groupSettings.Caption = "Articulos";
+        groupSettings.ShowCaption = DefaultBoolean.True;
+        groupSettings.ColumnSpan = 2;
+        groupSettings.Items.Add(itemSettings =>
+        {
+            itemSettings.ColumnSpan = 1;
+            itemSettings.ShowCaption = DefaultBoolean.False;
+            itemSettings.SetNestedContent(() =>
+            {
+                Html.RenderAction("MultiSelectPartial");
+            });
+        });
+
+    });
+
+    s.Items.AddGroupItem(groupSettings =>
+    {
+        groupSettings.Caption = "Details";
+        groupSettings.ShowCaption = DefaultBoolean.True;
+        groupSettings.Items.Add(itemSettings =>
+        {
+            itemSettings.ShowCaption = DefaultBoolean.False;
+            itemSettings.SetNestedContent(() =>
+            {
+                Html.RenderAction("EditPartialForm");
+            });
+        });
+
+    });
+    s.Items.Add(i =>
+    {
+        i.Caption = "";
+        i.Paddings.PaddingTop = 24;
+        i.HorizontalAlign = FormLayoutHorizontalAlign.Center;
+        i.SetNestedContent(() =>
+        {
+            Html.DevExpress().Button(b =>
+            {
+                b.RightToLeft = DefaultBoolean.False;
+                b.Name = "UpdateBtn";
+                b.Text = "Update";
+                b.ControlStyle.CssClass = "editFormButton";
+                b.UseSubmitBehavior = true;
+            }).Render();
+            Html.DevExpress().Button(b =>
+            {
+                b.Name = "CancelBtn";
+                b.Text = "Cancel";
+                b.Style.Add("margin-left", "4px");
+                b.ControlStyle.CssClass = "editFormButton";
+                b.ClientSideEvents.Click = "function(s, e){ document.location='" + DevExpressHelper.GetUrl(new { Controller = "Editing", Action = "ExternalEditForm" }) + "'; }";
+            }).Render();
+        });
+    });
+}).GetHtml()
+}
+
+
+
+@section LeftPanelContent {
+    @Html.Partial("~/Views/partialGeneral/LeftPanelPartial.cshtml");
+}

@@ -1,0 +1,9 @@
+@model katal.Model.SchedulerDataSource
+
+@{
+    var scheduler = Html.DevExpress().Scheduler(katal.Model.SchedulerHelper.Settings);
+    if(ViewBag.GeneralError != null) {
+        scheduler.SetErrorText(ViewBag.GeneralError);
+    }
+}
+@scheduler.Bind(Model.Appointments, Model.Resources).GetHtml()

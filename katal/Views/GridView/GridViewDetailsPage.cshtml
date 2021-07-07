@@ -1,0 +1,77 @@
+@using katal.conexion.model.entity
+@model List<Empresa>
+@{
+    ViewBag.Title = "Asignacion de Fuciones ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section LeftPanelContent {
+    @Html.Partial("~/Views/partialGeneral/LeftPanelPartial.cshtml");
+}
+@Html.DevExpress().TreeView(
+        settings =>
+        {
+            settings.AllowCheckNodes = true;
+            settings.AllowSelectNode = true;
+            settings.CheckNodesRecursive = true;
+            settings.EnableAnimation = true;
+            settings.EnableHotTrack = true;
+            settings.ShowTreeLines = true;
+            settings.ShowExpandButtons = true;
+            settings.Width = 300;
+            settings.Name = "dark";
+
+            settings.Width = 300;
+            settings.AllowCheckNodes = true;
+            Model.ForEach(modulo =>
+            {
+
+                var modulonivel = settings.Nodes.Add(modulo.RazonSocial);
+
+            });
+
+            settings.PreRender = (source, e) =>
+            {
+                ASPxTreeView treeView = (ASPxTreeView)source;
+                treeView.ExpandToDepth(0);
+            };
+
+            //function(s, e) { DXEventMonitor.Trace(s, e, 'CheckedChanged'); }
+            settings.ClientSideEvents.CheckedChanged = "function(s, e) { console.log(e); console.log(s);  }";
+        }).GetHtml()
+
+
+
+@section PageToolbar {
+    @Html.DevExpress().Menu(menuSettings =>
+    {
+    menuSettings.Name = "pageToolbar";
+
+    menuSettings.ItemAutoWidth = false;
+    menuSettings.AllowSelectItem = false;
+    menuSettings.ApplyItemStyleToTemplates = true;
+
+    menuSettings.SettingsAdaptivity.Enabled = true;
+    menuSettings.SettingsAdaptivity.EnableAutoHideRootItems = true;
+    menuSettings.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+    menuSettings.SettingsAdaptivity.CollapseRootItemsToIconsAtWindowInnerWidth = 600;
+
+    menuSettings.Width = Unit.Percentage(100);
+    menuSettings.ControlStyle.SeparatorWidth = Unit.Pixel(0);
+    menuSettings.ControlStyle.CssClass = "page-toolbar";
+
+    menuSettings.Styles.Item.CssClass = "item";
+    menuSettings.Styles.Item.VerticalAlign = VerticalAlign.Middle;
+
+    menuSettings.Images.Item.Width = Unit.Pixel(16);
+    menuSettings.Images.Item.Height = Unit.Pixel(16);
+
+    menuSettings.Items.Add(item =>
+        {
+            item.Enabled = false;
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Asignacion</h1>"));
+    });
+
+}).GetHtml()
+
+
+}

@@ -1,0 +1,34 @@
+﻿@using katal.Model;
+
+@Html.DevExpress().GridLookup(settings =>
+{
+    settings.Properties.Caption = "Proveedor    ";
+    settings.Name = "gridLookupProveedor";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "OrdenCompra", Action = "MultiSelectProveedor", CurrentCategory = Model.PRVCCODIGO };
+
+    settings.KeyFieldName = "PRVCCODIGO";
+
+    //settings.CommandColumn.Visible = true;
+    // settings.CommandColumn.ShowSelectCheckbox = true;
+    settings.Columns.Add("PRVCCODIGO").Visible = false;
+    settings.Columns.Add("PRVCRUC").Width = Unit.Percentage(10);
+    settings.Columns.Add("PRVCNOMBRE").Width= Unit.Percentage(90);
+    settings.Width = Unit.Percentage(100);
+
+    settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
+    settings.Properties.TextFormatString = "{2}";
+
+    settings.GridViewProperties.Settings.ShowFilterRow = true;
+    settings.GridViewProperties.Settings.ShowColumnHeaders = false;
+    //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
+    //settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
+    settings.GridViewProperties.SettingsPager.PageSize = 7;
+
+    settings.GridViewClientSideEvents.RowClick = "OnGridRowClick";
+
+    settings.DataBound = (sender, e) =>
+    {
+        var gridLookup = (MVCxGridLookup)sender;
+        gridLookup.GridView.Width = Unit.Percentage(100);
+    };
+}).BindList(ViewData["Proveedores"]).Bind(Model.PRVCCODIGO).GetHtml()

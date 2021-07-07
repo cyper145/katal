@@ -1,0 +1,289 @@
+﻿
+@using katal.conexion.model.entity
+
+@(Html.DevExpress().GridView<RequisicionCompra>(settings => {
+    settings.Name = "gridRequisicion";
+    settings.CallbackRouteValues = new { Controller = "RequisionCompra", Action = "DataRequisicionPartial" };
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RequisionCompra", Action = "RequisicionAddNewPartial" };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RequisionCompra", Action = "RequisicionUpdatePartial" };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RequisionCompra", Action = "RequisicionDeletePartial" };
+
+
+    settings.ControlStyle.CssClass = "grid-view";
+    settings.Styles.Cell.Wrap = DefaultBoolean.False;
+    settings.Styles.PagerBottomPanel.CssClass = "pager";
+    settings.Styles.FocusedRow.CssClass = "focused";
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1000;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+
+    settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 500;
+
+    settings.EditFormLayoutProperties.UseDefaultPaddings = false;
+
+    settings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+
+    settings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+    settings.Settings.ShowFilterRow = true;
+    settings.Settings.ShowFilterRowMenu = true;
+
+
+    settings.Toolbars.Add(tb => {
+        tb.Enabled = true;
+        tb.Position = GridToolbarPosition.Top;
+        tb.SettingsAdaptivity.Enabled = true;
+        tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+
+        tb.Items.Add(GridViewToolbarCommand.New);
+        tb.Items.Add(GridViewToolbarCommand.Edit);
+        tb.Items.Add(GridViewToolbarCommand.Delete);
+        tb.Items.Add(i => {
+            i.Command = GridViewToolbarCommand.Refresh;
+            i.BeginGroup = true;
+            i.AdaptivePriority = 2;
+        });
+        tb.Items.Add(i =>
+        {
+            i.Command = GridViewToolbarCommand.ShowFilterEditor;
+            i.BeginGroup = true;
+            i.AdaptivePriority = 2;
+        });
+
+        tb.Items.Add(i => {
+            i.Alignment = MenuItemAlignment.Right;
+            i.SetTemplateContent(c => {
+                Html.DevExpress().ButtonEdit(s => {
+                    s.Name = "search";
+                    s.Properties.NullText = "Search...";
+                    s.Properties.Buttons
+                        .Add()
+                        .Image.IconID = DevExpress.Web.ASPxThemes.IconID.FindFind16x16gray;
+                }).Render();
+            });
+        });
+    });
+
+    //settings.ClientSideEvents.ToolbarItemClick = "OnToolbarItemClick";
+
+    settings.KeyFieldName = "NROREQUI";
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "NROREQUI";
+        column.Caption = "Nro. Req.";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "CODSOLIC";
+        column.Caption = "Solicitante";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "AREA";
+        column.Caption = "Area";
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "FECREQUI";
+        column.Caption = "Fecha Req.";
+       // column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "ESTREQUI";
+        column.Caption = "Estado";
+    });
+
+    settings.SetEditFormTemplateContent(c =>
+    {
+
+
+        Html.DevExpress().FormLayout(layoutSetting =>
+        {
+            layoutSetting.Name = "FormLayoutSetting";
+
+            layoutSetting.Width = Unit.Percentage(100);
+
+            layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+            layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+            layoutSetting.UseDefaultPaddings = false;
+
+
+
+            var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+            {
+                groupSettings.Caption = "Nueva Requision ";
+                groupSettings.ShowCaption = DefaultBoolean.False;
+                groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                groupSettings.ColumnCount = 6;
+            });
+            groupItem.Items.Add(i =>
+            {
+
+                i.FieldName = "NROREQUI";
+                i.Caption = "Nro. Requisición";
+
+                i.ColumnSpan = 4;
+                i.NestedExtension().TextBox(t =>
+                {
+                    t.ReadOnly = true;
+                    t.Width = Unit.Percentage(25);
+                    // t.Properties.ClientSideEvents.Init = "onData";
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "FECREQUI";
+                i.Caption = "Fecha:";
+                i.ColumnSpan = 2;
+                i.NestedExtension().DateEdit(t =>
+                {
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                    t.Properties.ClientSideEvents.Init = "DateEmision";
+
+
+                });
+            });
+
+            groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+            {
+
+                groupSettings.ShowCaption = DefaultBoolean.False;
+                groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                groupSettings.ColumnCount = 6;
+            });
+
+
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CODSOLIC";
+                i.Caption = "Solicitante";
+                i.ColumnSpan = 3;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectSolicitante", new { TCLAVE = DataBinder.Eval(c.DataItem, "CODSOLIC") });
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.FieldName = "prioridad";
+                i.Caption = "Prioridad";
+                i.ColumnSpan = 3;
+                i.NestedExtension().ComboBox(t =>
+                {
+                    t.SelectedIndex = 0;
+                    t.Properties.ValueType = typeof(int);
+                    t.Properties.Items.Add("NORMAL", 0);
+                    t.Properties.Items.Add("MEDIA", 1);
+                    t.Properties.Items.Add("ALTA", 2);
+
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.FieldName = "AREA";
+                i.Caption = "Area";
+
+                i.ColumnSpan = 3;
+                i.SetNestedContent(() =>
+                {
+
+                    Html.RenderAction("MultiSelectArea", new { AREA_CODIGO = DataBinder.Eval(c.DataItem, "AREA") });
+                });
+            });
+
+
+            groupItem.Items.Add(i =>
+
+            {
+                i.FieldName = "FecEntrega";
+                i.ColumnSpan = 3;
+                i.Caption = "Fecha Probable Entrega";
+                i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
+                i.NestedExtension().DateEdit(t =>
+                {
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                   // t.Properties.ValidationSettings= ValidationSettings
+                  //  t.Properties.AllowNull = true;
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.FieldName = "GLOSA";
+                i.ColumnSpan = 6;
+                i.Caption = "Glosa";
+
+                i.NestedExtension().TextBox(t =>
+                {
+
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+
+                });
+            });
+
+            layoutSetting.Items.Add(itemSettings =>
+            {
+
+                itemSettings.ShowCaption = DefaultBoolean.False;
+                itemSettings.SetNestedContent(() =>
+                {
+                    Html.RenderAction("Detail", new { NROREQUI = DataBinder.Eval(c.DataItem, "NROREQUI") });
+                });
+            });
+            layoutSetting.Items.Add(itemSettings =>
+            {
+                itemSettings.ShowCaption = DefaultBoolean.False;
+            }).SetNestedContent(() =>
+            {
+                ViewContext.Writer.Write("<div style='float:right'>");
+                Html.DevExpress().Button(
+                    btnSettings =>
+                    {
+                        btnSettings.Name = "btnUpdate";
+                        btnSettings.Text = "Grabar";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridRequisicion.UpdateEdit(); }";
+
+                        //I want to Hide Update Button when FirstName is "John"
+
+                    }).Render();
+
+                Html.DevExpress().Button(
+                    btnSettings =>
+                    {
+                        btnSettings.Name = "btnCancel";
+                        btnSettings.Text = "Cancel";
+                        btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridRequisicion.CancelEdit(); }";
+                    }).Render();
+                ViewContext.Writer.Write("</div>");
+            });
+
+
+        }).Bind(ViewData["Object"] ?? c.DataItem).Render();
+
+    });
+
+    settings.SettingsSearchPanel.CustomEditorName = "search";
+    settings.SettingsBehavior.AllowFocusedRow = true;
+
+    settings.SettingsExport.EnableClientSideExportAPI = true;
+    settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
+
+    settings.Width = Unit.Percentage(100);
+
+    katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
+}).Bind(Model).SetEditErrorText(ViewBag.EditError).GetHtml())

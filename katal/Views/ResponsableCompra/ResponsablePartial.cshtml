@@ -1,0 +1,99 @@
+﻿
+@using katal.conexion.model.entity
+
+@(Html.DevExpress().GridView<ResponsableCompra>(settings => {
+    settings.Name = "grid";
+    settings.CallbackRouteValues = new { Controller = "ResponsableCompra", Action = "ResponsablePartial" };
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ResponsableCompra", Action = "ToolbarAddNewPartial" };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ResponsableCompra", Action = "ToolbarUpdatePartial" };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ResponsableCompra", Action = "ToolbarDeletePartial" };
+
+
+    settings.ControlStyle.CssClass = "grid-view";
+    settings.Styles.Cell.Wrap = DefaultBoolean.False;
+    settings.Styles.PagerBottomPanel.CssClass = "pager";
+    settings.Styles.FocusedRow.CssClass = "focused";
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 500;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+
+    settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 500;
+
+    settings.EditFormLayoutProperties.UseDefaultPaddings = false;
+
+    settings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+
+    settings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+    settings.Toolbars.Add(tb => {
+        tb.Enabled = true;
+        tb.Position = GridToolbarPosition.Top;
+        tb.SettingsAdaptivity.Enabled = true;
+        tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+
+        tb.Items.Add(GridViewToolbarCommand.New);
+        tb.Items.Add(GridViewToolbarCommand.Edit);
+        tb.Items.Add(GridViewToolbarCommand.Delete);
+        tb.Items.Add(i => {
+            i.Command = GridViewToolbarCommand.Refresh;
+            i.BeginGroup = true;
+            i.AdaptivePriority = 2;
+        });
+        tb.Items.Add(i =>
+        {
+            i.Command = GridViewToolbarCommand.ShowFilterEditor;
+            i.BeginGroup = true;
+            i.AdaptivePriority = 2;
+        });
+
+        tb.Items.Add(i => {
+            i.Alignment = MenuItemAlignment.Right;
+            i.SetTemplateContent(c => {
+                Html.DevExpress().ButtonEdit(s => {
+                    s.Name = "search";
+                    s.Properties.NullText = "Search...";
+                    s.Properties.Buttons
+                        .Add()
+                        .Image.IconID = DevExpress.Web.ASPxThemes.IconID.FindFind16x16gray;
+                }).Render();
+            });
+        });
+    });
+
+    settings.ClientSideEvents.ToolbarItemClick = "OnToolbarItemClick";
+
+    settings.KeyFieldName = "RESPONSABLE_CODIGO";
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "RESPONSABLE_CODIGO";
+        column.Caption = "Código";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "RESPONSABLE_NOMBRE";
+        column.Caption = "Descripción";
+
+    });
+    settings.EditFormLayoutProperties.ColCount = 1;
+    settings.EditFormLayoutProperties.Items.Add(i => i.RESPONSABLE_CODIGO);
+    settings.EditFormLayoutProperties.Items.Add(i => i.RESPONSABLE_NOMBRE);
+
+    settings.EditFormLayoutProperties.Items.AddCommandItem(i => {
+        i.ColumnSpan = 1;
+        i.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+    });
+
+    settings.SettingsSearchPanel.CustomEditorName = "search";
+    settings.SettingsBehavior.AllowFocusedRow = true;
+
+    settings.SettingsExport.EnableClientSideExportAPI = true;
+    settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
+
+    settings.Width = Unit.Percentage(100);
+
+    katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
+}).Bind(Model).SetEditErrorText(ViewBag.EditError).GetHtml())

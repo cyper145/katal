@@ -1,0 +1,171 @@
+﻿@using katal.conexion.model.entity
+@model List<ModuloAsignacion>
+
+@{
+    ViewBag.Title = "Asignacion de Funciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section LeftPanelContent {
+    @Html.Partial("~/Views/partialGeneral/LeftPanelPartial.cshtml");
+}
+
+
+
+
+
+@using (Html.BeginForm("recibirdata", "role",  new { ReturnUrl = ViewBag.ReturnUrl },
+            FormMethod.Post, new { @class = "asignation-form" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.DevExpress().TreeView(
+        settings =>
+        {
+            settings.AllowCheckNodes = true;
+            settings.AllowSelectNode = true;
+            settings.CheckNodesRecursive = true;
+            settings.EnableAnimation = true;
+            settings.EnableHotTrack = true;
+            settings.ShowTreeLines = true;
+            settings.ShowExpandButtons = true;
+            settings.Width = 300;
+            settings.Name = "dark";
+
+            settings.Width = 300;
+            settings.AllowCheckNodes = true;
+            Model.ForEach(modulo=> {
+
+                var modulonivel = settings.Nodes.Add(modulo.name);
+                modulonivel.Name = modulo.name;
+                modulonivel.Checked = modulo.assigned==1?true:false;
+                modulo.programas.ForEach(programa => {
+
+                    var programanivel = modulonivel.Nodes.Add(programa.name);
+                    programanivel.Name = programa.name;
+                    programanivel.Checked = programa.assigned == 1 ? true : false;
+                    programa.operacions.ForEach(operacion => {
+
+                        var operacionnivel = programanivel.Nodes.Add(operacion.name);
+                        operacionnivel.Name = operacion.name;
+                        operacionnivel.Checked = operacion.assigned == 1 ? true : false;
+                    });
+
+                });
+
+            });
+
+            settings.PreRender = (source, e) =>
+            {
+                ASPxTreeView treeView = (ASPxTreeView)source;
+                treeView.ExpandToDepth(0);
+            };
+
+            //function(s, e) { DXEventMonitor.Trace(s, e, 'CheckedChanged'); }
+            settings.ClientSideEvents.CheckedChanged = "function(s, e) { console.log(e); console.log(s);  }";
+        }).GetHtml()
+
+
+    @Html.DevExpress().FormLayout(settings =>
+{
+    settings.Name = "formLayout";
+    settings.UseDefaultPaddings = false;
+    settings.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(0);
+    settings.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+    var groupItem = settings.Items.AddGroupItem(i =>
+    {
+        i.ShowCaption = DefaultBoolean.False;
+        i.GroupBoxDecoration = GroupBoxDecoration.None;
+        i.Paddings.Padding = Unit.Pixel(16);
+
+    });
+
+    groupItem.Items.Add( i =>
+    {
+        i.Name = "rol";
+        i.Caption = "las propuestas";
+        i.ClientVisible = false;
+        i.NestedExtension().TextBox(s =>
+        {
+            s.Text = ViewBag.rol.ToString();
+            s.Properties.ClientSideEvents.Init = "function(s, e){ s.Focus(); }";
+        });
+    });
+
+
+    groupItem.Items.Add(itemSettings =>
+    {
+        itemSettings.ShowCaption = DefaultBoolean.False;
+        itemSettings.Visible = ViewBag.GeneralError != null;
+        itemSettings.SetNestedContent(() =>
+        {
+            ViewContext.Writer.Write("<div class=\"formLayout-generalErrorText\">" + @ViewBag.GeneralError + "</div>");
+        });
+    });
+
+    groupItem = settings.Items.AddGroupItem(i =>
+    {
+        i.ShowCaption = DefaultBoolean.False;
+        i.GroupBoxDecoration = GroupBoxDecoration.HeadingLine;
+        i.Paddings.PaddingTop = Unit.Pixel(13);
+        i.Paddings.PaddingBottom = Unit.Pixel(13);
+        i.GroupBoxStyle.CssClass = "formLayout-groupBox";
+    });
+    groupItem.Items.Add(i =>
+    {
+        i.ShowCaption = DefaultBoolean.False;
+        i.HorizontalAlign = FormLayoutHorizontalAlign.Left;
+        i.Paddings.Padding = Unit.Pixel(0);
+        i.NestedExtension().Button(s =>
+        {
+            s.Name = "SignInButton";
+            s.Width = Unit.Pixel(200);
+            s.Text = "Guardar";
+            s.UseSubmitBehavior = true;
+        });
+    });
+
+}).GetHtml()
+
+
+
+}
+
+
+
+@section PageToolbar {
+    @Html.DevExpress().Menu(menuSettings =>
+    {
+    menuSettings.Name = "pageToolbar";
+
+    menuSettings.ItemAutoWidth = false;
+    menuSettings.AllowSelectItem = false;
+    menuSettings.ApplyItemStyleToTemplates = true;
+
+    menuSettings.SettingsAdaptivity.Enabled = true;
+    menuSettings.SettingsAdaptivity.EnableAutoHideRootItems = true;
+    menuSettings.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+    menuSettings.SettingsAdaptivity.CollapseRootItemsToIconsAtWindowInnerWidth = 600;
+
+    menuSettings.Width = Unit.Percentage(100);
+    menuSettings.ControlStyle.SeparatorWidth = Unit.Pixel(0);
+    menuSettings.ControlStyle.CssClass = "page-toolbar";
+
+    menuSettings.Styles.Item.CssClass = "item";
+    menuSettings.Styles.Item.VerticalAlign = VerticalAlign.Middle;
+
+    menuSettings.Images.Item.Width = Unit.Pixel(16);
+    menuSettings.Images.Item.Height = Unit.Pixel(16);
+
+    menuSettings.Items.Add(item =>
+        {
+            item.Enabled = false;
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Asignacion</h1>"));
+    });
+    
+}).GetHtml()
+
+  
+}

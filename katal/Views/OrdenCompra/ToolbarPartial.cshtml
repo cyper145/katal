@@ -1,0 +1,244 @@
+﻿@using katal.conexion.model.entity
+@using katal.Model;
+@(Html.DevExpress().GridView<DetalleOrdenCompra>(settings => {
+    settings.Name = "grid";
+    settings.CallbackRouteValues = new { Controller = "OrdenCompra", Action = "ToolbarPartial", codigoOrden = ViewData["codigoOrden"] };
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "OrdenCompra", Action = "ToolbarAddNewPartial" };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "OrdenCompra", Action = "ToolbarUpdatePartial" };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "OrdenCompra", Action = "ToolbarDeletePartial" };
+
+    settings.Toolbars.Add(tb => {
+        tb.Enabled = true;
+        tb.Position = GridToolbarPosition.Top;
+        tb.SettingsAdaptivity.Enabled = true;
+        tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+
+        tb.Items.Add(GridViewToolbarCommand.New);
+        tb.Items.Add(GridViewToolbarCommand.Edit);
+        tb.Items.Add(GridViewToolbarCommand.Delete);
+        tb.Items.Add(i => {
+            i.Command = GridViewToolbarCommand.Refresh;
+            i.BeginGroup = true;
+            i.AdaptivePriority = 2;
+        });
+
+    });
+    settings.EnablePagingGestures = AutoBoolean.False;
+
+    settings.ControlStyle.CssClass = "grid-view";
+
+
+    settings.Styles.Cell.Wrap = DefaultBoolean.False;
+    settings.Styles.PagerBottomPanel.CssClass = "pager";
+    settings.Styles.FocusedRow.CssClass = "focused";
+
+    settings.SettingsBehavior.AllowFocusedRow = true;
+    //    gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+    settings.SettingsBehavior.AllowEllipsisInText = true;
+    settings.SettingsBehavior.AllowDragDrop = false;
+
+
+    settings.Settings.ShowHeaderFilterButton = false;
+
+    settings.SettingsPager.PageSize = 50;
+    settings.SettingsPager.EnableAdaptivity = true;
+
+
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1200;
+
+
+    settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 1200;
+
+    settings.EditFormLayoutProperties.UseDefaultPaddings = false;
+
+    settings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+
+    settings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+
+
+
+    settings.KeyFieldName = "oc_ccodigo";
+
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "oc_ccodigo";
+        column.Caption = "código";
+        column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        ComboBoxProperties properties = column.PropertiesEdit as ComboBoxProperties;
+
+        properties.TextField = "codigo";
+        properties.ValueField = "codigo";
+        properties.ValueType = typeof(string);
+        properties.DataSource = GridViewHelper.getArticulos();
+        column.Width =Unit.Percentage(10);
+        column.SetEditItemTemplateContent(container =>
+        {
+            Html.RenderAction("MultiSelectPartial", new { CurrentCategory = DataBinder.Eval(container.DataItem, "oc_ccodigo") });
+        });
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "OC_CDESREF";
+        column.Caption = "Descripción";
+        column.Width = Unit.Percentage(35);
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "OC_GLOSA";
+        column.Caption = "glosa";
+        column.CellRowSpan = 2;
+        column.Width = Unit.Percentage(15);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "OC_CUNIDAD";
+        column.Caption = "Uni";
+        column.CellRowSpan = 1;
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        column.ReadOnly = true;
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "OC_NCANTID";
+        column.Caption = "Cantidad";
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "OC_NPREUNI";
+        column.Caption = "Precio";
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        properties.ClientSideEvents.TextChanged = "changegCalcularPrecioPunitario";
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "OC_NDSCPOR";
+        column.Caption = "%Des";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        properties.ValidationSettings.RequiredField.IsRequired = false;
+        column.Width = Unit.Percentage(10);
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "OC_NTOTVEN";
+        column.Caption = "total";
+
+        column.Width = Unit.Percentage(10);
+        column.UnboundType = DevExpress.Data.UnboundColumnType.Decimal;
+        column.EditorProperties().TextBox(p =>
+        {
+            p.DisplayFormatString = "c";
+        });
+    });
+
+
+
+    
+    var layout=  settings.EditFormLayoutProperties.Items.AddGroupItem(i => {
+
+        i.ShowCaption = DefaultBoolean.False;
+        i.GroupBoxDecoration = GroupBoxDecoration.None;
+        i.ColumnCount = 12;
+
+    });
+
+
+    layout.Items.Add(i => {
+
+        i.ColumnName = "oc_ccodigo";
+        i.ColumnSpan = 5;
+
+        i.ShowCaption = DefaultBoolean.False;
+        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+
+
+    } );
+    layout.Items.Add(i => {
+
+        i.ColumnName = "OC_CDESREF";
+        i.ShowCaption = DefaultBoolean.False;
+        i.ColumnSpan = 4;
+        i.RowSpan = 2;
+        i.Visible = false;
+        i.Index = 1;
+    });
+    // settings.EditFormLayoutProperties.Items.Add(i => i.OC_GLOSA);
+
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "OC_GLOSA";
+        i.ColumnSpan = 2;
+
+    });
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "OC_CUNIDAD";
+        i.ColumnSpan = 1;
+        i.CssClass = "PONERENABLE";
+
+    });
+    layout.Items.Add(i => {
+
+        i.ColumnName = "OC_NCANTID";
+        i.ColumnSpan = 1;
+
+    } );
+    layout.Items.Add(i => {
+        i.ColumnName = "OC_NPREUNI";
+        i.ColumnSpan = 1;
+
+    });
+    layout.Items.Add(i => {
+        i.ColumnName = "OC_NDSCPOR";
+        i.ColumnSpan = 1;
+        i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
+    });
+    layout.Items.Add(i => {
+        i.ColumnName = "OC_NTOTVEN";
+        i.ColumnSpan = 1;
+
+    });
+
+
+    layout.Items.AddCommandItem(i => {
+        i.ColumnSpan = 12;
+
+        i.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+    });
+    settings.Settings.ShowFooter = true;
+    settings.SettingsBehavior.AutoExpandAllGroups = true;
+
+    settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Count, "OC_CDESREF").DisplayFormat = "Articulos = {0}";
+    var suma=settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "OC_NTOTVEN").DisplayFormat = "c";
+    //suma.DisplayFormat = "c";
+    settings.SettingsSearchPanel.CustomEditorName = "search";
+    settings.SettingsBehavior.AllowFocusedRow = true;
+
+    settings.SettingsExport.EnableClientSideExportAPI = true;
+
+
+    settings.Width = Unit.Percentage(100);
+
+    //DevExpress.Web.Demos.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
+}).Bind(Model).SetEditErrorText(ViewBag.EditError).GetHtml())

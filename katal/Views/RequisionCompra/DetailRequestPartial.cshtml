@@ -1,0 +1,284 @@
+﻿
+@using katal.conexion.model.entity
+@using katal.Model;
+@(Html.DevExpress().GridView(settings => {
+    settings.Name = "grid";
+    settings.CallbackRouteValues = new { Controller = "RequisionCompra", Action = "DetailRequestPartial", NROREQUI = ViewData["codigoOrden"] };
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RequisionCompra", Action = "DetailRequestAddNewPartial" };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RequisionCompra", Action = "DetailRequestUpdatePartial" };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RequisionCompra", Action = "DetailRequestDeletePartial" };
+
+    settings.Toolbars.Add(tb => {
+        tb.Enabled = true;
+        tb.Position = GridToolbarPosition.Top;
+        tb.SettingsAdaptivity.Enabled = true;
+        tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+
+        tb.Items.Add(GridViewToolbarCommand.New);
+        tb.Items.Add(GridViewToolbarCommand.Edit);
+        tb.Items.Add(GridViewToolbarCommand.Delete);
+        tb.Items.Add(i => {
+            i.Command = GridViewToolbarCommand.Refresh;
+            i.BeginGroup = true;
+            i.AdaptivePriority = 2;
+        });
+
+    });
+    settings.EnablePagingGestures = AutoBoolean.False;
+
+    settings.ControlStyle.CssClass = "grid-view";
+
+
+    settings.Styles.Cell.Wrap = DefaultBoolean.False;
+    settings.Styles.PagerBottomPanel.CssClass = "pager";
+    settings.Styles.FocusedRow.CssClass = "focused";
+
+    settings.SettingsBehavior.AllowFocusedRow = true;
+    //    gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+    settings.SettingsBehavior.AllowEllipsisInText = true;
+    settings.SettingsBehavior.AllowDragDrop = false;
+
+
+    settings.Settings.ShowHeaderFilterButton = false;
+
+    settings.SettingsPager.PageSize = 50;
+    settings.SettingsPager.EnableAdaptivity = true;
+
+
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1200;
+
+
+    settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 1200;
+
+    settings.EditFormLayoutProperties.UseDefaultPaddings = false;
+
+    settings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+
+    settings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+
+
+
+    settings.KeyFieldName = "codpro";
+
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "codpro";
+        column.Caption = "código";
+        column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        ComboBoxProperties properties = column.PropertiesEdit as ComboBoxProperties;
+
+        properties.TextField = "codigo";
+        properties.ValueField = "codigo";
+        properties.ValueType = typeof(string);
+        properties.DataSource = GridViewHelper.getArticulos();
+        column.Width =Unit.Percentage(10);
+        column.SetEditItemTemplateContent(container =>
+        {
+            Html.RenderAction("MultiSelectPartial", new { CurrentCategory = DataBinder.Eval(container.DataItem, "codpro") });
+        });
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "DESCPRO";
+        column.Caption = "Descripción";
+        column.Width = Unit.Percentage(35);
+
+    });
+
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "UNIPRO";
+        column.Caption = "Uni";
+        column.CellRowSpan = 1;
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        column.ReadOnly = true;
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "CANTID";
+        column.Caption = "Cantidad";
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "SALDO";
+        column.Caption = "stock";
+        column.Visible = false;
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        //  properties.ClientSideEvents.TextChanged = "changegCalcularPrecioPunitario";
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "FECREQUE";
+        column.Caption = "Fec. Requerim";
+        column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        DateEditProperties properties = column.PropertiesEdit as DateEditProperties;
+        properties.ValidationSettings.RequiredField.IsRequired = false;
+        column.Width = Unit.Percentage(10);
+        properties.ClientSideEvents.Init = "dateInit";
+
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "CENCOST";
+        column.Caption = "Centro Costos";
+        column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        ComboBoxProperties properties = column.PropertiesEdit as ComboBoxProperties;
+
+        properties.TextField = "CENCOST_CODIGO";
+        properties.ValueField = "CENCOST_CODIGO";
+        properties.ValueType = typeof(string);
+        properties.DataSource = GridViewHelper.GetCentroCostos();
+        column.Width = Unit.Percentage(10);
+        column.SetEditItemTemplateContent(container =>
+        {
+            Html.RenderAction("MultiSelectCentroCostos", new { CENCOST_CODIGO = DataBinder.Eval(container.DataItem, "CENCOST") });
+        });
+    });
+
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "REMAQ";
+        column.Caption = "Nro Maquina";
+        column.Visible = false;
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "ESPTECNICA";
+        column.Caption = "Especificaciones";
+        column.Visible = false;
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        //properties.Height=
+        //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
+
+    });
+    var layout=  settings.EditFormLayoutProperties.Items.AddGroupItem(i => {
+
+        i.ShowCaption = DefaultBoolean.False;
+        i.GroupBoxDecoration = GroupBoxDecoration.None;
+        i.ColumnCount = 12;
+        i.SettingsItemCaptions.Location= LayoutItemCaptionLocation.Top;
+
+    });
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "codpro";
+        i.ColumnSpan = 6;
+
+        i.ShowCaption = DefaultBoolean.False;
+        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+
+
+    });
+
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "UNIPRO";
+
+        i.ColumnSpan = 1;
+
+        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+
+
+    });
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "CANTID";
+        i.ColumnSpan = 2;
+        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+
+
+    });
+    /*
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "SALDO";
+        i.ColumnSpan = 1;
+        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+
+
+    });*/
+    /*
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "FECREQUE";
+
+        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+        i.ColumnSpan = 2;
+        i.VisibleIndex = 0;
+
+
+    });
+    */
+    /*
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "CENCOST";
+        i.ColumnSpan = 2;
+
+    });
+    */
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "REMAQ";
+        i.ColumnSpan = 3;
+
+    });
+    layout.Items.Add(i =>
+    {
+
+        i.ColumnName = "ESPTECNICA";
+        i.ColumnSpan = 12;
+
+    });
+
+    layout.Items.AddCommandItem(i =>
+    {
+        i.ColumnSpan = 12;
+
+        i.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+    });
+    settings.Settings.ShowFooter = true;
+    settings.SettingsBehavior.AutoExpandAllGroups = true;
+
+    // settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Count, "OC_CDESREF").DisplayFormat = "Articulos = {0}";
+    //var suma=settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "OC_NTOTVEN").DisplayFormat = "c";
+    //suma.DisplayFormat = "c";
+    settings.SettingsSearchPanel.CustomEditorName = "search";
+    settings.SettingsBehavior.AllowFocusedRow = true;
+
+    settings.SettingsExport.EnableClientSideExportAPI = true;
+
+
+    settings.Width = Unit.Percentage(100);
+
+    //DevExpress.Web.Demos.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
+}).Bind(Model).SetEditErrorText(ViewBag.EditError).GetHtml())

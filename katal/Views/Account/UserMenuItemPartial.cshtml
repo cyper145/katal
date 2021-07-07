@@ -1,0 +1,31 @@
+@model katal.Model.ApplicationUser
+
+@{
+    var avatarUrl = string.IsNullOrEmpty(Model.AvatarUrl) ? "Content/Images/user.svg" : Model.AvatarUrl;
+}
+<div class="user-info">
+    <div class="avatar">
+        <img id="AvatarUrl" src="@Url.Content(avatarUrl)" />
+    </div>
+    <div class="text-container">
+        @Html.DevExpress().Label(labelSettings =>
+        {
+           labelSettings.Name = "userNameLabel";
+           labelSettings.Text = Model.UserName + " (" + Model.FirstName + " " + Model.LastName + ")";
+           labelSettings.ControlStyle.CssClass = "user-name";
+       }).GetHtml()
+        @Html.DevExpress().Label(labelSettings =>
+       {
+           labelSettings.Name = "RolLabel";
+           labelSettings.Text ="Rol: " + Model.Rol;
+           labelSettings.ControlStyle.CssClass = "email";
+       }).GetHtml()
+
+        @Html.DevExpress().Label(labelSettings =>
+        {
+           labelSettings.Name = "empresaLabel";
+           labelSettings.Text ="Empresa: " + Model.Empresa;
+           labelSettings.ControlStyle.CssClass = "user-name";
+       }).GetHtml()
+    </div>
+</div>

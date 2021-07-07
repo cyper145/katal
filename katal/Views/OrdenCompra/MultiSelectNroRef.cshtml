@@ -1,0 +1,45 @@
+﻿
+
+@Html.DevExpress().GridLookup(settings =>
+{
+    
+    settings.Name = "gridLookupNroRef";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "OrdenCompra", Action = "MultiSelectNroRef", NROREQUI = Model.NROREQUI };
+
+    settings.KeyFieldName = "NROREQUI";
+
+    //settings.CommandColumn.Visible = true;
+    // settings.CommandColumn.ShowSelectCheckbox = true;
+    settings.Columns.Add("NROREQUI").Width = Unit.Percentage(10);
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "FECREQUI";
+       
+        column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        DateEditProperties properties = column.PropertiesEdit as DateEditProperties;
+      
+        column.Width = Unit.Percentage(30);
+    });
+    settings.Columns.Add("AREA").Width = Unit.Percentage(10);
+
+    settings.Width = Unit.Percentage(100);
+
+    settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
+    settings.Properties.TextFormatString = "{0}";
+    settings.Properties.Width = 250;
+    settings.GridViewProperties.Settings.ShowFilterRow = true;
+    settings.GridViewProperties.Settings.ShowColumnHeaders = false;
+    settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
+    //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
+    settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
+    settings.GridViewProperties.SettingsPager.PageSize = 7;
+
+    settings.GridViewClientSideEvents.EndCallback = "OnGridRowNroClick";// ver re
+
+    settings.DataBound = (sender, e) =>
+    {
+        var gridLookup = (MVCxGridLookup)sender;
+    gridLookup.GridView.Width = Unit.Percentage(100);
+    };
+}).BindList(ViewData["NroRef"]).Bind(Model.NROREQUI).GetHtml()
+
