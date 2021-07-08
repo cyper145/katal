@@ -122,7 +122,7 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-            return null;
+            
         }
         public List<Role> findAll()
         {

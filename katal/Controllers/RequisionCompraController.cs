@@ -212,7 +212,9 @@ namespace katal.Controllers
             var description = dataForm["gridLookup"];
             product.codpro = array.First.ToString();
             product.DESCPRO = description.ToString();
-           // product.CENCOST = arraycosto.First.ToString();
+            product.FECREQUE = DateTime.Now;
+            
+            // product.CENCOST = arraycosto.First.ToString();
             if (ModelState.IsValid)
                 SafeExecute(() => InsertProduct(product));
             else

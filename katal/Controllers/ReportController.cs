@@ -9,9 +9,12 @@ namespace katal.Controllers
     public class ReportController : Controller
     {
         // GET: Report
-        public ActionResult Index()
+        public ActionResult Index(String codigo)
         {
-            return View();
+            Reports.ReportOrden report = new Reports.ReportOrden();
+            report.Parameters["parameter0"].Value =codigo;
+            report.RequestParameters = false;
+            return View(report);
         }
     }
 }

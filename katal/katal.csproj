@@ -154,6 +154,7 @@
     <Content Include="Content\Images\double.svg" />
     <Content Include="Content\Images\edit.svg" />
     <Content Include="Content\Images\export.svg" />
+    <Content Include="Content\Images\exportorder.svg" />
     <Content Include="Content\Images\eye-button-hide.svg" />
     <Content Include="Content\Images\eye-button.svg" />
     <Content Include="Content\Images\GridView-white.svg" />
@@ -402,6 +403,12 @@
     <Compile Include="Reports\Report3.Designer.cs">
       <DependentUpon>Report3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports\ReportOrden.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportOrden.Designer.cs">
+      <DependentUpon>ReportOrden.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Area\" />
@@ -419,6 +426,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Report3.resx">
       <DependentUpon>Report3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReportOrden.resx">
+      <DependentUpon>ReportOrden.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,7 +1,7 @@
 ﻿
-
 @Html.DevExpress().ReportDesigner(settings =>
 {
     settings.Name = "ReportDesigner1";
+  
     
-}).Bind(new katal.Reports.Report3()).GetHtml()
+}).Bind(Model).GetHtml()

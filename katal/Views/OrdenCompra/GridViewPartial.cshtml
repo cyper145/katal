@@ -19,29 +19,7 @@
         gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "OrdenCompra", Action = "GridViewAddNewPartial" };
         gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "OrdenCompra", Action = "GridViewUpdatePartial" };
 
-        gridViewSettings.Toolbars.Add(tb =>
-        {
-            tb.Enabled = true;
-            tb.Position = GridToolbarPosition.Top;
-            tb.SettingsAdaptivity.Enabled = true;
-            tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
 
-            tb.Items.Add(GridViewToolbarCommand.New);
-            tb.Items.Add(GridViewToolbarCommand.Edit);
-            tb.Items.Add(GridViewToolbarCommand.Delete);
-            tb.Items.Add(i =>
-            {
-                i.Command = GridViewToolbarCommand.Refresh;
-                i.BeginGroup = true;
-                i.AdaptivePriority = 2;
-            });
-            tb.Items.Add(i =>
-            {
-                i.Command = GridViewToolbarCommand.ShowFilterRow;
-                i.BeginGroup = true;
-                i.AdaptivePriority = 2;
-            });
-        });
 
         gridViewSettings.EnablePagingGestures = AutoBoolean.False;
 
@@ -93,7 +71,6 @@
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
 
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
-
 
 
         gridViewSettings.SetEditFormTemplateContent(c=> {
@@ -489,16 +466,12 @@
             columnSettings.Settings.FilterMode = ColumnFilterMode.DisplayText;
             columnSettings.Settings.SortMode = DevExpress.XtraGrid.ColumnSortMode.DisplayText;
         });
-
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "oc_ccodpro";
             columnSettings.Caption = "Código Prov";
 
             columnSettings.Width = Unit.Pixel(150);
-
-
-
         });
 
 
@@ -575,6 +548,22 @@
 
             columnSettings.Visible = false;
 
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "OC_CNUMORD";
+            columnSettings.Caption = "Reporte";
+            columnSettings.SetDataItemTemplateContent(c =>
+            {
+                Html.DevExpress().HyperLink(hyperLinkSettings =>
+                {
+                    hyperLinkSettings.Properties.ImageUrl = "Content/Images/exportorder.svg";
+                    hyperLinkSettings.Properties.ImageHeight = Unit.Pixel(20);
+
+                    hyperLinkSettings.ToolTip = "Exportar";
+                    hyperLinkSettings.NavigateUrl = Url.Action("index", "Report", new { codigo = DataBinder.Eval(c.DataItem, "OC_CNUMORD") });
+                }).Render();
+            });
         });
 
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
