@@ -102,9 +102,45 @@ namespace katal.conexion.model.dao
             }
         }
 
+        public void DeleteDetail(string NROREQUI)
+        {
+            string SQLd = "DELETE FROM comovd WHERE oc_cnumord='" + NROREQUI + "'";
+
+            try
+            {
+                comando = new SqlCommand(SQLd, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+        }
         public void delete(OrdenCompra obj)
         {
-            throw new NotImplementedException();
+            string strsql = "DELETE FROM COMOVC WHERE OC_CNUMORD='" + obj.OC_CNUMORD + "'";
+            try
+            {
+                comando = new SqlCommand(strsql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         public bool find(OrdenCompra obj)

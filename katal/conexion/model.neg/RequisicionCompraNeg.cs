@@ -74,5 +74,6 @@ namespace katal.conexion.model.neg
             // ver como trabajar un respuesta alterna
            
         }
+    
     }
 }

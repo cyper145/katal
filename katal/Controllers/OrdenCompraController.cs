@@ -152,7 +152,7 @@ namespace katal.Controllers
         }
         private void UpdateRecord(OrdenCompra issue)
         {
-
+           
         }
         private ActionResult UpdateModelWithDataValidation(OrdenCompra issue, Action<OrdenCompra> updateMethod)
         {
