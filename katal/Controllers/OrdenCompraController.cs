@@ -164,7 +164,7 @@ namespace katal.Controllers
         }
         private void PerformDelete(string  codigo)
         {
-            GridViewHelper.OrdenCompras.Remove(GridViewHelper.OrdenCompras.Find(elemen=>elemen.OC_CNUMORD== codigo));
+            userNeg.delete(codigo);
         }
         private void PerformExport()
         {

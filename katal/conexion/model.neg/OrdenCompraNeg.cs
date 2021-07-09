@@ -122,6 +122,13 @@ namespace katal.conexion.model.neg
           
                 
         }
-        
+        public void delete(string OC_CNUMORD)
+        {
+            OrdenCompra objRequision = objUserDao.find(OC_CNUMORD);
+           
+                objUserDao.DeleteDetail(objRequision.OC_CNUMORD);
+                objUserDao.delete(objRequision);          
+            // ver como trabajar un respuesta alterna
+        }
     }
 }
