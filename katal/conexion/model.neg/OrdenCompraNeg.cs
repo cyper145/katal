@@ -56,22 +56,31 @@ namespace katal.conexion.model.neg
         // crear orden de compra
         public void create(OrdenCompra orden)
         {
-            // actualizar nro
-            string updateNumCompras = "UPDATE num_doccompras SET ctnnumero='" + orden.OC_CNUMORD + "' WHERE ctncodigo='OC'";
 
+            
             string ocprincipal = "";
-            if (orden.OC_PRINCIPAL.Trim().Length == 0)
+            if (orden.OC_PRINCIPAL==null || orden.OC_PRINCIPAL.Trim().Length == 0  )
             {
                 ocprincipal = orden.OC_CNUMORD;
+                orden.OC_PRINCIPAL = ocprincipal;
+
             }
             else
             {
                 ocprincipal = orden.OC_PRINCIPAL;
+                orden.OC_PRINCIPAL = ocprincipal;
             }
+            orden.DIRECCION = objUserDao.direccion(orden.oc_ccodpro);
+            objUserDao.create(orden);
+            objUserDao.updateNroOrden(orden.OC_CNUMORD);
+            objUserDao.createDetail(orden);
+
+           
+            
 
             //obtener la direccion
 
-            string Direccion = "select prvcdirecc from maeprov where prvccodigo= '" + orden.oc_ccodpro + "'";
+            string Direccion = objUserDao.direccion(orden.oc_ccodpro);
             // RESPONSABLE => oc_csolict
             // ENTREGA  EN=>oc_centreg
 
@@ -87,21 +96,7 @@ namespace katal.conexion.model.neg
             // SOLICITADO POR => OC_SOLICITA
 
 
-            string insert = "INSERT INTO comovc(oc_cnumord, oc_principal, oc_dfecdoc, oc_ccodpro, oc_crazsoc, ";
-            insert += "oc_cdirpro,oc_ccotiza,oc_ccodmon,oc_cforpag,oc_ntipcam,oc_dfecent,";
-            insert += "oc_cobserv,oc_csolict,oc_centreg,oc_csitord,oc_nimport,oc_ndescue,";
-            insert += "oc_nigv,oc_nventa,oc_dfecact,oc_chora,oc_cusuari,oc_cconver, oc_cfacnombre,";
-            insert += "oc_cfacruc, oc_cfacdirec, oc_cdocref, oc_cnrodocref,oc_ordfab,OC_SOLICITA,OC_TIPO,oc_lote) VALUES ('";
-            insert += orden.OC_CNUMORD + "','" + ocprincipal + "','" + orden.OC_DFECDOC + "','" + orden.oc_ccodpro + "','";
-            insert += orden.OC_CRAZSOC + "','" + Direccion;
-            insert += "','" + orden.OC_CCOTIZA + "','" + orden.OC_CCODMON + "','" + orden.OC_CFORPAG + "',";
-            insert += orden.OC_NTIPCAM + ",'" + orden.OC_DFECENT + "','";
-            insert += orden.OC_COBSERV + "','" + orden.OC_CSOLICT + "','" + orden.OC_CENTREG + "','00',";
-            insert += orden.OC_NIMPORT + "," + orden.OC_NDESCUE + "," + orden.OC_NIGV + "," + orden.OC_NVENTA;
-            insert += ",'" + orden.OC_CENTREG + "','" + DateTime.Now.ToString("hh:mm:ss") + "','" + AuthHelper.GetLoggedInUserInfo().UserName;
-            insert += "','" + orden.OC_CCONVER + "', '" + orden.OC_CFACNOMBRE + "', '" + orden.OC_CFACRUC + "', '" + orden.OC_CFACDIREC;
-            insert += "','" + orden.OC_CDOCREF + "', '" + orden.OC_CNRODOCREF + "','" + orden.OC_ORDFAB + "','" + orden.OC_SOLICITA + "','" + orden.OC_TIPO + "','" + orden.OC_LOTE + "')";
-
+            
 
             string fmt = "000.##";
             int nextDocumet = 0;
@@ -126,7 +121,7 @@ namespace katal.conexion.model.neg
             });
           
                 
-                }
+        }
         
     }
 }

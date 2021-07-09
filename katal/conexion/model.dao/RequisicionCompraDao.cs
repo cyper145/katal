@@ -156,7 +156,6 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-
         }
         public void delete(RequisicionCompra obj)
         {
@@ -264,8 +263,6 @@ namespace katal.conexion.model.dao
             }
             return OrdenCompras;
         }
-
-
         public List<RequisicionCompra> findAllPendientes()
         {
 
@@ -382,10 +379,6 @@ namespace katal.conexion.model.dao
             }
             return list;
         }
-
-
-       
-
 
         public string newNroRequerimiento()
         {

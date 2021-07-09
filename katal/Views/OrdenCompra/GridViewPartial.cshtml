@@ -347,7 +347,8 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "oc_csolict";
+                    // reponsable
+                    i.FieldName = "OC_CSOLICT";
                     i.Caption = "Doc Ref:";
                     i.ShowCaption = DefaultBoolean.False;
                     i.ColumnSpan = 5;
@@ -549,22 +550,7 @@
             columnSettings.Visible = false;
 
         });
-        gridViewSettings.Columns.Add(columnSettings =>
-        {
-            columnSettings.FieldName = "OC_CNUMORD";
-            columnSettings.Caption = "Reporte";
-            columnSettings.SetDataItemTemplateContent(c =>
-            {
-                Html.DevExpress().HyperLink(hyperLinkSettings =>
-                {
-                    hyperLinkSettings.Properties.ImageUrl = "Content/Images/exportorder.svg";
-                    hyperLinkSettings.Properties.ImageHeight = Unit.Pixel(20);
-
-                    hyperLinkSettings.ToolTip = "Exportar";
-                    hyperLinkSettings.NavigateUrl = Url.Action("index", "Report", new { codigo = DataBinder.Eval(c.DataItem, "OC_CNUMORD") });
-                }).Render();
-            });
-        });
+       
 
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";

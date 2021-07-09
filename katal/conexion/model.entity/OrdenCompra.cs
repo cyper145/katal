@@ -65,6 +65,7 @@ namespace katal.conexion.model.entity
         
         public string RUC { get; set; }
         public string RESPONSABLE_CODIGO { get; set; }
+        public string DIRECCION { get; set; }
 
 
         public List<DetalleOrdenCompra> detalles;
@@ -109,7 +110,7 @@ namespace katal.conexion.model.entity
         public decimal OC_NPREUNI { get; set; }
         public decimal OC_NCANTID { get; set; }
         //[Required]
-        public string OC_NDSCPOR { get; set; }
+        public decimal OC_NDSCPOR { get; set; }
         public decimal OC_NDESCTO { get; set; }
         public decimal OC_NIGV { get; set; }
         public decimal OC_NIGVPOR { get; set; }

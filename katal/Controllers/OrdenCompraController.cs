@@ -36,7 +36,7 @@ namespace katal.Controllers
         }
         public ActionResult Index()
         {
-            ViewData["Proveedores"] = proveedorNeg.findAll();
+         
             ViewData["FormasPago"] = userNeg.findAllFormasPago();
             ViewData["Solicitud"] = userNeg.findAllSolicitud();
             ViewData["DocRef"] = userNeg.findAllDocRef();
@@ -51,89 +51,6 @@ namespace katal.Controllers
             return PartialView("GridViewPartial", GridViewHelper.OrdenCompras);
         }
 
-
-
-        public ActionResult ExternalEditFormPartial()
-        {
-
-            return PartialView("ExternalEditFormPartial", GridViewHelper.OrdenCompras);
-        }
-
-        public ActionResult ExternalEditFormEdit(string id = "")
-        {
-
-            //solo para pruebas
-            string codigo = "0000000000001";
-
-
-            OrdeCurrent = userNeg.find(codigo);
-            // EditableProduct editProduct = NorthwindDataProvider.GetEditableProduct(productID);
-            if (OrdeCurrent == null)
-            {
-                OrdeCurrent = new OrdenCompra();
-                OrdeCurrent.OC_CNUMORD = "-1";
-            }
-            return View("EditingForm", OrdeCurrent);
-        }
-
-
-        /// para el grid 
-        public ActionResult EditPartialForm()
-        {
-
-            //solo para pruebas
-            string codigo = "0000000000001";
-
-
-            OrdeCurrent = userNeg.find(codigo);
-            return PartialView(userNeg.findAllDetail(OrdeCurrent.OC_CNUMORD));
-        }
-        public ActionResult GridViewCustomActionUpdate(Proveedor mainModel)
-        {
-            ViewData["SuccessFlag"] = UpdateAllValues(null, mainModel);
-            return PartialView("GridViewPartial", userNeg.findAll(GridViewHelper.dateRange));
-        }
-        /* save all changes to a data base in this action */
-        public bool UpdateAllValues(MVCxGridViewBatchUpdateValues<GridDataItem, int> batchValues, Proveedor mainModel)
-        {
-            if (batchValues != null)
-            {
-                foreach (var item in batchValues.Insert)
-                {
-                    if (batchValues.IsValid(item))
-                        BatchEditRepository.InsertNewItem(item, batchValues);
-                    else
-                        batchValues.SetErrorText(item, "Correct validation errors");
-                }
-                foreach (var item in batchValues.Update)
-                {
-                    if (batchValues.IsValid(item))
-                        BatchEditRepository.UpdateItem(item, batchValues);
-                    else
-                        batchValues.SetErrorText(item, "Correct validation errors");
-                }
-                foreach (var itemKey in batchValues.DeleteKeys)
-                {
-                    BatchEditRepository.DeleteItem(itemKey, batchValues);
-                }
-            }
-            bool result = false;
-            if (mainModel != null)
-            {
-                //custom actions
-                result = true;
-            }
-            return result && (batchValues == null || batchValues.EditorErrors.Count == 0);
-        }
-        public ActionResult BatchUpdatePartial(MVCxGridViewBatchUpdateValues<GridDataItem, int> batchValues, Proveedor mainModel)
-        {
-            ViewData["SuccessFlag"] = UpdateAllValues(batchValues, mainModel);
-            return PartialView("GridViewPartial", BatchEditRepository.GridData);
-        }
-        public ActionResult Success()
-        {
-            return View("Success");
-        }
 
 
         public ActionResult MultiSelectPartial(string CurrentCategory)
@@ -170,11 +87,24 @@ namespace katal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult GridViewAddNewPartial(OrdenCompra issue, FormCollection data)
         {
+
+            var codArticulodata = data["DXMVCEditorsValues"];
+            string[] word = codArticulodata.Split(',');
+            string dataRequisicion = codArticulodata[0] + word[2] + "," + word[14] + ","+ word[15]+ "," + codArticulodata[codArticulodata.Length - 1];
+            Dictionary<string, JArray> nodes = JsonConvert.DeserializeObject<Dictionary<string, JArray>>(dataRequisicion);
+            JArray proveedor = nodes["gridLookupProveedor"];
+            JArray docref = nodes["gridLookupDocRef"];
+            JArray nroRef = nodes["gridLookupNroRef"];
+
+            issue.oc_ccodpro = proveedor.First.ToString();
+            issue.OC_CDOCREF = docref.First.ToString();
+            issue.OC_CNRODOCREF= nroRef.First.ToString();
             var codArticulo = data["gridLookupProveedor"];
-            issue.oc_ccodpro = codArticulo.ToString();
+            issue.OC_CRAZSOC = codArticulo.ToString();
+
             issue.OC_CSITORD = "03";
             issue.EST_NOMBRE = "EMITIDA";
-            
+            issue.OC_CSOLICT = issue.RESPONSABLE_CODIGO;
             /*
             var length =   HttpUtility.HtmlDecode(data["grid"]);
             Dictionary<string, object> nodes = JsonConvert.DeserializeObject<Dictionary<string, object>>(length);
@@ -209,9 +139,10 @@ namespace katal.Controllers
             return UpdateModelWithDataValidation(issue, AddNewRecord);
         }
 
-         private void AddNewRecord(OrdenCompra issue)
+        private void AddNewRecord(OrdenCompra issue)
         {
-            GridViewHelper.OrdenCompras.Add(issue);
+           // GridViewHelper.OrdenCompras.Add(issue);
+            userNeg.create(issue);
             GridViewHelper.ClearDetalles();
          }
         [ValidateAntiForgeryToken]
@@ -254,6 +185,9 @@ namespace katal.Controllers
             }
             ViewData["codigoOrden"] = CurrentCategory;
             OrdeCurrent = userNeg.find(CurrentCategory);
+            // probando solo 
+            if(OrdeCurrent==null)
+                OrdeCurrent=GridViewHelper.OrdenCompras.Find(element => element.OC_CNUMORD == CurrentCategory);
             GridViewHelper.ClearDetalles();
             if (OrdeCurrent == null)
             {
@@ -276,9 +210,12 @@ namespace katal.Controllers
                 GridViewHelper.GetDetalles();
                 if (GridViewHelper.NROREQUI != "")
                 {
+                    
                     GridViewHelper.ClearDetalles();
                     cargar(requisionNeg.findAllDetail(GridViewHelper.NROREQUI));
-                }           
+                    GridViewHelper.NROREQUI = "";
+
+                }
                 return PartialView("ToolbarPartial", GridViewHelper.detalles);
             }
 
@@ -369,7 +306,6 @@ namespace katal.Controllers
             detalleOrdenCompra.OC_NDSCPOR= product.OC_NDSCPOR;
             detalleOrdenCompra.OC_NTOTVEN= product.OC_NTOTVEN;
 
-            // crear la logica para agregar un producto
         }
 
         [ValidateInput(false)]
