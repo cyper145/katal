@@ -1,5 +1,6 @@
 (function() {
     var selectedIds;
+    let selectdId;
     function onGridViewInit(s, e) {
         AddAdjustmentDelegate(adjustGridView);
         updateToolbarButtonsState();
@@ -36,16 +37,25 @@
                 deleteSelectedRecords();
                 break;
             case "Export":
-                gridView.ExportTo(ASPxClientGridViewExportFormat.Xlsx);
+
+                ExportSelectedRecords()
+                //gridView.ExportTo(ASPxClientGridViewExportFormat.Xlsx);
                 break;
         }
     }
-
+    function ExportSelectedRecords() {
+        
+      gridView.GetSelectedFieldValues("OC_CNUMORD", getSelectedFieldValuesExportCallback);
+        
+    }
+    function getSelectedFieldValuesExportCallback(values) {
+        gridView.PerformCallback({ customAction: 'export', codigo: selectdId });
+    }
 
 
     function deleteSelectedRecords() {
         if(confirm('Confirm Delete?')) {
-            gridView.GetSelectedFieldValues("id", getSelectedFieldValuesCallback);
+            gridView.GetSelectedFieldValues("OC_CNUMORD", getSelectedFieldValuesCallback);
         }
     }
     function onFiltersNavBarItemClick(s, e) {
@@ -76,9 +86,19 @@
 
 
     function getSelectedFieldValuesCallback(values) {
-        selectedIds = values.join(',');
-        gridView.PerformCallback({ customAction: 'delete' });
+              
+        gridView.PerformCallback({ customAction: 'delete', codigo: selectdId});
     }
+    function OnGridFocusedRowChangedOrdenCompra(s, e) {
+        s.GetRowValues(s.GetFocusedRowIndex(), 'OC_CNUMORD', OnGetRowValuesOrdenCompra);
+    }
+    function OnGetRowValuesOrdenCompra(values) {
+        //DetailPhoto.SetImageUrl("@GridViewRowsDemosHelper.GetEmployeeImageRouteUrl()?@GridViewRowsDemosHelper.ImageQueryKey=" + values[0]);
+        selectdId = values;   
+    }
+
+
+
     // para orden de compra detalles
     function onGridViewInitDetalles(s, e) {
         AddAdjustmentDelegate(adjustGridViewDetalles);
@@ -155,5 +175,6 @@
 
     window.onGridViewInitDetalles = onGridViewInitDetalles;
     window.onGridViewSelectionChangedDetalles = onGridViewSelectionChangedDetalles;
-
+    window.OnGridFocusedRowChangedOrdenCompra = OnGridFocusedRowChangedOrdenCompra;
+    
 })();

@@ -409,6 +409,12 @@
     <Compile Include="Reports\ReportOrden.Designer.cs">
       <DependentUpon>ReportOrden.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports\ReportOrdenCompra.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportOrdenCompra.Designer.cs">
+      <DependentUpon>ReportOrdenCompra.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Area\" />
@@ -429,6 +435,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\ReportOrden.resx">
       <DependentUpon>ReportOrden.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReportOrdenCompra.resx">
+      <DependentUpon>ReportOrdenCompra.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

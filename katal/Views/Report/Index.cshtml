@@ -1,7 +1,5 @@
-﻿
-@Html.DevExpress().ReportDesigner(settings =>
+﻿@Html.DevExpress().WebDocumentViewer(settings =>
 {
-    settings.Name = "ReportDesigner1";
-  
-    
+    settings.Name = "WebDocumentViewer1";
+   // settings.ClientSideEvents.CustomizeParameterEditors = "customizeParameterEditors";
 }).Bind(Model).GetHtml()

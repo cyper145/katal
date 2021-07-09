@@ -278,12 +278,12 @@ namespace katal.conexion.model.dao
         
         private string consultaLogin(string name, string password, string codEmpresa)
         {
-            string  consulta = "select U.*, r.name, e.EMP_RAZON_NOMBRE_NEW  from dk_users as U inner join dk_empresa_rol_user eu on U.id=eu.user_id inner join EMPRESA e on eu.cod_empres = e.EMP_CODIGO inner join dk_roles r on eu.rol_id = r.id where U.username='" + name + "'" + "AND"+ " e.EMP_CODIGO = '" + codEmpresa + "'" ;
+            string  consulta = "select U.*, r.name, e.EMP_RAZON_NOMBRE  from dk_users as U inner join dk_empresa_rol_user eu on U.id=eu.user_id inner join EMPRESA e on eu.cod_empres = e.EMP_CODIGO inner join dk_roles r on eu.rol_id = r.id where U.username='" + name + "'" + "AND"+ " e.EMP_CODIGO = '" + codEmpresa + "'" ;
             return consulta;
         }
         private string consultaLogin()
         {
-            string consulta = "select U.*, r.name, e.EMP_RAZON_NOMBRE_NEW  from dk_users as U left join dk_empresa_rol_user eu on U.id=eu.user_id left join EMPRESA e on eu.cod_empres = e.EMP_CODIGO left join dk_roles r on eu.rol_id = r.id ";
+            string consulta = "select U.*, r.name, e.EMP_RAZON_NOMBRE  from dk_users as U left join dk_empresa_rol_user eu on U.id=eu.user_id left join EMPRESA e on eu.cod_empres = e.EMP_CODIGO left join dk_roles r on eu.rol_id = r.id ";
             return consulta;
         }
         public static bool tienePrograma(int user_id, string programa)

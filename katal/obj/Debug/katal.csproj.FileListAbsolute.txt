@@ -213,3 +213,4 @@ D:\proyectoKatal\katal\katal\obj\Debug\katal.Reports.Report3.resources
 D:\proyectoKatal\katal\katal\obj\Debug\katal.csproj.GenerateResource.cache
 D:\proyectoKatal\katal\katal\obj\Debug\katal.dll.licenses
 D:\proyectoKatal\katal\katal\obj\Debug\katal.Reports.ReportOrden.resources
+D:\proyectoKatal\katal\katal\obj\Debug\katal.Reports.ReportOrdenCompra.resources

@@ -11,10 +11,10 @@ namespace katal.Controllers
         // GET: Report
         public ActionResult Index(String codigo)
         {
-            Reports.ReportOrden report = new Reports.ReportOrden();
-            report.Parameters["parameter0"].Value =codigo;
+            Reports.ReportOrdenCompra report = new Reports.ReportOrdenCompra();
+            report.Parameters["parameter1"].Value =codigo;
             report.RequestParameters = false;
-            return View(report);
+            return View(new DevExpress.XtraReports.Web.CachedReportSourceWeb(report));
         }
     }
 }

@@ -156,10 +156,15 @@ namespace katal.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public ActionResult GridViewCustomActionPartial(string customAction)
+        public ActionResult GridViewCustomActionPartial(string customAction, string codigo)
         {
             if (customAction == "delete")
-                SafeExecute(() => PerformDelete());
+                SafeExecute(() => PerformDelete(codigo));
+            if(customAction  == "export")
+            {
+                return RedirectToAction( "index","Report", new {codigo=codigo });
+            }
+                
             return GridViewPartial();
         }
         [ValidateAntiForgeryToken]
@@ -226,8 +231,13 @@ namespace katal.Controllers
                 ViewBag.GeneralError = "Please, correct all errors.";
             return GridViewPartial();
         }
-        private void PerformDelete()
+        private void PerformDelete(string  codigo)
         {
+            GridViewHelper.OrdenCompras.Remove(GridViewHelper.OrdenCompras.Find(elemen=>elemen.OC_CNUMORD== codigo));
+        }
+        private void PerformExport()
+        {
+
             if (!string.IsNullOrEmpty(Request.Params["SelectedRows"]))
                 GridViewHelper.DeleteRecords(Request.Params["SelectedRows"]);
         }
