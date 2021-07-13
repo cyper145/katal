@@ -195,6 +195,7 @@
     <Content Include="Content\Images\sign-out.svg" />
     <Content Include="Content\Images\user.svg" />
     <Content Include="Content\Layout.css" />
+    <Content Include="Content\ManejoComprobante.js" />
     <Content Include="Content\Photo\Alberto_Alonso.jpg" />
     <Content Include="Content\Photo\Alfredo_Gomez.jpg" />
     <Content Include="Content\Photo\Andrew_Lee.jpg" />
@@ -297,6 +298,8 @@
     <Content Include="Views\Role\Index.cshtml" />
     <Content Include="Views\Shared\leftpartial.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Comprobante\Index.cshtml" />
+    <Content Include="Views\Comprobante\GridViewPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -316,7 +319,9 @@
     <Compile Include="Code\RoleHelper.cs" />
     <Compile Include="conexion\model.dao\AreaDao.cs" />
     <Compile Include="conexion\model.dao\ArticuloDao.cs" />
+    <Compile Include="conexion\model.dao\ComprobanteDao.cs" />
     <Compile Include="conexion\model.dao\Conexion.cs" />
+    <Compile Include="conexion\model.dao\Conversion.cs" />
     <Compile Include="conexion\model.dao\EmpresaDao.cs" />
     <Compile Include="conexion\model.dao\Obligatorio.cs" />
     <Compile Include="conexion\model.dao\OrdenCompraDao.cs" />
@@ -329,6 +334,7 @@
     <Compile Include="conexion\model.entity\Area.cs" />
     <Compile Include="conexion\model.entity\Articulo.cs" />
     <Compile Include="conexion\model.entity\CentroCosto.cs" />
+    <Compile Include="conexion\model.entity\Comprobante.cs" />
     <Compile Include="conexion\model.entity\Empresa.cs" />
     <Compile Include="conexion\model.entity\FormaPago.cs" />
     <Compile Include="conexion\model.entity\InsertOrder.cs" />
@@ -345,6 +351,7 @@
     <Compile Include="conexion\model.entity\User.cs" />
     <Compile Include="conexion\model.neg\AreaNeg.cs" />
     <Compile Include="conexion\model.neg\ArticuloNeg.cs" />
+    <Compile Include="conexion\model.neg\ComprobanteNeg.cs" />
     <Compile Include="conexion\model.neg\EmpresaNeg.cs" />
     <Compile Include="conexion\model.neg\OrdenCompraNeg.cs" />
     <Compile Include="conexion\model.neg\PaisNeg.cs" />
@@ -358,6 +365,7 @@
     <Compile Include="Controllers\AreasController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ComprobanteController.cs" />
     <Compile Include="Controllers\DetalleOrdenCompraController.cs" />
     <Compile Include="Controllers\GridViewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

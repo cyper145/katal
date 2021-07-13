@@ -161,6 +161,39 @@
         return command == "CustomExportToXLS" || command == "CustomExportToXLSX";
     }
 
+    function onPageToolbarItemClickComprobante(s, e) {
+        switch (e.item.name) {
+            case "ToggleFilterPanel":
+                toggleFilterPanel();
+                break;
+            case "New":
+
+                gridView.AddNewRow();
+
+                break;
+            case "Edit":
+
+                gridView.StartEditRow(gridView.GetFocusedRowIndex());
+
+                break;
+            case "Delete":
+                deleteSelectedRecords();
+                break;
+            case "Export":
+
+                ExportSelectedRecords()
+                //gridView.ExportTo(ASPxClientGridViewExportFormat.Xlsx);
+                break;
+        }
+    }
+    function OnGridFocusedRowChangedComprobante(s,e) {
+        s.GetRowValues(s.GetFocusedRowIndex(), 'OC_CNUMORD', OnGetRowValuesComprobante);
+    }
+    function OnGetRowValuesComprobante(values) {
+        //DetailPhoto.SetImageUrl("@GridViewRowsDemosHelper.GetEmployeeImageRouteUrl()?@GridViewRowsDemosHelper.ImageQueryKey=" + values[0]);
+        selectdId = values;
+    }
+
     window.OnToolbarItemClick = OnToolbarItemClick
 
     window.onPageToolbarItemClickDetalles = onPageToolbarItemClickDetalles;
@@ -176,5 +209,11 @@
     window.onGridViewInitDetalles = onGridViewInitDetalles;
     window.onGridViewSelectionChangedDetalles = onGridViewSelectionChangedDetalles;
     window.OnGridFocusedRowChangedOrdenCompra = OnGridFocusedRowChangedOrdenCompra;
+    window.onPageToolbarItemClickComprobante = onPageToolbarItemClickComprobante;
+    window.OnGridFocusedRowChangedComprobante = OnGridFocusedRowChangedComprobante;
+
+
+    //para orden comprobantes
+
     
 })();

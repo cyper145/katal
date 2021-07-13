@@ -7,7 +7,7 @@ namespace katal.conexion.model.dao
         //singleton
         private static Conexion objConexion = null;
         private SqlConnection con;
-        private string nameBaseDatos ;
+       // private string nameBaseDatos ;
         private Conexion()
         {          
             con = new SqlConnection(this.cadenaConexion("BDWENCO"));
@@ -51,7 +51,7 @@ namespace katal.conexion.model.dao
         private string cadenaConexion(string nameBaseDatos)
         {
             //return $"data source = SERVIDOR; initial catalog = {nameBaseDatos}; user id = SOPORTE; password = SOPORTE";
-            return $"Data Source=DESKTOP-6OG4V32\\SQLEXPRESS;Initial Catalog={nameBaseDatos}; Integrated Security=True";
+            return $"Data Source=DESKTOP-RDGSDMQ;Initial Catalog={nameBaseDatos}; Integrated Security=True";
         }
     }
 }

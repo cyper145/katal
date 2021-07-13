@@ -45,9 +45,9 @@ namespace katal.Controllers
         }
         public ActionResult GridViewPartial()
         {
-          
-          //  Dictionary<string, Object> nodes = JsonConvert.DeserializeObject<Dictionary<string, Object>>(fecha);
-                  
+
+            //  Dictionary<string, Object> nodes = JsonConvert.DeserializeObject<Dictionary<string, Object>>(fecha);
+            GridViewHelper.OrdenCompras = userNeg.findAll(GridViewHelper.dateRange);
             return PartialView("GridViewPartial", GridViewHelper.OrdenCompras);
         }
 
@@ -166,12 +166,7 @@ namespace katal.Controllers
         {
             userNeg.delete(codigo);
         }
-        private void PerformExport()
-        {
-
-            if (!string.IsNullOrEmpty(Request.Params["SelectedRows"]))
-                GridViewHelper.DeleteRecords(Request.Params["SelectedRows"]);
-        }
+       
 
         //para el nuevo forma de agregar
 
