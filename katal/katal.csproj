@@ -195,7 +195,6 @@
     <Content Include="Content\Images\sign-out.svg" />
     <Content Include="Content\Images\user.svg" />
     <Content Include="Content\Layout.css" />
-    <Content Include="Content\ManejoComprobante.js" />
     <Content Include="Content\Photo\Alberto_Alonso.jpg" />
     <Content Include="Content\Photo\Alfredo_Gomez.jpg" />
     <Content Include="Content\Photo\Andrew_Lee.jpg" />

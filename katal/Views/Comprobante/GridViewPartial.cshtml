@@ -69,9 +69,14 @@
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
 
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
-        
 
 
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "codigo";
+            columnSettings.Caption = "Fecha d";
+            columnSettings.Width = Unit.Pixel(300);
+        });
 
 
         gridViewSettings.Columns.Add(columnSettings =>
@@ -80,7 +85,7 @@
             columnSettings.Caption = "Fecha";
             columnSettings.Width = Unit.Pixel(300);
         });
-      
+
 
 
         gridViewSettings.Columns.Add(columnSettings =>
@@ -102,12 +107,12 @@
             columnSettings.Width = Unit.Pixel(170);
 
         });
-       
+
 
 
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
-        gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";
+        //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";
 
 
         gridViewSettings.CellEditorInitialize = (s, e) =>
