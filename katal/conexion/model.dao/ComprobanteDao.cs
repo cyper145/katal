@@ -78,7 +78,7 @@ namespace katal.conexion.model.dao
                     comp.CESTADO = read[16].ToString();
                     comp.NSALDO = Conversion.ParseDecimal(read[17].ToString());
                     comp.NMONTPROG = Conversion.ParseDecimal(read[18].ToString());
-                    comp.LCANJEADO = Conversion.Parseint(read[19].ToString());
+                    comp.LCANJEADO = Conversion.ParseBool(read[19].ToString());
                     comp.CCODCONTA = read[20].ToString();
                     comp.CFORMPAGO = read[21].ToString();
                     comp.CSERREFER = read[22].ToString();

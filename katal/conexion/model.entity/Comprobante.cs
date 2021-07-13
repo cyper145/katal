@@ -26,7 +26,7 @@ namespace katal.conexion.model.entity
         public string CESTADO { get; set; }
         public decimal NSALDO { get; set; }
         public decimal NMONTPROG { get; set; }
-        public int LCANJEADO { get; set; }
+        public bool LCANJEADO { get; set; }
         public string CCODCONTA { get; set; }
         public string CFORMPAGO { get; set; }
         public string CSERREFER { get; set; }
