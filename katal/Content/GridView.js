@@ -194,6 +194,63 @@
         selectdId = values;
     }
 
+
+    //
+    function onPageToolbarItemClickRequision(s, e) {
+        switch (e.item.name) {
+            case "ToggleFilterPanel":
+                toggleFilterPanel();
+                break;
+            case "New":
+                gridView.AddNewRow();
+                break;
+            case "Edit":
+                gridView.StartEditRow(gridView.GetFocusedRowIndex());
+                break;
+            case "Delete":
+                deleteSelectedRecordsRequision();
+                break;
+            case "Export":
+                ExportSelectedRecordsRequision()
+                break;
+        }
+    }
+
+
+    //para eliminar elemnto
+    function deleteSelectedRecordsRequision() {
+        if (confirm('Confirma Delete?')) {
+            gridView.GetSelectedFieldValues("NROREQUI", getSelectedFieldValuesCallbackRequision);
+        }
+    }
+    function getSelectedFieldValuesCallbackRequision(values) {
+
+        gridView.PerformCallback({ customAction: 'delete', codigo: selectdId });
+    }
+     //para eliminar elemnto
+    //para imprimir elemnto
+    function ExportSelectedRecordsRequision() {
+       
+        gridView.GetSelectedFieldValues("NROREQUI", getSelectedFieldValuesCallbackRequisionExport);
+        
+    }
+    function getSelectedFieldValuesCallbackRequisionExport(values) {
+
+        gridView.PerformCallback({ customAction: 'export', codigo: selectdId });
+    }
+     //para imprimir elemnto
+
+
+    // para seleccionar elemento
+    function OnGridFocusedRowChangedRequision(s, e) {
+        s.GetRowValues(s.GetFocusedRowIndex(), 'NROREQUI', OnGetRowValuesRequision);
+    }
+    function OnGetRowValuesRequision(values) {
+        selectdId = values;
+    }
+
+
+
     window.OnToolbarItemClick = OnToolbarItemClick
 
     window.onPageToolbarItemClickDetalles = onPageToolbarItemClickDetalles;
@@ -211,9 +268,8 @@
     window.OnGridFocusedRowChangedOrdenCompra = OnGridFocusedRowChangedOrdenCompra;
     window.onPageToolbarItemClickComprobante = onPageToolbarItemClickComprobante;
     window.OnGridFocusedRowChangedComprobante = OnGridFocusedRowChangedComprobante;
-
-
-    //para orden comprobantes
-
+    //para orden requisiones
+    window.onPageToolbarItemClickRequision = onPageToolbarItemClickRequision;
+    window.OnGridFocusedRowChangedRequision = OnGridFocusedRowChangedRequision;
     
 })();
