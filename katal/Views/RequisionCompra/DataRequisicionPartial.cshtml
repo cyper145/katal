@@ -2,11 +2,13 @@
 @using katal.conexion.model.entity
 
 @(Html.DevExpress().GridView<RequisicionCompra>(settings => {
-    settings.Name = "gridRequisicion";
+    settings.Name = "gridView";
     settings.CallbackRouteValues = new { Controller = "RequisionCompra", Action = "DataRequisicionPartial" };
+
+    settings.CustomActionRouteValues = new { Controller = "RequisionCompra", Action = "GridViewCustomActionPartial" };
     settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RequisionCompra", Action = "RequisicionAddNewPartial" };
     settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RequisionCompra", Action = "RequisicionUpdatePartial" };
-    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RequisionCompra", Action = "RequisicionDeletePartial" };
+
 
 
     settings.ControlStyle.CssClass = "grid-view";
@@ -32,44 +34,14 @@
     settings.Settings.ShowFilterRowMenu = true;
 
 
-    settings.Toolbars.Add(tb => {
-        tb.Enabled = true;
-        tb.Position = GridToolbarPosition.Top;
-        tb.SettingsAdaptivity.Enabled = true;
-        tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
-
-        tb.Items.Add(GridViewToolbarCommand.New);
-        tb.Items.Add(GridViewToolbarCommand.Edit);
-        tb.Items.Add(GridViewToolbarCommand.Delete);
-        tb.Items.Add(i => {
-            i.Command = GridViewToolbarCommand.Refresh;
-            i.BeginGroup = true;
-            i.AdaptivePriority = 2;
-        });
-        tb.Items.Add(i =>
-        {
-            i.Command = GridViewToolbarCommand.ShowFilterEditor;
-            i.BeginGroup = true;
-            i.AdaptivePriority = 2;
-        });
-
-        tb.Items.Add(i => {
-            i.Alignment = MenuItemAlignment.Right;
-            i.SetTemplateContent(c => {
-                Html.DevExpress().ButtonEdit(s => {
-                    s.Name = "search";
-                    s.Properties.NullText = "Search...";
-                    s.Properties.Buttons
-                        .Add()
-                        .Image.IconID = DevExpress.Web.ASPxThemes.IconID.FindFind16x16gray;
-                }).Render();
-            });
-        });
-    });
-
-    //settings.ClientSideEvents.ToolbarItemClick = "OnToolbarItemClick";
 
     settings.KeyFieldName = "NROREQUI";
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "prioridad";
+        column.Caption = "Nro. Req.";
+        column.Visible = false;
+    });
     settings.Columns.Add(column =>
     {
         column.FieldName = "NROREQUI";
@@ -91,14 +63,42 @@
     {
         column.FieldName = "FECREQUI";
         column.Caption = "Fecha Req.";
-       // column.ColumnType = MVCxGridViewColumnType.DateEdit;
-        
+        column.ColumnType = MVCxGridViewColumnType.DateEdit;
+
     });
     settings.Columns.Add(column =>
     {
         column.FieldName = "ESTREQUI";
         column.Caption = "Estado";
     });
+    /*
+    t.Properties.Items.Add("NORMAL", 0);
+    t.Properties.Items.Add("MEDIA", 1);
+    t.Properties.Items.Add("ALTA", 2);
+    */
+    settings.FormatConditions.AddHighlight("NROREQUI", "[prioridad] ==2", GridConditionHighlightFormat.LightRedFillWithDarkRedText);
+    settings.FormatConditions.AddHighlight("CODSOLIC", "[prioridad] ==2", GridConditionHighlightFormat.LightRedFillWithDarkRedText);
+    settings.FormatConditions.AddHighlight("AREA", "[prioridad] ==2", GridConditionHighlightFormat.LightRedFillWithDarkRedText);
+    settings.FormatConditions.AddHighlight("FECREQUI", "[prioridad] ==2", GridConditionHighlightFormat.LightRedFillWithDarkRedText);
+    settings.FormatConditions.AddHighlight("ESTREQUI", "[prioridad] ==2", GridConditionHighlightFormat.LightRedFillWithDarkRedText);
+
+
+
+    settings.FormatConditions.AddHighlight("NROREQUI", "[prioridad] ==1", GridConditionHighlightFormat.YellowFillWithDarkYellowText);
+    settings.FormatConditions.AddHighlight("CODSOLIC", "[prioridad] ==1", GridConditionHighlightFormat.YellowFillWithDarkYellowText);
+    settings.FormatConditions.AddHighlight("AREA", "[prioridad] ==1", GridConditionHighlightFormat.YellowFillWithDarkYellowText);
+    settings.FormatConditions.AddHighlight("FECREQUI", "[prioridad] ==1", GridConditionHighlightFormat.YellowFillWithDarkYellowText);
+    settings.FormatConditions.AddHighlight("ESTREQUI", "[prioridad] ==1", GridConditionHighlightFormat.YellowFillWithDarkYellowText);
+
+    settings.FormatConditions.AddHighlight("NROREQUI", "[prioridad] ==0", GridConditionHighlightFormat.GreenFillWithDarkGreenText);
+    settings.FormatConditions.AddHighlight("CODSOLIC", "[prioridad] ==0", GridConditionHighlightFormat.GreenFillWithDarkGreenText);
+    settings.FormatConditions.AddHighlight("AREA", "[prioridad] ==0", GridConditionHighlightFormat.GreenFillWithDarkGreenText);
+    settings.FormatConditions.AddHighlight("FECREQUI", "[prioridad] ==0", GridConditionHighlightFormat.GreenFillWithDarkGreenText);
+    settings.FormatConditions.AddHighlight("ESTREQUI", "[prioridad] ==0", GridConditionHighlightFormat.GreenFillWithDarkGreenText);
+
+
+
+    // settings.FormatConditions.
 
     settings.SetEditFormTemplateContent(c =>
     {
@@ -215,8 +215,8 @@
                 {
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
-                   // t.Properties.ValidationSettings= ValidationSettings
-                  //  t.Properties.AllowNull = true;
+                    // t.Properties.ValidationSettings= ValidationSettings
+                    //  t.Properties.AllowNull = true;
                 });
             });
             groupItem.Items.Add(i =>
@@ -255,7 +255,7 @@
                     {
                         btnSettings.Name = "btnUpdate";
                         btnSettings.Text = "Grabar";
-                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridRequisicion.UpdateEdit(); }";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
 
                         //I want to Hide Update Button when FirstName is "John"
 
@@ -267,7 +267,7 @@
                         btnSettings.Name = "btnCancel";
                         btnSettings.Text = "Cancel";
                         btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
-                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridRequisicion.CancelEdit(); }";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";
                     }).Render();
                 ViewContext.Writer.Write("</div>");
             });
@@ -282,7 +282,7 @@
 
     settings.SettingsExport.EnableClientSideExportAPI = true;
     settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
-
+    settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
     settings.Width = Unit.Percentage(100);
 
     katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);

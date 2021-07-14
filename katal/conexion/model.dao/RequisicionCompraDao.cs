@@ -30,9 +30,11 @@ namespace katal.conexion.model.dao
         }
         public void create(RequisicionCompra obj)
         {
+
+            string FECREQUI = obj.FECREQUI.ToString("yyyy/dd/MM");
             string SQLC = "INSERT INTO requisc (nrorequi,tiporequi,codsolic,fecrequi,";
             SQLC += "glosa,area, estrequi,prioridad,FecEntrega) VALUES ('" + obj.NROREQUI + "','RQ','" + obj.CODSOLIC + "','";
-            SQLC += obj.FECREQUI.ToString("yyyy-MM-dd") + "','";
+            SQLC += FECREQUI + "','";
             SQLC += obj.GLOSA + "','" + obj.AREA + "','P'," + obj.prioridad+"," +  verDate(obj.FecEntrega) + ")";
             try
             {
@@ -53,10 +55,12 @@ namespace katal.conexion.model.dao
 
         public void update(RequisicionCompra obj)
         {
+
+            string FECREQUI = obj.FECREQUI.ToString("yyyy/dd/MM");
             string SQLC = "UPDATE requisc SET codsolic='";
             SQLC += obj.CODSOLIC + "', glosa='" + obj.GLOSA;
             SQLC += "',prioridad=" + obj.prioridad + ",FecEntrega=" + verDate(obj.FecEntrega);
-            SQLC += ",area='" + obj.AREA + "' ,fecrequi='" + obj.FECREQUI.ToString("yyyy-MM-dd") + "' WHERE nrorequi='";
+            SQLC += ",area='" + obj.AREA + "' ,fecrequi='" + FECREQUI + "' WHERE nrorequi='";
             SQLC += obj.NROREQUI + "' AND TIPOREQUI='RQ'";
 
             try
@@ -79,13 +83,15 @@ namespace katal.conexion.model.dao
         {
             int nextDocumet = 0;
             string item = "";
+            string FECREQUI = obj.FECREQUI.ToString("yyyy/dd/MM");
             obj.detalles.ForEach(element => {
                 ++nextDocumet;
+                
                 item += "INSERT INTO REQUISD (nrorequi,tiporequi,codpro,cantid,";
                 item += "estrequi,fecreque,descpro,unipro,reqitem, cencost, remaq, saldo,ESPTECNICA) VALUES";
                 item += "('" + obj.NROREQUI + "',";
                 item += " 'RQ','" + element.codpro + "'," + element.CANTID + ",'P',";
-                item += "'" + obj.FECREQUI.ToString("yyyy-MM-dd") + "','" + element.DESCPRO + "'";
+                item += "'" + FECREQUI + "','" + element.DESCPRO + "'";
                 item += ",'" + element.UNIPRO + "'," + nextDocumet + ",'" + obj.CODSOLIC + "', '" + element.REMAQ + "',";
                 item +=  "" + element.SALDO + ",'" +element.ESPTECNICA+ "')\n";             
             });
@@ -263,6 +269,50 @@ namespace katal.conexion.model.dao
             }
             return OrdenCompras;
         }
+
+        public List<RequisicionCompra> findAll(DateRangePickerModel dateRange)
+        {
+
+
+            List<RequisicionCompra> requisicionCompras = new List<RequisicionCompra>();
+            string findAll = "SELECT * FROM requisc where tiporequi = 'RQ'  and FECREQUI Between '" + dateRange.Start.ToString("yyyy-MM-ddTHH:mm:ss") + "' and '" + dateRange.End.ToString("yyyy-MM-ddTHH:mm:ss") + "'";
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    RequisicionCompra user = new RequisicionCompra();
+                    user.NROREQUI = read[0].ToString();
+                    user.CODSOLIC = read[1].ToString();
+                    user.FECREQUI = DateTime.Parse(read[2].ToString());
+                    user.GLOSA = read[3].ToString();
+                    user.AREA = read[4].ToString();
+                    user.ESTREQUI = read[5].ToString();
+                    user.TIPOREQUI = read[6].ToString();
+                    user.prioridad = int.Parse(read[7].ToString());
+                    user.FecEntrega = ParseDateTime(read[8].ToString());
+                    user.flgCerrado = int.Parse(read[9].ToString());
+                    user.IndAutorizado = int.Parse(read[10].ToString());
+                    user.UsrAutoriza = read[11].ToString();
+                    user.comrechazo = read[12].ToString();
+                    requisicionCompras.Add(user);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return requisicionCompras;
+        }
+
         public List<RequisicionCompra> findAllPendientes()
         {
 

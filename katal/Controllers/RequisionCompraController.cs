@@ -35,12 +35,14 @@ namespace katal.Controllers
         // GET: RequisionCompra
         public ActionResult Index()
         {
-            return View(GridViewHelper.GetRequisionCompras());
+
+          
+            return View(requisicionNeg.findAll(GridViewHelper.dateRange));
         }
         public ActionResult DataRequisicionPartial( )
         {
             GridViewHelper.ClearDetallesRequision();
-            return PartialView("DataRequisicionPartial", GridViewHelper.GetRequisionCompras());
+            return PartialView("DataRequisicionPartial", requisicionNeg.findAll(GridViewHelper.dateRange));
         }
 
         [ValidateInput(false)]
@@ -113,11 +115,17 @@ namespace katal.Controllers
             requisicionNeg.update(product);
             
         }
-        [ValidateInput(false)]
-        public ActionResult RequisicionDeletePartial(string NROREQUI = "")
+
+        [ValidateAntiForgeryToken]
+        public ActionResult GridViewCustomActionPartial(string customAction, string codigo)
         {
-            if (NROREQUI != "")
-                SafeExecute(() =>DeleteProduct(NROREQUI));
+            if (customAction == "delete")
+                SafeExecute(() => DeleteProduct(codigo));
+            if (customAction == "export")
+            {
+                return RedirectToAction("index", "Report", new { codigo = codigo });// ver para requisiones
+            }
+
             return DataRequisicionPartial();
         }
         public void DeleteProduct(string NROREQUI)
@@ -298,8 +306,23 @@ namespace katal.Controllers
             if (CurrentCategory == null)
                 CurrentCategory = "";
             return PartialView(new Articulo() { codigo = CurrentCategory });
+        }
+        public ActionResult DateRangePicker()
+        {
+            return PartialView("DateRangePicker");
+        }
+        [HttpPost]
+        public ActionResult DateRangePicker(FormCollection data)
+        {
+            if (Request.Params["Submit"] == null)
+                ModelState.Clear();
+            else
+            {
+                GridViewHelper.dateRange.End = DateTime.Parse(Request.Params["End"]);
+                GridViewHelper.dateRange.Start = DateTime.Parse(Request.Params["Start"]);
+            }
 
-
+            return RedirectToAction("index");
         }
 
     }

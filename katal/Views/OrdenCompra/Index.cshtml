@@ -20,7 +20,7 @@
     <script>
 
     function CloseGridLookup() {
-        gridLookup.ConfirmCurrentSelection();      
+        gridLookup.ConfirmCurrentSelection();
         console.log(datax)
         gridLookup.HideDropDown();
     }
@@ -205,10 +205,7 @@
 
 
     </script>
-}
-
-
-@section PageToolbar {
+}@section PageToolbar {
     @Html.DevExpress().Menu(menuSettings =>
 {
     menuSettings.Name = "pageToolbar";
@@ -311,6 +308,9 @@
 
 
 
+
+
+
 @section LeftPanelContent {
     @Html.Partial("~/Views/partialGeneral/LeftPanelPartial.cshtml");
 }
@@ -325,6 +325,6 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-   
+
     @Html.Partial("GridViewPartial")
 }

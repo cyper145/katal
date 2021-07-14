@@ -299,6 +299,7 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Comprobante\Index.cshtml" />
     <Content Include="Views\Comprobante\GridViewPartial.cshtml" />
+    <Content Include="Views\RequisionCompra\DateRangePicker.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

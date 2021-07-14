@@ -19,6 +19,11 @@ namespace katal.conexion.model.neg
         {
             return objUserDao.findAll();
         }
+
+        public List<RequisicionCompra> findAll(DateRangePickerModel dateRange)
+        {
+            return objUserDao.findAll(dateRange);
+        }
         public List<DetalleRequisicion> findAllDetail(string NROREQUI)
         {
             return objUserDao.findAllDetail(NROREQUI);
