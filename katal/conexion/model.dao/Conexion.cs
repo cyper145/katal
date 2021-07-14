@@ -51,7 +51,7 @@ namespace katal.conexion.model.dao
         private string cadenaConexion(string nameBaseDatos)
         {
             return $"data source = SERVIDOR; initial catalog = {nameBaseDatos}; user id = SOPORTE; password = SOPORTE";
-           // return $"Data Source=DESKTOP-RDGSDMQ;Initial Catalog={nameBaseDatos}; Integrated Security=True";
+            //return $"Data Source=DESKTOP-RDGSDMQ;Initial Catalog={nameBaseDatos}; Integrated Security=True";
         }
     }
 }

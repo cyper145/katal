@@ -11,12 +11,7 @@ namespace katal.Controllers
     {
 
         private ComprobanteNeg comprobanteNeg;
-        private RequisicionCompraNeg requisionNeg;
-        private ProveedorNeg proveedorNeg;
-        private ArticuloNeg articuloNeg;
-        static OrdenCompra OrdeCurrent;
-        private ResponsableCmpNeg responsable;
-
+    
         public ComprobanteController()
         {
             comprobanteNeg = new ComprobanteNeg();
@@ -30,10 +25,8 @@ namespace katal.Controllers
         }
         public ActionResult GridViewPartial()
         {
-
-            //  Dictionary<string, Object> nodes = JsonConvert.DeserializeObject<Dictionary<string, Object>>(fecha);
-            
-            return PartialView("GridViewPartial", comprobanteNeg.findAll());
+            List<Comprobante> comp = comprobanteNeg.findAll();
+            return PartialView("GridViewPartial", comp);
         }
 
         [ValidateAntiForgeryToken]
