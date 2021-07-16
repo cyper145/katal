@@ -218,7 +218,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.ReadOnly = true;
+                        //t.ReadOnly = true;
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -231,7 +231,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.ReadOnly = true;
+                       // t.ReadOnly = true;
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -243,7 +243,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.ReadOnly = true;
+                       // t.ReadOnly = true;
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -256,7 +256,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.ReadOnly = true;
+                       // t.ReadOnly = true;
                     });
                 });
 
@@ -271,7 +271,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.ReadOnly = true;
+                       // t.ReadOnly = true;
                     });
                 });
 
@@ -284,7 +284,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.ReadOnly = true;
+                       // t.ReadOnly = true;
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -297,7 +297,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.ReadOnly = true;
+                        //t.ReadOnly = true;
                     });
                 });
 
@@ -311,7 +311,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.ReadOnly = true;
+                      //  t.ReadOnly = true;
                     });
                 });
 
@@ -757,7 +757,21 @@
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "codigo";
-            columnSettings.Caption = "Fecha d";
+            columnSettings.Caption = "Orde";
+            columnSettings.Visible = false;
+            columnSettings.Width = Unit.Pixel(300);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "CORDEN";
+            columnSettings.Caption = "Orden";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "ANEX_DESCRIPCION";
+            columnSettings.Caption = "Provedor";
             columnSettings.Width = Unit.Pixel(300);
         });
 
@@ -765,6 +779,12 @@
         {
             columnSettings.FieldName = "DEMISION";
             columnSettings.Caption = "Fecha";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "documento";
+            columnSettings.Caption = "documento";
             columnSettings.Width = Unit.Pixel(300);
         });
 
@@ -786,6 +806,13 @@
         {
             columnSettings.FieldName = "NIMPORTE";
             columnSettings.Caption = "Importe";
+            columnSettings.Width = Unit.Pixel(170);
+
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "CESTADO";
+            columnSettings.Caption = "Estado";
             columnSettings.Width = Unit.Pixel(170);
 
         });
