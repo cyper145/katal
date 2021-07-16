@@ -19,6 +19,7 @@ namespace katal.Model
         public static List<RequisicionCompra> requisicionCompras = new List<RequisicionCompra>();
         public static string OC_CDOCREF ="";
         public static string NROREQUI = "";
+        public static string BD = "";
 
         public static DateRangePickerModel dateRange = new DateRangePickerModel();
         public static void GetDetalles()

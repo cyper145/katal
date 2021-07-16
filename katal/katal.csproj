@@ -302,6 +302,9 @@
     <Content Include="Views\RequisionCompra\DateRangePicker.cshtml" />
     <Content Include="Views\Report\Requerimiento.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectGasto.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectTipoAnexo.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectAnexo.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectTipoDoc.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -332,6 +335,7 @@
     <Compile Include="conexion\model.dao\RequisicionCompraDao.cs" />
     <Compile Include="conexion\model.dao\ResponsableCompraDao.cs" />
     <Compile Include="conexion\model.dao\RoleDao.cs" />
+    <Compile Include="conexion\model.dao\TipoAnexoDao.cs" />
     <Compile Include="conexion\model.dao\UserDao.cs" />
     <Compile Include="conexion\model.entity\Area.cs" />
     <Compile Include="conexion\model.entity\Articulo.cs" />
@@ -351,6 +355,7 @@
     <Compile Include="conexion\model.entity\Role.cs" />
     <Compile Include="conexion\model.entity\Root.cs" />
     <Compile Include="conexion\model.entity\Solicitud.cs" />
+    <Compile Include="conexion\model.entity\TipoAnexo.cs" />
     <Compile Include="conexion\model.entity\User.cs" />
     <Compile Include="conexion\model.neg\AreaNeg.cs" />
     <Compile Include="conexion\model.neg\ArticuloNeg.cs" />
@@ -362,6 +367,7 @@
     <Compile Include="conexion\model.neg\RequisicionCompraNeg.cs" />
     <Compile Include="conexion\model.neg\ResponsableCmpNeg.cs" />
     <Compile Include="conexion\model.neg\RoleNeg.cs" />
+    <Compile Include="conexion\model.neg\TipoAnexoNeg.cs" />
     <Compile Include="conexion\model.neg\UserNeg.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AreaController.cs" />

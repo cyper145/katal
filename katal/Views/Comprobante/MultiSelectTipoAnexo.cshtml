@@ -1,22 +1,23 @@
-﻿@Html.DevExpress().GridLookup(settings =>
+﻿
+@Html.DevExpress().GridLookup(settings =>
 {
     //settings.Properties.Caption = "Area:";
 
-    settings.Name = "gridLookupGastos";
-    settings.GridViewProperties.CallbackRouteValues = new { Controller = "Comprobante", Action = "MultiSelectGasto", Gastos_Codigo = Model.Gastos_Codigo };
+    settings.Name = "gridLookupTipoAnexo";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "Comprobante", Action = "MultiSelectTipoAnexo", TIPOANEX_CODIGO = Model.TIPOANEX_CODIGO };
 
-    settings.KeyFieldName = "Gastos_Codigo";
+    settings.KeyFieldName = "TIPOANEX_CODIGO";
 
     //settings.CommandColumn.Visible = true;
     // settings.CommandColumn.ShowSelectCheckbox = true;
 
-    settings.Columns.Add("Gastos_Codigo").Width = Unit.Percentage(10);
-    settings.Columns.Add("Gastos_Descripcion").Width = Unit.Percentage(90);
+    settings.Columns.Add("TIPOANEX_CODIGO").Width = Unit.Percentage(10);
+    settings.Columns.Add("TIPOANEX_DESCRIPCION").Width = Unit.Percentage(90);
 
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
-    settings.Properties.TextFormatString = "{1}";
+    settings.Properties.TextFormatString = "{0}";
 
     settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
@@ -32,6 +33,6 @@
         var gridLookup = (MVCxGridLookup)sender;
         gridLookup.GridView.Width = Unit.Percentage(100);
     };
-}).BindList(ViewData["Gastos"]).Bind(Model.Gastos_Codigo).GetHtml()
+}).BindList(ViewData["TipoAnexo"]).Bind(Model.TIPOANEX_CODIGO).GetHtml()
 
 

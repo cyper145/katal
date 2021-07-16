@@ -102,5 +102,9 @@ namespace katal.conexion.model.entity
         // para la tabla
 
         public string descriptionGasto { get; set; }
+        public string descriptiontipoAnexo { get; set; }
+        public string descriptiontipoDocumento { get; set; }
+
+
     }
 }

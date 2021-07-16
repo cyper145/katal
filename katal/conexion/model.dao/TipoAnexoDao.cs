@@ -50,5 +50,77 @@ namespace katal.conexion.model.dao
             return listTipos;
         }
 
+
+        public List<Anexo> findAllAnexo()
+        {
+            List<Anexo> listAnexo = new List<Anexo>();
+
+
+            // TIPOANEX_CODIGO = '" & _
+            //txtTpoAnexo
+            string BD = $"{this.BD}BDCONTABILIDAD";
+            string findAll = $"SELECT ANEX_CODIGO, ANEX_DESCRIPCION, ANEX_RUC FROM [{BD}].[dbo].[ANEXO] ";
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Anexo gasto = new Anexo();
+                    gasto.ANEX_CODIGO = read[0].ToString();
+                    gasto.ANEX_DESCRIPCION = read[1].ToString();
+                    gasto.ANEX_RUC = read[2].ToString();
+                    listAnexo.Add(gasto);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return listAnexo;
+        }
+
+        public List<TipoDocumento> findAllTipoDocumento()
+        {
+            List<TipoDocumento> listAnexo = new List<TipoDocumento>();
+
+          
+            // TIPOANEX_CODIGO = '" & _
+            //txtTpoAnexo
+            string BD = $"{this.BD}BDCONTABILIDAD";
+            string findAll = $"SELECT TIPDOC_CODIGO, TIPDOC_DESCRIPCION, tipdoc_referencia FROM [{BD}].[dbo].[TIPOS_DE_DOCUMENTOS] ";
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    TipoDocumento gasto = new TipoDocumento();
+                    gasto.TIPDOC_CODIGO = read[0].ToString();
+                    gasto.TIPDOC_DESCRIPCION = read[1].ToString();
+                    gasto.TIPDOC_REFERENCIA = read[2].ToString();
+                    listAnexo.Add(gasto);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return listAnexo;
+        }
     }
 }

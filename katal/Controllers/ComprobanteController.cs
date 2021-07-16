@@ -21,7 +21,7 @@ namespace katal.Controllers
 
             ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
             this.BD = user.codEmpresa;
-            
+            tipoAnexoNeg = new TipoAnexoNeg(this.BD);
         }// GET: Comprobante
         public ActionResult Index()
         {
@@ -141,10 +141,26 @@ namespace katal.Controllers
 
         public ActionResult MultiSelectTipoAnexo(string TIPOANEX_CODIGO = "-1")
         {
-            ViewData["TipoAnexo"] = tipoAnexoNeg.findAll();
+            ViewData["TipoAnexo"] = tipoAnexoNeg.findAll( );
             if (TIPOANEX_CODIGO == "-1")
                 TIPOANEX_CODIGO = "";
             return PartialView("MultiSelectTipoAnexo", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
+
+        }
+        public ActionResult MultiSelectAnexo(string ANEX_CODIGO = "-1")
+        {
+            ViewData["Anexo"] = tipoAnexoNeg.findAllAnexo();
+            if (ANEX_CODIGO == "-1")
+                ANEX_CODIGO = "";
+            return PartialView("MultiSelectAnexo", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
+
+        }
+        public ActionResult MultiSelectTipoDoc(string TIPDOC_CODIGO = "-1")
+        {
+            ViewData["TipoDoc"] = tipoAnexoNeg.findAllTipoDocumento();
+            if (TIPDOC_CODIGO == "-1")
+                TIPDOC_CODIGO = "";
+            return PartialView("MultiSelectTipoDoc", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
 
         }
 

@@ -50,6 +50,9 @@ namespace katal.conexion.model.dao
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
             //string findAll = $"SELECT * FROM {table} WHERE CAMESPROC='" + msAnoMesProc +"' AND CSALDINI=0";
+
+
+
             string findAll = "SELECT * FROM COMPROBANTECAB  WHERE CAMESPROC='" + msAnoMesProc + "' AND CSALDINI=0";
             try
             {
