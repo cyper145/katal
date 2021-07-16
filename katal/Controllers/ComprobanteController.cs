@@ -5,17 +5,23 @@ using System.Web;
 using System.Web.Mvc;
 using katal.conexion.model.neg;
 using katal.conexion.model.entity;
+using katal.Model;
+
 namespace katal.Controllers
 {
     public class ComprobanteController : BaseController
     {
 
         private ComprobanteNeg comprobanteNeg;
-    
+        private TipoAnexoNeg tipoAnexoNeg;
+        private string BD;
         public ComprobanteController()
         {
             comprobanteNeg = new ComprobanteNeg();
-           
+
+            ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
+            this.BD = user.codEmpresa;
+            
         }// GET: Comprobante
         public ActionResult Index()
         {
@@ -124,7 +130,23 @@ namespace katal.Controllers
         {
             //userNeg.delete(codigo);
         }
+        public ActionResult MultiSelectGasto(string Gastos_Codigo = "-1")
+        {
+            ViewData["Gastos"] = comprobanteNeg.findAllGastos();
+            if (Gastos_Codigo == "-1")
+                Gastos_Codigo = "";
+            return PartialView("MultiSelectGasto", new Gasto() { Gastos_Codigo = Gastos_Codigo });
 
+        }
+
+        public ActionResult MultiSelectTipoAnexo(string TIPOANEX_CODIGO = "-1")
+        {
+            ViewData["TipoAnexo"] = tipoAnexoNeg.findAll();
+            if (TIPOANEX_CODIGO == "-1")
+                TIPOANEX_CODIGO = "";
+            return PartialView("MultiSelectTipoAnexo", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
+
+        }
 
     }
 }

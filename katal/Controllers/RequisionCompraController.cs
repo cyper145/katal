@@ -123,7 +123,8 @@ namespace katal.Controllers
                 SafeExecute(() => DeleteProduct(codigo));
             if (customAction == "export")
             {
-                return RedirectToAction("index", "Report", new { codigo = codigo });// ver para requisiones
+
+                return RedirectToAction("Requerimiento", "Report", new { codigo = codigo });// ver para requisiones
             }
 
             return DataRequisicionPartial();

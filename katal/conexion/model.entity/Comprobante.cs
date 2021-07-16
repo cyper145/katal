@@ -71,7 +71,7 @@ namespace katal.conexion.model.entity
         public decimal NVALCIF { get; set; }
         public decimal NBASEIMP { get; set; }
         public decimal NINAFECTO { get; set; }
-        public DateTime  DCONTAB { get; set; }
+        public DateTime DCONTAB { get; set; }
         public decimal NTASAPERCEPCION { get; set; }
         public decimal NPERCEPCION { get; set; }
         public decimal NTASARETENCION { get; set; }
@@ -91,13 +91,16 @@ namespace katal.conexion.model.entity
         public string RCO_SERIE { get; set; }
         public string RCO_NUMERO { get; set; }
         public DateTime RCO_FECHA { get; set; }
-        public DateTime  DREGISTRO { get; set; }
+        public DateTime DREGISTRO { get; set; }
         public string USERREG { get; set; }
         public int flg_RNTNODOMICILIADO { get; set; }
         public string CAOCOMPRA { get; set; }
-
+        // para el codigo
         public string codigo { get; set; }
         public string documento { get; set; }
 
+        // para la tabla
+
+        public string descriptionGasto { get; set; }
     }
 }

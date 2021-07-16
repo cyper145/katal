@@ -19,5 +19,8 @@ namespace katal.conexion.model.neg
         {
             return objComprobanteDao.findAll();
         }
+        public List<Gasto> findAllGastos(){
+            return objComprobanteDao.findAllGastos();
+        }
     }
 }

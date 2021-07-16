@@ -50,22 +50,14 @@ namespace katal.Controllers
             GridViewHelper.OrdenCompras = userNeg.findAll(GridViewHelper.dateRange);
             return PartialView("GridViewPartial", GridViewHelper.OrdenCompras);
         }
-
-
-
         public ActionResult MultiSelectPartial(string CurrentCategory)
-        {
-
-        
+        {       
             if (CurrentCategory == null)
                 CurrentCategory = "";
-            return PartialView(new Articulo() { codigo = CurrentCategory });
-
-            
+            return PartialView(new Articulo() { codigo = CurrentCategory });           
         }
         public ActionResult MultiSelectProveedor(string CurrentCategory)
         {
-
             ViewData["Proveedores"] = proveedorNeg.findAll();
             if (CurrentCategory == null)
                 CurrentCategory = "";

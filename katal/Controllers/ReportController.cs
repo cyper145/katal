@@ -16,5 +16,13 @@ namespace katal.Controllers
             report.RequestParameters = false;
             return View(new DevExpress.XtraReports.Web.CachedReportSourceWeb(report));
         }
+        public ActionResult Requerimiento(String codigo)
+        {
+            Reports.Requisicion report = new Reports.Requisicion();
+            report.Parameters["parameter0"].Value = codigo;
+            report.Parameters["parameter1"].Value = codigo;
+            report.RequestParameters = false;
+            return View(new DevExpress.XtraReports.Web.CachedReportSourceWeb(report));
+        }
     }
 }

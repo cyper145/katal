@@ -167,6 +167,39 @@ namespace katal.conexion.model.dao
             return listComprobantes;
         }
 
+        public List<Gasto> findAllGastos()
+        {
+            List<Gasto> listGastos = new List<Gasto>();
+
+
+            string findAll = "SELECT Gastos_Codigo, Gastos_Descripcion FROM GASTOS ";
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Gasto gasto = new Gasto();
+                    gasto.Gastos_Codigo = read[0].ToString();
+                    gasto.Gastos_Descripcion = read[1].ToString();
+                    listGastos.Add(gasto);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return listGastos;
+        }
+
+
         public void update(Comprobante obj)
         {
             throw new NotImplementedException();

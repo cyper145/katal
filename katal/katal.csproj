@@ -300,6 +300,8 @@
     <Content Include="Views\Comprobante\Index.cshtml" />
     <Content Include="Views\Comprobante\GridViewPartial.cshtml" />
     <Content Include="Views\RequisionCompra\DateRangePicker.cshtml" />
+    <Content Include="Views\Report\Requerimiento.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectGasto.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -337,6 +339,7 @@
     <Compile Include="conexion\model.entity\Comprobante.cs" />
     <Compile Include="conexion\model.entity\Empresa.cs" />
     <Compile Include="conexion\model.entity\FormaPago.cs" />
+    <Compile Include="conexion\model.entity\Gasto.cs" />
     <Compile Include="conexion\model.entity\InsertOrder.cs" />
     <Compile Include="conexion\model.entity\Modulo.cs" />
     <Compile Include="conexion\model.entity\NumDocCompras.cs" />
@@ -423,6 +426,12 @@
     <Compile Include="Reports\ReportOrdenCompra.Designer.cs">
       <DependentUpon>ReportOrdenCompra.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports\Requisicion.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Requisicion.Designer.cs">
+      <DependentUpon>Requisicion.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Area\" />
@@ -446,6 +455,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\ReportOrdenCompra.resx">
       <DependentUpon>ReportOrdenCompra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Requisicion.resx">
+      <DependentUpon>Requisicion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

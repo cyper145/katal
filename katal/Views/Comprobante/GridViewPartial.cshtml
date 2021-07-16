@@ -1,5 +1,6 @@
 ﻿
 @using katal.conexion.model.entity;
+@using katal.Model;
 @model List<Comprobante>
 @{
 
@@ -69,6 +70,391 @@
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
 
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+
+
+        gridViewSettings.SetEditFormTemplateContent(c =>
+        {
+
+
+            Html.DevExpress().FormLayout(layoutSetting =>
+            {
+                layoutSetting.Name = "FormLayoutSetting";
+
+                layoutSetting.Width = Unit.Percentage(100);
+
+                layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+                layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+                layoutSetting.UseDefaultPaddings = false;
+
+
+
+                var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+                {
+
+                    groupSettings.ShowCaption = DefaultBoolean.False;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                    groupSettings.ColumnCount =12;
+                });
+                groupItem.Items.Add(i =>
+                {
+
+                    i.FieldName = "CORDEN";
+                    i.Caption = "Nro. Orden";
+
+                    i.ColumnSpan = 1;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.ReadOnly = true;
+                        t.Width = Unit.Percentage(25);
+                        // t.Properties.ClientSideEvents.Init = "onData";
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CCONCEPT";
+                    i.Caption = "Concepto";
+                    i.ColumnSpan = 1;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectGasto", new { Gastos_Codigo = DataBinder.Eval(c.DataItem, "CCONCEPT") });
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "descriptionGasto";
+                    i.ShowCaption =DefaultBoolean.False;
+                    i.ColumnSpan = 2;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.ReadOnly = true;
+                    });
+                });
+
+                groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Caption = "informacion principal";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                    groupSettings.ColumnCount = 12;
+                });
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "oc_ccodpro";
+                    i.Name = "datax";
+
+                    i.ShowCaption = DefaultBoolean.False;
+
+                    i.ColumnSpan = 8;
+                    i.SetNestedContent(() =>
+                    {
+
+                        Html.RenderAction("MultiSelectProveedor", new { CurrentCategory = DataBinder.Eval(c.DataItem, "oc_ccodpro") });
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_CRAZSOC";
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.ColumnSpan = 4;
+                    i.Visible = false;
+
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.ReadOnly = true;
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "RUC";
+                    i.Caption = "RUC:";
+                    i.ColumnSpan = 4;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.ReadOnly = true;
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "OC_SOLICITA";
+                    i.ColumnSpan = 4;
+                    i.Caption = " Solicitado por";
+                    i.NestedExtension().ComboBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                        t.Properties.ValueType = typeof(string);
+                        t.Properties.DataSource = GridViewHelper.GetSolitud();
+                        t.Properties.ValueField = "TCLAVE";
+                        t.Properties.TextField = "TDESCRI";
+                    });
+
+                });
+
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_DFECDOC";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Emisión";
+
+                    i.NestedExtension().DateEdit(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Date = DateTime.Now;
+                        t.Properties.ClientSideEvents.Init = "DateEmision";
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_DFECENT";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Entrega";
+
+                    i.NestedExtension().DateEdit(t =>
+                    {
+
+
+                        t.Date = new DateTime(1984, 06, 14);
+                        t.Width = Unit.Percentage(100);
+
+                    });
+                });
+
+
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_CDOCREF";
+                    i.Caption = "Doc Ref:";
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.ColumnSpan = 2;
+                    i.SetNestedContent(() =>
+                    {
+
+                        Html.RenderAction("MultiSelectDocRef", new { OC_CDOCREF = DataBinder.Eval(c.DataItem, "OC_CDOCREF") });
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_CNRODOCREF";
+                    i.ColumnSpan = 2;
+
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.SetNestedContent(() =>
+                    {
+
+                        Html.RenderAction("MultiSelectNroRef", new { NROREQUI = DataBinder.Eval(c.DataItem, "OC_CNRODOCREF") });
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_CFORPAG";
+                    i.ColumnSpan = 6;
+                    i.Caption = "Forma de Pago";
+                    i.NestedExtension().ComboBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.SelectedIndex = 0;
+                        t.Properties.ValueType = typeof(string);
+                        t.Properties.DataSource = GridViewHelper.GetFormaPago();
+                        t.Properties.ValueField = "COD_FP";
+                        t.Properties.TextField = "DES_FP";
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_CCODMON";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Moneda";
+                    i.NestedExtension().ComboBox(t =>
+                    {
+                        t.SelectedIndex = 0;
+
+                        t.Properties.ValueType = typeof(string);
+                        t.Properties.Items.Add("DOLARES AMERICANOS ", "ME");
+                        t.Properties.Items.Add("NUEVOS SOLES ", "MN");
+
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "COVMON_CODIGO";
+                    i.ColumnSpan = 2;
+                    i.Caption = "T. Cambio";
+                    i.NestedExtension().ComboBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.SelectedIndex = 0;
+                        t.Properties.ValueType = typeof(string);
+                        t.Properties.Items.Add("T/C COMPRA", "COM");
+                        t.Properties.Items.Add("T/C ESPECIAL ", "ESP");
+                        t.Properties.Items.Add("T/C  OTRA FECHA ", "FEC");
+                        t.Properties.Items.Add("T/C VENTA ", "VTA");
+                        t.Properties.ClientSideEvents.SelectedIndexChanged = "onchangeCambio";
+
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_NTIPCAM";
+                    i.ColumnSpan = 2;
+                    i.Caption = "";
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.ReadOnly = true;
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_CFACDIREC";
+                    i.ColumnSpan = 8;
+                    i.Caption = "Entregar en :";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_CCOTIZA";
+                    i.ColumnSpan = 4;
+                    i.Caption = "Cotizacion ";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    // reponsable
+                    i.FieldName = "OC_CSOLICT";
+                    i.Caption = "Doc Ref:";
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.ColumnSpan = 5;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectResponsable", new { oc_csolict = DataBinder.Eval(c.DataItem, "oc_csolict") });
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "RESPONSABLE_CODIGO";
+                    i.ColumnSpan = 1;
+                    i.Caption = "Cotizacion ";
+                    i.ShowCaption = DefaultBoolean.False;
+
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.ReadOnly = true;
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "OC_TIPO";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Tipó";
+
+
+                    i.NestedExtension().ComboBox(t =>
+                    {
+
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.SelectedIndex = 0;
+                        t.Properties.ValueType = typeof(int);
+                        t.Properties.Items.Add("Compra", 0);
+                        t.Properties.Items.Add("Servicio Fabric.", 1);
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "OC_PRINCIPAL";
+                    i.ColumnSpan = 4;
+                    i.Caption = "OC. Principal ";
+
+
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                    });
+                });
+                layoutSetting.Items.Add(itemSettings =>
+                {
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                    itemSettings.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("Toolbar", new { CurrentCategory = DataBinder.Eval(c.DataItem, "OC_CNUMORD") });
+                    });
+                });
+                layoutSetting.Items.Add(itemSettings =>
+                {
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                }).SetNestedContent(() =>
+                {
+                    ViewContext.Writer.Write("<div style='float:right'>");
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnUpdate";
+                            btnSettings.Text = "Grabar";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
+
+                            //I want to Hide Update Button when FirstName is "John"
+
+                        }).Render();
+
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnCancel";
+                            btnSettings.Text = "Cancel";
+                            btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";
+                        }).Render();
+                    ViewContext.Writer.Write("</div>");
+                });
+
+
+            }).Bind(ViewData["Object"] ?? c.DataItem).Render();
+
+        });
 
 
         gridViewSettings.Columns.Add(columnSettings =>

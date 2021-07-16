@@ -1,0 +1,37 @@
+﻿@Html.DevExpress().GridLookup(settings =>
+{
+    //settings.Properties.Caption = "Area:";
+
+    settings.Name = "gridLookupGastos";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "Comprobante", Action = "MultiSelectGasto", Gastos_Codigo = Model.Gastos_Codigo };
+
+    settings.KeyFieldName = "Gastos_Codigo";
+
+    //settings.CommandColumn.Visible = true;
+    // settings.CommandColumn.ShowSelectCheckbox = true;
+
+    settings.Columns.Add("Gastos_Codigo").Width = Unit.Percentage(10);
+    settings.Columns.Add("Gastos_Descripcion").Width = Unit.Percentage(90);
+
+    settings.Width = Unit.Percentage(100);
+
+    settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
+    settings.Properties.TextFormatString = "{1}";
+
+    settings.GridViewProperties.Settings.ShowFilterRow = true;
+    settings.GridViewProperties.Settings.ShowColumnHeaders = false;
+    settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
+    //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
+    settings.GridViewProperties.SettingsPager.EnableAdaptivity = false;
+    settings.GridViewProperties.SettingsPager.PageSize = 7;
+
+    //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
+
+    settings.DataBound = (sender, e) =>
+    {
+        var gridLookup = (MVCxGridLookup)sender;
+        gridLookup.GridView.Width = Unit.Percentage(100);
+    };
+}).BindList(ViewData["Gastos"]).Bind(Model.AREA_CODIGO).GetHtml()
+
+
