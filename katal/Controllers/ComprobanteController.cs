@@ -20,6 +20,10 @@ namespace katal.Controllers
             comprobanteNeg = new ComprobanteNeg();
 
             ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
+            if (user == null)
+            {
+
+            }
             this.BD = user.codEmpresa;
             tipoAnexoNeg = new TipoAnexoNeg(this.BD);
         }// GET: Comprobante

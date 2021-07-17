@@ -159,14 +159,14 @@
 
         }
         function DateEmision() {
-            console.log(OC_DFECDOC.GetText());
-            console.log("hollas");
-            if (OC_DFECDOC.GetText() == "") {
+            
+            if (DRECEPCIO.GetText() == "") {
                 let f = new Date();
-                OC_DFECDOC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
-
-                f.setDate(f.getDate() + 2);
-                OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+              //  OC_DFECDOC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                DRECEPCIO.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                DEMISION.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                //f.setDate(f.getDate() + 2);
+               // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
             }
 
 

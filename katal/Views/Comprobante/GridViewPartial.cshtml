@@ -115,79 +115,43 @@
                 {
                     i.FieldName = "CCONCEPT";
                     i.Caption = "Concepto";
-                    i.ColumnSpan = 2;
+                    i.ColumnSpan = 6;
                     i.SetNestedContent(() =>
                     {
                         Html.RenderAction("MultiSelectGasto", new { Gastos_Codigo = DataBinder.Eval(c.DataItem, "CCONCEPT") });
                     });
                 });
-                groupItem.Items.Add(i =>
-                {
 
-                    i.FieldName = "descriptionGasto";
-                    i.ShowCaption = DefaultBoolean.False;
-                    i.ColumnSpan = 4;
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                        t.ReadOnly = true;
-                        // t.Width = Unit.Percentage(25);
-                        // t.Properties.ClientSideEvents.Init = "onData";
-                    });
-                });
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "CTIPPROV";
                     i.Caption = "Anexo";
-                    i.ColumnSpan =2;
+                    i.ColumnSpan =6;
                     i.SetNestedContent(() =>
                     {
-                        Html.RenderAction("MultiSelectTipoAnexo", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CCONCEPT") });
+                        Html.RenderAction("MultiSelectTipoAnexo", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CTIPPROV") });
                     });
                 });
 
-                groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "descriptiontipoAnexo";
-                    i.ShowCaption = DefaultBoolean.False;
-                    i.ColumnSpan = 4;
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                        t.ReadOnly = true;
-                    });
-                });
+
 
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "ANEX_CODIGO";
                     i.ShowCaption = DefaultBoolean.False;
-                    i.ColumnSpan = 2;
+                    i.ColumnSpan = 6;
                     i.SetNestedContent(() =>
                     {
                         Html.RenderAction("MultiSelectAnexo", new { ANEX_CODIGO = DataBinder.Eval(c.DataItem, "ANEX_CODIGO") });
                     });
                 });
-                groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "ANEX_DESCRIPCION";
-                    i.ShowCaption = DefaultBoolean.False;
-                    i.ColumnSpan = 4;
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                        t.ReadOnly = true;
-                    });
-                });
+
                 groupItem.Items.Add(i =>
 
                 {
                     i.FieldName = "TIPODOCU_CODIGO";
                     i.Caption ="Documento";
-                    i.ColumnSpan = 2;
+                    i.ColumnSpan = 4;
 
                     i.SetNestedContent(() =>
                     {
@@ -195,19 +159,7 @@
                     });
                 });
 
-                groupItem.Items.Add(i =>
 
-                {
-                    i.FieldName = "descriptiontipoDocumento";
-                    i.ShowCaption = DefaultBoolean.False;
-                    i.ColumnSpan = 3;
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                        t.ReadOnly = true;
-                    });
-                });
                 groupItem.Items.Add(i =>
 
                 {
@@ -231,19 +183,19 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                       // t.ReadOnly = true;
+                        // t.ReadOnly = true;
                     });
                 });
                 groupItem.Items.Add(i =>
 
                 {
                     i.FieldName = "o/c-o/s";
-                    i.ColumnSpan = 2;
+                    i.ColumnSpan = 3;
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                       // t.ReadOnly = true;
+                        // t.ReadOnly = true;
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -256,7 +208,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                       // t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.Init = "DateEmision";
                     });
                 });
 
@@ -271,20 +223,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                       // t.ReadOnly = true;
-                    });
-                });
-
-                groupItem.Items.Add(i =>
-
-                {
-                    i.FieldName = "dias";
-                    i.ColumnSpan = 2;
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                       // t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.Init = "DateEmision";
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -300,6 +239,19 @@
                         //t.ReadOnly = true;
                     });
                 });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "dias";
+                    i.ColumnSpan = 2;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        // t.ReadOnly = true;
+                    });
+                });
+
 
                 groupItem.Items.Add(i =>
 
@@ -311,7 +263,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                      //  t.ReadOnly = true;
+                        //  t.ReadOnly = true;
                     });
                 });
 
@@ -649,13 +601,13 @@
                     groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
 
                     groupSettings.ColumnCount = 12;
-                    groupSettings.ColumnSpan = 6;
+                    groupSettings.ColumnSpan = 8;
                 });
 
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "RefComprobante";
-                    i.ColumnSpan = 2;
+                    i.ColumnSpan = 3;
                     i.Caption = "Ref.Comprobante";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -668,7 +620,7 @@
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "dat1";
-                    i.ColumnSpan = 2;
+                    i.ColumnSpan = 1;
                     i.ShowCaption =DefaultBoolean.False;
                     i.NestedExtension().TextBox(t =>
                     {
@@ -681,7 +633,7 @@
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "dat2";
-                    i.ColumnSpan = 4;
+                    i.ColumnSpan = 3;
                     i.ShowCaption = DefaultBoolean.False;
                     i.NestedExtension().TextBox(t =>
                     {
