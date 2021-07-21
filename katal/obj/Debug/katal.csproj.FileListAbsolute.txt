@@ -873,6 +873,7 @@ C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.Reports.Report2.resourc
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.Reports.Report3.resources
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.Reports.ReportOrden.resources
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.Reports.ReportOrdenCompra.resources
+C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.Reports.Requisicion.resources
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.csproj.GenerateResource.cache
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.dll.licenses
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.csproj.CoreCompileInputs.cache
@@ -880,4 +881,3 @@ C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.csproj.CopyComplete
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.dll
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.pdb
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.csproj.AssemblyReference.cache
-C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.Reports.Requisicion.resources

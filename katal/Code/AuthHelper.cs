@@ -21,7 +21,10 @@ namespace katal.Model
 
         public static bool SignIn(string userName, string password , int rol_id ,string empresa, string rol,string codEmpresa)
         {
-            HttpContext.Current.Session["User"] = CreateDefualtUser(userName, empresa, rol, codEmpresa);
+
+            ApplicationUser user = CreateDefualtUser(userName, empresa, rol, codEmpresa);
+            HttpContext.Current.Session["User"] = user;
+            GridViewHelper.user = user;
             HttpContext.Current.Session["Rol"] = rol_id; // Mock user data
             return true;
         }

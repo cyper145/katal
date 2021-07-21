@@ -14,15 +14,19 @@ namespace katal.Controllers
 
         private ComprobanteNeg comprobanteNeg;
         private TipoAnexoNeg tipoAnexoNeg;
+        private DestinoNeg destinoNeg;
+        private ResponsableCmpNeg responsable;
+
         private string BD;
         public ComprobanteController()
         {
+            responsable = new ResponsableCmpNeg();
             comprobanteNeg = new ComprobanteNeg();
-
+            destinoNeg = new DestinoNeg();
             ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
             if (user == null)
             {
-
+                user = GridViewHelper.user;
             }
             this.BD = user.codEmpresa;
             tipoAnexoNeg = new TipoAnexoNeg(this.BD);
@@ -153,9 +157,9 @@ namespace katal.Controllers
         }
         public ActionResult MultiSelectAnexo(string ANEX_CODIGO = "-1")
         {
-            ViewData["Anexo"] = tipoAnexoNeg.findAllAnexo();
+             ViewData["Anexo"] = tipoAnexoNeg.findAllAnexo();
             if (ANEX_CODIGO == "-1")
-                ANEX_CODIGO = "";
+                ANEX_CODIGO = "-1";
             return PartialView("MultiSelectAnexo", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
 
         }
@@ -165,6 +169,34 @@ namespace katal.Controllers
             if (TIPDOC_CODIGO == "-1")
                 TIPDOC_CODIGO = "";
             return PartialView("MultiSelectTipoDoc", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
+
+        }
+
+        public ActionResult MultiSelectDestino(string CO_C_CODIG = "-1")
+        {
+            ViewData["Destino"] = destinoNeg.findAll();
+            if (CO_C_CODIG == "-1")
+                CO_C_CODIG = "";
+            return PartialView("MultiSelectDestino", new Destino() { CO_C_CODIG = CO_C_CODIG });
+
+        }
+        public ActionResult MultiSelectResponsable(string oc_csolict = "-1")
+        {
+           
+
+            ViewData["responsable"] = responsable.findAll();
+            if (oc_csolict == "-1")
+                oc_csolict = "";
+            return PartialView("MultiSelectResponsable", new ResponsableCompra() { RESPONSABLE_CODIGO = oc_csolict });
+
+        }
+
+        public ActionResult MultiSelectTipoDocRef(string TIPDOC_CODIGO = "-1")
+        {
+            ViewData["TipoDocRef"] = tipoAnexoNeg.findAllTipoDocumento();
+            if (TIPDOC_CODIGO == "-1")
+                TIPDOC_CODIGO = "";
+            return PartialView("MultiSelectTipoDocRef", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
 
         }
 

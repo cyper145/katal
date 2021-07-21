@@ -73,6 +73,7 @@
 
 
 
+
         gridViewSettings.SetEditFormTemplateContent(c =>
         {
 
@@ -97,6 +98,7 @@
                     groupSettings.ColumnCount = 12;
                     groupSettings.ColumnSpan = 12;
                 });
+
                 groupItem.Items.Add(i =>
                 {
 
@@ -269,7 +271,7 @@
 
 
                 // cuarta fila
-
+                /*
                 groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
                 {
                     groupSettings.Caption = "Converion Monetaria";
@@ -279,19 +281,34 @@
                     groupSettings.ColumnSpan = 6;
                 });
 
+                */
 
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "moneda2";
+                    // i.ColumnSpan = 3;
+                    i.ColumnSpan =12;
+                    i.RowSpan = 2;
+
+                    i.Caption = "Converion Monetaria";
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().Label(t =>
+                    {
+
+                    });
+
+                });
 
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "moneda";
-                    i.ColumnSpan = 3;
+                    // i.ColumnSpan = 3;
+                    i.ColumnSpan = 2;
                     i.Caption = "moneda";
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-
-
                     });
 
                 });
@@ -301,7 +318,8 @@
 
                 {
                     i.FieldName = "COVMON_CODIGO";
-                    i.ColumnSpan = 3;
+                    //i.ColumnSpan = 3;
+                    i.ColumnSpan = 2;
                     i.ShowCaption = DefaultBoolean.False;
                     i.NestedExtension().ComboBox(t =>
                     {
@@ -319,24 +337,10 @@
                 });
 
                 groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "valor";
-                    i.ColumnSpan =2;
-                    i.ShowCaption = DefaultBoolean.False;
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                    });
-
-                });
-
-
-                groupItem.Items.Add(i =>
 
                 {
                     i.FieldName = "OC_DFECDOC";
-                    i.ColumnSpan = 4;
+                    i.ColumnSpan = 2;
                     i.ShowCaption = DefaultBoolean.False;
 
                     i.NestedExtension().DateEdit(t =>
@@ -350,8 +354,24 @@
 
                 groupItem.Items.Add(i =>
                 {
+                    i.FieldName = "valor";
+                    i.ColumnSpan =1;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+
+                });
+
+
+
+
+                groupItem.Items.Add(i =>
+                {
                     i.FieldName = "t/c";
-                    i.ColumnSpan = 6;
+                    i.ColumnSpan = 2;
                     i.Caption ="T/C";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -362,9 +382,9 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "t/c especial";
-                    i.ColumnSpan = 6;
-                    i.Caption = "T/C Especial";
+                    i.FieldName = "t_c";
+                    i.ColumnSpan = 3;
+                    i.Caption = "dar";
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
@@ -373,19 +393,23 @@
 
                 });
 
-                groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
-                {
-                    groupSettings.Caption = "Converion Compra";
-                    groupSettings.ShowCaption = DefaultBoolean.False;
-                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
 
-                    groupSettings.ColumnCount = 12;
-                    groupSettings.ColumnSpan = 6;
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "Acomprasd";
+                    i.ColumnSpan = 12;
+                    i.ShowCaption =DefaultBoolean.False;
+                    i.NestedExtension().Label(t =>
+                    {
+
+                    });
+
                 });
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "Acompras";
-                    i.ColumnSpan = 12;
+                    i.ColumnSpan = 2;
                     i.Caption = "A compras?";
                     i.NestedExtension().CheckBox(t =>
                     {
@@ -395,47 +419,39 @@
 
                 });
 
+
                 groupItem.Items.Add(i =>
+
                 {
-                    i.FieldName = "Destino";
-                    i.ColumnSpan = 4;
+                    i.FieldName = "CDESTCOMP";
                     i.Caption = "Destino";
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                    });
+                    i.ColumnSpan = 4;
 
-                });
-                groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "Destino complemeto";
-                    i.ColumnSpan = 8;
-                    i.ShowCaption = DefaultBoolean.False;
-                    i.NestedExtension().TextBox(t =>
+                    i.SetNestedContent(() =>
                     {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
+                        Html.RenderAction("MultiSelectDestino", new { CO_C_CODIG = DataBinder.Eval(c.DataItem, "CDESTCOMP") });
                     });
-
                 });
+
+
+
 
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "igvaplicar";
-                    i.ColumnSpan = 6;
+                    i.ColumnSpan = 3;
                     i.Caption = "igv por Aplicar";
                     i.NestedExtension().CheckBox(t =>
                     {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
+
                     });
 
                 });
+
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "defraccion";
-                    i.ColumnSpan = 6;
+                    i.ColumnSpan = 3;
                     i.Caption = "defraccion";
                     i.NestedExtension().ButtonEdit(t =>
                     {
@@ -445,21 +461,49 @@
 
                 });
 
-
-                groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+                // otro
+                groupItem.Items.Add(i =>
                 {
-                    groupSettings.Caption = "Montos";
+                    i.FieldName = "space";
+                    i.ColumnSpan = 12;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().Label(t =>
+                    {
 
-                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                    });
 
-                    groupSettings.ColumnCount = 12;
-                    groupSettings.ColumnSpan = 12;
+                });
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "RESPONSABLE_CODIGO";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Responsable";
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectResponsable", new { oc_csolict = DataBinder.Eval(c.DataItem, "RESPONSABLE_CODIGO") });
+                    });
+
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CFORMPAGO";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Forma Pago";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                    });
+
                 });
 
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "TASAIGV";
-                    i.ColumnSpan = 4;
+                    i.ColumnSpan =3;
                     i.Caption = "Tasa IGV";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -471,7 +515,7 @@
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "Baseimponible";
-                    i.ColumnSpan = 4;
+                    i.ColumnSpan = 3;
                     i.Caption = "Base imponible";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -480,10 +524,26 @@
                     });
 
                 });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CDESCRIPC";
+                    i.ColumnSpan = 6;
+                    i.RowSpan = 2;
+                    i.Caption = "glosa";
+                    i.NestedExtension().Memo(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.Rows = 3;
+                    });
+
+                });
+
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "Importe";
-                    i.ColumnSpan = 4;
+                    i.ColumnSpan = 3;
                     i.Caption = "Importe";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -495,7 +555,7 @@
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "MontoIgv";
-                    i.ColumnSpan = 4;
+                    i.ColumnSpan = 3;
                     i.Caption = "Monto Igv";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -507,7 +567,7 @@
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "MontoTotal";
-                    i.ColumnSpan = 4;
+                    i.ColumnSpan = 3;
                     i.Caption = "Monto Total";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -519,7 +579,7 @@
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "MontoPagar";
-                    i.ColumnSpan = 4;
+                    i.ColumnSpan = 3;
                     i.Caption = "Monto Pagar";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -532,95 +592,39 @@
 
 
 
-                groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
-                {
-                    groupSettings.Caption = "Detalles";
 
-                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
 
-                    groupSettings.ColumnCount = 12;
-                    groupSettings.ColumnSpan = 12;
-                });
+
+
+
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "responsable";
-                    i.ColumnSpan =2;
-                    i.Caption = "Responsable";
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                    });
-
-                });
-                groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "responsableDescription";
-                    i.ColumnSpan = 4;
+                    i.FieldName = "space2";
+                    i.ColumnSpan = 12;
                     i.ShowCaption = DefaultBoolean.False;
-                    i.NestedExtension().TextBox(t =>
+                    i.NestedExtension().Label(t =>
                     {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                    });
-
-                });
-                groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "glosa";
-                    i.ColumnSpan = 6;
-                    i.RowSpan = 2;
-                    i.Caption = "glosa";
-                    i.NestedExtension().Memo(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                        t.Properties.Rows = 2;
-                    });
-
-                });
-                groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "Formapago";
-                    i.ColumnSpan = 6;
-                    i.Caption = "Forma Pago";
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
 
                     });
 
                 });
 
-                groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
-                {
-                    groupSettings.Caption = "otros";
-                    groupSettings.ShowCaption = DefaultBoolean.False;
-                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
-
-                    groupSettings.ColumnCount = 12;
-                    groupSettings.ColumnSpan = 8;
-                });
-
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "RefComprobante";
-                    i.ColumnSpan = 3;
+                    i.FieldName = "CTDREFER";
+                    i.ColumnSpan = 4;
                     i.Caption = "Ref.Comprobante";
-                    i.NestedExtension().TextBox(t =>
+                    i.SetNestedContent(() =>
                     {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-
+                        Html.RenderAction("MultiSelectTipoDocRef", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "TIPODOCU_CODIGO") });
                     });
 
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "dat1";
-                    i.ColumnSpan = 1;
+                    i.FieldName = "CSERREFER";
+                    i.ColumnSpan = 2;
                     i.ShowCaption =DefaultBoolean.False;
                     i.NestedExtension().TextBox(t =>
                     {
@@ -632,8 +636,8 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "dat2";
-                    i.ColumnSpan = 3;
+                    i.FieldName = "CNUMREFER";
+                    i.ColumnSpan = 2;
                     i.ShowCaption = DefaultBoolean.False;
                     i.NestedExtension().TextBox(t =>
                     {
@@ -645,8 +649,8 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "dat3";
-                    i.ColumnSpan = 4;
+                    i.FieldName = "CCODRUC";
+                    i.ColumnSpan = 2;
                     i.ShowCaption = DefaultBoolean.False;
                     i.NestedExtension().TextBox(t =>
                     {
@@ -659,7 +663,7 @@
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "RentaDomiciliado";
-                    i.ColumnSpan = 12;
+                    i.ColumnSpan = 2;
                     i.Caption = "Renta No Domiciliado";
                     i.NestedExtension().CheckBox(t =>
                     {

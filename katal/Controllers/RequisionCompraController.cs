@@ -185,8 +185,8 @@ namespace katal.Controllers
                 GridViewHelper.GetDetalles();
                 return PartialView("Detail", GridViewHelper.detalleRequisicions);
             }
-
-            return PartialView("Detail", requisicionNeg.findAllDetail(requisicionCompra.NROREQUI));
+            GridViewHelper.detalleRequisicions = requisicionNeg.findAllDetail(requisicionCompra.NROREQUI);
+            return PartialView("Detail", GridViewHelper.detalleRequisicions);
         }
         public ActionResult DetailRequestPartial(string NROREQUI = "-1")
         {

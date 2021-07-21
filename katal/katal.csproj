@@ -305,6 +305,9 @@
     <Content Include="Views\Comprobante\MultiSelectTipoAnexo.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectAnexo.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectTipoDoc.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectDestino.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectResponsable.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectTipoDocRef.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -327,6 +330,7 @@
     <Compile Include="conexion\model.dao\ComprobanteDao.cs" />
     <Compile Include="conexion\model.dao\Conexion.cs" />
     <Compile Include="conexion\model.dao\Conversion.cs" />
+    <Compile Include="conexion\model.dao\DestinoDao.cs" />
     <Compile Include="conexion\model.dao\EmpresaDao.cs" />
     <Compile Include="conexion\model.dao\Obligatorio.cs" />
     <Compile Include="conexion\model.dao\OrdenCompraDao.cs" />
@@ -341,6 +345,7 @@
     <Compile Include="conexion\model.entity\Articulo.cs" />
     <Compile Include="conexion\model.entity\CentroCosto.cs" />
     <Compile Include="conexion\model.entity\Comprobante.cs" />
+    <Compile Include="conexion\model.entity\Destino.cs" />
     <Compile Include="conexion\model.entity\Empresa.cs" />
     <Compile Include="conexion\model.entity\FormaPago.cs" />
     <Compile Include="conexion\model.entity\Gasto.cs" />
@@ -360,6 +365,7 @@
     <Compile Include="conexion\model.neg\AreaNeg.cs" />
     <Compile Include="conexion\model.neg\ArticuloNeg.cs" />
     <Compile Include="conexion\model.neg\ComprobanteNeg.cs" />
+    <Compile Include="conexion\model.neg\DestinoNeg.cs" />
     <Compile Include="conexion\model.neg\EmpresaNeg.cs" />
     <Compile Include="conexion\model.neg\OrdenCompraNeg.cs" />
     <Compile Include="conexion\model.neg\PaisNeg.cs" />

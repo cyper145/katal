@@ -92,7 +92,7 @@ namespace katal.conexion.model.dao
                 item += "('" + obj.NROREQUI + "',";
                 item += " 'RQ','" + element.codpro + "'," + element.CANTID + ",'P',";
                 item += "'" + FECREQUI + "','" + element.DESCPRO + "'";
-                item += ",'" + element.UNIPRO + "'," + nextDocumet + ",'" + obj.CODSOLIC + "', '" + element.REMAQ + "',";
+                item += ",'" + element.UNIPRO + "'," + nextDocumet + ",'" + element.CENCOST + "', '" + element.REMAQ + "',";
                 item +=  "" + element.SALDO + ",'" +element.ESPTECNICA+ "')\n";             
             });
            

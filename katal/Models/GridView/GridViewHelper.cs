@@ -11,6 +11,7 @@ namespace katal.Model
     {
 
 
+        public  static ApplicationUser user = new ApplicationUser();// solucion temporal
         public  static List<DetalleOrdenCompra> detalles = new List<DetalleOrdenCompra>();
 
         public static List<OrdenCompra> OrdenCompras = new List<OrdenCompra>();
