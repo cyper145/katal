@@ -349,6 +349,7 @@
     <Compile Include="conexion\model.entity\Empresa.cs" />
     <Compile Include="conexion\model.entity\FormaPago.cs" />
     <Compile Include="conexion\model.entity\Gasto.cs" />
+    <Compile Include="conexion\model.entity\gastoTipoAnexo.cs" />
     <Compile Include="conexion\model.entity\InsertOrder.cs" />
     <Compile Include="conexion\model.entity\Modulo.cs" />
     <Compile Include="conexion\model.entity\NumDocCompras.cs" />

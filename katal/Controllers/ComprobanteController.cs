@@ -149,8 +149,18 @@ namespace katal.Controllers
 
 
        
-        public ActionResult MultiSelectGasto(string Gastos_Codigo = "-1")
+        public ActionResult MultiSelectGasto(string Gastos_Codigo = "-1", FormCollection dataR = null)
         {
+            if (dataR != null)
+            {
+                string v = dataR["gridLookupGastos"];
+                if (v != null && v != "")
+                {
+                    GridViewHelper.NROREQUI = v;
+                }
+
+            }
+
             ViewData["Gastos"] = comprobanteNeg.findAllGastos();
             if (Gastos_Codigo == "-1")
                 Gastos_Codigo = "";
@@ -211,5 +221,13 @@ namespace katal.Controllers
 
         }
 
+
+        // evento de cambiar 
+       // public JsonResult CargarTipoAnexoMoneda()
+       // {
+            //var  dar= Request.Params;
+           // string Gastos_Codigo = "";
+          //  return Json(new { document = userNeg.nextNroDocument() }, JsonRequestBehavior.AllowGet);
+//}
     }
 }

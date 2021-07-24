@@ -13,17 +13,19 @@ namespace katal.conexion.model.dao
 
         private Conexion objConexion;
         private SqlCommand comando;
-        private string table;
+        private string Bd;
 
         public ComprobanteDao(string bd)
         {
-            table = bd;
+            Bd = bd;
             ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
 
             if (user != null)
             {
                 objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
-            }///0      
+            }
+            
+            ///0      
         }
         /*
     public void create(Comprobante obj)
@@ -571,9 +573,9 @@ namespace katal.conexion.model.dao
             string msAnoMesProc = anios + mes;
             //string findAll = $"SELECT * FROM {table} WHERE CAMESPROC='" + msAnoMesProc +"' AND CSALDINI=0";
 
+            string conexion = Conexion.CadenaGeneral("014", "BDCOMUN", "COMPROBANTECAB");
 
-
-            string findAll = "SELECT * FROM COMPROBANTECAB  WHERE CAMESPROC='" + msAnoMesProc + "' AND CSALDINI=0";
+            string findAll = $"SELECT * FROM  {conexion}  WHERE CAMESPROC='" + msAnoMesProc + "' AND CSALDINI=0";
             try
             {
                 comando = new SqlCommand(findAll, objConexion.getCon());
@@ -694,8 +696,8 @@ namespace katal.conexion.model.dao
         {
             List<Gasto> listGastos = new List<Gasto>();
 
-
-            string findAll = "SELECT Gastos_Codigo, Gastos_Descripcion FROM GASTOS ";
+            string conexion = Conexion.CadenaGeneral("014", "BDCTAPAG", "Gastos");
+            string findAll = $"SELECT Gastos_Codigo, Gastos_Descripcion from {conexion} ";
             try
             {
                 comando = new SqlCommand(findAll, objConexion.getCon());
@@ -721,7 +723,44 @@ namespace katal.conexion.model.dao
             }
             return listGastos;
         }
+        public Gasto findAllGastosDetail(string codigo)
+        {
+           
 
+            string conexion = Conexion.CadenaGeneral("014", "BDCTAPAG", "Gastos");
+            string findAll = $"GASTOS_CODIGO, GASTOS_DESCRIPCION, GASTOS_MONEDA, GASTOS_HONORARIO, GASTOS_CUENTACON,GASTOS_DSCTO1, GASTOS_DSCTO2 FROM {conexion} WHERE GASTOS_CODIGO = '" + codigo + "'" ;
+            Gasto gasto = new Gasto();
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {                    
+                    gasto.Gastos_Codigo = read[0].ToString();
+                    gasto.Gastos_Descripcion = read[1].ToString();
+                    gasto.Gastos_Moneda= read[2].ToString();
+                    gasto.Gastos_Honorario= read[3].ToString();
+                    gasto.Gastos_CuentaCon= read[4].ToString();
+                    gasto.Gastos_Dscto1= read[5].ToString();
+                    gasto.Gastos_Dscto2= read[6].ToString();
+                   
+                }
+                return gasto;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            
+        }
+       
 
         public void update(Comprobante obj)
         {

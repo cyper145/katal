@@ -10,10 +10,12 @@ namespace katal.conexion.model.neg
     public class ComprobanteNeg
     {
         ComprobanteDao objComprobanteDao;
+        TipoAnexoDao anexoDao;
         public ComprobanteNeg()
         {
-            string bd = "[014BDCOMUN].[dbo].[COMPROBANTECAB]";// modificar
+            string bd = "014";// modificar
             objComprobanteDao = new ComprobanteDao(bd);
+            anexoDao = new TipoAnexoDao(bd);
         }
         public List<Comprobante> findAll()
         {
@@ -22,5 +24,15 @@ namespace katal.conexion.model.neg
         public List<Gasto> findAllGastos(){
             return objComprobanteDao.findAllGastos();
         }
+        public gastoTipoAnexo  cargarChangeTipoGasto(string codigo)
+        {
+            gastoTipoAnexo gastoTipoAnexo = new gastoTipoAnexo();
+            Gasto gasto=  objComprobanteDao.findAllGastosDetail(codigo);
+            string codigoAnexo = anexoDao.findAllDetail(gasto.Gastos_CuentaCon);
+            gastoTipoAnexo.gasto = gasto;
+            gastoTipoAnexo.codigoTipoAnexo = codigoAnexo;
+            return gastoTipoAnexo;
+        }
+
     }
 }

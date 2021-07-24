@@ -53,5 +53,10 @@ namespace katal.conexion.model.dao
             //return $"data source = SERVIDOR; initial catalog = {nameBaseDatos}; user id = SOPORTE; password = SOPORTE";
             return $"Data Source=DESKTOP-RDGSDMQ;Initial Catalog={nameBaseDatos}; Integrated Security=True";
         }
+        public static string CadenaGeneral(string codigo, string nameBaseDatosgeneral,string tabla)
+        {
+            string BD = $"{codigo}{nameBaseDatosgeneral}";
+            return $"[{BD}].[dbo].[{tabla}] ";
+        }
     }
 }

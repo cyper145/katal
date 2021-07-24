@@ -49,8 +49,36 @@ namespace katal.conexion.model.dao
             }
             return listTipos;
         }
+        public string findAllDetail(string cuentas)
+        {
+         
+            string conexion = Conexion.CadenaGeneral(BD, "BDCONTABILIDAD", "PLAN_CUENTA_NACIONAL");
+            string codigoAnexo="";
+            string findAll = $"SELECT TIPOANEX_CODIGO, TIPOANEX_DESCRIPCION FROM {conexion} WHERE PLANCTA_CODIGO='"+ cuentas + "'";
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    codigoAnexo = read[0].ToString();                                      
+                }
+                return codigoAnexo;
+            }
+            catch (Exception)
+            {
 
-
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+          
+        }
+     
         public List<Anexo> findAllAnexo()
         {
             List<Anexo> listAnexo = new List<Anexo>();
