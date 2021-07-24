@@ -165,7 +165,7 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "nose1";
+                    i.FieldName = "CSERIE";
                     i.ColumnSpan = 1;
                     i.ShowCaption = DefaultBoolean.False;
                     i.NestedExtension().TextBox(t =>
@@ -178,7 +178,7 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "nose2";
+                    i.FieldName = "CNUMERO";
                     i.ColumnSpan = 1;
                     i.ShowCaption = DefaultBoolean.False;
                     i.NestedExtension().TextBox(t =>
@@ -191,8 +191,9 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "o/c-o/s";
+                    i.FieldName = "CAOCOMPRA";
                     i.ColumnSpan = 3;
+                    i.Caption = "O/C-O/S";
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
@@ -244,7 +245,7 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "dias";
+                    i.FieldName = "DIASPAGO";
                     i.ColumnSpan = 2;
                     i.NestedExtension().TextBox(t =>
                     {
@@ -258,7 +259,7 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "transferir";
+                    i.FieldName = "LPASOIMP";
                     i.Caption = "Transferir a cuentas por pagar";
                     i.ColumnSpan = 4;
                     i.NestedExtension().CheckBox(t =>
@@ -285,7 +286,7 @@
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "moneda2";
+                    i.FieldName = "MONEDA";
                     // i.ColumnSpan = 3;
                     i.ColumnSpan =12;
                     i.RowSpan = 2;
@@ -301,10 +302,10 @@
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "moneda";
+                    i.FieldName = "TIPOMON_CODIGO";
                     // i.ColumnSpan = 3;
                     i.ColumnSpan = 2;
-                    i.Caption = "moneda";
+                    i.Caption = "Moneda";
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
@@ -317,10 +318,11 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "COVMON_CODIGO";
+
+                    i.FieldName = "CONVERSION_CODIGO";
                     //i.ColumnSpan = 3;
                     i.ColumnSpan = 2;
-                    i.ShowCaption = DefaultBoolean.False;
+                    i.Caption = "Tpo. Conv.";
                     i.NestedExtension().ComboBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
@@ -339,7 +341,7 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "OC_DFECDOC";
+                    i.FieldName = "DCONTAB";
                     i.ColumnSpan = 2;
                     i.ShowCaption = DefaultBoolean.False;
 
@@ -354,7 +356,7 @@
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "valor";
+                    i.FieldName = "COVMON_DESCRIPCION";
                     i.ColumnSpan =1;
                     i.ShowCaption = DefaultBoolean.False;
                     i.NestedExtension().TextBox(t =>
@@ -370,7 +372,7 @@
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "t/c";
+                    i.FieldName = "TipoCambio_Valor";
                     i.ColumnSpan = 2;
                     i.Caption ="T/C";
                     i.NestedExtension().TextBox(t =>
@@ -382,9 +384,9 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "t_c";
+                    i.FieldName = "TipoCambio_Valor12";
                     i.ColumnSpan = 3;
-                    i.Caption = "dar";
+                    i.Caption = "T/C Especial";
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
@@ -406,10 +408,59 @@
                     });
 
                 });
+
+
+
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "CDESTCOMP";
+                    i.Caption = "Destino";
+                    i.ColumnSpan = 3;
+
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectDestino", new { CO_C_CODIG = DataBinder.Eval(c.DataItem, "CDESTCOMP") });
+                    });
+                });
+
+                groupItem.Items.Add(i =>
+
+                {
+
+                    i.FieldName = "CO_L_RETE";
+                    //i.ColumnSpan = 3;
+                    i.ColumnSpan = 3;
+                    i.Caption = "Retención IGV";
+                    i.NestedExtension().ComboBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.SelectedIndex = 0;
+                        t.Properties.ValueType = typeof(string);
+                        t.Properties.Items.Add("SI", "1");
+                        t.Properties.Items.Add("NO ", "0");
+                      
+                        //t.Properties.ClientSideEvents.SelectedIndexChanged = "onchangeCambio";
+
+                    });
+                });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "Acompras";
-                    i.ColumnSpan = 2;
+                    i.FieldName = "DAR";
+                    i.ColumnSpan =3;
+                    i.Caption = "Defraccion";
+                    i.NestedExtension().ButtonEdit(t =>
+                    {
+
+                    });
+
+                });
+               
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "ESTCOMPRA";
+                    i.ColumnSpan = 1;
                     i.Caption = "A compras?";
                     i.NestedExtension().CheckBox(t =>
                     {
@@ -420,46 +471,21 @@
                 });
 
 
-                groupItem.Items.Add(i =>
-
-                {
-                    i.FieldName = "CDESTCOMP";
-                    i.Caption = "Destino";
-                    i.ColumnSpan = 4;
-
-                    i.SetNestedContent(() =>
-                    {
-                        Html.RenderAction("MultiSelectDestino", new { CO_C_CODIG = DataBinder.Eval(c.DataItem, "CDESTCOMP") });
-                    });
-                });
-
-
 
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "igvaplicar";
-                    i.ColumnSpan = 3;
-                    i.Caption = "igv por Aplicar";
+                    i.FieldName = "CIGVAPLIC";
+                    i.ColumnSpan = 1;
+                    i.Caption = "IGV por Aplicar";
                     i.NestedExtension().CheckBox(t =>
                     {
-
+                        t.Width = Unit.Percentage(10);
                     });
 
                 });
 
-                groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "defraccion";
-                    i.ColumnSpan = 3;
-                    i.Caption = "defraccion";
-                    i.NestedExtension().ButtonEdit(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                    });
 
-                });
 
                 // otro
                 groupItem.Items.Add(i =>
@@ -502,7 +528,7 @@
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "TASAIGV";
+                    i.FieldName = "NTASAIGV";
                     i.ColumnSpan =3;
                     i.Caption = "Tasa IGV";
                     i.NestedExtension().TextBox(t =>
@@ -514,7 +540,7 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "Baseimponible";
+                    i.FieldName = "NBASEIMP";
                     i.ColumnSpan = 3;
                     i.Caption = "Base imponible";
                     i.NestedExtension().TextBox(t =>
@@ -542,7 +568,7 @@
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "Importe";
+                    i.FieldName = "NPERCEPCION";
                     i.ColumnSpan = 3;
                     i.Caption = "Importe";
                     i.NestedExtension().TextBox(t =>
@@ -554,7 +580,7 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "MontoIgv";
+                    i.FieldName = "NIGV";
                     i.ColumnSpan = 3;
                     i.Caption = "Monto Igv";
                     i.NestedExtension().TextBox(t =>
@@ -566,7 +592,7 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "MontoTotal";
+                    i.FieldName = "NIMPORTE";
                     i.ColumnSpan = 3;
                     i.Caption = "Monto Total";
                     i.NestedExtension().TextBox(t =>
@@ -578,7 +604,7 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "MontoPagar";
+                    i.FieldName = "MontoPagartOTAL";// CALCULADO
                     i.ColumnSpan = 3;
                     i.Caption = "Monto Pagar";
                     i.NestedExtension().TextBox(t =>
@@ -588,15 +614,6 @@
                     });
 
                 });
-
-
-
-
-
-
-
-
-
 
                 groupItem.Items.Add(i =>
                 {

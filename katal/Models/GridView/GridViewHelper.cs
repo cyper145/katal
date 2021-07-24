@@ -15,7 +15,7 @@ namespace katal.Model
         public  static List<DetalleOrdenCompra> detalles = new List<DetalleOrdenCompra>();
 
         public static List<OrdenCompra> OrdenCompras = new List<OrdenCompra>();
-
+        public static List<Comprobante> Comprobantes= new List<Comprobante>();
         public static List<DetalleRequisicion> detalleRequisicions = new List<DetalleRequisicion>();
         public static List<RequisicionCompra> requisicionCompras = new List<RequisicionCompra>();
         public static string OC_CDOCREF ="";

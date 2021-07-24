@@ -35,12 +35,13 @@ namespace katal.Controllers
         {
 
             List<Comprobante> comp = comprobanteNeg.findAll();
-            return View(comp);
+            GridViewHelper.Comprobantes = comp;
+            return View(GridViewHelper.Comprobantes);
         }
         public ActionResult GridViewPartial()
         {
-            List<Comprobante> comp = comprobanteNeg.findAll();
-            return PartialView("GridViewPartial", comp);
+            //List<Comprobante> comp = comprobanteNeg.findAll();
+            return PartialView("GridViewPartial", GridViewHelper.Comprobantes);
         }
 
         [ValidateAntiForgeryToken]
@@ -55,9 +56,18 @@ namespace katal.Controllers
 
             return GridViewPartial();
         }
-        [ValidateAntiForgeryToken]
-        public ActionResult GridViewAddNewPartial(OrdenCompra issue, FormCollection data)
+        private void PerformDelete(string codigo)
         {
+            Comprobante aux = GridViewHelper.Comprobantes.Find(element => element.codigo == codigo);
+            GridViewHelper.Comprobantes.Remove(aux);
+            //userNeg.delete(codigo);
+        }
+
+        [ValidateAntiForgeryToken]
+        public ActionResult GridViewAddNewPartial(Comprobante issue, FormCollection data)
+        {
+
+
             /*
             var codArticulodata = data["DXMVCEditorsValues"];
             string[] word = codArticulodata.Split(',');
@@ -111,22 +121,22 @@ namespace katal.Controllers
             return UpdateModelWithDataValidation(issue, AddNewRecord);
         }
 
-        private void AddNewRecord(OrdenCompra issue)
+        private void AddNewRecord(Comprobante issue)
         {
-            // GridViewHelper.OrdenCompras.Add(issue);
+            GridViewHelper.Comprobantes.Add(issue);
            // userNeg.create(issue);
            // GridViewHelper.ClearDetalles();
         }
         [ValidateAntiForgeryToken]
-        public ActionResult GridViewUpdatePartial(OrdenCompra issue, HttpRequest request)
+        public ActionResult GridViewUpdatePartial(Comprobante issue, HttpRequest request)
         {
             return UpdateModelWithDataValidation(issue, UpdateRecord);
         }
-        private void UpdateRecord(OrdenCompra issue)
+        private void UpdateRecord(Comprobante issue)
         {
 
         }
-        private ActionResult UpdateModelWithDataValidation(OrdenCompra issue, Action<OrdenCompra> updateMethod)
+        private ActionResult UpdateModelWithDataValidation(Comprobante issue, Action<Comprobante> updateMethod)
         {
             if (ModelState.IsValid)
                 SafeExecute(() => updateMethod(issue));
@@ -134,10 +144,11 @@ namespace katal.Controllers
                 ViewBag.GeneralError = "Please, correct all errors.";
             return GridViewPartial();
         }
-        private void PerformDelete(string codigo)
-        {
-            //userNeg.delete(codigo);
-        }
+
+       
+
+
+       
         public ActionResult MultiSelectGasto(string Gastos_Codigo = "-1")
         {
             ViewData["Gastos"] = comprobanteNeg.findAllGastos();

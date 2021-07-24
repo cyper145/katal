@@ -174,11 +174,9 @@ namespace katal.Controllers
             if (NROREQUI == null)
             {
                 NROREQUI = "-1";
-
             }
             ViewData["codigoOrden"] = NROREQUI;
-            requisicionCompra = requisicionNeg.find(NROREQUI);
-           
+            requisicionCompra = requisicionNeg.find(NROREQUI);         
             if (requisicionCompra == null)
             {
                 ViewData["codigoOrden"] = NROREQUI;

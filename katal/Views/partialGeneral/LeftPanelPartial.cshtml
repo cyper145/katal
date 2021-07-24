@@ -51,11 +51,11 @@
                group.Text = "Compras";
                if (roleNeg.moduloAsigned(modulos, "articulos"))
                {
-                   group.Items.Add("articulos", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Article");
+                   group.Items.Add("Articulos", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Article");
                }
                if (roleNeg.moduloAsigned(modulos, "proveedores"))
                {
-                   group.Items.Add("proveedores", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Proveedor");
+                   group.Items.Add("Proveedores", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Proveedor");
                }
                if (roleNeg.moduloAsigned(modulos, "areas"))
                {
@@ -67,8 +67,13 @@
                }
                if (roleNeg.moduloAsigned(modulos, "requisicion-compra"))
                {
-                   group.Items.Add("requisicion compra", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/RequisionCompra");
+                   group.Items.Add("Requisicion compra", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/RequisionCompra");
                }
+               if (roleNeg.moduloAsigned(modulos, "registros-documentos"))
+               {
+                   group.Items.Add("Registros Documentos", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Comprobante");
+               }
+
                if (roleNeg.moduloAsigned(modulos, "responsable-compra"))
                {
                    group.Items.Add("Responsable Compra", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/ResponsableCompra");
@@ -80,7 +85,7 @@
                group.Text = "Ventas";
                if (roleNeg.moduloAsigned(modulos, "cotizaciones"))
                {
-                   group.Items.Add("cotizaciones", "ratas", "~/Content/NavBar/BO_Scheduler.png", "GridView");
+                   group.Items.Add("Cotizaciones", "ratas", "~/Content/NavBar/BO_Scheduler.png", "GridView");
                }
            });
        }).GetHtml()

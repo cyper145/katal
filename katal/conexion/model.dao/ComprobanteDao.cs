@@ -15,7 +15,7 @@ namespace katal.conexion.model.dao
         private SqlCommand comando;
         private string table;
 
-        public ComprobanteDao( string bd)
+        public ComprobanteDao(string bd)
         {
             table = bd;
             ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
@@ -25,10 +25,530 @@ namespace katal.conexion.model.dao
                 objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
             }///0      
         }
+        /*
+    public void create(Comprobante obj)
+        {
+            DateTime date = DateTime.Now;
+            string sEstado = "";
+            decimal nPorcen = 0;
+            decimal nValCIF = 0;
+            string anios = date.Year.ToString("0000.##");
+            string mes = date.Month.ToString("00.##");
+            string msAnoMesProc = anios + mes;
+            string verificacion = verificaDoc_cxc(obj.ANEX_CODIGO ,obj.TIPODOCU_CODIGO,obj.CSERIE , obj.CNUMERO);
+
+            string cCorre = "";
+            if (verificacion != "" && verificacion != "El Documento Esta en Cuentas x Pagar")
+            {
+               
+                try
+                {
+                    string Cadenar = "UPDATE [014BDCOMUN].[dbo].COMPROBANTECAB SET CNUMORDCO='" + obj.CTDREFER.Trim() + "',";
+                    Cadenar += " NUMRETRAC='" + obj.NUMRETRAC + "', CAOCOMPRA='" + obj.CAOCOMPRA + "',";
+                    Cadenar += " dvence=" + obj.DVENCE + "";
+                    Cadenar += ",FECRETRAC=" + obj.FECRETRAC;
+                    Cadenar += " WHERE CAMESPROC='" + msAnoMesProc + "' AND CORDEN='" + obj.CORDEN + "'";
+                    comando = new SqlCommand(Cadenar, objConexion.getCon());
+                    objConexion.getCon().Open();
+                    comando.ExecuteNonQuery();
+
+                    string  CadenaD = "SELECT EDOC_OBLIGA FROM ESTADODOC WHERE EDOC_CLAVE = '1'";
+                    comando = new SqlCommand(CadenaD, objConexion.getCon());
+                    objConexion.getCon().Open();
+                    SqlDataReader readinterno = comando.ExecuteReader();
+                    if (readinterno.Read())
+                    {
+                        bool docobliga =Conversion.ParseBool( readinterno[0].ToString());
+                        if (docobliga)
+                        {
+                            sEstado = "0";
+                        }
+                        else
+                        {
+                            sEstado = "1";
+                        }
+                    }
+                    switch (obj.CDESTCOMP)
+                    {
+                        case "002":
+                            nPorcen = 100;
+                            nValCIF = 0;
+                            break;
+                        case "005":
+                            //falta capturar esta data
+                            nPorcen = 0;
+                            nValCIF = 0;
+                            break;
+                      
+                    }
+
+                    cCorre = funcAutoNum(msAnoMesProc);
+
+
+                    CadenaD = "INSERT INTO COMPROBANTECAB (";
+                    CadenaD +=  "EMP_CODIGO,CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
+                    CadenaD += "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, ";
+                    CadenaD += "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, ";
+                    CadenaD += "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, ";
+                    CadenaD += "CTDREFER, CONVERSION_CODIGO, DREGISTRO, CTIPPROV, CNRORUC, ";
+                    CadenaD += "ESTCOMPRA, CDESTCOMP, DIASPAGO, CIGVAPLIC, CCONCEPT, ";
+                    CadenaD += "DFECREF, NTASAIGV, NIGV, NPORCE, CCODRUC, ";
+                    CadenaD += "LHONOR, NIR4, NIES, NTOTRH, NBASEIMP, ";
+                    CadenaD += "NVALCIF, DCONTAB, CAMESPROC, CSALDINI,NPERCEPCION,NUMRETRAC,";
+                    CadenaD += "FECRETRAC,CNUMORDCO,";
+                    CadenaD += "CO_L_RETE,LDETRACCION,NTASADETRACCION, DETRACCION,COD_SERVDETRACC,COD_TIPOOPERACION,";
+                    CadenaD += "nImporteRef, RCO_TIPO, RCO_SERIE, RCO_NUMERO,";
+                    // If IsDate(txtFecDocRef) Then
+                    CadenaD += "RCO_FECHA,";
+                    CadenaD += "flg_RNTNODOMICILIADO,CAOCOMPRA) VALUES (";
+                    CadenaD += "'" + GridViewHelper.user.codEmpresa + "','" + cCorre + "', '" + obj.ANEX_CODIGO + "', '" + obj.ANEX_DESCRIPCION + "', '" + obj.TIPODOCU_CODIGO + "', '" + obj.CSERIE + "',";
+                    CadenaD += "'" + obj.CNUMERO + "', " + obj.DEMISION + ", " + obj.DVENCE + ", " + obj.DRECEPCIO + ", '" + obj.TIPOMON_CODIGO + "',";
+                    //End If
+                    //
+                    if(obj.CDESTCOMP.Trim()== "007" || obj.CDESTCOMP.Trim()=="008")
+                    {
+                       // CadenaD += "" + IIf(true, Math.Round(Val(obj.NTOTRH), 2) - Math.Round(Val(obj.NIR4), 2), Math.Round(Val(obj.NIMPORTE), 2)) + ", ";
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";                                      
+                    }
+                    else
+                        if(obj.CDESTCOMP.Trim() == "006")
+                         {
+                            CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIMPORTE, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
+                         }
+                        else
+                        {
+                             CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";                      
+                        }
+
+                 //   CadenaD += "" + obj.CONVERSION_CODIGO == "ESP" ? obj.TIPOCAMBIO_VALOR  : 0    + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
+                    CadenaD += "" + obj.CONVERSION_CODIGO    + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
+                    //
+                    if (obj.CDESTCOMP.Trim() == "007" || obj.CDESTCOMP.Trim() == "008")
+                    {
+                        // CadenaD += "" + IIf(true, Math.Round(Val(obj.NTOTRH), 2) - Math.Round(Val(obj.NIR4), 2), Math.Round(Val(obj.NIMPORTE), 2)) + ", ";
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2) - Math.Round(obj.NIR4, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
+                    }
+                    else
+                        if (obj.CDESTCOMP.Trim() == "006")
+                    {
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIES, 2), Math.Round(obj.NIMPORTE+obj.NPERCEPCION,2)) + ", ";
+                    }
+                    else
+                    {
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH+ obj.NPERCEPCION, 2), Math.Round(obj.NIMPORTE+obj.NPERCEPCION, 2)) + ", ";
+                    }
+
+                    CadenaD += "'" + Trim(obj.GASTOS_CUENTACON) + "', '" + funcBlanco(txtForPago) + "', '" + funcBlanco(txtRefSerie) + "', '" + funcBlanco(txtRefNro) + "',";
+        Cadena = Cadena & "'" & funcBlanco(txtRefTpoDcto) & "', '" & txtTpoConv & "', " & FechS(VGFecTrb, Sqlf) & ", '" & txtTpoAnexo & "', '" & lblRuc & "', "
+        Cadena = Cadena & "" & chkRegComp.Value & ", '" & funcBlanco(txtDEst) & "', " & txtDias & ", '" & Mid(chkIGVxAplic.Caption, 1, 1) & "', '" & txtCpto & "',"
+        Cadena = Cadena & "" & FechS(dtpRefFecha, Sqlf) & ", " & txtTasaIGV & ", " & Round(Val(txtMontoIGV), 2) & ", " & Round(Val(nPorcen), 2) & ", '" & funcBlanco(txtRefAnexo) & "', "
+        Cadena = Cadena & "" & IIf(fraHono.Visible, 1, 0) & ", " & Round(Val(txtIR4ta), 2) & ", " & Round(Val(txtIES), 2) & ", " & Round(Val(txttotal), 2) & ", " & Round(Val(txtBaseImp), 2) & ","
+
+
+        Cadena = Cadena & "" & Round(Val(nValCIF), 2) & ", " & IIf(txtTpoConv = "FEC", FechS(dtpFecTC, Sqlf), FechS(dtpFecEmi, Sqlf)) & ", '" & msAnoMesProc & "', " & IIf(mbSalInic, 1, 0) & "," & ESNULO(txtImpPercep, 0) & ",'" & txNumDetraccion.Text & "'"
+        If IsDate(MaskEdBox1) Then
+           Cadena = Cadena & ",'" & Format(MaskEdBox1, "yyyy/dd/mm") & "'"
+        Else
+           Cadena = Cadena & ",''"
+        End If
+        Cadena = Cadena & ",'" & Trim(TxDocReferencia.Text) & "','" & IIf(Combo1.ListIndex = 1, "1", "0") & "',"
+
+
+        If Val(txtMontoIGV) = 0 Then
+          Cadena = Cadena & "0,0,0,'','',0,"
+        Else
+          Cadena = Cadena & cmbDetraccion.ListIndex & "," & Val(TxtTasaDet) & "," & Round(Val(txtTotalVta) * Val(TxtTasaDet) / 100, 2) & ",'" & txtTipServ.Text & "','" & txtTipOper.Text & "'," & Val(TxTImporteRef) & ","
+        End If
+
+
+        Cadena = Cadena & "'" & txt_RefCmp_Tipo.Text & "','" & txt_RefCmp_Serie.Text & "','" & txt_RefCmp_Documento & "',"
+        If IsDate(txtFecDocRef) Then
+          Cadena = Cadena & "'" & Format(txtFecDocRef, "yyyy/dd/mm") & "',"
+        End If
+        Cadena = Cadena & chk_RNoDomiciliado.Value & ",'" & txtOCompra.Text & "')"
+
+
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    objConexion.getCon().Close();
+                    objConexion.cerrarConexion();
+                }
+            }
+
+        
+
+
+
+
+  
+
+    
+
+
+    If Not(mrst_RegDctos.RecordCount< 1) Then reg = dgrData.Bookmark
+
+
+    If mbEstado Then 'Nuevo registro
+        cCorre = funcAutoNum
+        If Trim(cCorre) = "NULL" Then
+            Exit Sub
+        End If
+        'TxtOrden = cCorre
+
+
+        Set rs = New ADODB.Recordset
+
+        Cadena = "INSERT INTO COMPROBANTECAB ("
+        Cadena = Cadena & "EMP_CODIGO,CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, "
+        Cadena = Cadena & "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, "
+        Cadena = Cadena & "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, "
+        Cadena = Cadena & "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, "
+        Cadena = Cadena & "CTDREFER, CONVERSION_CODIGO, DREGISTRO, CTIPPROV, CNRORUC, "
+        Cadena = Cadena & "ESTCOMPRA, CDESTCOMP, DIASPAGO, CIGVAPLIC, CCONCEPT, "
+        Cadena = Cadena & "DFECREF, NTASAIGV, NIGV, NPORCE, CCODRUC, "
+        Cadena = Cadena & "LHONOR, NIR4, NIES, NTOTRH, NBASEIMP, "
+        Cadena = Cadena & "NVALCIF, DCONTAB, CAMESPROC, CSALDINI,NPERCEPCION,NUMRETRAC,"
+        Cadena = Cadena & "FECRETRAC,CNUMORDCO,"
+        Cadena = Cadena & "CO_L_RETE,LDETRACCION,NTASADETRACCION, DETRACCION,COD_SERVDETRACC,COD_TIPOOPERACION,"
+        Cadena = Cadena & "nImporteRef, RCO_TIPO, RCO_SERIE, RCO_NUMERO,"
+        If IsDate(txtFecDocRef) Then
+           Cadena = Cadena & "RCO_FECHA,"
+        End If
+        Cadena = Cadena & "flg_RNTNODOMICILIADO,CAOCOMPRA) VALUES ("
+        Cadena = Cadena & "'" & VGEMP_CODIGO & "','" & cCorre & "', '" & txtanexo & "', '" & lblAnexo & "', '" & txtTpoDcto & "', '" & txtserie & "',"
+        Cadena = Cadena & "'" & txtnumero & "', " & FechS(dtpFecEmi, Sqlf) & ", " & FechS(dtpFecVenc, Sqlf) & ", " & FechS(dtpFecRecep, Sqlf) & ", '" & txtmoneda & "',"
+        If Trim(txtDEst) = "007" Or Trim(txtDEst) = "008" Then
+            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal), 2) - Round(Val(txtIR4ta), 2), Round(Val(txtTotalVta), 2)) & ", "
+        ElseIf Trim(txtDEst) = "006" Then
+            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal), 2) - (Round(Val(txtIR4ta), 2) + Round(Val(txtIES), 2)), Round(Val(txtTotalVta), 2)) & ", "
+        Else
+            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal), 2), Round(Val(txtTotalVta), 2)) & ", "
+        End If
+        Cadena = Cadena & "" & IIf(txtTpoConv = "ESP", txtTipEsp, txtTC) & ", '" & funcBlanco(TxtGlosa) & "', '" & txtResp & "', '" & sEstado & "', "
+        If Trim(txtDEst) = "007" Or Trim(txtDEst) = "008" Then
+            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal) + Val(txtImpPercep), 2) - Round(Val(txtIR4ta), 2), Round(Val(txtTotalVta) + Val(txtImpPercep), 2)) & ", "
+        ElseIf Trim(txtDEst) = "006" Then
+            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal) + Val(txtImpPercep), 2) - (Round(Val(txtIR4ta), 2) + Round(Val(txtIES), 2)), Round(Val(txtTotalVta) + Val(txtImpPercep), 2)) & ", "
+        Else
+            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal) + Val(txtImpPercep), 2), Round(Val(txtTotalVta) + Val(txtImpPercep), 2)) & ", "
+        End If
+        Cadena = Cadena & "'" & Trim(msCtaGasto) & "', '" & funcBlanco(txtForPago) & "', '" & funcBlanco(txtRefSerie) & "', '" & funcBlanco(txtRefNro) & "',"
+        Cadena = Cadena & "'" & funcBlanco(txtRefTpoDcto) & "', '" & txtTpoConv & "', " & FechS(VGFecTrb, Sqlf) & ", '" & txtTpoAnexo & "', '" & lblRuc & "', "
+        Cadena = Cadena & "" & chkRegComp.Value & ", '" & funcBlanco(txtDEst) & "', " & txtDias & ", '" & Mid(chkIGVxAplic.Caption, 1, 1) & "', '" & txtCpto & "',"
+        Cadena = Cadena & "" & FechS(dtpRefFecha, Sqlf) & ", " & txtTasaIGV & ", " & Round(Val(txtMontoIGV), 2) & ", " & Round(Val(nPorcen), 2) & ", '" & funcBlanco(txtRefAnexo) & "', "
+        Cadena = Cadena & "" & IIf(fraHono.Visible, 1, 0) & ", " & Round(Val(txtIR4ta), 2) & ", " & Round(Val(txtIES), 2) & ", " & Round(Val(txttotal), 2) & ", " & Round(Val(txtBaseImp), 2) & ","
+
+
+        Cadena = Cadena & "" & Round(Val(nValCIF), 2) & ", " & IIf(txtTpoConv = "FEC", FechS(dtpFecTC, Sqlf), FechS(dtpFecEmi, Sqlf)) & ", '" & msAnoMesProc & "', " & IIf(mbSalInic, 1, 0) & "," & ESNULO(txtImpPercep, 0) & ",'" & txNumDetraccion.Text & "'"
+        If IsDate(MaskEdBox1) Then
+           Cadena = Cadena & ",'" & Format(MaskEdBox1, "yyyy/dd/mm") & "'"
+        Else
+           Cadena = Cadena & ",''"
+        End If
+        Cadena = Cadena & ",'" & Trim(TxDocReferencia.Text) & "','" & IIf(Combo1.ListIndex = 1, "1", "0") & "',"
+
+
+        If Val(txtMontoIGV) = 0 Then
+          Cadena = Cadena & "0,0,0,'','',0,"
+        Else
+          Cadena = Cadena & cmbDetraccion.ListIndex & "," & Val(TxtTasaDet) & "," & Round(Val(txtTotalVta) * Val(TxtTasaDet) / 100, 2) & ",'" & txtTipServ.Text & "','" & txtTipOper.Text & "'," & Val(TxTImporteRef) & ","
+        End If
+
+
+        Cadena = Cadena & "'" & txt_RefCmp_Tipo.Text & "','" & txt_RefCmp_Serie.Text & "','" & txt_RefCmp_Documento & "',"
+        If IsDate(txtFecDocRef) Then
+          Cadena = Cadena & "'" & Format(txtFecDocRef, "yyyy/dd/mm") & "',"
+        End If
+        Cadena = Cadena & chk_RNoDomiciliado.Value & ",'" & txtOCompra.Text & "')"
+
+
+
+        rs.Open Cadena, cConexCom, adOpenKeyset, adLockOptimistic
+
+
+
+        If Check1.Value = 1 Then
+            If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NPERCEPCION") Then
+               CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NPERCEPCION NUMERIC(15,6) NULL"
+            End If
+
+
+            If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "LDETRACCION") Then
+               CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD LDETRACCION BIT DEFAULT 0"
+            End If
+
+
+            If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NTASADETRACCION") Then
+               CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NTASADETRACCION NUMERIC(15,6) DEFAULT 0"
+            End If
+
+
+            If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NIMPORTEREF") Then
+               CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NIMPORTEREF NUMERIC(15,6) DEFAULT 0"
+            End If
+
+
+            If IsDate(MaskEdBox1) Then
+                Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef), CDate(MaskEdBox1))
+            Else
+                Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef))
+            End If
+        End If
+
+
+    Else 'Solo actualizar
+        'Me quede en que se debe deja r chequear el dcto pero no dejarlo modificar o grbar el dcto contabilizado
+        cCorre = TxtOrden
+        If mrst_TRegDctos!cEstado <> "0" And mrst_TRegDctos!cEstado <> "1" Then
+            Screen.MousePointer = 1
+            MsgBox "El estado del documento no permite su modificación.", vbExclamation, "Mensaje"
+            Cadena = "UPDATE COMPROBANTECAB SET CAOCOMPRA='" & txtOCompra.Text & "',CNUMORDCO='" & Trim(TxDocReferencia.Text) & "', "
+            Cadena = Cadena & " NUMRETRAC='" & txNumDetraccion & "'"
+            If IsDate(MaskEdBox1) Then
+                Cadena = Cadena & ",FECRETRAC=" & FechS(MaskEdBox1, Sqlf) & ""
+            Else
+                Cadena = Cadena & ",FECRETRAC=NUll"
+            End If
+            Cadena = Cadena & ",LDETRACCION=" & cmbDetraccion.ListIndex & ",NTASADETRACCION=" & Val(TxtTasaDet) & ",DETRACCION=" & Round(Val(txtTotalVta) * Val(TxtTasaDet) / 100, 2) & ",COD_SERVDETRACC='" & txtTipServ.Text & "',COD_TIPOOPERACION='" & txtTipOper.Text & "' WHERE CAMESPROC='" & msAnoMesProc & "' AND CORDEN='" & cCorre & "'"
+            cConexCom.Execute Cadena
+            Exit Sub
+        End If
+        'Antes de modificar verificar ante si el saldo actual del dcto es igual al importe
+        'SI es asi entonces si se puede modificar
+        'Sino entonces debe eliminar lo programado y lo cancelado para que se restaure el saldo
+        Set rst_Estado = New ADODB.Recordset
+        rst_Estado.Open "SELECT NIMPORTE, NSALDO, NMONTPROG FROM COMPROBANTECAB WHERE CAMESPROC='" & msAnoMesProc & "' AND CORDEN='" & _
+                    cCorre & "'", cConexCom, adOpenForwardOnly, adLockReadOnly
+        If Not rst_Estado.EOF Then
+            'If rst_Estado!NIMPORTE <> rst_Estado!NSALDO Then
+            If rst_Estado!NMONTPROG <> 0 Then
+                Screen.MousePointer = 1
+                'MsgBox "No es posible modificar este documento por tener un saldo diferente al importe.", vbExclamation, "Mensaje"
+                MsgBox "Este documento no puede ser modificado ya que se encuentra programado y/o cancelado." & Chr(13) & _
+                            "El monto de programación es diferente de 0.", vbInformation, "Mensaje"
+
+                Set rst_Estado = Nothing
+                Exit Sub
+            End If
+        Else
+            MsgBox "Documento no ha sido encontrado.", vbExclamation, "Mensaje"
+            Set rst_Estado = Nothing
+            Screen.MousePointer = 1
+            Exit Sub
+        End If
+
+
+'        If txtDest = "002" Then
+'            'Guarda el porcentaje del Dest grabado del dcto sólo cuando Destino = "002"
+'            fraOperGrav.Visible = True
+'            cmdOperGravAceptar.SetFocus
+'            nPorcen = txtOperGrav
+'        End If
+
+
+        If txtTpoConv<> "ESP" Then
+           If funcValorTipoCambio(IIf(txtTpoConv = "FEC", dtpFecTC.Value, dtpFecEmi.Value), IIf(txtTpoConv = "FEC", "VTA", txtTpoConv), TipCam, TipCamEq) Then
+               txtTC = TipCam
+            Else
+                Screen.MousePointer = 1
+                txtTC = "0.000"
+                MsgBox "No se encontró el valor de tipo de cambio.", vbExclamation, "Mensaje"
+                Exit Sub
+            End If
+        End If
+
+
+        Call EliminarTrasfCxP(txtTpoAnexo, txtanexo, txtTpoDcto, txtserie, txtnumero, msAnoMesProc)
+
+
+        Dim CADSQL As String
+        CADSQL = "UPDATE COMPROBANTECAB SET ANEX_CODIGO='" & txtanexo & "', ANEX_DESCRIPCION='" & lblAnexo & "'"
+        CADSQL = CADSQL & ", TIPODOCU_CODIGO='" & txtTpoDcto & "', CSERIE='" & txtserie & "'"
+        CADSQL = CADSQL & ", CNUMERO='" & txtnumero & "', DEMISION=" & FechS(dtpFecEmi, Sqlf) & ""
+        CADSQL = CADSQL & ", DVENCE=" & FechS(dtpFecVenc, Sqlf) & ", DRECEPCIO=" & FechS(dtpFecRecep, Sqlf) & ""
+        CADSQL = CADSQL & ", TIPOMON_CODIGO='" & txtmoneda & "', NIMPORTE=" & IIf(fraHono.Visible, Round(Val(txttotal), 2) - Round(Val(txtIR4ta), 2), Round(Val(txtTotalVta), 2))
+        CADSQL = CADSQL & ", TIPOCAMBIO_VALOR=" & IIf(txtTpoConv = "ESP", Round(Val(txtTipEsp), 3), Round(Val(txtTC), 3)) & ", CDESCRIPC='" & funcBlanco(TxtGlosa) & "'"
+        CADSQL = CADSQL & ", RESPONSABLE_CODIGO='" & txtResp & "', CESTADO='" & sEstado & "', CCODCONTA='" & funcBlanco(Trim(msCtaGasto)) & "'"
+        CADSQL = CADSQL & ", CFORMPAGO='" & txtForPago & "', CSERREFER='" & funcBlanco(txtRefSerie) & "', CNUMREFER='" & funcBlanco(txtRefNro) & "'"
+        CADSQL = CADSQL & ", CTDREFER='" & funcBlanco(txtRefTpoDcto) & "', CONVERSION_CODIGO='" & txtTpoConv & "', DREGISTRO=" & FechS(CDate(VGFecTrb), Sqlf) & ""
+        CADSQL = CADSQL & ", CTIPPROV='" & txtTpoAnexo & "', CNRORUC='" & lblRuc & "', ESTCOMPRA=" & chkRegComp.Value
+        CADSQL = CADSQL & ", CDESTCOMP='" & funcBlanco(txtDEst) & "', DIASPAGO=" & txtDias & ", NIGV=" & Round(Val(txtMontoIGV), 2)
+        CADSQL = CADSQL & ", CIGVAPLIC='" & Mid(chkIGVxAplic.Caption, 1, 1) & "', CCONCEPT='" & txtCpto & "', DFECREF=" & FechS(dtpRefFecha, Sqlf) & ""
+        CADSQL = CADSQL & ", NTASAIGV=" & txtTasaIGV & ", NPORCE=" & Round(Val(nPorcen), 2) & ", CCODRUC='" & funcBlanco(txtRefAnexo) & "'"
+        CADSQL = CADSQL & ", LHONOR=" & IIf(fraHono.Visible, 1, 0) & ", NIR4=" & Round(Val(txtIR4ta), 2) & ", NIES=" & Round(Val(txtIES), 2)
+        CADSQL = CADSQL & ", NTOTRH=" & Round(Val(txttotal), 2) & ", NSALDO=" & IIf(fraHono.Visible, Round(Val(txttotal) - Round(Val(txtIR4ta), 2), 2), Round(Val(txtTotalVta), 2)) & ", NBASEIMP=" & Round(Val(txtBaseImp), 2)
+        '2003/10/16: ' cambia
+        'CADSQL = CADSQL & ", NVALCIF=" & Round(Val(nValCIF), 2) & ", DCONTAB=" & IIf(txtTpoConv = "FEC", FechS(CDate(dtpFecTC.Value), Sqlf), FechS(CDate(VGFecTrb), Sqlf)) & ",LPASOIMP=" & Check1.Value & " "
+        CADSQL = CADSQL & ", NVALCIF=" & Round(Val(nValCIF), 2) & ", DCONTAB=" & IIf(txtTpoConv = "FEC", FechS(CDate(dtpFecTC.Value), Sqlf), FechS(CDate(VGFecTrb), Sqlf)) & ",NPERCEPCION=" & ESNULO(txtImpPercep, 0) & ",NUMRETRAC='" & txNumDetraccion & "' "
+        If IsDate(MaskEdBox1) Then
+            CADSQL = CADSQL & ",FECRETRAC=" & FechS(MaskEdBox1, Sqlf) & ""
+        Else
+            CADSQL = CADSQL & ",FECRETRAC=NUll"
+        End If
+        CADSQL = CADSQL & " ,CNUMORDCO='" & Trim(TxDocReferencia) & "',CO_L_RETE='" & IIf(Combo1.ListIndex = 1, "1", "0") & "',LDETRACCION=" & cmbDetraccion.ListIndex & ",NTASADETRACCION=" & Val(TxtTasaDet) & ","
+        CADSQL = CADSQL & " NIMPORTEREF=" & IIf(cmbDetraccion.ListIndex = 0, 0, Val(TxTImporteRef)) & ", "
+
+
+        CADSQL = CADSQL & "RCO_TIPO='" & txt_RefCmp_Tipo.Text & "',RCO_SERIE='" & txt_RefCmp_Serie.Text & "',RCO_NUMERO='" & txt_RefCmp_Documento & "',RCO_FECHA='" & Format(txtFecDocRef, "yyyy/dd/mm") & "',"
+        CADSQL = CADSQL & "flg_RNTNODOMICILIADO=" & chk_RNoDomiciliado.Value & ",CAOCOMPRA='" & txtOCompra.Text & "'"
+        CADSQL = CADSQL & " WHERE CAMESPROC='" & msAnoMesProc & "' AND CORDEN='" & cCorre & "' "
+
+
+        cConexCom.Execute CADSQL
+
+
+        If Check1.Value = 1 Then
+                If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NPERCEPCION") Then
+                   CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NPERCEPCION NUMERIC(15,6) NULL"
+                End If
+                If IsDate(MaskEdBox1) Then
+                    Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef), CDate(MaskEdBox1))
+                Else
+                    Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef))
+                End If
+        End If
+    End If
+        }
+        */
+
         public void create(Comprobante obj)
         {
-            throw new NotImplementedException();
+
         }
+        public decimal IIfData(bool verificacion, decimal data1, decimal data2)
+        {
+            if (verificacion)
+            {
+                return data1;
+            }
+            else
+            {
+                return data2;
+            }
+        }
+
+        public string verificaDoc_cxc(string anex, string doc, string Serie, string Num)
+        {
+
+            
+            string sql = "select ANEX_cODIGO,TIPODOCU_CODIGO,CSERIE,CNUMERO,NIMPORTE,NSALDO,LCANJEADO,NMONTPROG from [014BDCTAPAG].[dbo].[ComprobanteCab]";
+            sql += " where ANEX_cODIGO='" + anex + "' and TIPODOCU_CODIGO='" + doc + "' and CSERIE='" + Serie + "' and CNUMERO='" + Num + "' ";
+
+            try
+            {
+                comando = new SqlCommand(sql, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    sql = "SELECT * FROM [014BDCTAPAG].[dbo].[ProgramacionDet] WHERE CCODPROVE='" + anex + "' ";
+                    sql += " AND CCODDOCUM='" + doc + "' AND CSERIE='" + Serie + "' AND CNUMERO='" + Num + "' ";
+                    comando = new SqlCommand(sql, objConexion.getCon());
+                    objConexion.getCon().Open();
+                    SqlDataReader readinterno = comando.ExecuteReader();
+                    if (readinterno.Read())
+                    {
+                        return "El Documento se Encuentra Programado en Cuentas x Pagar";
+                    }                   
+                    decimal saldo = Conversion.ParseDecimal(read[5].ToString());
+                    decimal importe = Conversion.ParseDecimal(read[4].ToString());
+                    bool canjeado= Conversion.ParseBool(read[6].ToString());
+                    if (saldo == 0 || saldo < importe)
+                    {
+                        if (canjeado)
+                        {
+                            return "El Documento Esta Canjeado en Cuentas x Pagar";
+                        }
+                        else
+                        {
+                            return "El Documento Esta Canjeado en Cuentas x Pagar";
+
+                        }
+
+                      
+                    }
+                    
+                    return "El Documento Esta en Cuentas x Pagar";
+                }
+                else
+                {
+                    return "";
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+                  
+        }
+
+
+        public string funcAutoNum( string msAnoMesProc)
+        {
+            string cadena = "SELECT Concepto_Logico FROM CONCEPTOGRAL WHERE Concepto_Codigo='NUMEAUTO'";
+            try
+            {
+                comando = new SqlCommand(cadena, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                bool hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    bool codigo = Conversion.ParseBool( read[0].ToString());
+                     cadena = "SELECT MAX(CORDEN) AS MAXORDEN FROM COMPROBANTECAB WHERE CAMESPROC = '"+ msAnoMesProc+"'";
+                    comando = new SqlCommand(cadena, objConexion.getCon());
+                    objConexion.getCon().Open();
+                    SqlDataReader readd = comando.ExecuteReader();
+                    string last = readd[0].ToString();
+                    int nextDocumet = 0;
+                    if (last != "")
+                    {
+                        nextDocumet = int.Parse(last) + 1;
+                    }
+                  
+                    string next = nextDocumet.ToString("00000.##");
+                    if (codigo)
+                    {
+                        return next;
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                    //return next;
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+
+            return "";
+        }
+
+
+
 
         public void delete(Comprobante obj)
         {
