@@ -309,6 +309,9 @@
     <Content Include="Views\Comprobante\MultiSelectResponsable.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectTipoDocRef.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectMoneda.cshtml" />
+    <Content Include="Views\Comprobante\partialPopup.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectdetraccion.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectTipoOperacion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -342,6 +345,7 @@
     <Compile Include="conexion\model.dao\ResponsableCompraDao.cs" />
     <Compile Include="conexion\model.dao\RoleDao.cs" />
     <Compile Include="conexion\model.dao\TipoAnexoDao.cs" />
+    <Compile Include="conexion\model.dao\TipoOperacionDao.cs" />
     <Compile Include="conexion\model.dao\UserDao.cs" />
     <Compile Include="conexion\model.entity\Area.cs" />
     <Compile Include="conexion\model.entity\Articulo.cs" />
@@ -363,6 +367,7 @@
     <Compile Include="conexion\model.entity\ResponsableCompra.cs" />
     <Compile Include="conexion\model.entity\Role.cs" />
     <Compile Include="conexion\model.entity\Root.cs" />
+    <Compile Include="conexion\model.entity\ServSujDetraccion.cs" />
     <Compile Include="conexion\model.entity\Solicitud.cs" />
     <Compile Include="conexion\model.entity\TipoAnexo.cs" />
     <Compile Include="conexion\model.entity\TipoCambio.cs" />

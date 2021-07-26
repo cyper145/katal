@@ -82,19 +82,20 @@ namespace katal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult GridViewAddNewPartial(Comprobante issue, FormCollection data)
         {
-
-
-          
+       
             var codArticulodata = data["DXMVCEditorsValues"];
 
             string concepto = data["gridLookupGastos$State"];
             string tipoProveerdor = data["gridLookupTipoAnexo$State"];
             string proveedor = data["gridLookupAnexo$State"];
+            string tipoDocumento = data["gridLookupTipoDoc$State"];
             issue.CCONCEPT = ValidarRecuperar(concepto);
             issue.CTIPPROV = ValidarRecuperar(tipoProveerdor);
             issue.ANEX_CODIGO = ValidarRecuperar(proveedor);
+            issue.TIPODOCU_CODIGO = ValidarRecuperar(proveedor);
+            
             issue.ANEX_DESCRIPCION= data["gridLookupAnexo"];
-
+            issue.CORDEN = comprobanteNeg.funcAutoNum();
             /*
             string[] word = codArticulodata.Split(',');
             string dataRequisicion = codArticulodata[0] + word[2] + "," + word[14] + "," + word[15] + "," + codArticulodata[codArticulodata.Length - 1];
@@ -326,6 +327,24 @@ namespace katal.Controllers
             //string Gastos_Codigo = "";
             return Json(new { respuesta = respuesta }, JsonRequestBehavior.AllowGet);
         }
-
+        public ActionResult partialPopup()
+        {
+            return PartialView("partialPopup");
+        }
+        public ActionResult MultiSelectdetraccion(string codigo = "-1")
+        {
+            ViewData["Detraccion"] = comprobanteNeg.findAllDetraccion(DateTime.Now.ToShortDateString());
+            if (codigo == "-1")
+                codigo = "";
+            return PartialView("MultiSelectdetraccion", new ServSujDetraccion() { codigo = codigo });
+        }
+        public ActionResult MultiSelectTipoOperacion(string CODIGO = "-1")
+        {
+            ViewData["TipoOperacion"] = comprobanteNeg.findAllTipoOperacion();
+            if (CODIGO == "-1")
+                CODIGO = "";
+            return PartialView("MultiSelectTipoOperacion", new TipoOperacion() { CODIGO = CODIGO });
+        }
+       
     }
 }

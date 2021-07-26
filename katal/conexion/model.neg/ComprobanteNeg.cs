@@ -12,12 +12,14 @@ namespace katal.conexion.model.neg
         ComprobanteDao objComprobanteDao;
         TipoAnexoDao anexoDao;
         MonedaDao monedaDao;
+        TipoOperacionDao TipoOperacion;
         public ComprobanteNeg()
         {
             string bd = "014";// modificar
             objComprobanteDao = new ComprobanteDao(bd);
             anexoDao = new TipoAnexoDao(bd);
             monedaDao = new MonedaDao(bd);
+            TipoOperacion = new TipoOperacionDao(bd);
         }
         public List<Comprobante> findAll()
         {
@@ -51,5 +53,21 @@ namespace katal.conexion.model.neg
             return monedaDao.findTipoCambio(dateTime);
         }
 
+        public List<ServSujDetraccion> findAllDetraccion(string dateEmision)
+        {
+            return TipoOperacion.findAllDetraccion(dateEmision);
+        }
+        public List<TipoOperacion> findAllTipoOperacion()
+        {
+            return TipoOperacion.findAllTipoOperacion();
+        }
+        public string funcAutoNum()
+        {
+            DateTime date = DateTime.Now;
+            string anios = date.Year.ToString("0000.##");
+            string mes = date.Month.ToString("00.##");
+            string msAnoMesProc = anios + mes;
+            return objComprobanteDao.funcAutoNum(msAnoMesProc);
+        }
     }
 }

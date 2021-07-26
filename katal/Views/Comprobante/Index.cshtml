@@ -18,7 +18,7 @@
         }
     </style>
     <script>
-    
+
 
     function CloseGridLookup() {
         gridLookup.ConfirmCurrentSelection();
@@ -41,10 +41,10 @@
         function OnGridRowNroClick(s, e) {
             console.log(gridLookupTipoAnexo);
             console.log(gridLookupTipoAnexo.EditValue);
-           
+
             $.getJSON('/Comprobante/CargarTipoAnexoMoneda', function (resp) {
                 $.each(resp, function (k, v) {
-                    
+
                     gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
                     TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
                 });
@@ -185,7 +185,7 @@
 
         }
         function DateEmision() {
-            
+
             if (DRECEPCIO.GetText() == "") {
                 let f = new Date();
               //  OC_DFECDOC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
@@ -197,6 +197,14 @@
 
 
         }
+        function tasaIgv() {
+            if (NTASAIGV.GetText() == "") {
+                NTASAIGV.SetText("18");
+                //f.setDate(f.getDate() + 2);
+                // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+            }
+        }
+
 
     function OnClick(s, e) {
         if ($("#myForm").valid()) {
@@ -235,7 +243,7 @@
 
 
 
-   
+
 }
 
 
@@ -362,3 +370,4 @@
     @Html.Partial("GridViewPartial")
 }
 
+@Html.Partial("partialPopup")

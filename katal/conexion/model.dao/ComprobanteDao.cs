@@ -509,10 +509,12 @@ namespace katal.conexion.model.dao
                 bool hayRegistros = read.Read();
                 if (hayRegistros)
                 {
+                   
                     bool codigo = Conversion.ParseBool( read[0].ToString());
-                     cadena = "SELECT MAX(CORDEN) AS MAXORDEN FROM COMPROBANTECAB WHERE CAMESPROC = '"+ msAnoMesProc+"'";
+                    read.Close();
+                    cadena = "SELECT MAX(CORDEN) AS MAXORDEN FROM COMPROBANTECAB WHERE CAMESPROC = '"+ msAnoMesProc+"'";
                     comando = new SqlCommand(cadena, objConexion.getCon());
-                    objConexion.getCon().Open();
+                   // objConexion.getCon().Open();
                     SqlDataReader readd = comando.ExecuteReader();
                     string last = readd[0].ToString();
                     int nextDocumet = 0;
@@ -548,9 +550,6 @@ namespace katal.conexion.model.dao
 
             return "";
         }
-
-
-
 
         public void delete(Comprobante obj)
         {

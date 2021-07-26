@@ -309,7 +309,7 @@
 
                 {
 
-                   
+
                     i.FieldName = "CONVERSION_CODIGO";
                     i.Caption = "Tpo. Conv.";
                     i.ColumnSpan = 3;
@@ -426,17 +426,28 @@
 
                     });
                 });
-                groupItem.Items.Add(i =>
+
+                groupItem.Items.Add(itemSettings =>
                 {
-                    i.FieldName = "DAR";
-                    i.ColumnSpan =3;
-                    i.Caption = "Defraccion";
-                    i.NestedExtension().ButtonEdit(t =>
-                    {
+                    itemSettings.ColumnSpan = 3;
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                }).SetNestedContent(() =>
+                {
+                    ViewContext.Writer.Write("<div style='float:right'>");
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btShowModal";
+                            btnSettings.Text = "Defraccion";
+                            btnSettings.ClientSideEvents.Click = "function(s, e) { pcModalMode.Show(); }";
 
-                    });
 
+                        }).Render();
+
+
+                    ViewContext.Writer.Write("</div>");
                 });
+
 
                 groupItem.Items.Add(i =>
                 {
@@ -510,6 +521,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.Init = "tasaIgv";
                     });
 
                 });
