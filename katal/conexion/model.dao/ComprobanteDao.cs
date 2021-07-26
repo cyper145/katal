@@ -728,7 +728,7 @@ namespace katal.conexion.model.dao
            
 
             string conexion = Conexion.CadenaGeneral("014", "BDCTAPAG", "Gastos");
-            string findAll = $"GASTOS_CODIGO, GASTOS_DESCRIPCION, GASTOS_MONEDA, GASTOS_HONORARIO, GASTOS_CUENTACON,GASTOS_DSCTO1, GASTOS_DSCTO2 FROM {conexion} WHERE GASTOS_CODIGO = '" + codigo + "'" ;
+            string findAll = $"select GASTOS_CODIGO, GASTOS_DESCRIPCION, GASTOS_MONEDA, GASTOS_HONORARIO, GASTOS_CUENTACON,GASTOS_DSCTO1, GASTOS_DSCTO2 FROM {conexion} WHERE GASTOS_CODIGO = '" + codigo + "'" ;
             Gasto gasto = new Gasto();
             try
             {
@@ -761,7 +761,7 @@ namespace katal.conexion.model.dao
             
         }
        
-
+        
         public void update(Comprobante obj)
         {
             throw new NotImplementedException();

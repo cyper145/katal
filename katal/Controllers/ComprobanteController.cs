@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using katal.conexion.model.neg;
 using katal.conexion.model.entity;
 using katal.Model;
+using Newtonsoft.Json;
+using DevExpress.DataAccess.Native.Json;
 
 namespace katal.Controllers
 {
@@ -33,7 +35,6 @@ namespace katal.Controllers
         }// GET: Comprobante
         public ActionResult Index()
         {
-
             List<Comprobante> comp = comprobanteNeg.findAll();
             GridViewHelper.Comprobantes = comp;
             return View(GridViewHelper.Comprobantes);
@@ -63,13 +64,38 @@ namespace katal.Controllers
             //userNeg.delete(codigo);
         }
 
+        private string ValidarRecuperar(string data)
+        {
+            string respuesta = "";
+            string ver = HttpUtility.HtmlDecode(data);
+            if (ver != null)
+            {
+                Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                // Array codigo = nodes["selectedKeyValues"] ;
+                if (nodes.selectedKeyValues != null)
+                {
+                    respuesta = nodes.selectedKeyValues[0];
+                }
+            }
+            return respuesta;
+        }
         [ValidateAntiForgeryToken]
         public ActionResult GridViewAddNewPartial(Comprobante issue, FormCollection data)
         {
 
 
-            /*
+          
             var codArticulodata = data["DXMVCEditorsValues"];
+
+            string concepto = data["gridLookupGastos$State"];
+            string tipoProveerdor = data["gridLookupTipoAnexo$State"];
+            string proveedor = data["gridLookupAnexo$State"];
+            issue.CCONCEPT = ValidarRecuperar(concepto);
+            issue.CTIPPROV = ValidarRecuperar(tipoProveerdor);
+            issue.ANEX_CODIGO = ValidarRecuperar(proveedor);
+            issue.ANEX_DESCRIPCION= data["gridLookupAnexo"];
+
+            /*
             string[] word = codArticulodata.Split(',');
             string dataRequisicion = codArticulodata[0] + word[2] + "," + word[14] + "," + word[15] + "," + codArticulodata[codArticulodata.Length - 1];
             Dictionary<string, JArray> nodes = JsonConvert.DeserializeObject<Dictionary<string, JArray>>(dataRequisicion);
@@ -124,8 +150,8 @@ namespace katal.Controllers
         private void AddNewRecord(Comprobante issue)
         {
             GridViewHelper.Comprobantes.Add(issue);
-           // userNeg.create(issue);
-           // GridViewHelper.ClearDetalles();
+            // userNeg.create(issue);
+            // GridViewHelper.ClearDetalles();
         }
         [ValidateAntiForgeryToken]
         public ActionResult GridViewUpdatePartial(Comprobante issue, HttpRequest request)
@@ -145,22 +171,28 @@ namespace katal.Controllers
             return GridViewPartial();
         }
 
-       
 
 
-       
+
+
         public ActionResult MultiSelectGasto(string Gastos_Codigo = "-1", FormCollection dataR = null)
         {
             if (dataR != null)
             {
-                string v = dataR["gridLookupGastos"];
-                if (v != null && v != "")
+                string dar = dataR["gridLookupGastos$State"];
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
                 {
-                    GridViewHelper.NROREQUI = v;
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {                    
+                        GridViewHelper.Gastos_Codigo = nodes.selectedKeyValues[0];
+                        Gastos_Codigo = GridViewHelper.Gastos_Codigo;                      
+                    }
                 }
 
             }
-
             ViewData["Gastos"] = comprobanteNeg.findAllGastos();
             if (Gastos_Codigo == "-1")
                 Gastos_Codigo = "";
@@ -170,7 +202,9 @@ namespace katal.Controllers
 
         public ActionResult MultiSelectTipoAnexo(string TIPOANEX_CODIGO = "-1")
         {
-            ViewData["TipoAnexo"] = tipoAnexoNeg.findAll( );
+            ViewData["TipoAnexo"] = tipoAnexoNeg.findAll();
+            
+
             if (TIPOANEX_CODIGO == "-1")
                 TIPOANEX_CODIGO = "";
             return PartialView("MultiSelectTipoAnexo", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
@@ -202,14 +236,34 @@ namespace katal.Controllers
 
         }
         public ActionResult MultiSelectResponsable(string oc_csolict = "-1")
-        {
-           
-
+        {         
             ViewData["responsable"] = responsable.findAll();
             if (oc_csolict == "-1")
                 oc_csolict = "";
             return PartialView("MultiSelectResponsable", new ResponsableCompra() { RESPONSABLE_CODIGO = oc_csolict });
+        }
+        public ActionResult MultiSelectMoneda(string COVMON_CODIGO = "-1", FormCollection dataR = null)
+        {
+            if (dataR != null)
+            {
+                string dar = dataR["gridLookupMoneda$State"];
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        GridViewHelper.COVMON_CODIGO = nodes.selectedKeyValues[0];
+                        COVMON_CODIGO = GridViewHelper.COVMON_CODIGO;
+                    }
+                }
 
+            }
+            ViewData["moneda"] = comprobanteNeg.findAllMonedas();
+            if (COVMON_CODIGO == "-1")
+                COVMON_CODIGO = "";
+            return PartialView("MultiSelectMoneda", new Moneda() { COVMON_CODIGO = COVMON_CODIGO });
         }
 
         public ActionResult MultiSelectTipoDocRef(string TIPDOC_CODIGO = "-1")
@@ -218,16 +272,60 @@ namespace katal.Controllers
             if (TIPDOC_CODIGO == "-1")
                 TIPDOC_CODIGO = "";
             return PartialView("MultiSelectTipoDocRef", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
+        }    
+        public JsonResult CargarTipoAnexoMoneda()
+        {
+            string CODIGO = GridViewHelper.Gastos_Codigo;
+            gastoTipoAnexo anexo = new gastoTipoAnexo();
+            if (CODIGO != "" && CODIGO != null)
+            {
+                anexo = comprobanteNeg.cargarChangeTipoGasto (CODIGO);
+                GridViewHelper.Gastos_Codigo = "";
+            }
+            //string Gastos_Codigo = "";
+            return Json(new { tipoanexo = anexo }, JsonRequestBehavior.AllowGet);
+       }
+        public JsonResult CargarTipoMoneda(string fecha)
+        {
+            string CODIGO = GridViewHelper.COVMON_CODIGO;
+            TipoCambio anexo = new TipoCambio();
 
+            Respuesta respuesta = new Respuesta();
+            if (CODIGO != "" && CODIGO != null)
+            {
+                anexo = comprobanteNeg.findTipoCambio(fecha);
+                GridViewHelper.Gastos_Codigo = "";
+                
+                switch (CODIGO)
+                {
+                    case "ESP":
+                        respuesta.data = "0.000";                    
+                        respuesta.opcion = false;
+                        respuesta.especial = true;
+                        break;
+                    case "VTA":
+                        respuesta.data = anexo.TIPOCAMB_VENTA;
+                        respuesta.dataEspecial = "0.000";
+                        respuesta.opcion = true;
+                        respuesta.especial = false;
+                        break;
+                    case "COM":
+                        respuesta.data = anexo.TIPOCAMB_COMPRA;
+                        respuesta.dataEspecial = "0.000";
+                        respuesta.opcion = true;
+                        respuesta.especial = false;
+                        break;
+                    case "FEC":                       
+                        respuesta.opcion = true;
+                        respuesta.dataEspecial = "0.000";
+                        respuesta.especial = false;
+                        break;
+                    
+                }
+            }
+            //string Gastos_Codigo = "";
+            return Json(new { respuesta = respuesta }, JsonRequestBehavior.AllowGet);
         }
 
-
-        // evento de cambiar 
-       // public JsonResult CargarTipoAnexoMoneda()
-       // {
-            //var  dar= Request.Params;
-           // string Gastos_Codigo = "";
-          //  return Json(new { document = userNeg.nextNroDocument() }, JsonRequestBehavior.AllowGet);
-//}
     }
 }

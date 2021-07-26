@@ -223,8 +223,6 @@
 
                     });
                 });
-
-
                 groupItem.Items.Add( i =>
 
                 {
@@ -445,17 +443,6 @@
             }).Bind(ViewData["Object"] ?? c.DataItem).Render();
 
         });
-
-
-
-
-        // gridViewSettings.CommandColumn.Visible = true;
-        // gridViewSettings.CommandColumn.ShowSelectCheckbox = true;
-        // gridViewSettings.CommandColumn.SelectAllCheckboxMode = GridViewSelectAllCheckBoxMode.AllPages;
-        // gridViewSettings.CommandColumn.VisibleIndex = 0;
-        //gridViewSettings.CommandColumn.Width = Unit.Pixel(52);
-
-
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "OC_CNUMORD";
@@ -488,8 +475,6 @@
 
             columnSettings.Visible = false;
         });
-
-
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "OC_DFECENT";
@@ -555,8 +540,6 @@
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
         gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedOrdenCompra";
-
-
         gridViewSettings.CellEditorInitialize = (s, e) =>
         {
             ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;

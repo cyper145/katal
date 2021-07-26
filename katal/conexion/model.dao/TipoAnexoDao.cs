@@ -54,7 +54,7 @@ namespace katal.conexion.model.dao
          
             string conexion = Conexion.CadenaGeneral(BD, "BDCONTABILIDAD", "PLAN_CUENTA_NACIONAL");
             string codigoAnexo="";
-            string findAll = $"SELECT TIPOANEX_CODIGO, TIPOANEX_DESCRIPCION FROM {conexion} WHERE PLANCTA_CODIGO='"+ cuentas + "'";
+            string findAll = $"SELECT TIPOANEX_CODIGO FROM {conexion} WHERE PLANCTA_CODIGO='"+ cuentas + "'";
             try
             {
                 comando = new SqlCommand(findAll, objConexion.getCon());

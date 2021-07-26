@@ -18,6 +18,7 @@
         }
     </style>
     <script>
+    
 
     function CloseGridLookup() {
         gridLookup.ConfirmCurrentSelection();
@@ -38,7 +39,32 @@
 
 
         function OnGridRowNroClick(s, e) {
-            grid.Refresh();
+            console.log(gridLookupTipoAnexo);
+            console.log(gridLookupTipoAnexo.EditValue);
+           
+            $.getJSON('/Comprobante/CargarTipoAnexoMoneda', function (resp) {
+                $.each(resp, function (k, v) {
+                    
+                    gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
+                    TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
+                });
+            });
+            //var g = gridLookupTipoAnexo.GetGridView();
+           // g.Refresh();
+        }
+        function OnChangeMoneda(s, e) {
+
+            let fecha = DEMISION.GetText();
+            $.getJSON('/Comprobante/CargarTipoMoneda?fecha=' + fecha, function (resp) {
+                $.each(resp, function (k, v) {
+                    console.log(v);
+
+                    TipoCambio_Valor.SetText(v.data);
+                    TipoCambio_Valor12.SetText(v.dataEspecial);
+                    //gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
+                    //TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
+                });
+            });
         }
 
         //OnGridRowResponsableClick

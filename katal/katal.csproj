@@ -308,6 +308,7 @@
     <Content Include="Views\Comprobante\MultiSelectDestino.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectResponsable.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectTipoDocRef.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectMoneda.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -332,6 +333,7 @@
     <Compile Include="conexion\model.dao\Conversion.cs" />
     <Compile Include="conexion\model.dao\DestinoDao.cs" />
     <Compile Include="conexion\model.dao\EmpresaDao.cs" />
+    <Compile Include="conexion\model.dao\MonedaDao.cs" />
     <Compile Include="conexion\model.dao\Obligatorio.cs" />
     <Compile Include="conexion\model.dao\OrdenCompraDao.cs" />
     <Compile Include="conexion\model.dao\PaisDao.cs" />
@@ -352,6 +354,7 @@
     <Compile Include="conexion\model.entity\gastoTipoAnexo.cs" />
     <Compile Include="conexion\model.entity\InsertOrder.cs" />
     <Compile Include="conexion\model.entity\Modulo.cs" />
+    <Compile Include="conexion\model.entity\Moneda.cs" />
     <Compile Include="conexion\model.entity\NumDocCompras.cs" />
     <Compile Include="conexion\model.entity\OrdenCompra.cs" />
     <Compile Include="conexion\model.entity\Pais.cs" />
@@ -362,6 +365,8 @@
     <Compile Include="conexion\model.entity\Root.cs" />
     <Compile Include="conexion\model.entity\Solicitud.cs" />
     <Compile Include="conexion\model.entity\TipoAnexo.cs" />
+    <Compile Include="conexion\model.entity\TipoCambio.cs" />
+    <Compile Include="conexion\model.entity\Trans.cs" />
     <Compile Include="conexion\model.entity\User.cs" />
     <Compile Include="conexion\model.neg\AreaNeg.cs" />
     <Compile Include="conexion\model.neg\ArticuloNeg.cs" />

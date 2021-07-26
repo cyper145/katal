@@ -55,25 +55,15 @@
 
         gridViewSettings.SettingsExport.EnableClientSideExportAPI = true;
         gridViewSettings.SettingsExport.ExportSelectedRowsOnly = true;
-
         gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1200;
         gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
         gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
-
         gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
         gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 1200;
-
         gridViewSettings.EditFormLayoutProperties.UseDefaultPaddings = false;
-
         gridViewSettings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
-
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
-
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
-
-
-
-
         gridViewSettings.SetEditFormTemplateContent(c =>
         {
 
@@ -304,7 +294,7 @@
                 {
                     i.FieldName = "TIPOMON_CODIGO";
                     // i.ColumnSpan = 3;
-                    i.ColumnSpan = 2;
+                    i.ColumnSpan = 3;
                     i.Caption = "Moneda";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -319,57 +309,52 @@
 
                 {
 
+                   
                     i.FieldName = "CONVERSION_CODIGO";
-                    //i.ColumnSpan = 3;
-                    i.ColumnSpan = 2;
                     i.Caption = "Tpo. Conv.";
-                    i.NestedExtension().ComboBox(t =>
+                    i.ColumnSpan = 3;
+
+                    i.SetNestedContent(() =>
                     {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                        t.SelectedIndex = 0;
-                        t.Properties.ValueType = typeof(string);
-                        t.Properties.Items.Add("T/C COMPRA", "COM");
-                        t.Properties.Items.Add("T/C ESPECIAL ", "ESP");
-                        t.Properties.Items.Add("T/C  OTRA FECHA ", "FEC");
-                        t.Properties.Items.Add("T/C VENTA ", "VTA");
-                        t.Properties.ClientSideEvents.SelectedIndexChanged = "onchangeCambio";
-
-                    });
-                });
-
-                groupItem.Items.Add(i =>
-
-                {
-                    i.FieldName = "DCONTAB";
-                    i.ColumnSpan = 2;
-                    i.ShowCaption = DefaultBoolean.False;
-
-                    i.NestedExtension().DateEdit(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                        t.Date = DateTime.Now;
-                        t.Properties.ClientSideEvents.Init = "DateEmision";
-                    });
-                });
-
-                groupItem.Items.Add(i =>
-                {
-                    i.FieldName = "COVMON_DESCRIPCION";
-                    i.ColumnSpan =1;
-                    i.ShowCaption = DefaultBoolean.False;
-                    i.NestedExtension().TextBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
+                        Html.RenderAction("MultiSelectMoneda", new { COVMON_CODIGO = DataBinder.Eval(c.DataItem, "CONVERSION_CODIGO") });
                     });
 
+
                 });
+                /*
+                                groupItem.Items.Add(i =>
+
+                                {
+                                    i.FieldName = "DCONTAB";
+                                    i.ColumnSpan = 2;
+                                    i.ShowCaption = DefaultBoolean.False;
+
+                                    i.NestedExtension().DateEdit(t =>
+                                    {
+                                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                                        t.ShowModelErrors = true;
+                                        t.Date = DateTime.Now;
+                                        t.Properties.ClientSideEvents.Init = "DateEmision";
+                                    });
+                                });
+
+                                groupItem.Items.Add(i =>
+                                {
+                                    i.FieldName = "COVMON_DESCRIPCION";
+                                    i.ColumnSpan =1;
+                                    i.ShowCaption = DefaultBoolean.False;
+                                    i.NestedExtension().TextBox(t =>
+                                    {
+                                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                                        t.ShowModelErrors = true;
+                                    });
+
+                                });
+                                */
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "TipoCambio_Valor";
-                    i.ColumnSpan = 2;
+                    i.ColumnSpan = 3;
                     i.Caption ="T/C";
                     i.NestedExtension().TextBox(t =>
                     {
@@ -436,7 +421,7 @@
                         t.Properties.ValueType = typeof(string);
                         t.Properties.Items.Add("SI", "1");
                         t.Properties.Items.Add("NO ", "0");
-                      
+
                         //t.Properties.ClientSideEvents.SelectedIndexChanged = "onchangeCambio";
 
                     });
@@ -452,7 +437,7 @@
                     });
 
                 });
-               
+
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "ESTCOMPRA";
@@ -466,9 +451,6 @@
 
                 });
 
-
-
-
                 groupItem.Items.Add(i =>
                 {
                     i.FieldName = "CIGVAPLIC";
@@ -480,9 +462,6 @@
                     });
 
                 });
-
-
-
                 // otro
                 groupItem.Items.Add(i =>
                 {
@@ -756,9 +735,6 @@
             columnSettings.Caption = "documento";
             columnSettings.Width = Unit.Pixel(300);
         });
-
-
-
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "TIPOMON_CODIGO";
@@ -776,7 +752,6 @@
             columnSettings.FieldName = "NIMPORTE";
             columnSettings.Caption = "Importe";
             columnSettings.Width = Unit.Pixel(170);
-
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
@@ -785,14 +760,9 @@
             columnSettings.Width = Unit.Pixel(170);
 
         });
-
-
-
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
         //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";
-
-
         gridViewSettings.CellEditorInitialize = (s, e) =>
         {
             ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
