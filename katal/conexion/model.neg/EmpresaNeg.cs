@@ -19,5 +19,9 @@ namespace katal.conexion.model.neg
         {
             return objRoleDao.findAll();
         }
+        public Empresa findContable(string codigoEmpresa)
+        {
+            return objRoleDao.findContable(codigoEmpresa);
+        }
     }
 }

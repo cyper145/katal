@@ -48,5 +48,37 @@ namespace katal.conexion.model.dao
             }
             return listUsers;
         }
+
+        public Empresa findContable(string codigoEmpresa)
+        {
+
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "EMPRESA");
+            string findAll = $"select EMP_NIVEL from {conexion} where  EMP_CODIGO ='{codigoEmpresa} '"  ;
+            Empresa user = new Empresa();
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    
+                    user.EMP_NIVEL = read[0].ToString();
+                    
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return user;
+        }
+
     }
 }

@@ -312,6 +312,11 @@
     <Content Include="Views\Comprobante\partialPopup.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectdetraccion.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectTipoOperacion.cshtml" />
+    <Content Include="Views\Comprobante\Contabilizar.cshtml" />
+    <Content Include="Views\Comprobante\ContaGridViewPartial.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectPlanCuenta.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectCentroCostos.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectOrdenFabricacion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -357,11 +362,14 @@
     <Compile Include="conexion\model.entity\Gasto.cs" />
     <Compile Include="conexion\model.entity\gastoTipoAnexo.cs" />
     <Compile Include="conexion\model.entity\InsertOrder.cs" />
+    <Compile Include="conexion\model.entity\Maquinas.cs" />
     <Compile Include="conexion\model.entity\Modulo.cs" />
     <Compile Include="conexion\model.entity\Moneda.cs" />
     <Compile Include="conexion\model.entity\NumDocCompras.cs" />
     <Compile Include="conexion\model.entity\OrdenCompra.cs" />
+    <Compile Include="conexion\model.entity\OrdenFabricacion.cs" />
     <Compile Include="conexion\model.entity\Pais.cs" />
+    <Compile Include="conexion\model.entity\PlanCuentaNacional.cs" />
     <Compile Include="conexion\model.entity\Proveedor.cs" />
     <Compile Include="conexion\model.entity\RequisicionCompra.cs" />
     <Compile Include="conexion\model.entity\ResponsableCompra.cs" />

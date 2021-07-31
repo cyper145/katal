@@ -9,6 +9,7 @@ namespace katal.conexion.model.entity
     {
         public string codigoEmpresa { get; set; }
         public string RazonSocial { get; set; }
+        public string EMP_NIVEL { get; set; }
     }
    
 }

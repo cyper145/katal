@@ -23,6 +23,13 @@ namespace katal.Model
         public static string Gastos_Codigo = "";
         public static string COVMON_CODIGO = "";
         public static string BD = "";
+        public static string COMP_CORDEN = "";
+        public static string COMP_TIPODOCU_CODIGO = "";
+        public static string COMP_CSERIE = "";
+        public static string COMP_CNUMERO = "";
+        public static int NivelCOntable = 0;
+       
+
 
         public static DateRangePickerModel dateRange = new DateRangePickerModel();
         public static void GetDetalles()

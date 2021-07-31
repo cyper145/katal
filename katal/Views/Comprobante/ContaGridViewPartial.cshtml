@@ -1,0 +1,353 @@
+﻿
+
+@using katal.conexion.model.entity;
+@using katal.conexion.model.neg;
+@using katal.Model;
+@model List<Comprobante>
+@{
+
+    var gridView = Html.DevExpress().GridView<Comprobante>(gridViewSettings =>
+    {
+        gridViewSettings.Name = "gridView";
+        gridViewSettings.KeyFieldName = "codigo";
+
+        gridViewSettings.CallbackRouteValues = new
+        {
+            Controller = "Comprobante",
+            Action = "ContaGridViewPartial"
+        };
+        gridViewSettings.CustomActionRouteValues = new { Controller = "Comprobante", Action = "GridViewCustomActionPartial" };
+        gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Comprobante", Action = "GridViewAddNewPartial" };
+        gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Comprobante", Action = "GridViewUpdatePartial" };
+
+
+
+        gridViewSettings.EnablePagingGestures = AutoBoolean.False;
+
+        gridViewSettings.ControlStyle.CssClass = "grid-view";
+        gridViewSettings.Width = Unit.Percentage(100);
+        gridViewSettings.Height = Unit.Percentage(100);
+
+        gridViewSettings.Styles.Cell.Wrap = DefaultBoolean.False;
+        gridViewSettings.Styles.PagerBottomPanel.CssClass = "pager";
+        gridViewSettings.Styles.FocusedRow.CssClass = "focused";
+
+        gridViewSettings.SettingsBehavior.AllowFocusedRow = true;
+        //    gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+        gridViewSettings.SettingsBehavior.AllowEllipsisInText = true;
+        gridViewSettings.SettingsBehavior.AllowDragDrop = false;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+        gridViewSettings.SearchPanelEditorCreate = (sender, e) =>
+        {
+            e.EditorProperties = new DateEditProperties();
+        };
+        gridViewSettings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        gridViewSettings.SettingsEditing.EditFormColumnCount = 2;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        gridViewSettings.Settings.VerticalScrollBarMode = ScrollBarMode.Hidden;
+        gridViewSettings.Settings.HorizontalScrollBarMode = ScrollBarMode.Auto;
+        gridViewSettings.Settings.ShowHeaderFilterButton = true;
+
+        gridViewSettings.SettingsPager.PageSize = 50;
+        gridViewSettings.SettingsPager.EnableAdaptivity = true;
+        gridViewSettings.SettingsPager.PageSizeItemSettings.Visible = true;
+
+        gridViewSettings.SettingsExport.EnableClientSideExportAPI = true;
+        gridViewSettings.SettingsExport.ExportSelectedRowsOnly = true;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 700;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 1200;
+        gridViewSettings.EditFormLayoutProperties.UseDefaultPaddings = false;
+        gridViewSettings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+        gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+        gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+        gridViewSettings.SetEditFormTemplateContent(c =>
+        {
+
+            ComprobanteNeg em = new ComprobanteNeg();
+            Html.DevExpress().FormLayout(layoutSetting =>
+            {
+                layoutSetting.Name = "FormLayoutSetting";
+
+                layoutSetting.Width = Unit.Percentage(100);
+
+                layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+                layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+                layoutSetting.UseDefaultPaddings = false;
+
+                layoutSetting.ColumnCount = 12;
+
+                var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Caption = "Registro";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                    groupSettings.ColumnCount = 12;
+                    groupSettings.ColumnSpan = 12;
+                });
+
+                groupItem.Items.Add(i =>
+                {
+
+                    i.FieldName = "CNROITEM";
+                    i.Caption = "Secuencia";
+
+                    i.ColumnSpan =6;
+                    i.NestedExtension().TextBox(t =>
+                    {
+
+
+                        // t.Properties.ClientSideEvents.Init = "onData";
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "tipo";
+                    i.ColumnSpan = 6;
+                    i.Caption = "Tipo";
+                    i.NestedExtension().ComboBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.SelectedIndex = 0;
+                        t.Properties.Items.Add("DEBE", 0);
+                        t.Properties.Items.Add("HABER", 1);
+                        //  t.Properties.ClientSideEvents.SelectedIndexChanged = "onchangeCambio";
+
+                    });
+                });
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CCODCONTA";
+                    i.Caption = "cuenta";
+                    i.ColumnSpan = 12;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectPlanCuenta");
+                    });
+                });
+               
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "NVALOR";
+                    i.Caption = "Valor";
+                    i.ColumnSpan = 6;
+                    i.NestedExtension().TextBox(t =>
+                    {
+
+                        // t.Properties.ClientSideEvents.Init = "onData";
+                    });
+                });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CCOSTO";
+
+                    i.Caption = "C. costos:";
+                    i.ColumnSpan = 6;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectCentroCostos");
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "ordenFabricacion";
+                    i.Caption = "Ord. Fabricación";
+                    i.ColumnSpan =6;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectOrdenFabricacion");
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "CDESTCOMP";
+                    i.Caption = "C. Destino";
+                    i.ColumnSpan = 6;
+
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectDestino", new { CO_C_CODIG = DataBinder.Eval(c.DataItem, "CDESTCOMP") });
+                    });
+                });
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "ANEX_CODIGO";
+                    i.Caption = "Anexo";
+                    i.ColumnSpan = 12;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectAnexo", new { ANEX_CODIGO = DataBinder.Eval(c.DataItem, "ANEX_CODIGO") });
+                    });
+                });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CGLOSA";
+                    i.ColumnSpan = 12;
+                    i.Caption = "Glosa";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                    });
+
+                });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "Cantidad";
+                    i.ColumnSpan = 6;
+                    i.Caption = "Cantidad";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                    });
+
+                });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "Maquina";
+                    i.ColumnSpan = 6;
+                    i.Caption = "Maquina";
+                    i.NestedExtension().ComboBox(s =>
+                    {
+                        s.Width = Unit.Percentage(100);
+                        s.ShowModelErrors = true;
+                        s.Properties.ValidationSettings.Display = Display.Dynamic;
+                        s.Properties.ValidationSettings.SetFocusOnError = true;
+                        s.Properties.ValidationSettings.ErrorTextPosition = ErrorTextPosition.Bottom;
+                        s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithText;
+                        s.Properties.DataSource = em.findAllMaquinas();
+                        s.Properties.ValueField = "idmaquina";
+                        s.Properties.TextField = "maq_codigo";
+
+                    });
+
+                });
+
+                layoutSetting.Items.Add(itemSettings =>
+                {
+                    itemSettings.ColumnSpan = 12;
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                }).SetNestedContent(() =>
+                {
+                    ViewContext.Writer.Write("<div style='float:right'>");
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnUpdate";
+                            btnSettings.Text = "Grabar";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
+
+                            //I want to Hide Update Button when FirstName is "John"
+
+                        }).Render();
+
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnCancel";
+                            btnSettings.Text = "Cancel";
+                            btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";
+                        }).Render();
+                    ViewContext.Writer.Write("</div>");
+                });
+
+
+            }).Bind(ViewData["Object"] ?? c.DataItem).Render();
+
+        });
+
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "codigo";
+            columnSettings.Caption = "Orde";
+            columnSettings.Visible = false;
+            columnSettings.Width = Unit.Pixel(300);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "CORDEN";
+            columnSettings.Caption = "Orden";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "ANEX_DESCRIPCION";
+            columnSettings.Caption = "Provedor";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "DEMISION";
+            columnSettings.Caption = "Fecha";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "documento";
+            columnSettings.Caption = "documento";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "TIPOMON_CODIGO";
+            columnSettings.Caption = "MON.";
+            columnSettings.Width = Unit.Pixel(200);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "NIGV";
+            columnSettings.Caption = "I.G.V";
+            columnSettings.Width = Unit.Pixel(70);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "NIMPORTE";
+            columnSettings.Caption = "Importe";
+            columnSettings.Width = Unit.Pixel(170);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "CESTADO";
+            columnSettings.Caption = "Estado";
+            columnSettings.Width = Unit.Pixel(170);
+
+        });
+        gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
+        gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
+        //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";
+        gridViewSettings.CellEditorInitialize = (s, e) =>
+        {
+            ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
+        };
+    });
+    if (ViewBag.GeneralError != null)
+    {
+        gridView.SetEditErrorText(ViewBag.GeneralError);
+    }
+}
+
+@gridView.Bind(Model).GetHtml()
+

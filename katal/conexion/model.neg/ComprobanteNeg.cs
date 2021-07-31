@@ -25,6 +25,24 @@ namespace katal.conexion.model.neg
         {
             return objComprobanteDao.findAll();
         }
+        public List<Comprobante> findAllConta(string sCorrelativo, string TIPODOCU_CODIGO, string CSERIE, string CNUMERO)
+        {
+            return objComprobanteDao.findAllConta(sCorrelativo, TIPODOCU_CODIGO, CSERIE, CNUMERO);
+        }
+        public List<PlanCuentaNacional> findAllCuentasNacionales(int NivelContable)
+        {
+            return objComprobanteDao.findAllCuentasNacionales(NivelContable);
+        }
+
+        public List<OrdenFabricacion> findAllOrdenFabricacion()
+        {
+            return objComprobanteDao.findAllOrdenFabricacion();
+        }
+        public List<Maquinas> findAllMaquinas()
+        {
+            return objComprobanteDao.findAllMaquinas();
+        }
+
         public List<Gasto> findAllGastos() {
             return objComprobanteDao.findAllGastos();
         }

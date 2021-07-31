@@ -1,0 +1,41 @@
+﻿
+
+
+@Html.DevExpress().GridLookup(settings =>
+{
+    //settings.Properties.Caption = "Area:";
+
+    settings.Name = "gridLookupOrdenFabricacion";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "Comprobante", Action = "MultiSelectOrdenFabricacion", OF_COD = Model.OF_COD };
+
+    settings.KeyFieldName = "OF_COD";
+
+    //settings.CommandColumn.Visible = true;
+    // settings.CommandColumn.ShowSelectCheckbox = true;
+
+    settings.Columns.Add("OF_COD").Width = Unit.Percentage(10);
+    settings.Columns.Add("OF_ARTNOM").Width = Unit.Percentage(80);
+    settings.Columns.Add("OF_ARTUNI").Width = Unit.Percentage(10);
+
+    settings.Width = Unit.Percentage(100);
+
+    settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
+    settings.Properties.TextFormatString = "{1}";
+
+    settings.GridViewProperties.Settings.ShowFilterRow = true;
+    settings.GridViewProperties.Settings.ShowColumnHeaders = false;
+    settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
+    //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
+    settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
+    settings.GridViewProperties.SettingsPager.PageSize = 7;
+
+    //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
+
+    settings.DataBound = (sender, e) =>
+    {
+        var gridLookup = (MVCxGridLookup)sender;
+        gridLookup.GridView.Width = Unit.Percentage(100);
+    };
+}).BindList(ViewData["OrdenFabricacion"]).Bind(Model.OF_COD).GetHtml()
+
+

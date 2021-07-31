@@ -1,5 +1,6 @@
 ﻿
 @using katal.conexion.model.entity;
+
 @using katal.Model;
 @model List<Comprobante>
 @{
@@ -67,7 +68,7 @@
         gridViewSettings.SetEditFormTemplateContent(c =>
         {
 
-
+           
             Html.DevExpress().FormLayout(layoutSetting =>
             {
                 layoutSetting.Name = "FormLayoutSetting";

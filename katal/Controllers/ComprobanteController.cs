@@ -18,13 +18,17 @@ namespace katal.Controllers
         private TipoAnexoNeg tipoAnexoNeg;
         private DestinoNeg destinoNeg;
         private ResponsableCmpNeg responsable;
+        private EmpresaNeg empresaNeg;
+        private RequisicionCompraNeg requisicionNeg;
 
         private string BD;
         public ComprobanteController()
         {
             responsable = new ResponsableCmpNeg();
             comprobanteNeg = new ComprobanteNeg();
+            empresaNeg = new EmpresaNeg();
             destinoNeg = new DestinoNeg();
+            requisicionNeg = new RequisicionCompraNeg();
             ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
             if (user == null)
             {
@@ -39,10 +43,24 @@ namespace katal.Controllers
             GridViewHelper.Comprobantes = comp;
             return View(GridViewHelper.Comprobantes);
         }
+        public ActionResult Contabilizar()
+        {
+            GridViewHelper.NivelCOntable =int.Parse(  empresaNeg.findContable(GridViewHelper.user.codEmpresa).EMP_NIVEL);
+
+            List<Comprobante> comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE,GridViewHelper.COMP_CNUMERO);
+            GridViewHelper.Comprobantes = comp;
+            return View(GridViewHelper.Comprobantes);
+        }
+
         public ActionResult GridViewPartial()
         {
             //List<Comprobante> comp = comprobanteNeg.findAll();
             return PartialView("GridViewPartial", GridViewHelper.Comprobantes);
+        }
+        public ActionResult ContaGridViewPartial()
+        {
+            //List<Comprobante> comp = comprobanteNeg.findAll();
+            return PartialView("ContaGridViewPartial", GridViewHelper.Comprobantes);
         }
 
         [ValidateAntiForgeryToken]
@@ -163,13 +181,14 @@ namespace katal.Controllers
         {
 
         }
-        private ActionResult UpdateModelWithDataValidation(Comprobante issue, Action<Comprobante> updateMethod)
+        private ActionResult UpdateModelWithDataValidation(Comprobante issue, Action<Comprobante> metodo)
         {
             if (ModelState.IsValid)
-                SafeExecute(() => updateMethod(issue));
+                SafeExecute(() => metodo(issue));
             else
                 ViewBag.GeneralError = "Please, correct all errors.";
-            return GridViewPartial();
+                     
+            return RedirectToAction("contabilizar");
         }
 
 
@@ -211,6 +230,8 @@ namespace katal.Controllers
             return PartialView("MultiSelectTipoAnexo", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
 
         }
+
+
         public ActionResult MultiSelectAnexo(string ANEX_CODIGO = "-1")
         {
              ViewData["Anexo"] = tipoAnexoNeg.findAllAnexo();
@@ -345,6 +366,39 @@ namespace katal.Controllers
                 CODIGO = "";
             return PartialView("MultiSelectTipoOperacion", new TipoOperacion() { CODIGO = CODIGO });
         }
-       
+
+        // VER CONPROBANTE
+        public ActionResult MultiSelectPlanCuenta(string PLANCTA_CODIGO = "-1")
+        {
+            ViewData["PlanCuenta"] = comprobanteNeg.findAllCuentasNacionales(GridViewHelper.NivelCOntable);
+
+
+            if (PLANCTA_CODIGO == "-1")
+                PLANCTA_CODIGO = "";
+            return PartialView("MultiSelectPlanCuenta", new PlanCuentaNacional() { PLANCTA_CODIGO = PLANCTA_CODIGO });
+
+        }
+
+        public ActionResult MultiSelectCentroCostos(string CENCOST_CODIGO = "-1")
+        {
+
+
+            ViewData["centro_costos"] = requisicionNeg.findAllCentroCostos();
+            if (CENCOST_CODIGO == "-1")
+                CENCOST_CODIGO = "";
+            return PartialView("MultiSelectCentroCostos", new CentroCosto() { CENCOST_CODIGO = CENCOST_CODIGO });
+
+        }
+        public ActionResult MultiSelectOrdenFabricacion(string OF_COD = "-1")
+        {
+            ViewData["OrdenFabricacion"] = comprobanteNeg.findAllOrdenFabricacion();
+
+
+            if (OF_COD == "-1")
+                OF_COD = "";
+            return PartialView("MultiSelectOrdenFabricacion", new OrdenFabricacion() { OF_COD = OF_COD });
+        }
+
+
     }
 }
