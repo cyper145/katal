@@ -241,8 +241,8 @@ namespace katal.Controllers
             else
                 ViewBag.GeneralError = "Please, correct all errors.";
 
-            //return RedirectToAction("contabilizar");
-            return PartialView("GridViewPartial");
+           return RedirectToAction("contabilizar");
+           // return PartialView("GridViewPartial");
         }
 
         public ActionResult MultiSelectGasto(string Gastos_Codigo = "-1", FormCollection dataR = null)

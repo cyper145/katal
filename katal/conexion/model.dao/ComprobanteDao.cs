@@ -29,7 +29,7 @@ namespace katal.conexion.model.dao
             ///0      
         }
         
-    public void create(Comprobante obj)
+        public void create(Comprobante obj)
         {
             DateTime date = DateTime.Now;
             string sEstado = "";
@@ -382,10 +382,7 @@ namespace katal.conexion.model.dao
        
         
 
-        /* public void create(Comprobante obj)
-         {
-
-         }*/
+       
         public decimal IIfData(bool verificacion, decimal data1, decimal data2)
         {
             if (verificacion)
@@ -546,7 +543,7 @@ namespace katal.conexion.model.dao
             DateTime date = DateTime.Now; 
             
             string anios = date.Year.ToString("0000.##");
-            anios="2015";
+           // anios="2015";
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
             //string findAll = $"SELECT * FROM {table} WHERE CAMESPROC='" + msAnoMesProc +"' AND CSALDINI=0";
@@ -676,7 +673,7 @@ namespace katal.conexion.model.dao
             List<Comprobante> listComprobantes = new List<Comprobante>();
 
             string anios = date.Year.ToString("0000.##");
-            anios = "2015";
+           // anios = "2015";
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
             //string findAll = $"SELECT * FROM {table} WHERE CAMESPROC='" + msAnoMesProc +"' AND CSALDINI=0";
