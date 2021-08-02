@@ -23,7 +23,7 @@ namespace katal.conexion.model.entity
         public string rol { get; set; }
         public User()
         {
-
+            this.rol_id = 1;
         }
         public User(int user_id)
         {

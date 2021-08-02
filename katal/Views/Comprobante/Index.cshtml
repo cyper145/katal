@@ -44,7 +44,7 @@
 
             $.getJSON('/Comprobante/CargarTipoAnexoMoneda', function (resp) {
                 $.each(resp, function (k, v) {
-
+                    console.log(v.gasto);
                     gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
                     TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
                 });
@@ -59,8 +59,8 @@
                 $.each(resp, function (k, v) {
                     console.log(v);
 
-                    TipoCambio_Valor.SetText(v.data);
-                    TipoCambio_Valor12.SetText(v.dataEspecial);
+                    TIPOCAMBIO_VALOR.SetText(v.data);
+                    TIPOCAMBIO_VALOR2.SetText(v.dataEspecial);
                     //gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
                     //TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
                 });
@@ -184,6 +184,15 @@
             }
 
         }
+        function OnChangeDfecha(s, e) {
+
+            let fecha = DFecha.GetText();
+            $.getJSON('/Comprobante/changeDFecha?DFecha=' + fecha, function (resp) {
+                $.each(resp, function (k, v) {
+                   
+                });
+            });
+        }
         function DateEmision() {
 
             if (DRECEPCIO.GetText() == "") {
@@ -204,6 +213,21 @@
                 // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
             }
         }
+        function cambioIgv() {
+
+
+            let baseimporte = parseFloat(NBASEIMP.GetText());
+            let tasaigv = parseFloat(NTASAIGV.GetText());
+            let importepercepcion = parseFloat(NPERCEPCION.GetText());
+            let montoigv = baseimporte * tasaigv / 100;
+            let totaligv = montoigv + baseimporte;
+            let totalpagar = totaligv + importepercepcion
+            NIGV.SetText(montoigv);
+            NIMPORTE.SetText(totaligv);
+            MontoPagar.SetText(totalpagar);
+        }
+
+
 
 
     function OnClick(s, e) {
@@ -368,6 +392,7 @@
     @Html.AntiForgeryToken()
 
     @Html.Partial("GridViewPartial")
+    @Html.Partial("partialPopup")
+
 }
 
-@Html.Partial("partialPopup")

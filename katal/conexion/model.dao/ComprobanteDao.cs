@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using katal.conexion.model.entity;
@@ -27,7 +28,7 @@ namespace katal.conexion.model.dao
             
             ///0      
         }
-        /*
+        
     public void create(Comprobante obj)
         {
             DateTime date = DateTime.Now;
@@ -40,36 +41,24 @@ namespace katal.conexion.model.dao
             string verificacion = verificaDoc_cxc(obj.ANEX_CODIGO ,obj.TIPODOCU_CODIGO,obj.CSERIE , obj.CNUMERO);
 
             string cCorre = "";
-            if (verificacion != "" && verificacion != "El Documento Esta en Cuentas x Pagar")
-            {
-               
+            
+
                 try
                 {
-                    string Cadenar = "UPDATE [014BDCOMUN].[dbo].COMPROBANTECAB SET CNUMORDCO='" + obj.CTDREFER.Trim() + "',";
-                    Cadenar += " NUMRETRAC='" + obj.NUMRETRAC + "', CAOCOMPRA='" + obj.CAOCOMPRA + "',";
-                    Cadenar += " dvence=" + obj.DVENCE + "";
-                    Cadenar += ",FECRETRAC=" + obj.FECRETRAC;
-                    Cadenar += " WHERE CAMESPROC='" + msAnoMesProc + "' AND CORDEN='" + obj.CORDEN + "'";
-                    comando = new SqlCommand(Cadenar, objConexion.getCon());
-                    objConexion.getCon().Open();
-                    comando.ExecuteNonQuery();
-
-                    string  CadenaD = "SELECT EDOC_OBLIGA FROM ESTADODOC WHERE EDOC_CLAVE = '1'";
-                    comando = new SqlCommand(CadenaD, objConexion.getCon());
-                    objConexion.getCon().Open();
-                    SqlDataReader readinterno = comando.ExecuteReader();
-                    if (readinterno.Read())
+                    if (verificacion != "" && verificacion != "El Documento Esta en Cuentas x Pagar")
                     {
-                        bool docobliga =Conversion.ParseBool( readinterno[0].ToString());
-                        if (docobliga)
-                        {
-                            sEstado = "0";
-                        }
-                        else
-                        {
-                            sEstado = "1";
-                        }
+
+                        string Cadenar = "UPDATE [014BDCOMUN].[dbo].COMPROBANTECAB SET CNUMORDCO='" + obj.CTDREFER.Trim() + "',";
+                        Cadenar += " NUMRETRAC='" + obj.NUMRETRAC + "', CAOCOMPRA='" + obj.CAOCOMPRA + "',";
+                        Cadenar += " dvence=" + obj.DVENCE + "";
+                        Cadenar += ",FECRETRAC=" + obj.FECRETRAC;
+                        Cadenar += " WHERE CAMESPROC='" + msAnoMesProc + "' AND CORDEN='" + obj.CORDEN + "'";
+                        comando = new SqlCommand(Cadenar, objConexion.getCon());
+                        objConexion.getCon().Open();
+                        comando.ExecuteNonQuery();
                     }
+                
+                sEstado = Estado();
                     switch (obj.CDESTCOMP)
                     {
                         case "002":
@@ -81,14 +70,17 @@ namespace katal.conexion.model.dao
                             nPorcen = 0;
                             nValCIF = 0;
                             break;
-                      
-                    }
+                    default:
+                        nPorcen = 0;
+                        nValCIF = 0;
+                        break;
+                }
 
                     cCorre = funcAutoNum(msAnoMesProc);
 
 
-                    CadenaD = "INSERT INTO COMPROBANTECAB (";
-                    CadenaD +=  "EMP_CODIGO,CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
+                    string CadenaD = "INSERT INTO COMPROBANTECAB (";
+                    CadenaD += "EMP_CODIGO,CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
                     CadenaD += "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, ";
                     CadenaD += "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, ";
                     CadenaD += "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, ";
@@ -104,26 +96,26 @@ namespace katal.conexion.model.dao
                     CadenaD += "RCO_FECHA,";
                     CadenaD += "flg_RNTNODOMICILIADO,CAOCOMPRA) VALUES (";
                     CadenaD += "'" + GridViewHelper.user.codEmpresa + "','" + cCorre + "', '" + obj.ANEX_CODIGO + "', '" + obj.ANEX_DESCRIPCION + "', '" + obj.TIPODOCU_CODIGO + "', '" + obj.CSERIE + "',";
-                    CadenaD += "'" + obj.CNUMERO + "', " + obj.DEMISION + ", " + obj.DVENCE + ", " + obj.DRECEPCIO + ", '" + obj.TIPOMON_CODIGO + "',";
+                    CadenaD += "'" + obj.CNUMERO + "', " + dateFormat(obj.DEMISION)  + ", " + dateFormat(obj.DVENCE)  + ", " + dateFormat(obj.DRECEPCIO) + ", '" + obj.TIPOMON_CODIGO + "',";
                     //End If
                     //
-                    if(obj.CDESTCOMP.Trim()== "007" || obj.CDESTCOMP.Trim()=="008")
+                    if (obj.CDESTCOMP.Trim() == "007" || obj.CDESTCOMP.Trim() == "008")
                     {
-                       // CadenaD += "" + IIf(true, Math.Round(Val(obj.NTOTRH), 2) - Math.Round(Val(obj.NIR4), 2), Math.Round(Val(obj.NIMPORTE), 2)) + ", ";
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";                                      
+                        // CadenaD += "" + IIf(true, Math.Round(Val(obj.NTOTRH), 2) - Math.Round(Val(obj.NIR4), 2), Math.Round(Val(obj.NIMPORTE), 2)) + ", ";
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
                     }
                     else
-                        if(obj.CDESTCOMP.Trim() == "006")
-                         {
-                            CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIMPORTE, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
-                         }
-                        else
-                        {
-                             CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";                      
-                        }
+                        if (obj.CDESTCOMP.Trim() == "006")
+                    {
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIMPORTE, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
+                    }
+                    else
+                    {
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
+                    }
 
-                 //   CadenaD += "" + obj.CONVERSION_CODIGO == "ESP" ? obj.TIPOCAMBIO_VALOR  : 0    + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
-                    CadenaD += "" + obj.CONVERSION_CODIGO    + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
+                    //   CadenaD += "" + obj.CONVERSION_CODIGO == "ESP" ? obj.TIPOCAMBIO_VALOR  : 0    + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
+                    CadenaD += "" + obj.TIPOCAMBIO_VALOR.ToString("F3", CultureInfo.InvariantCulture) + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
                     //
                     if (obj.CDESTCOMP.Trim() == "007" || obj.CDESTCOMP.Trim() == "008")
                     {
@@ -133,44 +125,38 @@ namespace katal.conexion.model.dao
                     else
                         if (obj.CDESTCOMP.Trim() == "006")
                     {
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIES, 2), Math.Round(obj.NIMPORTE+obj.NPERCEPCION,2)) + ", ";
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIES, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
                     }
                     else
                     {
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH+ obj.NPERCEPCION, 2), Math.Round(obj.NIMPORTE+obj.NPERCEPCION, 2)) + ", ";
+                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
                     }
+                    // cuando hay honorarios
+                    CadenaD += "'" + obj.CCODCONTA.Trim() + "', '" + funcBlanco(obj.CFORMPAGO) + "', '" + funcBlanco(obj.CSERREFER) + "', '" + funcBlanco(obj.CNUMREFER) + "',";
+                    CadenaD += "'" + funcBlanco(obj.CTDREFER) + "', '" + obj.CONVERSION_CODIGO + "', " + dateFormat(obj.DREGISTRO) + ", '" + obj.CTIPPROV + "', '" + obj.CNRORUC + "', ";
+                    CadenaD += "" + boolToInt(  obj.ESTCOMPRA) + ", '" + funcBlanco(obj.CDESTCOMP) + "', " + obj.DIASPAGO + ", '" + obj.CIGVAPLIC + "', '" + obj.CCONCEPT + "',";
+                    CadenaD += "" + dateFormat(obj.DFECREF) + ", " + obj.NTASAIGV + ", " + obj.NIGV + ", " + nPorcen + ", '" + funcBlanco(obj.CCODRUC) + "', ";
+                    CadenaD += "" + 0 + ", " + obj.NIR4 + ", " + obj.NIES + ", " + obj.NTOTRH + ", " + obj.NBASEIMP + ",";
+                    CadenaD += "" + nValCIF + ", " + dateFormat(obj.DEMISION) + ", '" + msAnoMesProc + "', " + boolToInt( obj.CSALDINI) + "," + obj.NPERCEPCION + ",'" + obj.NUMRETRAC + "'";
+                    CadenaD += "," + dateFormat(obj.FECRETRAC) + "";
 
-                    CadenaD += "'" + Trim(obj.GASTOS_CUENTACON) + "', '" + funcBlanco(txtForPago) + "', '" + funcBlanco(txtRefSerie) + "', '" + funcBlanco(txtRefNro) + "',";
-        Cadena = Cadena & "'" & funcBlanco(txtRefTpoDcto) & "', '" & txtTpoConv & "', " & FechS(VGFecTrb, Sqlf) & ", '" & txtTpoAnexo & "', '" & lblRuc & "', "
-        Cadena = Cadena & "" & chkRegComp.Value & ", '" & funcBlanco(txtDEst) & "', " & txtDias & ", '" & Mid(chkIGVxAplic.Caption, 1, 1) & "', '" & txtCpto & "',"
-        Cadena = Cadena & "" & FechS(dtpRefFecha, Sqlf) & ", " & txtTasaIGV & ", " & Round(Val(txtMontoIGV), 2) & ", " & Round(Val(nPorcen), 2) & ", '" & funcBlanco(txtRefAnexo) & "', "
-        Cadena = Cadena & "" & IIf(fraHono.Visible, 1, 0) & ", " & Round(Val(txtIR4ta), 2) & ", " & Round(Val(txtIES), 2) & ", " & Round(Val(txttotal), 2) & ", " & Round(Val(txtBaseImp), 2) & ","
-
-
-        Cadena = Cadena & "" & Round(Val(nValCIF), 2) & ", " & IIf(txtTpoConv = "FEC", FechS(dtpFecTC, Sqlf), FechS(dtpFecEmi, Sqlf)) & ", '" & msAnoMesProc & "', " & IIf(mbSalInic, 1, 0) & "," & ESNULO(txtImpPercep, 0) & ",'" & txNumDetraccion.Text & "'"
-        If IsDate(MaskEdBox1) Then
-           Cadena = Cadena & ",'" & Format(MaskEdBox1, "yyyy/dd/mm") & "'"
-        Else
-           Cadena = Cadena & ",''"
-        End If
-        Cadena = Cadena & ",'" & Trim(TxDocReferencia.Text) & "','" & IIf(Combo1.ListIndex = 1, "1", "0") & "',"
+                    CadenaD += ",'" + funcBlanco(obj.CNUMORDCO).Trim() + "','" + obj.CO_L_RETE + "',";
 
 
-        If Val(txtMontoIGV) = 0 Then
-          Cadena = Cadena & "0,0,0,'','',0,"
-        Else
-          Cadena = Cadena & cmbDetraccion.ListIndex & "," & Val(TxtTasaDet) & "," & Round(Val(txtTotalVta) * Val(TxtTasaDet) / 100, 2) & ",'" & txtTipServ.Text & "','" & txtTipOper.Text & "'," & Val(TxTImporteRef) & ","
-        End If
+                    if (obj.NTASAIGV == 0 ){
+                        CadenaD += "0,0,0,'','',0,";
+                    }
+                    else
+                    {
+                        CadenaD += boolToInt( obj.LDETRACCION) + "," + obj.NTASADETRACCION + "," + (obj.NIMPORTE * obj.NTASADETRACCION / 100) + ",'" + obj.COD_SERVDETRACC + "','" + obj.COD_TIPOOPERACION + "'," + obj.NIMPORTEREF + ",";
 
-
-        Cadena = Cadena & "'" & txt_RefCmp_Tipo.Text & "','" & txt_RefCmp_Serie.Text & "','" & txt_RefCmp_Documento & "',"
-        If IsDate(txtFecDocRef) Then
-          Cadena = Cadena & "'" & Format(txtFecDocRef, "yyyy/dd/mm") & "',"
-        End If
-        Cadena = Cadena & chk_RNoDomiciliado.Value & ",'" & txtOCompra.Text & "')"
-
-
-
+                    }
+                    CadenaD += "'" + obj.RCO_TIPO + "','" + obj.RCO_SERIE + "','" + obj.RCO_NUMERO + "',";
+                    CadenaD +=  "" + dateFormat(obj.RCO_FECHA) + ",";
+                    CadenaD += obj.flg_RNTNODOMICILIADO + ",'" + obj.CAOCOMPRA + "')";
+                    comando = new SqlCommand(CadenaD, objConexion.getCon());
+                    objConexion.getCon().Open();
+                    comando.ExecuteNonQuery();
                 }
                 catch (Exception)
                 {
@@ -181,7 +167,7 @@ namespace katal.conexion.model.dao
                     objConexion.getCon().Close();
                     objConexion.cerrarConexion();
                 }
-            }
+            
 
         
 
@@ -193,88 +179,7 @@ namespace katal.conexion.model.dao
     
 
 
-    If Not(mrst_RegDctos.RecordCount< 1) Then reg = dgrData.Bookmark
-
-
-    If mbEstado Then 'Nuevo registro
-        cCorre = funcAutoNum
-        If Trim(cCorre) = "NULL" Then
-            Exit Sub
-        End If
-        'TxtOrden = cCorre
-
-
-        Set rs = New ADODB.Recordset
-
-        Cadena = "INSERT INTO COMPROBANTECAB ("
-        Cadena = Cadena & "EMP_CODIGO,CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, "
-        Cadena = Cadena & "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, "
-        Cadena = Cadena & "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, "
-        Cadena = Cadena & "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, "
-        Cadena = Cadena & "CTDREFER, CONVERSION_CODIGO, DREGISTRO, CTIPPROV, CNRORUC, "
-        Cadena = Cadena & "ESTCOMPRA, CDESTCOMP, DIASPAGO, CIGVAPLIC, CCONCEPT, "
-        Cadena = Cadena & "DFECREF, NTASAIGV, NIGV, NPORCE, CCODRUC, "
-        Cadena = Cadena & "LHONOR, NIR4, NIES, NTOTRH, NBASEIMP, "
-        Cadena = Cadena & "NVALCIF, DCONTAB, CAMESPROC, CSALDINI,NPERCEPCION,NUMRETRAC,"
-        Cadena = Cadena & "FECRETRAC,CNUMORDCO,"
-        Cadena = Cadena & "CO_L_RETE,LDETRACCION,NTASADETRACCION, DETRACCION,COD_SERVDETRACC,COD_TIPOOPERACION,"
-        Cadena = Cadena & "nImporteRef, RCO_TIPO, RCO_SERIE, RCO_NUMERO,"
-        If IsDate(txtFecDocRef) Then
-           Cadena = Cadena & "RCO_FECHA,"
-        End If
-        Cadena = Cadena & "flg_RNTNODOMICILIADO,CAOCOMPRA) VALUES ("
-        Cadena = Cadena & "'" & VGEMP_CODIGO & "','" & cCorre & "', '" & txtanexo & "', '" & lblAnexo & "', '" & txtTpoDcto & "', '" & txtserie & "',"
-        Cadena = Cadena & "'" & txtnumero & "', " & FechS(dtpFecEmi, Sqlf) & ", " & FechS(dtpFecVenc, Sqlf) & ", " & FechS(dtpFecRecep, Sqlf) & ", '" & txtmoneda & "',"
-        If Trim(txtDEst) = "007" Or Trim(txtDEst) = "008" Then
-            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal), 2) - Round(Val(txtIR4ta), 2), Round(Val(txtTotalVta), 2)) & ", "
-        ElseIf Trim(txtDEst) = "006" Then
-            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal), 2) - (Round(Val(txtIR4ta), 2) + Round(Val(txtIES), 2)), Round(Val(txtTotalVta), 2)) & ", "
-        Else
-            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal), 2), Round(Val(txtTotalVta), 2)) & ", "
-        End If
-        Cadena = Cadena & "" & IIf(txtTpoConv = "ESP", txtTipEsp, txtTC) & ", '" & funcBlanco(TxtGlosa) & "', '" & txtResp & "', '" & sEstado & "', "
-        If Trim(txtDEst) = "007" Or Trim(txtDEst) = "008" Then
-            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal) + Val(txtImpPercep), 2) - Round(Val(txtIR4ta), 2), Round(Val(txtTotalVta) + Val(txtImpPercep), 2)) & ", "
-        ElseIf Trim(txtDEst) = "006" Then
-            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal) + Val(txtImpPercep), 2) - (Round(Val(txtIR4ta), 2) + Round(Val(txtIES), 2)), Round(Val(txtTotalVta) + Val(txtImpPercep), 2)) & ", "
-        Else
-            Cadena = Cadena & "" & IIf(fraHono.Visible, Round(Val(txttotal) + Val(txtImpPercep), 2), Round(Val(txtTotalVta) + Val(txtImpPercep), 2)) & ", "
-        End If
-        Cadena = Cadena & "'" & Trim(msCtaGasto) & "', '" & funcBlanco(txtForPago) & "', '" & funcBlanco(txtRefSerie) & "', '" & funcBlanco(txtRefNro) & "',"
-        Cadena = Cadena & "'" & funcBlanco(txtRefTpoDcto) & "', '" & txtTpoConv & "', " & FechS(VGFecTrb, Sqlf) & ", '" & txtTpoAnexo & "', '" & lblRuc & "', "
-        Cadena = Cadena & "" & chkRegComp.Value & ", '" & funcBlanco(txtDEst) & "', " & txtDias & ", '" & Mid(chkIGVxAplic.Caption, 1, 1) & "', '" & txtCpto & "',"
-        Cadena = Cadena & "" & FechS(dtpRefFecha, Sqlf) & ", " & txtTasaIGV & ", " & Round(Val(txtMontoIGV), 2) & ", " & Round(Val(nPorcen), 2) & ", '" & funcBlanco(txtRefAnexo) & "', "
-        Cadena = Cadena & "" & IIf(fraHono.Visible, 1, 0) & ", " & Round(Val(txtIR4ta), 2) & ", " & Round(Val(txtIES), 2) & ", " & Round(Val(txttotal), 2) & ", " & Round(Val(txtBaseImp), 2) & ","
-
-
-        Cadena = Cadena & "" & Round(Val(nValCIF), 2) & ", " & IIf(txtTpoConv = "FEC", FechS(dtpFecTC, Sqlf), FechS(dtpFecEmi, Sqlf)) & ", '" & msAnoMesProc & "', " & IIf(mbSalInic, 1, 0) & "," & ESNULO(txtImpPercep, 0) & ",'" & txNumDetraccion.Text & "'"
-        If IsDate(MaskEdBox1) Then
-           Cadena = Cadena & ",'" & Format(MaskEdBox1, "yyyy/dd/mm") & "'"
-        Else
-           Cadena = Cadena & ",''"
-        End If
-        Cadena = Cadena & ",'" & Trim(TxDocReferencia.Text) & "','" & IIf(Combo1.ListIndex = 1, "1", "0") & "',"
-
-
-        If Val(txtMontoIGV) = 0 Then
-          Cadena = Cadena & "0,0,0,'','',0,"
-        Else
-          Cadena = Cadena & cmbDetraccion.ListIndex & "," & Val(TxtTasaDet) & "," & Round(Val(txtTotalVta) * Val(TxtTasaDet) / 100, 2) & ",'" & txtTipServ.Text & "','" & txtTipOper.Text & "'," & Val(TxTImporteRef) & ","
-        End If
-
-
-        Cadena = Cadena & "'" & txt_RefCmp_Tipo.Text & "','" & txt_RefCmp_Serie.Text & "','" & txt_RefCmp_Documento & "',"
-        If IsDate(txtFecDocRef) Then
-          Cadena = Cadena & "'" & Format(txtFecDocRef, "yyyy/dd/mm") & "',"
-        End If
-        Cadena = Cadena & chk_RNoDomiciliado.Value & ",'" & txtOCompra.Text & "')"
-
-
-
-        rs.Open Cadena, cConexCom, adOpenKeyset, adLockOptimistic
-
-
-
+    /*
         If Check1.Value = 1 Then
             If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NPERCEPCION") Then
                CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NPERCEPCION NUMERIC(15,6) NULL"
@@ -415,14 +320,72 @@ namespace katal.conexion.model.dao
                     Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef))
                 End If
         End If
-    End If
+    End If*/
         }
-        */
-
-        public void create(Comprobante obj)
+        public string dateFormat(DateTime date)
         {
-
+            DateTime dateTime = DateTime.MinValue;
+            if(date == dateTime)
+            {
+                date =new  DateTime( 1900,1,1);
+            }
+            return  "'"+date.ToString("yyyy-dd-MM")+"'";
         }
+        public int boolToInt( bool val)
+        {
+            return val ? 1 : 0;
+        }
+        public string Estado()
+        {
+            string sEstado="0";
+            try
+            {
+                string CadenaD = "SELECT EDOC_OBLIGA FROM ESTADODOC WHERE EDOC_CLAVE = '1'";
+                comando = new SqlCommand(CadenaD, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader readinterno = comando.ExecuteReader();
+                if (readinterno.Read())
+                {
+                    bool docobliga = Conversion.ParseBool(readinterno[0].ToString());
+                    if (docobliga)
+                    {
+                        sEstado = "0";
+                    }
+                    else
+                    {
+                        sEstado = "1";
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return sEstado;
+        }
+        public  string  funcBlanco(String Valor )
+        {
+            if (Valor==null || Valor.Trim() == "" )
+            {
+                return " " ;
+            }
+            else
+            {
+                return Valor;
+            }
+        }
+       
+        
+
+        /* public void create(Comprobante obj)
+         {
+
+         }*/
         public decimal IIfData(bool verificacion, decimal data1, decimal data2)
         {
             if (verificacion)
@@ -434,7 +397,17 @@ namespace katal.conexion.model.dao
                 return data2;
             }
         }
-
+        public DateTime  IIfDateEdit(bool verificacion, DateTime data1, DateTime data2)
+        {
+            if (verificacion)
+            {
+                return data1;
+            }
+            else
+            {
+                return data2;
+            }
+        }
         public string verificaDoc_cxc(string anex, string doc, string Serie, string Num)
         {
 
@@ -571,8 +544,9 @@ namespace katal.conexion.model.dao
 
             List<Comprobante> listComprobantes = new List<Comprobante>();
             DateTime date = DateTime.Now; 
-      
-            string anios = date.Year.ToString("0000.##"); 
+            
+            string anios = date.Year.ToString("0000.##");
+            anios="2015";
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
             //string findAll = $"SELECT * FROM {table} WHERE CAMESPROC='" + msAnoMesProc +"' AND CSALDINI=0";
@@ -679,7 +653,7 @@ namespace katal.conexion.model.dao
 
                     comp.codigo = comp.CORDEN + comp.CAMESPROC;
                     comp.documento = comp.TIPODOCU_CODIGO + ' ' + comp.CSERIE + " - " + comp.CNUMERO;
-
+                    comp.MontoPagar = comp.NIMPORTE + comp.NPERCEPCION;
                     listComprobantes.Add(comp);
                 }
             }
@@ -702,6 +676,7 @@ namespace katal.conexion.model.dao
             List<Comprobante> listComprobantes = new List<Comprobante>();
 
             string anios = date.Year.ToString("0000.##");
+            anios = "2015";
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
             //string findAll = $"SELECT * FROM {table} WHERE CAMESPROC='" + msAnoMesProc +"' AND CSALDINI=0";

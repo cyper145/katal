@@ -65,10 +65,10 @@ namespace katal.conexion.model.dao
                 if (read.Read())
                 {
                     
-                    gasto.TIPOCAMB_COMPRA = read[0].ToString();
-                    gasto.TIPOCAMB_EQCOMPRA = read[1].ToString();
-                    gasto.TIPOCAMB_VENTA = read[2].ToString();
-                    gasto.TIPOCAMB_EQVENTA = read[3].ToString();
+                    gasto.TIPOCAMB_COMPRA =Conversion.ParseDecimal(  read[0].ToString());
+                    gasto.TIPOCAMB_EQCOMPRA = Conversion.ParseDecimal(read[1].ToString());
+                    gasto.TIPOCAMB_VENTA = Conversion.ParseDecimal(read[2].ToString());
+                    gasto.TIPOCAMB_EQVENTA = Conversion.ParseDecimal(read[3].ToString());
                    
                 }
                 else
@@ -81,10 +81,10 @@ namespace katal.conexion.model.dao
                     if (read2.Read())
                     {
 
-                        gasto.TIPOCAMB_COMPRA = read2[0].ToString();
-                        gasto.TIPOCAMB_EQCOMPRA = read2[1].ToString();
-                        gasto.TIPOCAMB_VENTA = read2[2].ToString();
-                        gasto.TIPOCAMB_EQVENTA = read2[3].ToString();
+                        gasto.TIPOCAMB_COMPRA = Conversion.ParseDecimal(read2[0].ToString());
+                        gasto.TIPOCAMB_EQCOMPRA = Conversion.ParseDecimal(read2[1].ToString());
+                        gasto.TIPOCAMB_VENTA = Conversion.ParseDecimal(read2[2].ToString());
+                        gasto.TIPOCAMB_EQVENTA = Conversion.ParseDecimal(read2[3].ToString());
 
                     }
                 }

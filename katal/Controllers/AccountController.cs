@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using katal.conexion.model.dao;
 using katal.conexion.model.entity;
@@ -74,10 +75,10 @@ namespace katal.Controllers
                 User user = new User();
                 user.username = model.UserName;
                 user.email = model.Email;
-                user.password = AuthHelper.Encriptar(model.Password);
+                user.password = model.Password;
                 user.photo = "ddd";// falta           
                 user.id = int.Parse(AuthHelper.generateID());
-
+                
                 try
                 {
                     userNeg.create(user);

@@ -246,6 +246,9 @@ namespace katal.conexion.model.dao
                     user.rol = read[11].ToString();
                     user.empresa = read[12].ToString();
                     user.estado = 99;
+                    string passwordd = Crypto.HashPassword(password);
+                    bool darff = Crypto.VerifyHashedPassword(user.password, password);
+                    bool dar2 = Crypto.VerifyHashedPassword(passwordd, password);
                     if (Crypto.VerifyHashedPassword(user.password, password))
                     {
                         return user;

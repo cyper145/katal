@@ -65,10 +65,14 @@
         gridViewSettings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+      
+
+
         gridViewSettings.SetEditFormTemplateContent(c =>
         {
 
-           
+
             Html.DevExpress().FormLayout(layoutSetting =>
             {
                 layoutSetting.Name = "FormLayoutSetting";
@@ -354,7 +358,7 @@
                                 */
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "TipoCambio_Valor";
+                    i.FieldName = "TIPOCAMBIO_VALOR";
                     i.ColumnSpan = 3;
                     i.Caption ="T/C";
                     i.NestedExtension().TextBox(t =>
@@ -366,7 +370,7 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "TipoCambio_Valor12";
+                    i.FieldName = "TIPOCAMBIO_VALOR2";
                     i.ColumnSpan = 3;
                     i.Caption = "T/C Especial";
                     i.NestedExtension().TextBox(t =>
@@ -427,6 +431,24 @@
 
                     });
                 });
+
+                groupItem.Items.Add(i =>
+
+                {
+
+                    i.FieldName = "data1";
+                    //i.ColumnSpan = 3;
+                    i.ColumnSpan = 3;
+                    i.Visible = false;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                    });
+                });
+
+
 
                 groupItem.Items.Add(itemSettings =>
                 {
@@ -523,6 +545,7 @@
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
                         t.Properties.ClientSideEvents.Init = "tasaIgv";
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
                     });
 
                 });
@@ -535,6 +558,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
                     });
 
                 });
@@ -563,6 +587,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
                     });
 
                 });
@@ -575,6 +600,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
                     });
 
                 });
@@ -587,18 +613,21 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
                     });
 
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "MontoPagartOTAL";// CALCULADO
+                    i.FieldName = "MontoPagar";// CALCULADO
                     i.ColumnSpan = 3;
                     i.Caption = "Monto Pagar";
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
+                        t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
                     });
 
                 });
@@ -622,7 +651,7 @@
                     i.Caption = "Ref.Comprobante";
                     i.SetNestedContent(() =>
                     {
-                        Html.RenderAction("MultiSelectTipoDocRef", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "TIPODOCU_CODIGO") });
+                        Html.RenderAction("MultiSelectTipoDocRef", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "CTDREFER") });
                     });
 
                 });

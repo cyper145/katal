@@ -28,6 +28,7 @@ namespace katal.Model
         public static string COMP_CSERIE = "";
         public static string COMP_CNUMERO = "";
         public static int NivelCOntable = 0;
+        public static Comprobante comprobante = new Comprobante();
        
 
 

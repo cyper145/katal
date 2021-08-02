@@ -21,6 +21,11 @@ namespace katal.conexion.model.neg
             monedaDao = new MonedaDao(bd);
             TipoOperacion = new TipoOperacionDao(bd);
         }
+
+        public void create(Comprobante comprobante)
+        {
+            objComprobanteDao.create(comprobante);
+        }
         public List<Comprobante> findAll()
         {
             return objComprobanteDao.findAll();

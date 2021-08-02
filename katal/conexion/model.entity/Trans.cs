@@ -13,7 +13,7 @@ namespace katal.conexion.model.entity
 
     public class Respuesta
     {
-        public string data { get; set; }
+        public decimal data { get; set; }
         public string dataEspecial { get; set; }
         public bool opcion  { get; set; }
         public bool especial  { get; set; }

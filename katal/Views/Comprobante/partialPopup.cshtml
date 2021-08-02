@@ -1,9 +1,11 @@
 ﻿
+
+
 @Html.DevExpress().PopupControl(
     settings =>
     {
         settings.Name = "pcModalMode";
-        settings.Width = 420;
+        settings.Width = 550;
         settings.AllowDragging = true;
         settings.CloseAction = CloseAction.CloseButton;
         settings.CloseOnEscape = true;
@@ -15,125 +17,115 @@
         settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
         settings.SetContent(() =>
         {
-            using (Html.BeginForm("Comprobante", "PopupControl", FormMethod.Post, new { id = "popupForm", @class = "edit_form" }))
+
+
+            @Html.DevExpress().FormLayout(s =>
             {
-                Html.Hidden("ProductID");
-
-                @Html.DevExpress().FormLayout(s =>
+                s.Name = "ModalModeFormLayout";
+                s.RequiredMarkDisplayMode = RequiredMarkMode.None;
+                s.Width = Unit.Percentage(100);
+                s.Height = Unit.Percentage(100);
+                s.ColumnCount = 6;
+                s.NestedExtensionWidth = Unit.Percentage(100);
+                s.Items.Add(i =>
                 {
-                    s.Name = "ModalModeFormLayout";
-                    s.RequiredMarkDisplayMode = RequiredMarkMode.None;
-                    s.Width = Unit.Percentage(100);
-                    s.Height = Unit.Percentage(100);
-                    s.ColumnCount = 6;
-                    s.NestedExtensionWidth = Unit.Percentage(100);
-                    s.Items.Add(i =>
+                    i.Name = "DDetraccion";
+                    i.Caption = "Afecto";
+                    i.ColumnSpan = 3;
+                    i.NestedExtension().ComboBox(t =>
                     {
-                        i.Name = "Detracción";
-                        i.Caption = "Afecto";
-                        i.ColumnSpan = 3;
-                        i.NestedExtension().ComboBox(t =>
-                        {
-                            t.Properties.ValidationSettings.Display = Display.Dynamic;
-                            t.ShowModelErrors = true;
-                            t.SelectedIndex = 0;
-                            t.Properties.ValueType = typeof(string);
-                            t.Properties.Items.Add("SI", "1");
-                            t.Properties.Items.Add("NO ", "0");
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.SelectedIndex = 0;
+                        t.Properties.ValueType = typeof(string);
+                        t.Properties.Items.Add("SI", "1");
+                        t.Properties.Items.Add("NO ", "0");
 
 
-                        });
                     });
-                    s.Items.Add(i =>
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DTasa";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Tasa(%)";
+                    i.NestedExtension().TextBox(t =>
                     {
-                        i.FieldName = "Tasa";
-                        i.ColumnSpan = 3;
-                        i.Caption = "Tasa(%)";
-                        i.NestedExtension().TextBox(t =>
-                        {
-                            t.Properties.ValidationSettings.Display = Display.Dynamic;
-                            t.ShowModelErrors = true;
-                        });
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
                     });
-                    s.Items.Add(i =>
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DDocumento";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Documento";
+                    i.NestedExtension().TextBox(t =>
                     {
-                        i.FieldName = "Documento";
-                        i.ColumnSpan = 6;
-                        i.Caption = "Documento";
-                        i.NestedExtension().TextBox(t =>
-                        {
-                            t.Properties.ValidationSettings.Display = Display.Dynamic;
-                            t.ShowModelErrors = true;
-                        });
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
                     });
-                    s.Items.Add(i =>
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DFecha";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Fecha";
+                    i.NestedExtension().DateEdit(t =>
                     {
-                        i.FieldName = "Fecha";
-                        i.ColumnSpan = 6;
-                        i.Caption = "Fecha";
-                        i.NestedExtension().DateEdit(t =>
-                        {
-                            t.Properties.ValidationSettings.Display = Display.Dynamic;
-                            t.ShowModelErrors = true;
-                        });
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.ValueChanged= "OnChangeDfecha";
                     });
+                });
 
-                    s.Items.Add(i =>
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DtipoServicio";
+                    i.ColumnSpan = 6;
+                    i.Caption = "Tpo. Servicio";
+                    i.SetNestedContent(() =>
                     {
-                        i.FieldName = "Detraccion";
-                        i.ColumnSpan = 6;
-                        i.Caption = "Tpo Servicio";
-                        i.SetNestedContent(() =>
-                        {
-                            Html.RenderAction("MultiSelectdetraccion");
-                        });
+                        Html.RenderAction("MultiSelectdetraccion");
                     });
-                    s.Items.Add(i =>
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "tipoOperacion";
+                    i.ColumnSpan = 6;
+                    i.Caption = "Tipo Operac";
+                    i.SetNestedContent(() =>
                     {
-                        i.FieldName = "tipoOperacion";
-                        i.ColumnSpan = 6;
-                        i.Caption = "Tipo Operac";
-                        i.SetNestedContent(() =>
-                        {
-                            Html.RenderAction("MultiSelectTipoOperacion");
-                        });
+                        Html.RenderAction("MultiSelectTipoOperacion");
                     });
+                });
 
 
 
 
-                    s.Items.Add(i =>
+                s.Items.Add(i =>
+                {
+                    i.ColumnSpan = 6;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.SetNestedContent(() =>
                     {
-                        i.ColumnSpan = 6;
-                        i.ShowCaption = DefaultBoolean.False;
-                        i.SetNestedContent(() =>
-                        {
-                            Html.DevExpress().Button(
-                                buttonSettings =>
-                                {
-                                    buttonSettings.Name = "btnUpdate";
-                                    buttonSettings.ControlStyle.CssClass = "button";
-                                    buttonSettings.Width = 80;
-                                    buttonSettings.Text = "OK";
-                                    buttonSettings.UseSubmitBehavior = true;
-                                }
-                            ).Render();
-                            Html.DevExpress().Button(
-                                buttonSettings =>
-                                {
-                                    buttonSettings.Name = "btnCancel";
-                                    buttonSettings.ControlStyle.CssClass = "button";
-                                    buttonSettings.Width = 80;
-                                    buttonSettings.Text = "Aceptar";
-                                    buttonSettings.ClientSideEvents.Click = "function(s, e){ pcModalMode.Hide(); }";
-                                }
-                            ).Render();
-                        });
+
+                        Html.DevExpress().Button(
+                            buttonSettings =>
+                            {
+                                buttonSettings.Name = "btnTraccion";
+                                buttonSettings.ControlStyle.CssClass = "button";
+                                buttonSettings.Width = 80;
+                                buttonSettings.Text = "Aceptar";
+                                buttonSettings.ClientSideEvents.Click = "function(s, e){ pcModalMode.Hide(); }";
+                            }
+                        ).Render();
                     });
-                }).Render();
-            }
+                });
+            }).Render();
+
         });
 
-        settings.ClientSideEvents.CloseUp = "function(s, e){ ASPxClientEdit.ClearEditorsInContainer(null, '', true); }";
+        // settings.ClientSideEvents.CloseUp = "function(s, e){ ASPxClientEdit.ClearEditorsInContainer(null, '', true); }";
     }).GetHtml()
 
