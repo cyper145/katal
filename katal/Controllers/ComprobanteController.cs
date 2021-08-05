@@ -41,6 +41,8 @@ namespace katal.Controllers
         }// GET: Comprobante
         public ActionResult Index()
         {
+
+            GridViewHelper.activarRetecion = comprobanteNeg.habilitarRetencion();
             List<Comprobante> comp = comprobanteNeg.findAll();
             GridViewHelper.Comprobantes = comp;
             return View(GridViewHelper.Comprobantes);
@@ -56,6 +58,8 @@ namespace katal.Controllers
 
         public ActionResult GridViewPartial()
         {
+            //determinar el tasa igv
+            GridViewHelper.tasa = comprobanteNeg.tasa();
             //List<Comprobante> comp = comprobanteNeg.findAll();
             return PartialView("GridViewPartial", GridViewHelper.Comprobantes);
         }
@@ -241,7 +245,7 @@ namespace katal.Controllers
             else
                 ViewBag.GeneralError = "Please, correct all errors.";
 
-           return RedirectToAction("contabilizar");
+            return RedirectToAction("contabilizar");
            // return PartialView("GridViewPartial");
         }
 
@@ -290,18 +294,51 @@ namespace katal.Controllers
             return PartialView("MultiSelectAnexo", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
 
         }
-        public ActionResult MultiSelectTipoDoc(string TIPDOC_CODIGO = "-1")
+        public ActionResult MultiSelectTipoDoc(string TIPDOC_CODIGO = "-1", FormCollection dataR = null)
         {
             ViewData["TipoDoc"] = tipoAnexoNeg.findAllTipoDocumento();
+            if (dataR != null)
+            {
+                string dar = dataR["gridLookupTipoDoc$State"];
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        GridViewHelper.TIPDOC_CODIGO = nodes.selectedKeyValues[0];
+                        TIPDOC_CODIGO = GridViewHelper.TIPDOC_CODIGO;
+                    }
+                }
+
+            }
             if (TIPDOC_CODIGO == "-1")
                 TIPDOC_CODIGO = "";
             return PartialView("MultiSelectTipoDoc", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
 
         }
 
-        public ActionResult MultiSelectDestino(string CO_C_CODIG = "-1")
+        public ActionResult MultiSelectDestino(string CO_C_CODIG = "-1", FormCollection dataR = null)
         {
             ViewData["Destino"] = destinoNeg.findAll();
+
+            if (dataR != null)
+            {
+                string dar = dataR["gridLookupDestino$State"];
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        GridViewHelper.CO_C_CODIG = nodes.selectedKeyValues[0];
+                        CO_C_CODIG = GridViewHelper.COVMON_CODIGO;
+                    }
+                }
+
+            }
             if (CO_C_CODIG == "-1")
                 CO_C_CODIG = "";
             return PartialView("MultiSelectDestino", new Destino() { CO_C_CODIG = CO_C_CODIG });
@@ -353,10 +390,24 @@ namespace katal.Controllers
             {
                 anexo = comprobanteNeg.cargarChangeTipoGasto(CODIGO);
                 GridViewHelper.comprobante.CCODCONTA = anexo.gasto.Gastos_CuentaCon;
+                GridViewHelper.comprobante.gasto1 = anexo.gasto.Gastos_Dscto1;
+                GridViewHelper.comprobante.gasto2 = anexo.gasto.Gastos_Dscto2;
                 GridViewHelper.Gastos_Codigo = "";
             }
             //string Gastos_Codigo = "";
             return Json(new { tipoanexo = anexo }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult CargarTipoDocumento()
+        {
+            string CODIGO = GridViewHelper.TIPDOC_CODIGO;
+            TipoDocumento anexo = new TipoDocumento();
+            if (CODIGO != "" && CODIGO != null)
+            {
+                anexo = tipoAnexoNeg.findTipoDocumento(CODIGO);
+                
+            }
+            //string Gastos_Codigo = "";
+            return Json(new { tipodocumento = anexo }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult CargarTipoMoneda(string fecha)
         {
@@ -518,5 +569,45 @@ namespace katal.Controllers
             GridViewHelper.comprobante.DFecha=DFecha;
             return Json(new { respuesta = "" }, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult habilitarRetencion()
+        {
+            bool retencion= GridViewHelper.activarRetecion;
+            return Json(new { retencion = retencion }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult HabilitarCalculados()
+        {
+
+            string CODIGO = GridViewHelper.CO_C_CODIG;
+            Destino destino = new Destino();
+            RespuestaDestino respuesta = new RespuestaDestino();
+            if (CODIGO != "" && CODIGO != null)
+            {
+                destino = destinoNeg.find(CODIGO);
+                if (destino.CON_IMPSTO == "N")
+                {
+                    respuesta.montoIGV = 0;
+                    respuesta.tasaIGV = 0;
+                    respuesta.opcion = true;
+
+                    //NTASAIGV NIGV
+                }
+                else
+                {
+                    respuesta.opcion = false;
+                    respuesta.tasaIGV = GridViewHelper.tasa;
+                }
+            }
+            return Json(new { respuesta = respuesta }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult obtenerGastos()
+        {
+            RespuestaGastos retencion = new RespuestaGastos();
+            
+            retencion.mnGasto1 = GridViewHelper.comprobante.gasto1;
+            retencion.mnGasto2 = GridViewHelper.comprobante.gasto2;
+
+            return Json(new { retencion = retencion }, JsonRequestBehavior.AllowGet);
+        }
+        
     }
 }

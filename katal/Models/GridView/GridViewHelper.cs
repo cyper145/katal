@@ -21,13 +21,17 @@ namespace katal.Model
         public static string OC_CDOCREF ="";
         public static string NROREQUI = "";
         public static string Gastos_Codigo = "";
+        public static string TIPDOC_CODIGO = "";
         public static string COVMON_CODIGO = "";
+        public static string CO_C_CODIG = "";
         public static string BD = "";
         public static string COMP_CORDEN = "";
         public static string COMP_TIPODOCU_CODIGO = "";
         public static string COMP_CSERIE = "";
         public static string COMP_CNUMERO = "";
         public static int NivelCOntable = 0;
+        public static decimal tasa = 0;
+        public static bool activarRetecion = false;
         public static Comprobante comprobante = new Comprobante();
        
 

@@ -19,5 +19,10 @@ namespace katal.conexion.model.neg
         {
             return objDestinoDao.findAll();
         }
+
+        public Destino find(string codigo)
+        {
+            return objDestinoDao.find(codigo);
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace katal.conexion.model.entity
         public string TIPDOC_DESCRIPCION { get; set; }
         public string TIPDOC_SUNAT { get; set; }
         public string TIPDOC_RESTA { get; set; }
-        public string TIPDOC_REFERENCIA { get; set; }
+        public bool TIPDOC_REFERENCIA { get; set; }
         public string TIPDOC_FILE { get; set; }
         public string TIPDOC_FECHAVTO { get; set; }
         public string TIPDOC_REGCOMP { get; set; }

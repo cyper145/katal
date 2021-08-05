@@ -29,8 +29,7 @@
     settings.GridViewProperties.SettingsPager.EnableAdaptivity = false;
     settings.GridViewProperties.SettingsPager.PageSize = 7;
 
-    //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
-
+    settings.GridViewClientSideEvents.EndCallback = "OnGridChangeDestino";// ver re
     settings.DataBound = (sender, e) =>
     {
         var gridLookup = (MVCxGridLookup)sender;

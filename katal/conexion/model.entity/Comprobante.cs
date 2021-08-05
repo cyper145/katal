@@ -116,6 +116,10 @@ namespace katal.conexion.model.entity
         public DateTime DFecha { get; set; }
         public string DtipoServicio { get; set; }
         public string tipoOperacion { get; set; }
+        public decimal gasto1 { get; set; }
+        public decimal gasto2 { get; set; }
+
+        //public 
     }
 
 

@@ -356,6 +356,7 @@
     <Compile Include="conexion\model.entity\Articulo.cs" />
     <Compile Include="conexion\model.entity\CentroCosto.cs" />
     <Compile Include="conexion\model.entity\Comprobante.cs" />
+    <Compile Include="conexion\model.entity\ConceptosGenerales.cs" />
     <Compile Include="conexion\model.entity\Destino.cs" />
     <Compile Include="conexion\model.entity\Empresa.cs" />
     <Compile Include="conexion\model.entity\FormaPago.cs" />

@@ -134,7 +134,7 @@ namespace katal.conexion.model.dao
                     TipoDocumento gasto = new TipoDocumento();
                     gasto.TIPDOC_CODIGO = read[0].ToString();
                     gasto.TIPDOC_DESCRIPCION = read[1].ToString();
-                    gasto.TIPDOC_REFERENCIA = read[2].ToString();
+                    gasto.TIPDOC_REFERENCIA =Conversion.ParseBool( read[2].ToString());
                     listAnexo.Add(gasto);
                 }
             }
@@ -150,5 +150,39 @@ namespace katal.conexion.model.dao
             }
             return listAnexo;
         }
+
+        public TipoDocumento findTipoDocumento(string codigo)
+        {
+            // TIPOANEX_CODIGO = '" & _
+            //txtTpoAnexo
+            TipoDocumento gasto = new TipoDocumento();
+            string BD = $"{this.BD}BDCONTABILIDAD";
+            string findAll = $"SELECT TIPDOC_CODIGO, TIPDOC_DESCRIPCION, tipdoc_referencia FROM [{BD}].[dbo].[TIPOS_DE_DOCUMENTOS]  where TIPDOC_CODIGO='{codigo}' ";
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    
+                    gasto.TIPDOC_CODIGO = read[0].ToString();
+                    gasto.TIPDOC_DESCRIPCION = read[1].ToString();
+                    gasto.TIPDOC_REFERENCIA =Conversion.ParseBool( read[2].ToString());
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return gasto;
+        }
+
     }
 }

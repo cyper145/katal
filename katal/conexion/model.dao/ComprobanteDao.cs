@@ -943,10 +943,10 @@ namespace katal.conexion.model.dao
                     gasto.Gastos_Codigo = read[0].ToString();
                     gasto.Gastos_Descripcion = read[1].ToString();
                     gasto.Gastos_Moneda= read[2].ToString();
-                    gasto.Gastos_Honorario= read[3].ToString();
+                    gasto.Gastos_Honorario=Conversion.ParseBool (read[3].ToString());
                     gasto.Gastos_CuentaCon= read[4].ToString();
-                    gasto.Gastos_Dscto1= read[5].ToString();
-                    gasto.Gastos_Dscto2= read[6].ToString();
+                    gasto.Gastos_Dscto1=Conversion.ParseDecimal( read[5].ToString());
+                    gasto.Gastos_Dscto2= Conversion.ParseDecimal(read[6].ToString());
                    
                 }
                 return gasto;
@@ -964,7 +964,118 @@ namespace katal.conexion.model.dao
             
         }
        
-        
+        public bool ExiteConceptos()
+        {
+            bool hayRegistros = false;
+            string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
+            string find = $"SELECT* FROM {conexion} WHERE CONCGRAL_CODIGO = 'AGERET'";
+            try
+            {
+                comando = new SqlCommand(find, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+              
+
+            }
+            catch (Exception e)
+            {
+               // e.GetType
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return hayRegistros;
+        }
+
+        public bool ExitedataConceptos()
+        {
+            bool hayRegistros = false;
+            bool data = false;
+            string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
+            string find = $"SELECT* FROM {conexion} WHERE CONCGRAL_CODIGO = 'AGERET'";
+            try
+            {
+                comando = new SqlCommand(find, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                     data = Conversion.ParseBool( read[6].ToString());
+                }              
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return data;
+        }
+
+        // VER LA FORMA COMO USAR DE FORMA GENERAL
+        public string ConceptosGenerales(string concepto )
+        {
+            
+            bool hayRegistros = false;
+            string data = "";
+            ConceptosGenerales conceptos = new ConceptosGenerales();
+            string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
+            string find = $"SELECT * FROM {conexion} WHERE CONCGRAL_CODIGO = '{concepto}'";
+            try
+            {
+                comando = new SqlCommand(find, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    conceptos.CONCGRAL_CODIGO = read[0].ToString();
+                    conceptos.CONCGRAL_DESCRIPCION = read[1].ToString();
+                    conceptos.CONCGRAL_TIPO = read[2].ToString();
+                    conceptos.CONCGRAL_CONTEC = read[3].ToString();
+                    conceptos.CONCGRAL_CONTEN = read[4].ToString();
+                    conceptos.CONCGRAL_CONTED = read[5].ToString();
+                    conceptos.CONCGRAL_CONTEL =  read[6].ToString();
+                    switch (conceptos.CONCGRAL_TIPO)
+                    {
+                        case "C":
+                            data = conceptos.CONCGRAL_CONTEC;
+                            break;
+                        case "N":
+                            data = conceptos.CONCGRAL_CONTEN;
+                            break;
+                        case "L":
+                            data = conceptos.CONCGRAL_CONTEL;
+                            break;
+                        default :
+                            data = conceptos.CONCGRAL_CONTED;
+                            break;
+
+
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return data;
+        }
         public void update(Comprobante obj)
         {
             throw new NotImplementedException();

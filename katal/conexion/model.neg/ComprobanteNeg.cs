@@ -84,6 +84,22 @@ namespace katal.conexion.model.neg
         {
             return TipoOperacion.findAllTipoOperacion();
         }
+
+        public decimal  tasa()
+        {           
+            return  Conversion.ParseDecimal(objComprobanteDao.ConceptosGenerales("TASAIGV"));
+        }
+        public bool habilitarRetencion()
+        {
+            if (objComprobanteDao.ExiteConceptos())
+            {
+                return objComprobanteDao.ExitedataConceptos();
+            }
+            else
+            {
+                return false;
+            }
+        }
         public string funcAutoNum()
         {
             DateTime date = DateTime.Now;

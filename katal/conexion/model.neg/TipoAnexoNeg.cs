@@ -26,5 +26,9 @@ namespace katal.conexion.model.neg
         {
             return objAreaDao.findAllTipoDocumento();
         }
+        public TipoDocumento findTipoDocumento(string codigo)
+        {
+            return objAreaDao.findTipoDocumento(codigo);
+        }
     }
 }
