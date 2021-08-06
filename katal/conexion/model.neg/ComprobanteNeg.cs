@@ -30,7 +30,7 @@ namespace katal.conexion.model.neg
         {
             return objComprobanteDao.findAll();
         }
-        public List<Comprobante> findAllConta(string sCorrelativo, string TIPODOCU_CODIGO, string CSERIE, string CNUMERO)
+        public Comprobante findAllConta(string sCorrelativo, string TIPODOCU_CODIGO, string CSERIE, string CNUMERO)
         {
             return objComprobanteDao.findAllConta(sCorrelativo, TIPODOCU_CODIGO, CSERIE, CNUMERO);
         }
@@ -107,6 +107,16 @@ namespace katal.conexion.model.neg
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
             return objComprobanteDao.funcAutoNum(msAnoMesProc);
+        }
+
+        public void inserdataTemporal(Comprobante comprobante)
+        {
+            objComprobanteDao.insertdetalleTemporal(comprobante);
+        }
+
+        public List<ContableDet> findallContableDet()
+        {
+           return  objComprobanteDao.findallContableDet();
         }
     }
 }

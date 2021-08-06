@@ -18,6 +18,7 @@
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
     settings.Properties.TextFormatString = "{1}";
+    settings.Properties.ClientSideEvents.KeyDown = "downTipoConversion";
 
     settings.GridViewProperties.Settings.ShowFilterRow = false;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
@@ -28,6 +29,11 @@
 
     //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
     settings.GridViewClientSideEvents.EndCallback = "OnChangeMoneda";
+
+
+    settings.GridViewClientSideEvents.Init = "OnChangeMoneda";
+    // settings.GridViewClientSideEvents. = "OnChangeMoneda";
+
     settings.DataBound = (sender, e) =>
     {
         var gridLookup = (MVCxGridLookup)sender;

@@ -20,7 +20,8 @@
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
     settings.Properties.TextFormatString = "{1}";
-
+    settings.Properties.ClientSideEvents.KeyDown = "KeyDownTipoDoc";
+    
     settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
     settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;

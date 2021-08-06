@@ -47,12 +47,13 @@
             elemet.style.display = "block";
         }
         function OnGridRowNroClick(s, e) {
-            console.log(gridLookupTipoAnexo);
-            console.log(gridLookupTipoAnexo.EditValue);
+           
 
             $.getJSON('/Comprobante/CargarTipoAnexoMoneda', function (resp) {
                 $.each(resp, function (k, v) {
-
+                    if (v.gasto == null) {
+                        return;
+                    }
                     gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
                     TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
                     
@@ -80,11 +81,31 @@
                         FormLayoutSetting.GetItemByName("groupNIES").SetVisible(false);
 
                     }
+                   
+
                     //ver que se muestre 
                 });
             });
             //var g = gridLookupTipoAnexo.GetGridView();
            // g.Refresh();
+        }
+
+        function OnGridRowClickGasto(s, e) {
+           
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupAnexo.Focus();
+            }
+        }
+        
+
+        function KeyDownAnexo(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupTipoDoc.Focus();
+            }
+         
         }
         function OnGridDatatipoDoc(s, e) {
             $.getJSON('/Comprobante/CargarTipoDocumento', function (resp) {
@@ -101,10 +122,100 @@
                         gridLookupTipoDocRef.SetReadOnly(true);
                         RCO_NUMERO.SetReadOnly(true);
                     }
-                   
+
+                  
                 });
             });
         }
+
+
+        function KeyDownTipoDoc(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CSERIE.Focus();
+            }
+
+        }
+        function downSerie(s, e) {
+           
+           
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CNUMERO.Focus();
+            }
+        }
+
+        function downNumero(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CAOCOMPRA.Focus();
+            }
+        }
+        function downCAOCOMPRA(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                DIASPAGO.Focus();
+            }
+        }
+        function downDIASPAGO(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupMoneda.Focus();
+                
+            }
+        }
+
+        function downTipoConversion(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupDestino.Focus();
+
+            }
+        }
+        function KeyDownDestino(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                NBASEIMP.Focus();
+
+            }
+        }
+        function KeyDownNBASEIMP(s, e) {
+
+            cambioIgvBase();
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                NPERCEPCION.Focus();
+            }
+        }
+        function KeyDownNPERCEPCION(s, e) {
+
+            cambioIgv();
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                btnUpdate.Focus();
+            }
+        }
+        function initEstCompra(s, e) {
+            // Checked
+            ESTCOMPRA.SetChecked(true);
+        }
+        function initLPASOIMP(s, e) {
+            // Checked
+            LPASOIMP.SetChecked(true);
+        }
+        
+        
         function habilitarRetencion(s, e) {
             $.getJSON('/Comprobante/habilitarRetencion', function (resp) {
                 $.each(resp, function (k, v) {
@@ -351,7 +462,7 @@
                 baseimporte = parseFloat(NBASEIMP.GetText());
             }
             let tasaigv = 0
-            if (TASAIGV.GetText() != "") {
+            if (NTASAIGV.GetText() != "") {
                 tasaigv = parseFloat(NTASAIGV.GetText());
             }
 

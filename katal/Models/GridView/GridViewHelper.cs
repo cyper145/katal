@@ -16,6 +16,8 @@ namespace katal.Model
 
         public static List<OrdenCompra> OrdenCompras = new List<OrdenCompra>();
         public static List<Comprobante> Comprobantes= new List<Comprobante>();
+        public static List<ContableDet> contableDets= new List<ContableDet>();
+
         public static List<DetalleRequisicion> detalleRequisicions = new List<DetalleRequisicion>();
         public static List<RequisicionCompra> requisicionCompras = new List<RequisicionCompra>();
         public static string OC_CDOCREF ="";
@@ -23,6 +25,8 @@ namespace katal.Model
         public static string Gastos_Codigo = "";
         public static string TIPDOC_CODIGO = "";
         public static string COVMON_CODIGO = "";
+        public static string RUC = "";
+
         public static string CO_C_CODIG = "";
         public static string BD = "";
         public static string COMP_CORDEN = "";

@@ -3,10 +3,10 @@
 @using katal.conexion.model.entity;
 @using katal.conexion.model.neg;
 @using katal.Model;
-@model List<Comprobante>
+@model List<ContableDet>
 @{
 
-    var gridView = Html.DevExpress().GridView<Comprobante>(gridViewSettings =>
+    var gridView = Html.DevExpress().GridView<ContableDet>(gridViewSettings =>
     {
         gridViewSettings.Name = "gridView";
         gridViewSettings.KeyFieldName = "codigo";
@@ -105,7 +105,7 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "tipo";
+                    i.FieldName = "CTIPO";
                     i.ColumnSpan = 6;
                     i.Caption = "Tipo";
                     i.NestedExtension().ComboBox(t =>
@@ -182,7 +182,7 @@
 
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "ANEX_CODIGO";
+                    i.FieldName = "CCODANEXO";
                     i.Caption = "Anexo";
                     i.ColumnSpan = 12;
                     i.SetNestedContent(() =>
@@ -277,62 +277,32 @@
 
         gridViewSettings.Columns.Add(columnSettings =>
         {
-            columnSettings.FieldName = "codigo";
-            columnSettings.Caption = "Orde";
+            columnSettings.FieldName = "CNROITEM";
+            columnSettings.Caption = "Codigo";
             columnSettings.Visible = false;
             columnSettings.Width = Unit.Pixel(100);
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
-            columnSettings.FieldName = "CORDEN";
-            columnSettings.Caption = "Orden";
+            columnSettings.FieldName = "CCODCONTA";
+            columnSettings.Caption = "cuenta";
             columnSettings.Width = Unit.Pixel(100);
         });
 
         gridViewSettings.Columns.Add(columnSettings =>
         {
-            columnSettings.FieldName = "ANEX_DESCRIPCION";
-            columnSettings.Caption = "Provedor";
+            columnSettings.FieldName = "campo1";
+            columnSettings.Caption = "Debe";
             columnSettings.Width = Unit.Pixel(300);
         });
 
         gridViewSettings.Columns.Add(columnSettings =>
         {
-            columnSettings.FieldName = "DEMISION";
-            columnSettings.Caption = "Fecha";
+            columnSettings.FieldName = "campo2";
+            columnSettings.Caption = "Haber";
             columnSettings.Width = Unit.Pixel(100);
         });
-        gridViewSettings.Columns.Add(columnSettings =>
-        {
-            columnSettings.FieldName = "documento";
-            columnSettings.Caption = "Documento";
-            columnSettings.Width = Unit.Pixel(300);
-        });
-        gridViewSettings.Columns.Add(columnSettings =>
-        {
-            columnSettings.FieldName = "TIPOMON_CODIGO";
-            columnSettings.Caption = "MON.";
-            columnSettings.Width = Unit.Pixel(200);
-        });
-        gridViewSettings.Columns.Add(columnSettings =>
-        {
-            columnSettings.FieldName = "NIGV";
-            columnSettings.Caption = "I.G.V";
-            columnSettings.Width = Unit.Pixel(100);
-        });
-        gridViewSettings.Columns.Add(columnSettings =>
-        {
-            columnSettings.FieldName = "NIMPORTE";
-            columnSettings.Caption = "Importe";
-            columnSettings.Width = Unit.Pixel(170);
-        });
-        gridViewSettings.Columns.Add(columnSettings =>
-        {
-            columnSettings.FieldName = "CESTADO";
-            columnSettings.Caption = "Estado";
-            columnSettings.Width = Unit.Pixel(170);
-
-        });
+        
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
         //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";

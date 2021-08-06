@@ -51,9 +51,10 @@ namespace katal.Controllers
         {
             GridViewHelper.NivelCOntable = int.Parse(empresaNeg.findContable(GridViewHelper.user.codEmpresa).EMP_NIVEL);
 
-            List<Comprobante> comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
-            GridViewHelper.Comprobantes = comp;
-            return View(GridViewHelper.Comprobantes);
+            Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
+            comprobanteNeg.inserdataTemporal(comp);
+            GridViewHelper.contableDets = comprobanteNeg.findallContableDet();
+            return View(GridViewHelper.contableDets);
         }
 
         public ActionResult GridViewPartial()
@@ -66,7 +67,7 @@ namespace katal.Controllers
         public ActionResult ContaGridViewPartial()
         {
             //List<Comprobante> comp = comprobanteNeg.findAll();
-            return PartialView("ContaGridViewPartial", GridViewHelper.Comprobantes);
+            return PartialView("ContaGridViewPartial", GridViewHelper.contableDets);
         }
 
         [ValidateAntiForgeryToken]
@@ -128,6 +129,67 @@ namespace katal.Controllers
             issue.CONVERSION_CODIGO = ValidarRecuperar(codConversion);
             issue.CDESTCOMP = ValidarRecuperar(codDestino);
             issue.RESPONSABLE_CODIGO = ValidarRecuperar(codResponsable);
+            ViewData["dar"] = issue.CORDEN;
+            ViewData["dar"] = issue.ANEX_CODIGO;
+            ViewData["dar"] = issue.ANEX_DESCRIPCION;
+            ViewData["dar"] = issue.TIPODOCU_CODIGO;
+            ViewData["dar"] = issue.CSERIE;
+            ViewData["dar"] = issue.DEMISION;
+            ViewData["dar"] = issue.DRECEPCIO;
+            ViewData["dar"] = issue.TIPOMON_CODIGO;
+            ViewData["dar"] = issue.NIMPORTE;
+            ViewData["dar"] = issue.TIPOCAMBIO_VALOR;
+            ViewData["dar"] = issue.CDESCRIPC;
+            ViewData["dar"] = issue.RESPONSABLE_CODIGO;
+            ViewData["dar"] = issue.CESTADO;
+            ViewData["dar"] = issue.NSALDO;
+            ViewData["dar"] = issue.CCODCONTA;
+            ViewData["dar"] = issue.CFORMPAGO;
+            ViewData["dar"] = issue.CSERREFER;
+            ViewData["dar"] = issue.CNUMREFER;
+            ViewData["dar"] = issue.CONVERSION_CODIGO;
+            ViewData["dar"] = issue.DREGISTRO;
+            ViewData["dar"] = issue.CTIPPROV;
+            ViewData["dar"] = issue.CNRORUC;
+            ViewData["dar"] = issue.ESTCOMPRA;
+            ViewData["dar"] = issue.CDESTCOMP;
+            ViewData["dar"] = issue.DIASPAGO;
+            ViewData["dar"] = issue.CIGVAPLIC;
+            ViewData["dar"] = issue.CCONCEPT;
+            ViewData["dar"] = issue.DFECREF;
+            ViewData["dar"] = issue.NTASAIGV;
+            ViewData["dar"] = issue.NIGV;
+            ViewData["dar"] = issue.NPORCE;
+            ViewData["dar"] = issue.CCODRUC;
+            ViewData["dar"] = issue.LHONOR;
+            ViewData["dar"] = issue.NIR4;
+            ViewData["dar"] = issue.NIES;
+            ViewData["dar"] = issue.NTOTRH;
+            ViewData["dar"] = issue.NBASEIMP;
+            ViewData["dar"] = issue.NVALCIF;
+            ViewData["dar"] = issue.DCONTAB;
+            ViewData["dar"] = issue.CSALDINI;
+            ViewData["dar"] = issue.NPERCEPCION;
+            ViewData["dar"] = issue.NUMRETRAC;
+            ViewData["dar"] = issue.FECRETRAC;
+            ViewData["dar"] = issue.CNUMORDCO;
+            ViewData["dar"] = issue.CO_L_RETE;
+            ViewData["dar"] = issue.LDETRACCION;
+            ViewData["dar"] = issue.NTASADETRACCION;
+            ViewData["dar"] = issue.DETRACCION;
+            ViewData["dar"] = issue.COD_SERVDETRACC;
+            ViewData["dar"] = issue.COD_TIPOOPERACION;
+            ViewData["dar"] = issue.NIMPORTEREF;
+            ViewData["dar"] = issue.RCO_TIPO;
+            ViewData["dar"] = issue.RCO_SERIE;
+            ViewData["dar"] = issue.RCO_NUMERO;
+            ViewData["dar"] = issue.RCO_FECHA;
+            ViewData["dar"] = issue.flg_RNTNODOMICILIADO;
+            ViewData["dar"] = issue.CAOCOMPRA;
+
+
+
+            
 
 
             issue.TIPOCAMBIO_VALOR = issue.TIPOCAMBIO_VALOR > issue.TIPOCAMBIO_VALOR2 ? issue.TIPOCAMBIO_VALOR : issue.TIPOCAMBIO_VALOR2;
@@ -141,10 +203,74 @@ namespace katal.Controllers
             issue.COD_TIPOOPERACION= GridViewHelper.comprobante.tipoOperacion;
             issue.COD_SERVDETRACC= GridViewHelper.comprobante.DtipoServicio;
             issue.CCODCONTA = GridViewHelper.comprobante.CCODCONTA;
+            issue.CNRORUC = GridViewHelper.comprobante.CNRORUC;
+
             GridViewHelper.COMP_CORDEN = issue.CORDEN;
             GridViewHelper.COMP_TIPODOCU_CODIGO = issue.TIPODOCU_CODIGO;
             GridViewHelper.COMP_CSERIE = issue.CSERIE;
             GridViewHelper.COMP_CNUMERO = issue.CNUMERO;
+
+
+            ViewData["dar"] = issue.CORDEN;
+            ViewData["dar"] = issue.ANEX_CODIGO;
+            ViewData["dar"] = issue.ANEX_DESCRIPCION;
+            ViewData["dar"] = issue.TIPODOCU_CODIGO;
+            ViewData["dar"] = issue.CSERIE;
+            ViewData["dar"] = issue.DEMISION;
+            ViewData["dar"] = issue.DVENCE;
+            ViewData["dar"] = issue.DRECEPCIO;
+            ViewData["dar"] = issue.TIPOMON_CODIGO;
+            ViewData["dar"] = issue.NIMPORTE;
+            ViewData["dar"] = issue.TIPOCAMBIO_VALOR;
+            ViewData["dar"] = issue.CDESCRIPC;
+            ViewData["dar"] = issue.RESPONSABLE_CODIGO;
+            ViewData["dar"] = issue.CESTADO;
+            ViewData["dar"] = issue.NSALDO;
+            ViewData["dar"] = issue.CCODCONTA;
+            ViewData["dar"] = issue.CFORMPAGO;
+            ViewData["dar"] = issue.CSERREFER;
+            ViewData["dar"] = issue.CNUMREFER;
+            ViewData["dar"] = issue.CTDREFER;
+            ViewData["dar"] = issue.CONVERSION_CODIGO;
+            ViewData["dar"] = issue.DREGISTRO;
+            ViewData["dar"] = issue.CTIPPROV;
+            ViewData["dar"] = issue.CNRORUC;
+            ViewData["dar"] = issue.ESTCOMPRA;
+            ViewData["dar"] = issue.CDESTCOMP;
+            ViewData["dar"] = issue.DIASPAGO;
+            ViewData["dar"] = issue.CIGVAPLIC;
+            ViewData["dar"] = issue.CCONCEPT;
+            ViewData["dar"] = issue.DFECREF;
+            ViewData["dar"] = issue.NTASAIGV;
+            ViewData["dar"] = issue.NIGV;
+            ViewData["dar"] = issue.NPORCE;
+            ViewData["dar"] = issue.CCODRUC; //referencia anexo
+            ViewData["dar"] = issue.LHONOR;
+            ViewData["dar"] = issue.NIR4;
+            ViewData["dar"] = issue.NIES;
+            ViewData["dar"] = issue.NTOTRH;
+            ViewData["dar"] = issue.NBASEIMP;
+            ViewData["dar"] = issue.NVALCIF;
+            ViewData["dar"] = issue.DCONTAB;
+            ViewData["dar"] = issue.CAMESPROC;
+            ViewData["dar"] = issue.CSALDINI;
+            ViewData["dar"] = issue.NPERCEPCION;
+            ViewData["dar"] = issue.NUMRETRAC; // tex Documento
+            ViewData["dar"] = issue.FECRETRAC;
+            ViewData["dar"] = issue.CNUMORDCO;
+            ViewData["dar"] = issue.CO_L_RETE;// combo1
+            ViewData["dar"] = issue.LDETRACCION;
+            ViewData["dar"] = issue.NTASADETRACCION;
+            ViewData["dar"] = issue.DETRACCION;
+            ViewData["dar"] = issue.COD_SERVDETRACC;
+            ViewData["dar"] = issue.COD_TIPOOPERACION;
+            ViewData["dar"] = issue.NIMPORTEREF;
+            ViewData["dar"] = issue.RCO_TIPO;
+            ViewData["dar"] = issue.RCO_SERIE;
+            ViewData["dar"] = issue.RCO_NUMERO;
+            ViewData["dar"] = issue.RCO_FECHA;
+            ViewData["dar"] = issue.flg_RNTNODOMICILIADO;
+            ViewData["dar"] = issue.CAOCOMPRA;
 
             /*
             string[] word = codArticulodata.Split(',');
@@ -277,7 +403,7 @@ namespace katal.Controllers
         public ActionResult MultiSelectTipoAnexo(string TIPOANEX_CODIGO = "-1")
         {
             ViewData["TipoAnexo"] = tipoAnexoNeg.findAll();
-
+            
 
             if (TIPOANEX_CODIGO == "-1")
                 TIPOANEX_CODIGO = "";
@@ -286,9 +412,29 @@ namespace katal.Controllers
         }
 
 
-        public ActionResult MultiSelectAnexo(string ANEX_CODIGO = "-1")
+        public ActionResult MultiSelectAnexo(string ANEX_CODIGO = "-1", FormCollection dataR = null)
         {
-            ViewData["Anexo"] = tipoAnexoNeg.findAllAnexo();
+
+            List<Anexo> data = tipoAnexoNeg.findAllAnexo();
+            ViewData["Anexo"] = data;
+            if (dataR != null)
+            {
+                string dar = dataR["gridLookupAnexo$State"];
+                
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        string codigoanexo = nodes.selectedKeyValues[0];
+                        Anexo anexo = data.Find(X => X.ANEX_CODIGO == codigoanexo);
+                        GridViewHelper.comprobante.CNRORUC = anexo.ANEX_RUC;
+                    }
+                }
+
+            }
             if (ANEX_CODIGO == "-1")
                 ANEX_CODIGO = "-1";
             return PartialView("MultiSelectAnexo", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
@@ -372,6 +518,10 @@ namespace katal.Controllers
             ViewData["moneda"] = comprobanteNeg.findAllMonedas();
             if (COVMON_CODIGO == "-1")
                 COVMON_CODIGO = "";
+            else
+            {
+                GridViewHelper.COVMON_CODIGO = COVMON_CODIGO;
+            }
             return PartialView("MultiSelectMoneda", new Moneda() { COVMON_CODIGO = COVMON_CODIGO });
         }
 

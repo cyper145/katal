@@ -46,7 +46,7 @@ namespace katal.conexion.model.entity
         public bool CSALDINI { get; set; }
         public string CODCAJCH { get; set; }
         public decimal DIASPAGO { get; set; }
-        public string CIGVAPLIC { get; set; }
+        public bool CIGVAPLIC { get; set; }
         public string CAMESPROC { get; set; }
         public string CCONCEPT { get; set; }
         public DateTime DFECREF { get; set; }
@@ -160,5 +160,29 @@ namespace katal.conexion.model.entity
         public string DFecha { get; set; }
         public string DtipoServicio { get; set; }
         public string tipoOperacion { get; set; }
+    }
+
+
+    public class ContableDet
+    {
+        public string CNROITEM { get; set; }
+        public decimal NVALOR { get; set; }
+        public string CCODCONTA { get; set; }
+        public string CTIPO { get; set; }
+        public string CCOSTO { get; set; }
+        public string CCTADEST { get; set; }
+        public string CCODSUBDI { get; set; }
+        public string CGLOSA { get; set; }
+        public string CTIPDOC { get; set; }
+        public string CSERDOC { get; set; }
+        public string CNUMDOC { get; set; }
+        public string CANEXO { get; set; }
+        public string CCODANEXO { get; set; }
+        public string NUMRETRAC { get; set; }
+        public string FECRETRAC { get; set; }
+        public string campo1 { get; set; }
+        public string campo2 { get; set; }
+        
+
     }
 }

@@ -15,8 +15,8 @@ namespace katal.conexion.model.entity
         public string Gastos_CuentaCon { get; set; }
         public decimal Gastos_Dscto1 { get; set; }
         public decimal Gastos_Dscto2 { get; set; }
-        public decimal Gastos_Cta1 { get; set; }
-        public decimal Gastos_Cta2 { get; set; }
+        public string Gastos_Cta1 { get; set; }
+        public string Gastos_Cta2 { get; set; }
       
     }
 

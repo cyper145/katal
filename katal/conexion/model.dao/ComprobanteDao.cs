@@ -25,10 +25,10 @@ namespace katal.conexion.model.dao
             {
                 objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
             }
-            
+
             ///0      
         }
-        
+
         public void create(Comprobante obj)
         {
             DateTime date = DateTime.Now;
@@ -38,306 +38,155 @@ namespace katal.conexion.model.dao
             string anios = date.Year.ToString("0000.##");
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
-            string verificacion = verificaDoc_cxc(obj.ANEX_CODIGO ,obj.TIPODOCU_CODIGO,obj.CSERIE , obj.CNUMERO);
+            string verificacion = verificaDoc_cxc(obj.ANEX_CODIGO, obj.TIPODOCU_CODIGO, obj.CSERIE, obj.CNUMERO);
 
             string cCorre = "";
-            
 
-                try
+
+            try
+            {
+                if (verificacion != "" && verificacion != "El Documento Esta en Cuentas x Pagar")
                 {
-                    if (verificacion != "" && verificacion != "El Documento Esta en Cuentas x Pagar")
-                    {
 
-                        string Cadenar = "UPDATE [014BDCOMUN].[dbo].COMPROBANTECAB SET CNUMORDCO='" + obj.CTDREFER.Trim() + "',";
-                        Cadenar += " NUMRETRAC='" + obj.NUMRETRAC + "', CAOCOMPRA='" + obj.CAOCOMPRA + "',";
-                        Cadenar += " dvence=" + obj.DVENCE + "";
-                        Cadenar += ",FECRETRAC=" + obj.FECRETRAC;
-                        Cadenar += " WHERE CAMESPROC='" + msAnoMesProc + "' AND CORDEN='" + obj.CORDEN + "'";
-                        comando = new SqlCommand(Cadenar, objConexion.getCon());
-                        objConexion.getCon().Open();
-                        comando.ExecuteNonQuery();
-                    }
-                
+                    string Cadenar = "UPDATE [014BDCOMUN].[dbo].COMPROBANTECAB SET CNUMORDCO='" + obj.CTDREFER.Trim() + "',";
+                    Cadenar += " NUMRETRAC='" + obj.NUMRETRAC + "', CAOCOMPRA='" + obj.CAOCOMPRA + "',";
+                    Cadenar += " dvence=" + obj.DVENCE + "";
+                    Cadenar += ",FECRETRAC=" + obj.FECRETRAC;
+                    Cadenar += " WHERE CAMESPROC='" + msAnoMesProc + "' AND CORDEN='" + obj.CORDEN + "'";
+                    comando = new SqlCommand(Cadenar, objConexion.getCon());
+                    objConexion.getCon().Open();
+                    comando.ExecuteNonQuery();
+                }
+
                 sEstado = Estado();
-                    switch (obj.CDESTCOMP)
-                    {
-                        case "002":
-                            nPorcen = 100;
-                            nValCIF = 0;
-                            break;
-                        case "005":
-                            //falta capturar esta data
-                            nPorcen = 0;
-                            nValCIF = 0;
-                            break;
+                switch (obj.CDESTCOMP)
+                {
+                    case "002":
+                        nPorcen = 100;
+                        nValCIF = 0;
+                        break;
+                    case "005":
+                        //falta capturar esta data
+                        nPorcen = obj.NPORCE;
+                        nValCIF = obj.NVALCIF;
+                        break;
                     default:
                         nPorcen = 0;
                         nValCIF = 0;
                         break;
                 }
 
-                    cCorre = funcAutoNum(msAnoMesProc);
+                cCorre = funcAutoNum(msAnoMesProc);
 
 
-                    string CadenaD = "INSERT INTO COMPROBANTECAB (";
-                    CadenaD += "EMP_CODIGO,CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
-                    CadenaD += "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, ";
-                    CadenaD += "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, ";
-                    CadenaD += "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, ";
-                    CadenaD += "CTDREFER, CONVERSION_CODIGO, DREGISTRO, CTIPPROV, CNRORUC, ";
-                    CadenaD += "ESTCOMPRA, CDESTCOMP, DIASPAGO, CIGVAPLIC, CCONCEPT, ";
-                    CadenaD += "DFECREF, NTASAIGV, NIGV, NPORCE, CCODRUC, ";
-                    CadenaD += "LHONOR, NIR4, NIES, NTOTRH, NBASEIMP, ";
-                    CadenaD += "NVALCIF, DCONTAB, CAMESPROC, CSALDINI,NPERCEPCION,NUMRETRAC,";
-                    CadenaD += "FECRETRAC,CNUMORDCO,";
-                    CadenaD += "CO_L_RETE,LDETRACCION,NTASADETRACCION, DETRACCION,COD_SERVDETRACC,COD_TIPOOPERACION,";
-                    CadenaD += "nImporteRef, RCO_TIPO, RCO_SERIE, RCO_NUMERO,";
-                    // If IsDate(txtFecDocRef) Then
-                    CadenaD += "RCO_FECHA,";
-                    CadenaD += "flg_RNTNODOMICILIADO,CAOCOMPRA) VALUES (";
-                    CadenaD += "'" + GridViewHelper.user.codEmpresa + "','" + cCorre + "', '" + obj.ANEX_CODIGO + "', '" + obj.ANEX_DESCRIPCION + "', '" + obj.TIPODOCU_CODIGO + "', '" + obj.CSERIE + "',";
-                    CadenaD += "'" + obj.CNUMERO + "', " + dateFormat(obj.DEMISION)  + ", " + dateFormat(obj.DVENCE)  + ", " + dateFormat(obj.DRECEPCIO) + ", '" + obj.TIPOMON_CODIGO + "',";
-                    //End If
-                    //
-                    if (obj.CDESTCOMP.Trim() == "007" || obj.CDESTCOMP.Trim() == "008")
-                    {
-                        // CadenaD += "" + IIf(true, Math.Round(Val(obj.NTOTRH), 2) - Math.Round(Val(obj.NIR4), 2), Math.Round(Val(obj.NIMPORTE), 2)) + ", ";
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
-                    }
-                    else
-                        if (obj.CDESTCOMP.Trim() == "006")
-                    {
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIMPORTE, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
-                    }
-                    else
-                    {
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
-                    }
-
-                    //   CadenaD += "" + obj.CONVERSION_CODIGO == "ESP" ? obj.TIPOCAMBIO_VALOR  : 0    + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
-                    CadenaD += "" + obj.TIPOCAMBIO_VALOR.ToString("F3", CultureInfo.InvariantCulture) + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
-                    //
-                    if (obj.CDESTCOMP.Trim() == "007" || obj.CDESTCOMP.Trim() == "008")
-                    {
-                        // CadenaD += "" + IIf(true, Math.Round(Val(obj.NTOTRH), 2) - Math.Round(Val(obj.NIR4), 2), Math.Round(Val(obj.NIMPORTE), 2)) + ", ";
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2) - Math.Round(obj.NIR4, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
-                    }
-                    else
-                        if (obj.CDESTCOMP.Trim() == "006")
-                    {
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIES, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
-                    }
-                    else
-                    {
-                        CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
-                    }
-                    // cuando hay honorarios
-                    CadenaD += "'" + obj.CCODCONTA.Trim() + "', '" + funcBlanco(obj.CFORMPAGO) + "', '" + funcBlanco(obj.CSERREFER) + "', '" + funcBlanco(obj.CNUMREFER) + "',";
-                    CadenaD += "'" + funcBlanco(obj.CTDREFER) + "', '" + obj.CONVERSION_CODIGO + "', " + dateFormat(obj.DREGISTRO) + ", '" + obj.CTIPPROV + "', '" + obj.CNRORUC + "', ";
-                    CadenaD += "" + boolToInt(  obj.ESTCOMPRA) + ", '" + funcBlanco(obj.CDESTCOMP) + "', " + obj.DIASPAGO + ", '" + obj.CIGVAPLIC + "', '" + obj.CCONCEPT + "',";
-                    CadenaD += "" + dateFormat(obj.DFECREF) + ", " + obj.NTASAIGV + ", " + obj.NIGV + ", " + nPorcen + ", '" + funcBlanco(obj.CCODRUC) + "', ";
-                    CadenaD += "" + 0 + ", " + obj.NIR4 + ", " + obj.NIES + ", " + obj.NTOTRH + ", " + obj.NBASEIMP + ",";
-                    CadenaD += "" + nValCIF + ", " + dateFormat(obj.DEMISION) + ", '" + msAnoMesProc + "', " + boolToInt( obj.CSALDINI) + "," + obj.NPERCEPCION + ",'" + obj.NUMRETRAC + "'";
-                    CadenaD += "," + dateFormat(obj.FECRETRAC) + "";
-
-                    CadenaD += ",'" + funcBlanco(obj.CNUMORDCO).Trim() + "','" + obj.CO_L_RETE + "',";
-
-
-                    if (obj.NTASAIGV == 0 ){
-                        CadenaD += "0,0,0,'','',0,";
-                    }
-                    else
-                    {
-                        CadenaD += boolToInt( obj.LDETRACCION) + "," + obj.NTASADETRACCION + "," + (obj.NIMPORTE * obj.NTASADETRACCION / 100) + ",'" + obj.COD_SERVDETRACC + "','" + obj.COD_TIPOOPERACION + "'," + obj.NIMPORTEREF + ",";
-
-                    }
-                    CadenaD += "'" + obj.RCO_TIPO + "','" + obj.RCO_SERIE + "','" + obj.RCO_NUMERO + "',";
-                    CadenaD +=  "" + dateFormat(obj.RCO_FECHA) + ",";
-                    CadenaD += obj.flg_RNTNODOMICILIADO + ",'" + obj.CAOCOMPRA + "')";
-                    comando = new SqlCommand(CadenaD, objConexion.getCon());
-                    objConexion.getCon().Open();
-                    comando.ExecuteNonQuery();
-                }
-                catch (Exception)
+                string CadenaD = "INSERT INTO COMPROBANTECAB (";
+                CadenaD += "EMP_CODIGO,CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
+                CadenaD += "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, ";
+                CadenaD += "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, ";
+                CadenaD += "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, ";
+                CadenaD += "CTDREFER, CONVERSION_CODIGO, DREGISTRO, CTIPPROV, CNRORUC, ";
+                CadenaD += "ESTCOMPRA, CDESTCOMP, DIASPAGO, CIGVAPLIC, CCONCEPT, ";
+                CadenaD += "DFECREF, NTASAIGV, NIGV, NPORCE, CCODRUC, ";
+                CadenaD += "LHONOR, NIR4, NIES, NTOTRH, NBASEIMP, ";
+                CadenaD += "NVALCIF, DCONTAB, CAMESPROC, CSALDINI,NPERCEPCION,NUMRETRAC,";
+                CadenaD += "FECRETRAC,CNUMORDCO,";
+                CadenaD += "CO_L_RETE,LDETRACCION,NTASADETRACCION, DETRACCION,COD_SERVDETRACC,COD_TIPOOPERACION,";
+                CadenaD += "nImporteRef, RCO_TIPO, RCO_SERIE, RCO_NUMERO,";
+                // If IsDate(txtFecDocRef) Then
+                CadenaD += "RCO_FECHA,";
+                CadenaD += "flg_RNTNODOMICILIADO,CAOCOMPRA) VALUES (";
+                CadenaD += "'" + GridViewHelper.user.codEmpresa + "','" + cCorre + "', '" + obj.ANEX_CODIGO + "', '" + obj.ANEX_DESCRIPCION + "', '" + obj.TIPODOCU_CODIGO + "', '" + obj.CSERIE + "',";
+                CadenaD += "'" + obj.CNUMERO + "', " + dateFormat(obj.DEMISION) + ", " + dateFormat(obj.DVENCE) + ", " + dateFormat(obj.DRECEPCIO) + ", '" + obj.TIPOMON_CODIGO + "',";
+                //End If
+                //
+                if (obj.CDESTCOMP.Trim() == "007" || obj.CDESTCOMP.Trim() == "008")
                 {
-                    throw;
+                    // CadenaD += "" + IIf(true, Math.Round(Val(obj.NTOTRH), 2) - Math.Round(Val(obj.NIR4), 2), Math.Round(Val(obj.NIMPORTE), 2)) + ", ";
+                    CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
                 }
-                finally
+                else
+                    if (obj.CDESTCOMP.Trim() == "006")
                 {
-                    objConexion.getCon().Close();
-                    objConexion.cerrarConexion();
+                    CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIMPORTE, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
                 }
-            
+                else
+                {
+                    CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
+                }
 
-        
+                //   CadenaD += "" + obj.CONVERSION_CODIGO == "ESP" ? obj.TIPOCAMBIO_VALOR  : 0    + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
+                CadenaD += "" + obj.TIPOCAMBIO_VALOR.ToString("F3", CultureInfo.InvariantCulture) + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
+                //
+                if (obj.CDESTCOMP.Trim() == "007" || obj.CDESTCOMP.Trim() == "008")
+                {
+                    // CadenaD += "" + IIf(true, Math.Round(Val(obj.NTOTRH), 2) - Math.Round(Val(obj.NIR4), 2), Math.Round(Val(obj.NIMPORTE), 2)) + ", ";
+                    CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2) - Math.Round(obj.NIR4, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
+                }
+                else
+                    if (obj.CDESTCOMP.Trim() == "006")
+                {
+                    CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIES, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
+                }
+                else
+                {
+                    CadenaD += "" + IIfData(true, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
+                }
+                // cuando hay honorarios
+                CadenaD += "'" + obj.CCODCONTA.Trim() + "', '" + funcBlanco(obj.CFORMPAGO) + "', '" + funcBlanco(obj.CSERREFER) + "', '" + funcBlanco(obj.CNUMREFER) + "',";
+                CadenaD += "'" + funcBlanco(obj.CTDREFER) + "', '" + obj.CONVERSION_CODIGO + "', " + dateFormat(obj.DREGISTRO) + ", '" + obj.CTIPPROV + "', '" + obj.CNRORUC + "', ";
+                CadenaD += "" + boolToInt(obj.ESTCOMPRA) + ", '" + funcBlanco(obj.CDESTCOMP) + "', " + obj.DIASPAGO + ", '" + obj.CIGVAPLIC + "', '" + obj.CCONCEPT + "',";
+                CadenaD += "" + dateFormat(obj.DFECREF) + ", " + obj.NTASAIGV + ", " + obj.NIGV + ", " + nPorcen + ", '" + funcBlanco(obj.CCODRUC) + "', ";
+                CadenaD += "" + 0 + ", " + obj.NIR4 + ", " + obj.NIES + ", " + obj.NTOTRH + ", " + obj.NBASEIMP + ",";
+                CadenaD += "" + nValCIF + ", " + dateFormat(obj.DEMISION) + ", '" + msAnoMesProc + "', " + boolToInt(obj.CSALDINI) + "," + obj.NPERCEPCION + ",'" + obj.NUMRETRAC + "'";
+                CadenaD += "," + dateFormat(obj.FECRETRAC) + "";
 
-
-
-
-  
-
-    
-
-
-    /*
-        If Check1.Value = 1 Then
-            If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NPERCEPCION") Then
-               CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NPERCEPCION NUMERIC(15,6) NULL"
-            End If
-
-
-            If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "LDETRACCION") Then
-               CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD LDETRACCION BIT DEFAULT 0"
-            End If
-
-
-            If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NTASADETRACCION") Then
-               CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NTASADETRACCION NUMERIC(15,6) DEFAULT 0"
-            End If
-
-
-            If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NIMPORTEREF") Then
-               CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NIMPORTEREF NUMERIC(15,6) DEFAULT 0"
-            End If
-
-
-            If IsDate(MaskEdBox1) Then
-                Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef), CDate(MaskEdBox1))
-            Else
-                Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef))
-            End If
-        End If
+                CadenaD += ",'" + funcBlanco(obj.CNUMORDCO).Trim() + "','" + obj.CO_L_RETE + "',";
 
 
-    Else 'Solo actualizar
-        'Me quede en que se debe deja r chequear el dcto pero no dejarlo modificar o grbar el dcto contabilizado
-        cCorre = TxtOrden
-        If mrst_TRegDctos!cEstado <> "0" And mrst_TRegDctos!cEstado <> "1" Then
-            Screen.MousePointer = 1
-            MsgBox "El estado del documento no permite su modificación.", vbExclamation, "Mensaje"
-            Cadena = "UPDATE COMPROBANTECAB SET CAOCOMPRA='" & txtOCompra.Text & "',CNUMORDCO='" & Trim(TxDocReferencia.Text) & "', "
-            Cadena = Cadena & " NUMRETRAC='" & txNumDetraccion & "'"
-            If IsDate(MaskEdBox1) Then
-                Cadena = Cadena & ",FECRETRAC=" & FechS(MaskEdBox1, Sqlf) & ""
-            Else
-                Cadena = Cadena & ",FECRETRAC=NUll"
-            End If
-            Cadena = Cadena & ",LDETRACCION=" & cmbDetraccion.ListIndex & ",NTASADETRACCION=" & Val(TxtTasaDet) & ",DETRACCION=" & Round(Val(txtTotalVta) * Val(TxtTasaDet) / 100, 2) & ",COD_SERVDETRACC='" & txtTipServ.Text & "',COD_TIPOOPERACION='" & txtTipOper.Text & "' WHERE CAMESPROC='" & msAnoMesProc & "' AND CORDEN='" & cCorre & "'"
-            cConexCom.Execute Cadena
-            Exit Sub
-        End If
-        'Antes de modificar verificar ante si el saldo actual del dcto es igual al importe
-        'SI es asi entonces si se puede modificar
-        'Sino entonces debe eliminar lo programado y lo cancelado para que se restaure el saldo
-        Set rst_Estado = New ADODB.Recordset
-        rst_Estado.Open "SELECT NIMPORTE, NSALDO, NMONTPROG FROM COMPROBANTECAB WHERE CAMESPROC='" & msAnoMesProc & "' AND CORDEN='" & _
-                    cCorre & "'", cConexCom, adOpenForwardOnly, adLockReadOnly
-        If Not rst_Estado.EOF Then
-            'If rst_Estado!NIMPORTE <> rst_Estado!NSALDO Then
-            If rst_Estado!NMONTPROG <> 0 Then
-                Screen.MousePointer = 1
-                'MsgBox "No es posible modificar este documento por tener un saldo diferente al importe.", vbExclamation, "Mensaje"
-                MsgBox "Este documento no puede ser modificado ya que se encuentra programado y/o cancelado." & Chr(13) & _
-                            "El monto de programación es diferente de 0.", vbInformation, "Mensaje"
+                if (obj.NTASAIGV == 0) {
+                    CadenaD += "0,0,0,'','',0,";
+                }
+                else
+                {
+                    CadenaD += boolToInt(obj.LDETRACCION) + "," + obj.NTASADETRACCION + "," + (obj.NIMPORTE * obj.NTASADETRACCION / 100) + ",'" + obj.COD_SERVDETRACC + "','" + obj.COD_TIPOOPERACION + "'," + obj.NIMPORTEREF + ",";
 
-                Set rst_Estado = Nothing
-                Exit Sub
-            End If
-        Else
-            MsgBox "Documento no ha sido encontrado.", vbExclamation, "Mensaje"
-            Set rst_Estado = Nothing
-            Screen.MousePointer = 1
-            Exit Sub
-        End If
+                }
+                CadenaD += "'" + obj.RCO_TIPO + "','" + obj.RCO_SERIE + "','" + obj.RCO_NUMERO + "',";
+                CadenaD += "" + dateFormat(obj.RCO_FECHA) + ",";
+                CadenaD += obj.flg_RNTNODOMICILIADO + ",'" + obj.CAOCOMPRA + "')";
+                comando = new SqlCommand(CadenaD, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
 
 
-'        If txtDest = "002" Then
-'            'Guarda el porcentaje del Dest grabado del dcto sólo cuando Destino = "002"
-'            fraOperGrav.Visible = True
-'            cmdOperGravAceptar.SetFocus
-'            nPorcen = txtOperGrav
-'        End If
-
-
-        If txtTpoConv<> "ESP" Then
-           If funcValorTipoCambio(IIf(txtTpoConv = "FEC", dtpFecTC.Value, dtpFecEmi.Value), IIf(txtTpoConv = "FEC", "VTA", txtTpoConv), TipCam, TipCamEq) Then
-               txtTC = TipCam
-            Else
-                Screen.MousePointer = 1
-                txtTC = "0.000"
-                MsgBox "No se encontró el valor de tipo de cambio.", vbExclamation, "Mensaje"
-                Exit Sub
-            End If
-        End If
-
-
-        Call EliminarTrasfCxP(txtTpoAnexo, txtanexo, txtTpoDcto, txtserie, txtnumero, msAnoMesProc)
-
-
-        Dim CADSQL As String
-        CADSQL = "UPDATE COMPROBANTECAB SET ANEX_CODIGO='" & txtanexo & "', ANEX_DESCRIPCION='" & lblAnexo & "'"
-        CADSQL = CADSQL & ", TIPODOCU_CODIGO='" & txtTpoDcto & "', CSERIE='" & txtserie & "'"
-        CADSQL = CADSQL & ", CNUMERO='" & txtnumero & "', DEMISION=" & FechS(dtpFecEmi, Sqlf) & ""
-        CADSQL = CADSQL & ", DVENCE=" & FechS(dtpFecVenc, Sqlf) & ", DRECEPCIO=" & FechS(dtpFecRecep, Sqlf) & ""
-        CADSQL = CADSQL & ", TIPOMON_CODIGO='" & txtmoneda & "', NIMPORTE=" & IIf(fraHono.Visible, Round(Val(txttotal), 2) - Round(Val(txtIR4ta), 2), Round(Val(txtTotalVta), 2))
-        CADSQL = CADSQL & ", TIPOCAMBIO_VALOR=" & IIf(txtTpoConv = "ESP", Round(Val(txtTipEsp), 3), Round(Val(txtTC), 3)) & ", CDESCRIPC='" & funcBlanco(TxtGlosa) & "'"
-        CADSQL = CADSQL & ", RESPONSABLE_CODIGO='" & txtResp & "', CESTADO='" & sEstado & "', CCODCONTA='" & funcBlanco(Trim(msCtaGasto)) & "'"
-        CADSQL = CADSQL & ", CFORMPAGO='" & txtForPago & "', CSERREFER='" & funcBlanco(txtRefSerie) & "', CNUMREFER='" & funcBlanco(txtRefNro) & "'"
-        CADSQL = CADSQL & ", CTDREFER='" & funcBlanco(txtRefTpoDcto) & "', CONVERSION_CODIGO='" & txtTpoConv & "', DREGISTRO=" & FechS(CDate(VGFecTrb), Sqlf) & ""
-        CADSQL = CADSQL & ", CTIPPROV='" & txtTpoAnexo & "', CNRORUC='" & lblRuc & "', ESTCOMPRA=" & chkRegComp.Value
-        CADSQL = CADSQL & ", CDESTCOMP='" & funcBlanco(txtDEst) & "', DIASPAGO=" & txtDias & ", NIGV=" & Round(Val(txtMontoIGV), 2)
-        CADSQL = CADSQL & ", CIGVAPLIC='" & Mid(chkIGVxAplic.Caption, 1, 1) & "', CCONCEPT='" & txtCpto & "', DFECREF=" & FechS(dtpRefFecha, Sqlf) & ""
-        CADSQL = CADSQL & ", NTASAIGV=" & txtTasaIGV & ", NPORCE=" & Round(Val(nPorcen), 2) & ", CCODRUC='" & funcBlanco(txtRefAnexo) & "'"
-        CADSQL = CADSQL & ", LHONOR=" & IIf(fraHono.Visible, 1, 0) & ", NIR4=" & Round(Val(txtIR4ta), 2) & ", NIES=" & Round(Val(txtIES), 2)
-        CADSQL = CADSQL & ", NTOTRH=" & Round(Val(txttotal), 2) & ", NSALDO=" & IIf(fraHono.Visible, Round(Val(txttotal) - Round(Val(txtIR4ta), 2), 2), Round(Val(txtTotalVta), 2)) & ", NBASEIMP=" & Round(Val(txtBaseImp), 2)
-        '2003/10/16: ' cambia
-        'CADSQL = CADSQL & ", NVALCIF=" & Round(Val(nValCIF), 2) & ", DCONTAB=" & IIf(txtTpoConv = "FEC", FechS(CDate(dtpFecTC.Value), Sqlf), FechS(CDate(VGFecTrb), Sqlf)) & ",LPASOIMP=" & Check1.Value & " "
-        CADSQL = CADSQL & ", NVALCIF=" & Round(Val(nValCIF), 2) & ", DCONTAB=" & IIf(txtTpoConv = "FEC", FechS(CDate(dtpFecTC.Value), Sqlf), FechS(CDate(VGFecTrb), Sqlf)) & ",NPERCEPCION=" & ESNULO(txtImpPercep, 0) & ",NUMRETRAC='" & txNumDetraccion & "' "
-        If IsDate(MaskEdBox1) Then
-            CADSQL = CADSQL & ",FECRETRAC=" & FechS(MaskEdBox1, Sqlf) & ""
-        Else
-            CADSQL = CADSQL & ",FECRETRAC=NUll"
-        End If
-        CADSQL = CADSQL & " ,CNUMORDCO='" & Trim(TxDocReferencia) & "',CO_L_RETE='" & IIf(Combo1.ListIndex = 1, "1", "0") & "',LDETRACCION=" & cmbDetraccion.ListIndex & ",NTASADETRACCION=" & Val(TxtTasaDet) & ","
-        CADSQL = CADSQL & " NIMPORTEREF=" & IIf(cmbDetraccion.ListIndex = 0, 0, Val(TxTImporteRef)) & ", "
-
-
-        CADSQL = CADSQL & "RCO_TIPO='" & txt_RefCmp_Tipo.Text & "',RCO_SERIE='" & txt_RefCmp_Serie.Text & "',RCO_NUMERO='" & txt_RefCmp_Documento & "',RCO_FECHA='" & Format(txtFecDocRef, "yyyy/dd/mm") & "',"
-        CADSQL = CADSQL & "flg_RNTNODOMICILIADO=" & chk_RNoDomiciliado.Value & ",CAOCOMPRA='" & txtOCompra.Text & "'"
-        CADSQL = CADSQL & " WHERE CAMESPROC='" & msAnoMesProc & "' AND CORDEN='" & cCorre & "' "
-
-
-        cConexCom.Execute CADSQL
-
-
-        If Check1.Value = 1 Then
-                If Not ExisteElem(1, CN_CTAPAG, "comprobantecab", "NPERCEPCION") Then
-                   CN_CTAPAG.Execute "ALTER TABLE comprobantecab ADD NPERCEPCION NUMERIC(15,6) NULL"
-                End If
-                If IsDate(MaskEdBox1) Then
-                    Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef), CDate(MaskEdBox1))
-                Else
-                    Call Trasferencia_CxP(cCorre, txtTpoDcto, txtserie, txtnumero, Trim(txNumDetraccion), IIf(cmbDetraccion.ListIndex = 1, True, False), Val(TxtTasaDet), Val(TxTImporteRef))
-                End If
-        End If
-    End If*/
+           
         }
         public string dateFormat(DateTime date)
         {
             DateTime dateTime = DateTime.MinValue;
-            if(date == dateTime)
+            if (date == dateTime)
             {
-                date =new  DateTime( 1900,1,1);
+                date = new DateTime(1900, 1, 1);
             }
-            return  "'"+date.ToString("yyyy-dd-MM")+"'";
+            return "'" + date.ToString("yyyy-dd-MM") + "'";
         }
-        public int boolToInt( bool val)
+        public int boolToInt(bool val)
         {
             return val ? 1 : 0;
         }
         public string Estado()
         {
-            string sEstado="0";
+            string sEstado = "0";
             try
             {
                 string CadenaD = "SELECT EDOC_OBLIGA FROM ESTADODOC WHERE EDOC_CLAVE = '1'";
@@ -368,21 +217,21 @@ namespace katal.conexion.model.dao
             }
             return sEstado;
         }
-        public  string  funcBlanco(String Valor )
+        public string funcBlanco(String Valor)
         {
-            if (Valor==null || Valor.Trim() == "" )
+            if (Valor == null || Valor.Trim() == "")
             {
-                return " " ;
+                return " ";
             }
             else
             {
                 return Valor;
             }
         }
-       
-        
 
-       
+
+
+
         public decimal IIfData(bool verificacion, decimal data1, decimal data2)
         {
             if (verificacion)
@@ -394,7 +243,7 @@ namespace katal.conexion.model.dao
                 return data2;
             }
         }
-        public DateTime  IIfDateEdit(bool verificacion, DateTime data1, DateTime data2)
+        public DateTime IIfDateEdit(bool verificacion, DateTime data1, DateTime data2)
         {
             if (verificacion)
             {
@@ -408,7 +257,7 @@ namespace katal.conexion.model.dao
         public string verificaDoc_cxc(string anex, string doc, string Serie, string Num)
         {
 
-            
+
             string sql = "select ANEX_cODIGO,TIPODOCU_CODIGO,CSERIE,CNUMERO,NIMPORTE,NSALDO,LCANJEADO,NMONTPROG from [014BDCTAPAG].[dbo].[ComprobanteCab]";
             sql += " where ANEX_cODIGO='" + anex + "' and TIPODOCU_CODIGO='" + doc + "' and CSERIE='" + Serie + "' and CNUMERO='" + Num + "' ";
 
@@ -427,10 +276,10 @@ namespace katal.conexion.model.dao
                     if (readinterno.Read())
                     {
                         return "El Documento se Encuentra Programado en Cuentas x Pagar";
-                    }                   
+                    }
                     decimal saldo = Conversion.ParseDecimal(read[5].ToString());
                     decimal importe = Conversion.ParseDecimal(read[4].ToString());
-                    bool canjeado= Conversion.ParseBool(read[6].ToString());
+                    bool canjeado = Conversion.ParseBool(read[6].ToString());
                     if (saldo == 0 || saldo < importe)
                     {
                         if (canjeado)
@@ -443,9 +292,9 @@ namespace katal.conexion.model.dao
 
                         }
 
-                      
+
                     }
-                    
+
                     return "El Documento Esta en Cuentas x Pagar";
                 }
                 else
@@ -464,11 +313,14 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-                  
+
+        }
+        public  void Trasferencia_CxP (string cCorre,string  txtTpoDcto,  string txtSerie, string txtNumero, string txNumDetraccion,bool detraacion , decimal TxtTasaDet, decimal TxTImporteRef, DateTime datedetraccion)
+        {
+
         }
 
-
-        public string funcAutoNum( string msAnoMesProc)
+        public string funcAutoNum(string msAnoMesProc)
         {
             string cadena = "SELECT Concepto_Logico FROM CONCEPTOGRAL WHERE Concepto_Codigo='NUMEAUTO'";
             try
@@ -479,34 +331,34 @@ namespace katal.conexion.model.dao
                 bool hayRegistros = read.Read();
                 if (hayRegistros)
                 {
-                   
-                    bool codigo = Conversion.ParseBool( read[0].ToString());
+
+                    bool codigo = Conversion.ParseBool(read[0].ToString());
                     read.Close();
-                    cadena = "SELECT MAX(CORDEN) AS MAXORDEN FROM COMPROBANTECAB WHERE CAMESPROC = '"+ msAnoMesProc+"'";
+                    cadena = "SELECT MAX(CORDEN) AS MAXORDEN FROM COMPROBANTECAB WHERE CAMESPROC = '" + msAnoMesProc + "'";
                     comando = new SqlCommand(cadena, objConexion.getCon());
-                   // objConexion.getCon().Open();
+                    // objConexion.getCon().Open();
                     SqlDataReader readd = comando.ExecuteReader();
                     bool hayRegistrosdd = readd.Read();
                     int nextDocumet = 0;
                     if (hayRegistrosdd)
-                    {                    
+                    {
                         string last = readd[0].ToString();
                         nextDocumet = Conversion.Parseint(last) + 1;
-                    }                  
+                    }
                     else
                     {
                         nextDocumet = 1;
                     }
-                  
+
                     string next = nextDocumet.ToString("00000.##");
-                   /* if (codigo)
-                    {
-                        return next;
-                    }
-                    else
-                    {
-                        return "";
-                    }*/
+                    /* if (codigo)
+                     {
+                         return next;
+                     }
+                     else
+                     {
+                         return "";
+                     }*/
                     return next;
                 }
 
@@ -540,10 +392,10 @@ namespace katal.conexion.model.dao
         {
 
             List<Comprobante> listComprobantes = new List<Comprobante>();
-            DateTime date = DateTime.Now; 
-            
+            DateTime date = DateTime.Now;
+
             string anios = date.Year.ToString("0000.##");
-           // anios="2015";
+            // anios="2015";
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
             //string findAll = $"SELECT * FROM {table} WHERE CAMESPROC='" + msAnoMesProc +"' AND CSALDINI=0";
@@ -598,7 +450,7 @@ namespace katal.conexion.model.dao
                     comp.CSALDINI = Conversion.ParseBool(read[36].ToString());
                     comp.CODCAJCH = read[37].ToString();
                     comp.DIASPAGO = Conversion.ParseDecimal(read[38].ToString());
-                    comp.CIGVAPLIC = read[39].ToString();
+                    comp.CIGVAPLIC = converionBool(  read[39].ToString());
                     comp.CAMESPROC = read[40].ToString();
                     comp.CCONCEPT = read[41].ToString();
                     comp.DFECREF = Conversion.ParseDateTime(read[42].ToString());
@@ -666,11 +518,32 @@ namespace katal.conexion.model.dao
             }
             return listComprobantes;
         }
-
-        public List<Comprobante> findAllConta(string sCorrelativo , string TIPODOCU_CODIGO, string CSERIE,string CNUMERO)
+        private bool converionBool(string dale)
+        {
+            if (dale == "N")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        private string  converionBoolReci(bool dale)
+        {
+            if (dale )
+            {
+                return "S";
+            }
+            else
+            {
+                return "N";
+            }
+        }
+        public Comprobante findAllConta(string sCorrelativo , string TIPODOCU_CODIGO, string CSERIE,string CNUMERO)
         {
             DateTime date = DateTime.Now;
-            List<Comprobante> listComprobantes = new List<Comprobante>();
+            Comprobante comp = new Comprobante();
 
             string anios = date.Year.ToString("0000.##");
            // anios = "2015";
@@ -690,7 +563,7 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    Comprobante comp = new Comprobante();
+                   
                     comp.EMP_CODIGO = read[0].ToString();
                     comp.CORDEN = read[1].ToString();
                     comp.ANEX_CODIGO = read[2].ToString();
@@ -730,7 +603,7 @@ namespace katal.conexion.model.dao
                     comp.CSALDINI = Conversion.ParseBool(read[36].ToString());
                     comp.CODCAJCH = read[37].ToString();
                     comp.DIASPAGO = Conversion.ParseDecimal(read[38].ToString());
-                    comp.CIGVAPLIC = read[39].ToString();
+                    comp.CIGVAPLIC = converionBool( read[39].ToString());
                     comp.CAMESPROC = read[40].ToString();
                     comp.CCONCEPT = read[41].ToString();
                     comp.DFECREF = Conversion.ParseDateTime(read[42].ToString());
@@ -783,7 +656,7 @@ namespace katal.conexion.model.dao
                     comp.codigo = comp.CORDEN + comp.CAMESPROC;
                     comp.documento = comp.TIPODOCU_CODIGO + ' ' + comp.CSERIE + " - " + comp.CNUMERO;
 
-                    listComprobantes.Add(comp);
+                    
                 }
             }
             catch (Exception)
@@ -796,7 +669,7 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-            return listComprobantes;
+            return comp;
 
         } 
         public List<Gasto> findAllGastos()
@@ -978,7 +851,7 @@ namespace katal.conexion.model.dao
               
 
             }
-            catch (Exception e)
+            catch (Exception )
             {
                // e.GetType
                 throw;
@@ -1076,6 +949,1389 @@ namespace katal.conexion.model.dao
             }
             return data;
         }
+
+
+        // insertar data temporal  
+        public void insertdetalleTemporal(Comprobante comprobante)
+        {
+            string wlresta = "";
+            int var = 0;
+            string CCta = "";
+            string CCta2 = "";
+            string CCta1 = "";
+            string CCtaPercep = "";
+            decimal TDebe = 0;
+            string CCtaImportacion = "";
+            string CCtaImpPerc_Igv = "";
+            ConceptosGenerales conceptosGenerales = new ConceptosGenerales();
+            ConceptoGral conceptoGral = new ConceptoGral();
+            deleteContableDet();
+            TipoDocumento tipoDocumento = findTipoDocumento(comprobante.TIPODOCU_CODIGO);
+            if (tipoDocumento != null)
+            {
+                wlresta = tipoDocumento.TIPDOC_RESTA;
+            }
+            string destino = comprobante.CDESTCOMP;
+            if (destino=="001" || destino == "002" || destino == "006" || destino == "007" || destino == "008")
+            {
+                Gasto gasto = findAllGastosDetail(comprobante.CCONCEPT);
+                if (gasto != null)
+                {
+                    CCta = gasto.Gastos_Cta1;
+                    CCta2 = gasto.Gastos_CuentaCon;
+                }
+                if (comprobante.NPERCEPCION != 0)
+                {
+                    conceptosGenerales = ConceptosGeneralesData("PRCTAIGV");
+                    CCtaPercep = conceptosGenerales.CONCGRAL_CONTEC;
+                }
+                if (destino == "002")
+                {
+                    conceptoGral = conceptoGralData("IGVSCF");
+                    if (conceptoGral != null)
+                    {
+                        CCta1 = conceptoGral.Concepto_Caracter; 
+                    }
+                }
+            }
+            else
+            {
+                conceptoGral = conceptoGralData("IGVSCF");
+                if (conceptoGral != null)
+                {
+                    CCta = conceptoGral.Concepto_Caracter;
+                }
+                Gasto gasto = findAllGastosDetail(comprobante.CCONCEPT);
+                if (gasto!=null)
+                {
+                    CCta1 = gasto.Gastos_Cta1;
+                    CCta2 = gasto.Gastos_Cta1;
+                }
+            }
+
+            if (Conversion.Parseint( comprobante.RESPONSABLE_CODIGO) == 10)
+            {
+                string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
+                CCtaImportacion = verdata("CONCGRAL_CODIGO='IMPCARGO'", conexion, 1, "CONCGRAL_CONTEC");
+               
+            }
+            
+
+            if(!exiteCampo("CONTABLEDET", "ORDFAB"))
+            {
+                ALTERContableDet();
+            }
+
+            switch(comprobante.CDESTCOMP)
+            {
+                case "003":
+                case "001":
+                    if (comprobante.NIGV != 0)
+                    {
+                        insert(comprobante,Conversion.ParseBool( wlresta), CCtaPercep, CCta);
+                        insertNro2(comprobante,Conversion.ParseBool( wlresta), CCtaPercep);
+                       
+                    }
+                    break;
+                case "002":
+                    insertD(comprobante, Conversion.ParseBool(wlresta), CCtaPercep, CCta);
+                    insertNroD2(comprobante, Conversion.ParseBool(wlresta), CCtaPercep, CCta1);
+                    insertNroD3(comprobante, Conversion.ParseBool(wlresta));
+                    break;
+                case "004":
+                    if(comprobante.NIR4==0 && comprobante.NIES == 0)
+                    {
+                        insertD004(comprobante, Conversion.ParseBool(wlresta));
+                    }
+                    break;
+                case "006":
+                    if(comprobante.NIR4 > 0 && comprobante.NIES > 0)
+                    {
+                        insertD006(comprobante);
+                        insertD0062(comprobante, CCta);
+                        insertD0063(comprobante, CCta2);
+                    }
+                       
+                    break;
+                case "007":
+                    if(comprobante.NIR4>0)
+                    {
+                        insertD007(comprobante);
+                        insertD0072(comprobante);
+                    }
+                        
+                    break;
+                case "008":
+                    if (comprobante.NIES > 0)
+                    {
+                        insertD008(comprobante);
+                        insertD0082(comprobante,CCta2);
+                    }
+                    break;
+                case "005":
+                    if (comprobante.NIGV != 0)
+                    {
+                        insertD005(comprobante, Conversion.ParseBool(wlresta),CCta1);
+                        insertD0052(comprobante, Conversion.ParseBool(wlresta));
+                    }
+
+                    break;
+            }
+
+            if (CCtaPercep != null)
+            {
+                insertGeneral(comprobante, Conversion.ParseBool(wlresta), CCtaPercep);
+                insertGeneral2(comprobante, Conversion.ParseBool(wlresta), CCta2);
+            }
+           
+            if(CCtaImportacion!=null || CCtaImportacion.Trim() != "")
+            {
+                if (comprobante.TIPODOCU_CODIGO == "CI")
+                {
+                    if(int.Parse(comprobante.RESPONSABLE_CODIGO) == 10)
+                    {
+                        string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
+                        CCtaImpPerc_Igv = verdata("CONCGRAL_CODIGO='IGVPERC'", conexion, 1, "CONCGRAL_CONTEC");
+                    }
+                    insertImpor(comprobante, CCtaImpPerc_Igv);
+                    insertImpor2(comprobante);
+
+                }
+                insertImpor3(comprobante, CCtaImportacion);
+
+
+            }
+            //commienza cuenta 60
+            int item = 0;
+            string cta = "";
+            string Fam = "";
+            string resp = "";
+            string frms = "SD";
+            string csql = "";
+                if (frms == "SD")
+            {
+                //csql += "select * from comcab where CCTD='" & FrmFacSinGuiaRapido.Text1(6).Text & "' and CCNUMSER='" & FrmFacSinGuiaRap;
+            }
+        }
+
+        public List<ContableDet> findallContableDet()
+        {
+            List<ContableDet> listAreas = new List<ContableDet>();
+            string conexion = Conexion.CadenaGeneral("014", "BDWENCO", "ContableDet");
+
+
+            string findAll = $"SELECT *,IIF(CTIPO ='D', NVALOR, 0 ) as campo1 ,IIF(CTIPO ='H', NVALOR, 0 ) as campo2  FROM {conexion}";
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    ContableDet area = new ContableDet();
+                    area.CNROITEM = read[0].ToString();
+                    area.NVALOR =Conversion.ParseDecimal( read[1].ToString());
+                    area.CTIPO = read[2].ToString();
+                    area.CCOSTO = read[3].ToString();
+                    area.CCTADEST = read[4].ToString();
+                    area.CCODSUBDI = read[5].ToString();
+                    area.CGLOSA = read[6].ToString();
+                    area.CTIPDOC = read[7].ToString();
+                    area.CSERDOC = read[8].ToString();
+                    area.CNUMDOC = read[9].ToString();
+                    area.CANEXO = read[10].ToString();
+                    area.CCODANEXO = read[11].ToString();
+                    area.NUMRETRAC = read[12].ToString();
+                    area.FECRETRAC = read[13].ToString();
+                    area.campo1 = read[14].ToString();
+                    area.campo2 = read[15].ToString();
+
+                    listAreas.Add(area);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return listAreas;
+        }
+
+        #region ===== metodos para insertar====
+        public void deleteContableDet()
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string delete = $"delete from {conexion}";
+            try
+            {
+                comando = new SqlCommand(delete, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void ALTERContableDet()
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string delete = $"ALTER TABLE {conexion} ADD ORDFAB TEXT(10) NULL";
+            try
+            {
+                comando = new SqlCommand(delete, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public TipoDocumento findTipoDocumento(string codigo)
+        {
+            // TIPOANEX_CODIGO = '" & _
+            //txtTpoAnexo
+            TipoDocumento gasto = new TipoDocumento();
+            string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "TIPOS_DE_DOCUMENTOS");
+           
+            string findAll = $"SELECT TIPDOC_CODIGO, TIPDOC_DESCRIPCION, tipdoc_referencia FROM {conexion}  where TIPDOC_CODIGO='{codigo}' ";
+            try
+            {
+                comando = new SqlCommand(findAll, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+
+                    gasto.TIPDOC_CODIGO = read[0].ToString();
+                    gasto.TIPDOC_DESCRIPCION = read[1].ToString();
+                    gasto.TIPDOC_SUNAT = read[2].ToString();
+                    gasto.TIPDOC_RESTA = read[2].ToString();
+                    gasto.TIPDOC_REFERENCIA = Conversion.ParseBool(read[2].ToString());
+                    gasto.TIPDOC_FECHAVTO = read[2].ToString();
+                    gasto.TIPDOC_REGCOMP = read[2].ToString();
+
+                }
+     
+     
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return gasto;
+        }
+
+        public ConceptosGenerales ConceptosGeneralesData(string  concepto)
+        {
+
+            bool hayRegistros = false;
+            string data = "";
+
+            ConceptosGenerales conceptos = new ConceptosGenerales();
+            string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
+            string find = $"SELECT * FROM {conexion} WHERE CONCGRAL_CODIGO = '{concepto}'";
+            try
+            {
+                comando = new SqlCommand(find, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    conceptos.CONCGRAL_CODIGO = read[0].ToString();
+                    conceptos.CONCGRAL_DESCRIPCION = read[1].ToString();
+                    conceptos.CONCGRAL_TIPO = read[2].ToString();
+                    conceptos.CONCGRAL_CONTEC = read[3].ToString();
+                    conceptos.CONCGRAL_CONTEN = read[4].ToString();
+                    conceptos.CONCGRAL_CONTED = read[5].ToString();
+                    conceptos.CONCGRAL_CONTEL = read[6].ToString();
+                    
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return conceptos;
+        }
+        public ConceptoGral conceptoGralData(string concepto)
+        {
+
+            bool hayRegistros = false;
+            string data = "";
+
+            ConceptoGral conceptos = new ConceptoGral();
+            string conexion = Conexion.CadenaGeneral("014", "BDCOMUN", "CONCEPTOGRAL");
+            string find = $"SELECT * FROM {conexion} WHERE Concepto_Codigo = '{concepto}'";
+            try
+            {
+                comando = new SqlCommand(find, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    conceptos.Concepto_Codigo = read[0].ToString();
+                    conceptos.Concepto_Descripcion = read[1].ToString();
+                    conceptos.Concepto_Tipo = read[2].ToString();
+                    conceptos.Concepto_Caracter = read[3].ToString();
+                    conceptos.Concepto_Numerico =Conversion.ParseDecimal( read[4].ToString());
+                    conceptos.Concepto_Fecha = Conversion.ParseDateTime(read[5].ToString());
+                    conceptos.Concepto_Logico = Conversion.ParseBool(read[6].ToString());
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return conceptos;
+        }
+
+        public bool exiteCampo(string tabla, string campo)
+        {
+
+            return existeTabla("", "BDWENCO", tabla, campo);
+        }
+
+
+        private bool existeTabla(string codigo, string nombreBase, string nombreTabla, string nombreColumn)
+        {
+            string conexion = Conexion.CadenaGeneral(codigo, nombreBase, nombreTabla);
+
+            string sCmd = $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = '{nombreColumn}' AND TABLE_NAME = '{conexion}'";
+
+            bool exite = false;
+
+            try
+            {
+                comando = new SqlCommand(sCmd, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+
+                    int exiteint = Conversion.Parseint(read[0].ToString());
+                    return exiteint > 0;
+                }
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return false;
+        }
+
+        private void insert(Comprobante comprobante, bool wlresta , string CCtaPercep, string CCta)
+        {
+           string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00001',";
+            csql +=  "" + comprobante.NIGV.ToString("##############0.00")  + ",";
+            csql += "'" + fValNull(CCta) + "',";
+            if (wlresta)
+            {
+                csql +=  "'H',";
+            }
+            else
+            {
+                csql += "'D',";
+            }
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql +=   "'" + fValNull(comprobante.CCTADEST ) + "',";
+            csql +=   "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql +=   "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql +=   "'" + fValNull(comprobante.CSERIE ) + "',";
+            csql +=   "'" + fValNull(comprobante.CNUMERO ) + "',";
+
+            if (CCtaPercep!="")
+            {
+                if(obtenerValer(3, CCtaPercep, "[BDWENCO].[dbo].[PLAN_CUENTA_NACIONAL]", "PLANCTA_CODIGO", false, "ISNULL(TIPOANEX_CODIGO,' ')") == null)
+                {
+                    csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+                    csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+                }
+                else
+                {
+                    csql += "'',";
+                    csql += "'',";
+                }
+            }
+            else
+            {
+                csql += "'',";
+                csql += "'',";
+            }
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+
+
+          
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+        private void insertNro2(Comprobante comprobante, bool wlresta, string CCtaPercep)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00002',";
+            csql += "" + comprobante.NIMPORTE.ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+            if (wlresta)
+            {
+                csql += "'D',";
+            }
+            else
+            {
+                csql += "'H',";
+            }
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+
+            if (CCtaPercep != "")
+            {
+                if (obtenerValer(3, CCtaPercep, "[BDWENCO].[dbo].[PLAN_CUENTA_NACIONAL]", "PLANCTA_CODIGO", false, "ISNULL(TIPOANEX_CODIGO,' ')") == null)
+                {
+                    csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+                    csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+                }
+                else
+                {
+                    csql += "'',";
+                    csql += "'',";
+                }
+            }
+            else
+            {
+                csql += "'',";
+                csql += "'',";
+            }
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+
+
+
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+        // caso 002
+        private void insertD(Comprobante comprobante, bool wlresta, string CCtaPercep, string CCta)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00001',";
+            csql += "" + (comprobante.NIGV*comprobante.NPORCE/100).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(CCta) + "',";
+            if (wlresta)
+            {
+                csql += "'H',";
+            }
+            else
+            {
+                csql += "'D',";
+            }
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + "',"; // anexo 
+            csql += "'" + "',";// codanexo                 
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+
+
+
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void insertNroD2(Comprobante comprobante, bool wlresta, string CCtaPercep, string CCta1)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00002',";
+            csql += "" + (comprobante.NIGV-comprobante.NIGV * comprobante.NPORCE / 100).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+            if (wlresta)
+            {
+                csql += "'D',";
+            }
+            else
+            {
+                csql += "'H',";
+            }
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + "',";
+            csql += "'" + "',";                 
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void insertNroD3(Comprobante comprobante, bool wlresta)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00003',";
+            csql += "" + comprobante.NIMPORTE.ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+            if (wlresta)
+            {
+                csql += "'D',";
+            }
+            else
+            {
+                csql += "'H',";
+            }
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";        
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        // CASO 004
+
+        private void insertD004(Comprobante comprobante, bool wlresta)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00001',";
+            csql += "" + comprobante.NIMPORTE.ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+            if (wlresta)
+            {
+                csql += "'D',";
+            }
+            else
+            {
+                csql += "'h',";
+            }
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";            
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        //caso 006 
+        private void insertD006(Comprobante comprobante)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO";
+            csql += ",CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,CCOSTO,CCTADEST,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00001',";
+            csql += "" + (comprobante.NTOTRH- comprobante.NIR4- comprobante.NIES).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+            
+            csql += "'H',";          
+          
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',"; 
+            csql += "'"  + "',";
+            csql += "'"  + "',";          
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void insertD0062(Comprobante comprobante, string CCta)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST";
+            csql += ",CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00002',";
+            csql += "" + (comprobante.NIR4).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(CCta) + "',";
+
+            csql += "'H',";         
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        private void insertD0063(Comprobante comprobante, string CCta2)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST";
+            csql += ",CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00003',";
+            csql += "" + (comprobante.NIES).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(CCta2) + "',";
+
+            csql += "'H',";
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        // caso 007 
+        private void insertD007(Comprobante comprobante)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO";
+            csql += ",CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,CCOSTO,CCTADEST,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00001',";
+            csql += "" + (comprobante.NTOTRH- comprobante.NIR4).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";         
+            csql += "'H',";                     
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+          
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+
+
+
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void insertD0072(Comprobante comprobante)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO";
+            csql += ",CCOSTO,CCTADEST,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00002',";
+            csql += "" + (comprobante.NIR4).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+            csql += "'H',";
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";       
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        // caso 008
+        private void insertD008(Comprobante comprobante)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,";
+            csql += "CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,CCOSTO,CCTADEST,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00001',";
+            csql += "" + (comprobante.NTOTRH- comprobante.NIES).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+           
+            csql += "'H',";                    
+
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";          
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        private void insertD0082(Comprobante comprobante,string CCta2)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST";
+            csql += "CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00002',";
+            csql += "" + (comprobante.NIES).ToString("##############0.00") + ",";
+            csql += "'" + fValNull(CCta2) + "',";
+            csql += "'H',";
+            csql += "'"  + "',";
+            csql += "'"  + "',";
+            csql += "'"  + "',";
+            csql += "'" + "',";          
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        // caso 005 
+        private void insertD005(Comprobante comprobante, bool wlresta, string CCta1)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00001',";
+            csql += "" + comprobante.NIGV.ToString("##############0.00") + ",";
+            csql += "'" + fValNull(CCta1) + "',";
+            if (wlresta)
+            {
+                csql += "'H',";
+            }
+            else
+            {
+                csql += "'D',";
+            }
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'',";
+            csql += "'',";            
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void insertD0052(Comprobante comprobante, bool wlresta)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            if (comprobante.NIGV != 0)
+            {
+                csql += "'00002',";
+            }
+            else
+            {
+                csql += "'00001',";
+            }
+            if (comprobante.CCODRUC!=null)
+            {
+                csql += "" + (comprobante.NIMPORTE+comprobante.NVALCIF ).ToString("##############0.00") + ",";
+            }
+            else
+            {
+                csql += "" + comprobante.NIMPORTE.ToString("##############0.00") + ",";
+            }
+            
+          
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+            if (wlresta)
+            {
+                csql += "'D',";
+            }
+            else
+            {
+                csql += "'H',";
+            }
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        // general
+        private void insertGeneral(Comprobante comprobante, bool wlresta, string CCtaPercep)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00003',";                 
+            csql += "" + comprobante.NPERCEPCION.ToString("##############0.00") + ",";           
+            csql += "'" + fValNull(CCtaPercep) + "',";          
+            csql += "'D',";         
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+
+            if (obtenerValer(3, CCtaPercep, "[BDWENCO].[dbo].[PLAN_CUENTA_NACIONAL]", "PLANCTA_CODIGO", false, "TIPOANEX_CODIGO")!=null)
+            {
+                    csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+                    csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+            }
+            else
+            {
+                csql += "'"  + "',";
+                csql += "'"  + "',";
+            }
+           
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        private void insertGeneral2(Comprobante comprobante, bool wlresta, string CCta2)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00004',";
+            csql += "" + comprobante.NPERCEPCION.ToString("##############0.00") + ",";
+            csql += "'" + fValNull(CCta2) + "',";
+            if (wlresta)
+            {
+                csql += "'D',";
+            }
+            else
+            {
+                csql += "'H',";
+            }
+          
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            if (CCta2 != "")
+            {
+                if (obtenerValer(3, CCta2, "[BDWENCO].[dbo].[PLAN_CUENTA_NACIONAL]", "PLANCTA_CODIGO", false, "TIPOANEX_CODIGO") != null)
+                {
+                    csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+                    csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+                }
+                else
+                {
+                    csql += "'" + "',";
+                    csql += "'" + "',";
+                }
+            }
+            else
+            {
+                csql += "'" + "',";
+                csql += "'" + "',";
+            }
+            
+
+            csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+        private void insertImpor(Comprobante comprobante, string CCtaImpPerc_Igv)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00001',";
+            csql += "" + comprobante.NPERCEPCION.ToString("##############0.00") + ",";
+            csql += "'" + fValNull(CCtaImpPerc_Igv);                      
+            csql += "'D',";       
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+           
+            csql += "'" +  "'," + 0 + ")";
+
+
+
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void insertImpor2(Comprobante comprobante)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00002',";
+            csql += "" + comprobante.NPERCEPCION.ToString("##############0.00") + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA);
+            csql += "'H',";
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+
+            csql += "'" + "'," + 0 + ")";
+
+
+
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void insertImpor3(Comprobante comprobante,string CCtaImportacion)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
+            csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
+            csql += "'00003',";
+            csql += "" + comprobante.NBASEIMP.ToString("##############0.00") + ",";
+            csql += "'" + fValNull(CCtaImportacion);
+            csql += "'D',";
+            csql += "'" + fValNull(comprobante.CCOSTO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
+            csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+
+            csql += "'" + "'," + 0 + ")";
+
+
+
+            try
+            {
+                comando = new SqlCommand(csql, objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        private dynamic Esnulo(string expresion, dynamic valor)
+        {
+            if(expresion==null || expresion.Trim() == "")
+            {
+                return valor;
+            }
+            else
+            {
+                return expresion;
+            }
+        }
+        private string fValNull(string CCta)
+        {
+            if (CCta == null)
+            {
+                return "";
+            }
+            else
+            {
+                if (CCta.Trim() == "")
+                {
+                    return "";
+                }
+                else
+                {
+                    return CCta;
+                }
+
+            }
+
+        }
+
+        private string obtenerValer(int TipoAnexo, string cod, string tabla, string campo, bool fecha, string CampDev)
+        { 
+            string cf = "";
+            string data = "";
+            if(campo .Trim() != "")
+            {
+                cf += "SELECT " + CampDev + " FROM " + tabla + " WHERE " + campo + "='" + cod + "'";
+                
+            }
+          
+       
+            try
+            {
+                comando = new SqlCommand(cf, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+
+                   data = read[0].ToString();                 
+                }
+                return data;
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            
+
+        }
+
+        private string verdata(string condicion, string tabla, int param, string camdev)
+        {
+            string verdata = "";
+            string CAD = $"SELECT* FROM  {tabla} WHERE   {condicion}";
+            try
+            {
+                comando = new SqlCommand(CAD, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+
+                    verdata = read[0].ToString();
+                }
+                return verdata;
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+        }
+
+
+        #endregion ===end ===================
+
         public void update(Comprobante obj)
         {
             throw new NotImplementedException();

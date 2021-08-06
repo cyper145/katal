@@ -169,6 +169,7 @@
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
                         //t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.KeyDown = "downSerie";
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -182,6 +183,7 @@
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
                         // t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.KeyDown = "downNumero";
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -195,6 +197,7 @@
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
                         // t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.KeyDown = "downCAOCOMPRA";
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -238,7 +241,7 @@
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
                         t.ReadOnly = true;
-                        
+
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -251,6 +254,7 @@
                         t.ShowModelErrors = true;
                         t.Properties.ClientSideEvents.TextChanged = "changeDiasPago";
                         t.Properties.ClientSideEvents.LostFocus = "changeDiasPago";
+                        t.Properties.ClientSideEvents.KeyDown = "downDIASPAGO";
                         // t.ReadOnly = true;
                     });
                 });
@@ -267,22 +271,13 @@
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
                         //  t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.Init = "initLPASOIMP";
+
                     });
                 });
 
 
-                // cuarta fila
-                /*
-                groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
-                {
-                    groupSettings.Caption = "Converion Monetaria";
-                    groupSettings.ShowCaption = DefaultBoolean.True;
-                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
-                    groupSettings.ColumnCount = 12;
-                    groupSettings.ColumnSpan = 6;
-                });
 
-                */
 
                 groupItem.Items.Add(i =>
                 {
@@ -423,6 +418,9 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
+                        t.Checked = true;
+                        t.Properties.ClientSideEvents.Init = "initEstCompra";
+
                     });
 
                 });
@@ -701,7 +699,10 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.Properties.ClientSideEvents.TextChanged = "cambioIgvBase";
+                      //  t.Properties.ClientSideEvents.TextChanged = "cambioIgvBase";
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownNBASEIMP";
+
+
                     });
 
                 });
@@ -722,12 +723,14 @@
                 {
                     i.FieldName = "NPERCEPCION";
                     i.ColumnSpan = 2;
-                    i.Caption = "Importe";
+                    i.Caption = "Importe Percepción";
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                        //t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownNPERCEPCION";
+                       
                     });
 
                 });

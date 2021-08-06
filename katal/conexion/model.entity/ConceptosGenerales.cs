@@ -16,4 +16,15 @@ namespace katal.conexion.model.entity
         public string CONCGRAL_CONTEL { get; set; }
 
     }
+
+    public class ConceptoGral
+    {
+        public string Concepto_Codigo { get; set; }
+        public string Concepto_Descripcion { get; set; }
+        public string Concepto_Tipo { get; set; }
+        public string Concepto_Caracter { get; set; }
+        public Decimal Concepto_Numerico { get; set; }
+        public DateTime Concepto_Fecha { get; set; }
+        public bool Concepto_Logico { get; set; }
+    }
 }
