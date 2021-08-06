@@ -79,7 +79,7 @@ namespace katal.conexion.model.dao
                 cCorre = funcAutoNum(msAnoMesProc);
 
 
-                string CadenaD = "INSERT INTO COMPROBANTECAB (";
+                string CadenaD = "INSERT INTO [014BDCOMUN].[dbo].COMPROBANTECAB (";
                 CadenaD += "EMP_CODIGO,CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
                 CadenaD += "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, ";
                 CadenaD += "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, ";
@@ -134,7 +134,7 @@ namespace katal.conexion.model.dao
                 // cuando hay honorarios
                 CadenaD += "'" + obj.CCODCONTA.Trim() + "', '" + funcBlanco(obj.CFORMPAGO) + "', '" + funcBlanco(obj.CSERREFER) + "', '" + funcBlanco(obj.CNUMREFER) + "',";
                 CadenaD += "'" + funcBlanco(obj.CTDREFER) + "', '" + obj.CONVERSION_CODIGO + "', " + dateFormat(obj.DREGISTRO) + ", '" + obj.CTIPPROV + "', '" + obj.CNRORUC + "', ";
-                CadenaD += "" + boolToInt(obj.ESTCOMPRA) + ", '" + funcBlanco(obj.CDESTCOMP) + "', " + obj.DIASPAGO + ", '" + obj.CIGVAPLIC + "', '" + obj.CCONCEPT + "',";
+                CadenaD += "" + boolToInt(obj.ESTCOMPRA) + ", '" + funcBlanco(obj.CDESTCOMP) + "', " + obj.DIASPAGO + ", '" + boolToInt(obj.CIGVAPLIC) + "', '" + obj.CCONCEPT + "',";
                 CadenaD += "" + dateFormat(obj.DFECREF) + ", " + obj.NTASAIGV + ", " + obj.NIGV + ", " + nPorcen + ", '" + funcBlanco(obj.CCODRUC) + "', ";
                 CadenaD += "" + 0 + ", " + obj.NIR4 + ", " + obj.NIES + ", " + obj.NTOTRH + ", " + obj.NBASEIMP + ",";
                 CadenaD += "" + nValCIF + ", " + dateFormat(obj.DEMISION) + ", '" + msAnoMesProc + "', " + boolToInt(obj.CSALDINI) + "," + obj.NPERCEPCION + ",'" + obj.NUMRETRAC + "'";
@@ -538,6 +538,17 @@ namespace katal.conexion.model.dao
             else
             {
                 return "N";
+            }
+        }
+        private int converionBoolint(bool dale)
+        {
+            if (dale)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
             }
         }
         public Comprobante findAllConta(string sCorrelativo , string TIPODOCU_CODIGO, string CSERIE,string CNUMERO)

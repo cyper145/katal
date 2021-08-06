@@ -366,13 +366,23 @@ namespace katal.Controllers
             ModelState.Remove("LPASOIMP");
             ModelState.Remove("ESTCOMPRA");
             ModelState.Remove("DIASPAGO");
+            ModelState.Remove("CIGVAPLIC");
+            ModelState.Remove("NIR4");
+            ModelState.Remove("NIES");
+            ModelState.Remove("NTOTRH");
+            ModelState.Remove("NPERCEPCION");
+            ModelState.Remove("RCO_FECHA");
+            ModelState.Remove("flg_RNTNODOMICILIADO");
             if (ModelState.IsValid)
+            {
                 SafeExecute(() => metodo(issue));
+
+                return RedirectToAction("contabilizar");
+            }
             else
                 ViewBag.GeneralError = "Please, correct all errors.";
 
-            return RedirectToAction("contabilizar");
-           // return PartialView("GridViewPartial");
+            return PartialView("GridViewPartial");
         }
 
         public ActionResult MultiSelectGasto(string Gastos_Codigo = "-1", FormCollection dataR = null)
