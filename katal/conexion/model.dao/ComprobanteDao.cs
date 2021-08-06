@@ -815,7 +815,7 @@ namespace katal.conexion.model.dao
            
 
             string conexion = Conexion.CadenaGeneral("014", "BDCTAPAG", "Gastos");
-            string findAll = $"select GASTOS_CODIGO, GASTOS_DESCRIPCION, GASTOS_MONEDA, GASTOS_HONORARIO, GASTOS_CUENTACON,GASTOS_DSCTO1, GASTOS_DSCTO2 FROM {conexion} WHERE GASTOS_CODIGO = '" + codigo + "'" ;
+            string findAll = $"select GASTOS_CODIGO, GASTOS_DESCRIPCION, GASTOS_MONEDA, GASTOS_HONORARIO, GASTOS_CUENTACON,GASTOS_DSCTO1, GASTOS_DSCTO2,Gastos_Cta1,Gastos_Cta2 FROM {conexion} WHERE GASTOS_CODIGO = '" + codigo + "'" ;
             Gasto gasto = new Gasto();
             try
             {
@@ -831,6 +831,8 @@ namespace katal.conexion.model.dao
                     gasto.Gastos_CuentaCon= read[4].ToString();
                     gasto.Gastos_Dscto1=Conversion.ParseDecimal( read[5].ToString());
                     gasto.Gastos_Dscto2= Conversion.ParseDecimal(read[6].ToString());
+                    gasto.Gastos_Cta1= read[7].ToString();
+                    gasto.Gastos_Cta2= read[8].ToString();
                    
                 }
                 return gasto;
@@ -1198,7 +1200,7 @@ namespace katal.conexion.model.dao
         public void ALTERContableDet()
         {
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
-            string delete = $"ALTER TABLE {conexion} ADD ORDFAB TEXT(10) NULL";
+            string delete = $"ALTER TABLE {conexion} ADD ORDFAB varchar(10) NULL";
             try
             {
                 comando = new SqlCommand(delete, objConexion.getCon());
@@ -1347,8 +1349,8 @@ namespace katal.conexion.model.dao
         {
             string conexion = Conexion.CadenaGeneral(codigo, nombreBase, nombreTabla);
 
-            string sCmd = $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = '{nombreColumn}' AND TABLE_NAME = '{conexion}'";
-
+            string sCmd = "use BDWENCO  ";
+            sCmd += $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = '{nombreColumn}' AND TABLE_NAME = '{nombreTabla}'";
             bool exite = false;
 
             try
@@ -1378,11 +1380,12 @@ namespace katal.conexion.model.dao
 
         private void insert(Comprobante comprobante, bool wlresta , string CCtaPercep, string CCta)
         {
+           
            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
             csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
             csql += "'00001',";
-            csql +=  "" + comprobante.NIGV.ToString("##############0.00")  + ",";
+            csql +=  "" + comprobante.NIGV  + ",";
             csql += "'" + fValNull(CCta) + "',";
             if (wlresta)
             {
