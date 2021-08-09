@@ -67,6 +67,7 @@ namespace katal.Controllers
         public ActionResult ContaGridViewPartial()
         {
             //List<Comprobante> comp = comprobanteNeg.findAll();
+            GridViewHelper.contableDets = comprobanteNeg.findallContableDet();
             return PartialView("ContaGridViewPartial", GridViewHelper.contableDets);
         } 
 

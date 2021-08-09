@@ -188,12 +188,12 @@ namespace katal.conexion.model.dao
                 label3 = fValNull(planCuenta.PLANCTA_DESCRIPCION);
                 xcanexo = fValNull(planCuenta.TIPOANEX_CODIGO);
                 xco_c_cenco = planCuenta.PLANCTA_CENTCOST;
-                xco_c_conco = fValNull(planCuenta.PLANCTA_CON_COSTO);
+                xco_c_conco = planCuenta.PLANCTA_CON_COSTO;
 
-                if (xco_c_conco != "")
+                if (xco_c_conco!=null)
                 {
                     GastosIngresos gastoIngresos = findGastoIngreso(xco_c_conco);
-                    if (gastoIngresos != null)
+                    if (gastoIngresos == null)
                     {
                         xco_c_tipo = "N";
                     }
@@ -1018,7 +1018,7 @@ namespace katal.conexion.model.dao
 
             GastosIngresos plan = null;
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "GASTOS_INGRESOS");
-            string csql = $"SELECT * from {conexion}  WHERE  PLANCTA_NIVEL = {codigo } ";
+            string csql = $"SELECT * from {conexion}  WHERE  GASING_CODIGO = '{codigo }' ";
             try
             {
                 comando = new SqlCommand(csql, objConexion.getCon());
@@ -1627,7 +1627,7 @@ namespace katal.conexion.model.dao
 
             PlanCuentaNacional plan = new PlanCuentaNacional();
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "PLAN_CUENTA_NACIONAL");
-            string findAll = $"SELECT PLANCTA_CODIGO,PLANCTA_DESCRIPCION from {conexion}  WHERE  PLANCTA_NIVEL = {NivelContable } AND PLANCTA_CODIGO='{xccodcuenta}'";
+            string findAll = $"SELECT * from {conexion}  WHERE  PLANCTA_NIVEL = {NivelContable } AND PLANCTA_CODIGO='{xccodcuenta}'";
             try
             {
                 comando = new SqlCommand(findAll, objConexion.getCon());
@@ -1655,10 +1655,14 @@ namespace katal.conexion.model.dao
                     plan.PLANCTA_AJUSTE = read[16].ToString();
                     plan.PLANCTA_PARTIDA = read[17].ToString();
                     plan.PLANCTA_DIF_CAMBIO = read[18].ToString();
-                    plan.PLANCTA_MONETARIA = read[19].ToString();
-                    plan.PLANCTA_CON_COSTO = read[20].ToString();
-                    plan.PLANCTA_PLAN_EXTERIOR = read[21].ToString();
-                    plan.PLANCTA_ESTADO = read[22].ToString();
+
+                    plan.PLANCTA_NATURALEZA = read[19].ToString();
+
+
+                    plan.PLANCTA_MONETARIA = read[20].ToString();
+                    plan.PLANCTA_CON_COSTO = read[21].ToString();
+                    plan.PLANCTA_PLAN_EXTERIOR = read[22].ToString();
+                    plan.PLANCTA_ESTADO = read[23].ToString();
                     
                 }
             }

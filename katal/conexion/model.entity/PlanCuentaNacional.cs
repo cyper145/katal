@@ -26,6 +26,7 @@ namespace katal.conexion.model.entity
         public string PLANCTA_AJUSTE { get; set; }
         public string PLANCTA_PARTIDA { get; set; }
         public string PLANCTA_DIF_CAMBIO { get; set; }
+        public string PLANCTA_NATURALEZA { get; set; }      
         public string PLANCTA_MONETARIA { get; set; }
         public string PLANCTA_CON_COSTO { get; set; }
         public string PLANCTA_PLAN_EXTERIOR { get; set; }

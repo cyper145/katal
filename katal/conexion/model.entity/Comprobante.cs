@@ -191,7 +191,7 @@ namespace katal.conexion.model.entity
         
         public string CDESTCOMP { get; set; }
         public string codmaquina { get; set; }
-        public int cantidad { get; set; }
+        public decimal cantidad { get; set; }
 
 
 
