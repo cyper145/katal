@@ -15,16 +15,16 @@
         var enabled = gridView.GetSelectedRowCount() > 0;
         pageToolbar.GetItemByName("Delete").SetEnabled(enabled);
         pageToolbar.GetItemByName("Export").SetEnabled(enabled);
-
+        pageToolbar.GetItemByName("transferir").SetEnabled(enabled);
         pageToolbar.GetItemByName("Edit").SetEnabled(gridView.GetFocusedRowIndex() !== -1);
     }
-    function onPageToolbarItemClick(s, e) {
+    function onPageToolbarItemClick(s, e) { 
         switch(e.item.name) {
             case "ToggleFilterPanel":
                 toggleFilterPanel();
                 break;
             case "New":
-                
+                console.log("dar");
                 gridView.AddNewRow();
                
                 break;
@@ -34,15 +34,28 @@
 
                 break;
             case "Delete":
-                deleteSelectedRecords();
+                ExportSelectedRecords();
                 break;
             case "Export":
 
-                ExportSelectedRecords()
+                ExportSelectedRecords();
                 //gridView.ExportTo(ASPxClientGridViewExportFormat.Xlsx);
+                break;
+            case "transferir":
+                console.log("dar");
+                TransferirRecords();
                 break;
         }
     }
+    function TransferirRecords() {
+
+        gridView.GetSelectedFieldValues("CNROITEM", getSelectedTransferir);
+
+    }
+    function getSelectedTransferir(values) {
+        gridView.PerformCallback({ customAction: 'transferir', codigo: selectdId });
+    }
+
     function ExportSelectedRecords() {
         
       gridView.GetSelectedFieldValues("OC_CNUMORD", getSelectedFieldValuesExportCallback);

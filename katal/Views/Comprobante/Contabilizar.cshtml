@@ -270,7 +270,7 @@
         item.Image.Url = "/Content/Images/search.svg";
         item.Image.UrlChecked = "/Content/Images/search-selected.svg";
     });
-    menuSettings.ClientSideEvents.ItemClick = "onPageToolbarItemClickComprobante";
+    menuSettings.ClientSideEvents.ItemClick = "onPageToolbarItemClick";//
 }).GetHtml()
 
     @Html.DevExpress().Panel(panelSettings =>

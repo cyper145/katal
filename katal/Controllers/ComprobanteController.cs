@@ -134,8 +134,20 @@ namespace katal.Controllers
             {
                 return RedirectToAction("index", "Report", new { codigo = codigo });
             }
+            if(customAction== "transferir")
+            {
+                PerformTransfer();
+            }
 
             return GridViewPartial();
+        }
+
+
+        private void PerformTransfer()
+        {
+            Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
+            comprobanteNeg.Tranferir(comp, GridViewHelper.NivelCOntable);
+            //userNeg.delete(codigo);
         }
         private void PerformDelete(string codigo)
         {

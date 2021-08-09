@@ -132,6 +132,7 @@ namespace katal.conexion.model.dao
                 {
                     CadenaD += "" + IIfData(obj.LHONOR, Math.Round(obj.NTOTRH + obj.NPERCEPCION, 2), Math.Round(obj.NIMPORTE + obj.NPERCEPCION, 2)) + ", ";
                 }
+                obj.DREGISTRO = obj.DEMISION;// 
                 // cuando hay honorarios
                 CadenaD += "'" + obj.CCODCONTA.Trim() + "', '" + funcBlanco(obj.CFORMPAGO) + "', '" + funcBlanco(obj.CSERREFER) + "', '" + funcBlanco(obj.CNUMREFER) + "',";
                 CadenaD += "'" + funcBlanco(obj.CTDREFER) + "', '" + obj.CONVERSION_CODIGO + "', " + dateFormat(obj.DREGISTRO) + ", '" + obj.CTIPPROV + "', '" + obj.CNRORUC + "', ";
@@ -856,7 +857,8 @@ namespace katal.conexion.model.dao
         {
             EjercicioContable plan = null;
             string MNUMERO = "0001";
-            string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV"+mes);
+            string mess = mes.ToString("00.##");
+            string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV"+ mess);
 
             string csql = $"Select MAX(CMOV_C_COMPR) AS MAXCOMPR from {conexion} where SUBDIAR_CODIGO='{codSub}'";
             
@@ -876,6 +878,7 @@ namespace katal.conexion.model.dao
             {
 
                 throw;
+
             }
             finally
             {
@@ -2062,9 +2065,12 @@ namespace katal.conexion.model.dao
         {
             List<ContableDet> listAreas = new List<ContableDet>();
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string findAll = " SELECT *, campo1 =CASE CTIPO WHEN 'D' THEN NVALOR WHEN 'H' THEN 0 END  ,";
 
+            findAll += "campo2 = CASE CTIPO WHEN 'D' THEN 0 WHEN 'H' THEN NVALOR END";
+            findAll += $"  FROM {conexion}";
 
-            string findAll = $"SELECT *,IIF(CTIPO ='D', NVALOR, 0 ) as campo1 ,IIF(CTIPO ='H', NVALOR, 0 ) as campo2  FROM {conexion}";
+            //string findAll = $"SELECT *,IIF(CTIPO ='D', NVALOR, 0 ) as campo1 ,IIF(CTIPO ='H', NVALOR, 0 ) as campo2  FROM {conexion}";
             try
             {
                 comando = new SqlCommand(findAll, objConexion.getCon());
