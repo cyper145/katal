@@ -699,7 +699,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-                      //  t.Properties.ClientSideEvents.TextChanged = "cambioIgvBase";
+                        //  t.Properties.ClientSideEvents.TextChanged = "cambioIgvBase";
                         t.Properties.ClientSideEvents.KeyDown = "KeyDownNBASEIMP";
 
 
@@ -730,7 +730,7 @@
                         t.ShowModelErrors = true;
                         //t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
                         t.Properties.ClientSideEvents.KeyDown = "KeyDownNPERCEPCION";
-                       
+
                     });
 
                 });
@@ -864,8 +864,8 @@
                 {
                     i.FieldName = "RCO_TIPO";
                     i.ColumnSpan = 4;
-                    i.Caption = "Ref. Comprobante de Pago Original:";
-                    i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+                    i.Caption = "Ref. Comprobante:";
+                    //i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                     i.SetNestedContent(() =>
                     {
                         Html.RenderAction("MultiSelectTipoDocRef", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "CTDREFER") });
@@ -877,7 +877,8 @@
                 {
                     i.FieldName = "RCO_SERIE";
                     i.ColumnSpan = 2;
-                    i.ShowCaption =DefaultBoolean.False;
+                     i.ShowCaption =DefaultBoolean.False;
+                    i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
@@ -892,6 +893,7 @@
                     i.FieldName = "RCO_NUMERO";
                     i.ColumnSpan = 2;
                     i.ShowCaption = DefaultBoolean.False;
+                    i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                     i.NestedExtension().TextBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
@@ -905,6 +907,7 @@
                     i.FieldName = "RCO_FECHA";
                     i.ColumnSpan = 2;
                     i.ShowCaption = DefaultBoolean.False;
+                    i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                     i.NestedExtension().DateEdit(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
@@ -919,6 +922,7 @@
                     i.FieldName = "flg_RNTNODOMICILIADO";
                     i.ColumnSpan = 2;
                     i.Caption = "Renta No Domiciliado";
+                    //  i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                     i.NestedExtension().CheckBox(t =>
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;

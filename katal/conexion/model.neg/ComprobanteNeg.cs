@@ -26,6 +26,10 @@ namespace katal.conexion.model.neg
         {
             objComprobanteDao.create(comprobante);
         }
+        public void create(Comprobante comprobante, int nivelContable)
+        {
+            objComprobanteDao.create(comprobante, nivelContable);
+        }
         public List<Comprobante> findAll()
         {
             return objComprobanteDao.findAll();

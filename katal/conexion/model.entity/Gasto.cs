@@ -17,8 +17,11 @@ namespace katal.conexion.model.entity
         public decimal Gastos_Dscto2 { get; set; }
         public string Gastos_Cta1 { get; set; }
         public string Gastos_Cta2 { get; set; }
-      
-    }
 
-    
+    }
+    public class GastosIngresos {
+        public string GASING_CODIGO { get; set; }
+        public string GASING_DESCRIPCION { get; set; }
+        public string GASING_TIPO { get; set; }     
+    } 
 }

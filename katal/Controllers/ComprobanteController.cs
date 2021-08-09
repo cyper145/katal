@@ -68,7 +68,61 @@ namespace katal.Controllers
         {
             //List<Comprobante> comp = comprobanteNeg.findAll();
             return PartialView("ContaGridViewPartial", GridViewHelper.contableDets);
+        } 
+
+        public ActionResult GridViewAddComprobante(ContableDet issue, FormCollection data)
+        {
+
+            var codArticulodata = data["DXMVCEditorsValues"];
+            var btShowModal = data["btShowModal"];
+
+            string concepto = data["gridLookupGastos$State"];
+            string tipoProveerdor = data["gridLookupTipoAnexo$State"];
+            string proveedor = data["gridLookupAnexo$State"];
+            string tipoDocumento = data["gridLookupTipoDoc$State"];
+            string codConversion = data["gridLookupMoneda$State"];
+
+            string codDestino = data["gridLookupDestino$State"];
+            string codResponsable = data["gridLookupResponsable$State"];
+
+            string PlanCuenta = data["gridLookupPlanCuenta$State"];
+            string Costos = data["gridLookupCostos$State"];
+            string OrdenFabricacion = data["gridLookupOrdenFabricacion$State"];
+            string DestinoConta = data["gridLookupDestinoConta$State"];
+            string AnexoConta = data["gridLookupAnexoConta$State"];
+             issue.CCODCONTA = ValidarRecuperar(PlanCuenta);
+             issue.CCOSTO = ValidarRecuperar(Costos);
+             issue.ORDFAB = ValidarRecuperar(OrdenFabricacion);
+             issue.CCTADEST = ValidarRecuperar(DestinoConta);
+             issue.CCODANEXO = ValidarRecuperar(AnexoConta);
+            issue.CDESTCOMP = ValidarRecuperar(DestinoConta);
+
+            //gridLookupResponsable$State        
+            //gridLookupTipoDocRef$State
+            // issue.CCONCEPT = ValidarRecuperar(concepto);
+            Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
+            comp.ContableDet = issue;
+            return UpdateModelWithDataValidation(comp, AddNewRecordContable);
         }
+
+        private void AddNewRecordContable(Comprobante issue)
+        {      
+            comprobanteNeg.create(issue, GridViewHelper.NivelCOntable);          
+        }
+
+        public JsonResult cargardata()
+        {
+            int CODIGO = GridViewHelper.contableDets.Count+1;
+            string next = CODIGO.ToString("00000.##");
+            Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
+            RespuestaCDataComprobante respuestaCData = new RespuestaCDataComprobante();
+            respuestaCData.NROITEM = next;
+            respuestaCData.GLOSA = comp.CDESCRIPC;
+
+            //string Gastos_Codigo = "";
+            return Json(new { tipoanexo = respuestaCData }, JsonRequestBehavior.AllowGet);
+        }
+
 
         [ValidateAntiForgeryToken]
         public ActionResult GridViewCustomActionPartial(string customAction, string codigo)
@@ -373,11 +427,19 @@ namespace katal.Controllers
             ModelState.Remove("NPERCEPCION");
             ModelState.Remove("RCO_FECHA");
             ModelState.Remove("flg_RNTNODOMICILIADO");
+            ModelState.Remove("cantidad");
+
             if (ModelState.IsValid)
             {
                 SafeExecute(() => metodo(issue));
-
-                return RedirectToAction("contabilizar");
+                if (issue.ContableDet == null)
+                {
+                    return RedirectToAction("contabilizar");
+                }
+                else
+                {
+                    return PartialView("ContaGridViewPartial");
+                }
             }
             else
                 ViewBag.GeneralError = "Please, correct all errors.";
@@ -450,6 +512,17 @@ namespace katal.Controllers
             return PartialView("MultiSelectAnexo", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
 
         }
+
+        public ActionResult MultiSelectAnexoConta(string ANEX_CODIGO = "-1", FormCollection dataR = null)
+        {
+            List<Anexo> data = tipoAnexoNeg.findAllAnexo();
+            ViewData["Anexo"] = data;         
+            if (ANEX_CODIGO == "-1")
+                ANEX_CODIGO = "-1";
+            return PartialView("MultiSelectAnexoConta", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
+
+        }
+        
         public ActionResult MultiSelectTipoDoc(string TIPDOC_CODIGO = "-1", FormCollection dataR = null)
         {
             ViewData["TipoDoc"] = tipoAnexoNeg.findAllTipoDocumento();
@@ -490,7 +563,7 @@ namespace katal.Controllers
                     if (nodes.selectedKeyValues != null)
                     {
                         GridViewHelper.CO_C_CODIG = nodes.selectedKeyValues[0];
-                        CO_C_CODIG = GridViewHelper.COVMON_CODIGO;
+                        CO_C_CODIG = GridViewHelper.CO_C_CODIG;
                     }
                 }
 
@@ -500,6 +573,20 @@ namespace katal.Controllers
             return PartialView("MultiSelectDestino", new Destino() { CO_C_CODIG = CO_C_CODIG });
 
         }
+
+        
+
+ public ActionResult MultiSelectDestinoConta(string CO_C_CODIG = "-1", FormCollection dataR = null)
+        {
+            ViewData["Destino"] = destinoNeg.findAll();
+
+            
+            if (CO_C_CODIG == "-1")
+                CO_C_CODIG = "";
+            return PartialView("MultiSelectDestinoConta", new Destino() { CO_C_CODIG = CO_C_CODIG });
+
+        }
+
         public ActionResult MultiSelectResponsable(string oc_csolict = "01")
         {
             ViewData["responsable"] = responsable.findAll();

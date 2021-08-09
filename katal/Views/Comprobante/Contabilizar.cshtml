@@ -114,69 +114,16 @@
         }
 
 
-        function changegCalcularPrecioCantidad(s, e) {
-            var data = document.getElementById("grid_DXEFL_DXEditor5_I");
-            let datadescuento = document.getElementById("grid_DXEFL_DXEditor6_I");
-            let precioUnitario = 0;
-            let cantidad = 0;
-            let descuento = 0;
+        
+        
 
-            if (datadescuento.value != "") {
-                descuento = parseFloat(datadescuento.value);
-            }
-            if (data.value == "" || data.value == NaN) {
-                precioUnitario = 0;
-            }
-            else {
-                precioUnitario = parseFloat(data.value);
-            }
-            if (s.GetText() == "") {
-                cantidad = 0;
-            }
-            else {
-                cantidad = parseFloat(s.GetText());
-            }
-            var PrecioTotal = document.getElementById("grid_DXEFL_DXEditor7_I");
+        function onDataConta() {
+            if (CNROITEM.GetText() == "") {
 
-            PrecioTotal.value = precioUnitario * cantidad*(1-descuento/100);
-
-        }
-        function changegCalcularPrecioPunitario(s, e) {
-
-
-            let datadescuento = document.getElementById("grid_DXEFL_DXEditor6_I");
-            let descuento = 0;
-
-            if (datadescuento.value != "") {
-                descuento = parseFloat(datadescuento.value);
-            }
-            var data = document.getElementById("grid_DXEFL_DXEditor4_I");// cantidad
-            let precioUnitario=0;
-            let cantidad=0;
-            if (data.value == "" || data.value == NaN) {
-                cantidad = 0;
-            }
-            else {
-                cantidad = parseFloat(data.value);
-            }
-            if (s.GetText() == "") {
-                precioUnitario = 0;
-            }
-            else {
-                precioUnitario = parseFloat(s.GetText());
-            }
-
-            var PrecioTotal = document.getElementById("grid_DXEFL_DXEditor7_I");
-
-            PrecioTotal.value = precioUnitario * cantidad * (1 - descuento / 100);
-        }
-
-        function onData() {
-            if (OC_CNUMORD.GetText() == "") {
-
-                $.getJSON('/OrdenCompra/nroDera', function (resp) {
+                $.getJSON('/Comprobante/cargardata', function (resp) {
                     $.each(resp, function (k, v) {
-                        OC_CNUMORD.SetText(v);
+                        CNROITEM.SetText(v.NROITEM);
+                        CGLOSA.SetText(v.GLOSA);
                     });
                 });
 
@@ -280,6 +227,24 @@
     {
         item.Name = "New";
         item.Text = "Registro";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "/Content/Images/add.svg";
+
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "EDIT";
+        item.Text = "editar";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "/Content/Images/edit.svg";
+
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "transferir";
+        item.Text = "Transferir";
         item.Alignment = MenuItemAlignment.Left;
         item.AdaptivePriority = 2;
         item.Image.Url = "/Content/Images/registar.svg";

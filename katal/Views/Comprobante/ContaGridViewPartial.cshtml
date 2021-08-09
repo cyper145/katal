@@ -9,16 +9,16 @@
     var gridView = Html.DevExpress().GridView<ContableDet>(gridViewSettings =>
     {
         gridViewSettings.Name = "gridView";
-        gridViewSettings.KeyFieldName = "codigo";
+        gridViewSettings.KeyFieldName = "CNROITEM";
 
         gridViewSettings.CallbackRouteValues = new
         {
             Controller = "Comprobante",
             Action = "ContaGridViewPartial"
         };
-        gridViewSettings.CustomActionRouteValues = new { Controller = "Comprobante", Action = "GridViewCustomActionPartial" };
-        gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Comprobante", Action = "GridViewAddNewPartial" };
-        gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Comprobante", Action = "GridViewUpdatePartial" };
+        gridViewSettings.CustomActionRouteValues = new { Controller = "Comprobante", Action = "ContaGridViewPartial" };
+        gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Comprobante", Action = "GridViewAddComprobante" };
+        gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Comprobante", Action = "GridViewUpdateComprobante" };
 
 
 
@@ -100,7 +100,8 @@
                     i.ColumnSpan =6;
                     i.NestedExtension().TextBox(t =>
                     {
-                         t.Properties.ClientSideEvents.Init = "onData";
+                        t.Properties.ClientSideEvents.Init = "onDataConta";
+                        t.ReadOnly = true;
                     });
                 });
                 groupItem.Items.Add(i =>
@@ -131,7 +132,7 @@
                         Html.RenderAction("MultiSelectPlanCuenta");
                     });
                 });
-               
+
 
                 groupItem.Items.Add(i =>
                 {
@@ -158,7 +159,7 @@
                 });
                 groupItem.Items.Add(i =>
                 {
-                    i.FieldName = "ordenFabricacion";
+                    i.FieldName = "ORDFAB";
                     i.Caption = "Ord. Fabricación";
                     i.ColumnSpan =6;
                     i.SetNestedContent(() =>
@@ -169,13 +170,13 @@
                 groupItem.Items.Add(i =>
 
                 {
-                    i.FieldName = "CDESTCOMP";
+                    i.FieldName = "CCTADEST";
                     i.Caption = "C. Destino";
                     i.ColumnSpan = 6;
 
                     i.SetNestedContent(() =>
                     {
-                        Html.RenderAction("MultiSelectDestino", new { CO_C_CODIG = DataBinder.Eval(c.DataItem, "CDESTCOMP") });
+                        Html.RenderAction("MultiSelectDestinoConta", new { CO_C_CODIG = DataBinder.Eval(c.DataItem, "CCTADEST") });
                     });
                 });
 
@@ -187,7 +188,7 @@
                     i.ColumnSpan = 12;
                     i.SetNestedContent(() =>
                     {
-                        Html.RenderAction("MultiSelectAnexo", new { ANEX_CODIGO = DataBinder.Eval(c.DataItem, "ANEX_CODIGO") });
+                        Html.RenderAction("MultiSelectAnexoConta", new { ANEX_CODIGO = DataBinder.Eval(c.DataItem, "CCODANEXO") });
                     });
                 });
 
@@ -279,7 +280,7 @@
         {
             columnSettings.FieldName = "CNROITEM";
             columnSettings.Caption = "Codigo";
-            columnSettings.Visible = false;
+
             columnSettings.Width = Unit.Pixel(100);
         });
         gridViewSettings.Columns.Add(columnSettings =>
@@ -302,7 +303,7 @@
             columnSettings.Caption = "Haber";
             columnSettings.Width = Unit.Pixel(100);
         });
-        
+
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
         //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";

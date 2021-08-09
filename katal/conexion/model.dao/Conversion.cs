@@ -50,6 +50,19 @@ namespace katal.conexion.model.dao
             {
                 return bool.Parse(data);
             }
+            
+        }
+        public static bool ParseBool(bool data)
+        {
+            if (data)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
     }
 }

@@ -24,14 +24,18 @@ namespace katal.conexion.model.entity
         public decimal tasaIGV { get; set; }
         public decimal montoIGV { get; set; }
         public bool opcion { get; set; }
-        public bool especial { get; set; }
-
-        
+        public bool especial { get; set; }       
     }
     public class RespuestaGastos
     {
         public decimal mnGasto1 { get; set; }
         public decimal mnGasto2 { get; set; }
+    }
+    public class RespuestaCDataComprobante
+    {
+        public string NROITEM  { get; set; }
+        public string GLOSA  { get; set; }
+      
     }
 
 }

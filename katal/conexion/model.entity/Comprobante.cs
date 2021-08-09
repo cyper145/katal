@@ -119,6 +119,8 @@ namespace katal.conexion.model.entity
         public decimal gasto1 { get; set; }
         public decimal gasto2 { get; set; }
 
+        public  ContableDet ContableDet { get; set; }
+
         //public 
     }
 
@@ -179,10 +181,19 @@ namespace katal.conexion.model.entity
         public string CANEXO { get; set; }
         public string CCODANEXO { get; set; }
         public string NUMRETRAC { get; set; }
-        public string FECRETRAC { get; set; }
+        public DateTime FECRETRAC { get; set; }
+        public string ORDFAB { get; set; }
+
         public string campo1 { get; set; }
         public string campo2 { get; set; }
         
+        // CAMPOS PARA EL TABLA REAL
+        
+        public string CDESTCOMP { get; set; }
+        public string codmaquina { get; set; }
+        public int cantidad { get; set; }
+
+
 
     }
 }

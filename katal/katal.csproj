@@ -317,6 +317,8 @@
     <Content Include="Views\Comprobante\MultiSelectPlanCuenta.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectCentroCostos.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectOrdenFabricacion.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectDestinoConta.cshtml" />
+    <Content Include="Views\Comprobante\MultiSelectAnexoConta.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -354,10 +356,13 @@
     <Compile Include="conexion\model.dao\UserDao.cs" />
     <Compile Include="conexion\model.entity\Area.cs" />
     <Compile Include="conexion\model.entity\Articulo.cs" />
+    <Compile Include="conexion\model.entity\Cabecera.cs" />
+    <Compile Include="conexion\model.entity\CabMov.cs" />
     <Compile Include="conexion\model.entity\CentroCosto.cs" />
     <Compile Include="conexion\model.entity\Comprobante.cs" />
     <Compile Include="conexion\model.entity\ConceptosGenerales.cs" />
     <Compile Include="conexion\model.entity\Destino.cs" />
+    <Compile Include="conexion\model.entity\EjercicioContable.cs" />
     <Compile Include="conexion\model.entity\Empresa.cs" />
     <Compile Include="conexion\model.entity\FormaPago.cs" />
     <Compile Include="conexion\model.entity\Gasto.cs" />

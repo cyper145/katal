@@ -11,7 +11,7 @@ namespace katal.conexion.model.entity
         public string PLANCTA_DESCRIPCION { get; set; }
         public string PLANCTA_NIVEL { get; set; }
         public string TIPOANEX_CODIGO { get; set; }
-        public string PLANCTA_CENTCOST { get; set; }
+        public bool PLANCTA_CENTCOST { get; set; }
         public string TIPOCTA_CODIGO { get; set; }
         public string PLANCTA_AUTO { get; set; }
         public string PLANCTA_CARGO1 { get; set; }
