@@ -58,5 +58,15 @@ namespace katal.conexion.model.dao
             string BD = $"{codigo}{nameBaseDatosgeneral}";
             return $"[{BD}].[dbo].[{tabla}] ";
         }
+        public static string ConexionCadena(string codigo, string basedatos, string consulta)
+        {
+
+            return $"Use [{codigo}{basedatos}]  {consulta}";
+        }
+        public static string ConexionCadena(string codigo, string basedatos,int anio, string consulta)
+        {
+
+            return $"Use [{codigo}{basedatos}{anio}]  {consulta}";
+        }
     }
 }

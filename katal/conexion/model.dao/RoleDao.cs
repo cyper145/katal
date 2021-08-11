@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using katal.conexion.model.entity;
 namespace katal.conexion.model.dao
 {
-    class RoleDao : Obligatorio<Role>
+    class RoleDao : Obligatorio
     {
 
         private Conexion objConexion;
@@ -14,7 +14,7 @@ namespace katal.conexion.model.dao
         {
             
             // solo en este caso
-            objConexion = Conexion.saberEstado("rol");
+            objConexion = Conexion.saberEstado();
         }
         public void create(Role obj)
         {
@@ -22,7 +22,7 @@ namespace katal.conexion.model.dao
             string create = "insert into dk_roles(id,name,description)values('" + obj.id + "','" + obj.name + "','" + obj.description + "')";
             try
             {
-                comando = new SqlCommand(create, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco( create), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -41,7 +41,7 @@ namespace katal.conexion.model.dao
             string delete = "delete from dk_roles where id='" + obj.id + "'";
             try
             {
-                comando = new SqlCommand(delete, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(delete), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -61,7 +61,7 @@ namespace katal.conexion.model.dao
             string find = "select*from dk_roles where id='" + obj.id + "' ";
             try
             {
-                comando = new SqlCommand(find, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco( find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -95,7 +95,7 @@ namespace katal.conexion.model.dao
             Role role = new Role();
             try
             {
-                comando = new SqlCommand(find, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco( find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -131,7 +131,7 @@ namespace katal.conexion.model.dao
             string findAll = "select*from dk_roles";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -162,7 +162,7 @@ namespace katal.conexion.model.dao
             string update = "update  dk_roles set name='" + obj.name + "',description='" + obj.description + "' where id='" + obj.id + "'";
             try
             {
-                comando = new SqlCommand(update, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(update), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -184,7 +184,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT m.*,p.* , o.* FROM  dk_modulos m INNER JOIN dk_programas p ON m.id = p.module_id INNER JOIN dk_operacion_programa op ON op.programa_id = p.id INNER JOIN dk_operaciones o ON o.id = op.operacion_id ";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 ModuloAsignacion current_module;
@@ -244,7 +244,7 @@ namespace katal.conexion.model.dao
             string find = "SELECT r.asignaciones FROM  dk_roles r " + "where id='" + role_id + "'";
             try
             {
-                comando = new SqlCommand(find, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -276,7 +276,7 @@ namespace katal.conexion.model.dao
             string update = "update  dk_roles set asignaciones='" + obj.funciones + "' where id='" + obj.id + "'";
             try
             {
-                comando = new SqlCommand(update, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(update), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }

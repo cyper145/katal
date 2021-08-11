@@ -23,21 +23,16 @@ namespace katal.Controllers
         private EmpresaNeg empresaNeg;
         private RequisicionCompraNeg requisicionNeg;
 
-        private string BD;
+        
         public ComprobanteController()
         {
-            responsable = new ResponsableCmpNeg();
-            comprobanteNeg = new ComprobanteNeg();
+            responsable = new ResponsableCmpNeg(codEmpresa);
+            comprobanteNeg = new ComprobanteNeg(codEmpresa);
             empresaNeg = new EmpresaNeg();
             destinoNeg = new DestinoNeg();
-            requisicionNeg = new RequisicionCompraNeg();
-            ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
-            if (user == null)
-            {
-                user = GridViewHelper.user;
-            }
-            this.BD = user.codEmpresa;
-            tipoAnexoNeg = new TipoAnexoNeg(this.BD);
+            requisicionNeg = new RequisicionCompraNeg(codEmpresa);
+           
+            tipoAnexoNeg = new TipoAnexoNeg(codEmpresa);
         }// GET: Comprobante
         public ActionResult Index()
         {

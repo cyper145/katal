@@ -85,12 +85,12 @@ namespace katal.Model
 
         public static List<RequisicionCompra> GetRequisionCompras()
         {
-            RequisicionCompraNeg userNeg = new RequisicionCompraNeg();
+            RequisicionCompraNeg userNeg = new RequisicionCompraNeg(user.codEmpresa);
             return userNeg.findAll();
         }
         public static List<CentroCosto> GetCentroCostos()
         {
-            RequisicionCompraNeg userNeg = new RequisicionCompraNeg();
+            RequisicionCompraNeg userNeg = new RequisicionCompraNeg(user.codEmpresa);
             return userNeg.findAllCentroCostos();
         }
         public static List<Issue> GetIssues()
@@ -112,23 +112,23 @@ namespace katal.Model
         }
         public static List<Proveedor> getProveedor()
         {
-            ProveedorNeg userNeg = new ProveedorNeg();
+            ProveedorNeg userNeg = new ProveedorNeg(user.codEmpresa);
             return userNeg.findAll();
         }
 
         public static List<Articulo> getArticulos()
         {
-            ArticuloNeg  userNeg = new ArticuloNeg();
+            ArticuloNeg  userNeg = new ArticuloNeg(user.codEmpresa);
             return userNeg.findAll();
         }
         public static List<Solicitud> GetSolitud()
         {
-            OrdenCompraNeg userNeg = new OrdenCompraNeg();
+            OrdenCompraNeg userNeg = new OrdenCompraNeg(user.codEmpresa);
             return userNeg.findAllSolicitud();
         }
         public static List<FormaPago> GetFormaPago()
         {
-            OrdenCompraNeg userNeg = new OrdenCompraNeg();
+            OrdenCompraNeg userNeg = new OrdenCompraNeg(user.codEmpresa);
             return userNeg.findAllFormasPago();
         }
 

@@ -8,17 +8,17 @@ using katal.Model;
 
 namespace katal.conexion.model.dao
 {
-    public class PaisDao : Obligatorio<Pais>
+    public class PaisDao : Obligatorio
     {
 
         private Conexion objConexion;
         private SqlCommand comando;
 
-        public PaisDao()
+        public PaisDao(string codEmpresa) :base( codEmpresa)
         {
-            ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
+            
 
-            objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
+            objConexion = Conexion.saberEstado();
         }
         public void create(Pais obj)
         {
@@ -42,7 +42,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand(str_sql, objConexion.getCon());
+                comando = new SqlCommand(conexionComun( str_sql), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())

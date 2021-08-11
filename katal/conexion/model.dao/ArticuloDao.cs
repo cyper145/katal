@@ -8,20 +8,15 @@ using katal.Model;
 
 namespace katal.conexion.model.dao
 {
-    public class ArticuloDao : Obligatorio<Articulo>
+    public class ArticuloDao : Obligatorio
     {
 
         private Conexion objConexion;
         private SqlCommand comando;
 
-        public ArticuloDao()
-        {
-           ApplicationUser user =   AuthHelper.GetLoggedInUserInfo();
-
-            if(user != null)
-            {
-                objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
-            }///014BDCOMUN
+        public ArticuloDao(string codEmpresa) : base(codEmpresa)
+        {        
+            objConexion = Conexion.saberEstado();          
         }
 
         public void create(Articulo obj)
@@ -35,7 +30,7 @@ namespace katal.conexion.model.dao
             
             try
             {
-                comando = new SqlCommand(create, objConexion.getCon());
+                comando = new SqlCommand( conexionComun(create), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -72,7 +67,7 @@ namespace katal.conexion.model.dao
             string findAll = "Select ACODIGO,ADESCRI,AUNIDAD,AFSERIE,AFLOTE,ACODIGO2,AFAMILIA,AMODELO,AGRUPO,ATIPO,ACUENTA,AMARCA FROM MAEART ";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())

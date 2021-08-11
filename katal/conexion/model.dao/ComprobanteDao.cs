@@ -10,24 +10,16 @@ using Microsoft.VisualBasic;
 
 namespace katal.conexion.model.dao
 {
-    public class ComprobanteDao : Obligatorio<Comprobante>
+    public class ComprobanteDao : Obligatorio
     {
 
         private Conexion objConexion;
         private SqlCommand comando;
-        private string Bd;
+        
 
-        public ComprobanteDao(string bd)
-        {
-            Bd = bd;
-            ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
-
-            if (user != null)
-            {
-                objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
-            }
-
-            ///0      
+        public ComprobanteDao(string codEmpresa):base(codEmpresa)
+        {                   
+          objConexion = Conexion.saberEstado();             
         }
 
         public void create(Comprobante obj)
@@ -769,7 +761,7 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-            return null;
+          
 
         }
        // public 
@@ -850,12 +842,12 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-            return null;
+           
         }
 
         private string mNumero(int anio, int mes , string codSub)
         {
-            EjercicioContable plan = null;
+            
             string MNUMERO = "0001";
             string mess = mes.ToString("00.##");
             string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV"+ mess);
@@ -889,7 +881,7 @@ namespace katal.conexion.model.dao
         }
         private string mNumeroBDMovCab(int anio, int mes, string codSub)
         {
-            EjercicioContable plan = null;
+           
             int numero = 0;
             string MNUMERO = "0001";
             string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV" + mes);
@@ -1014,7 +1006,7 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-            return null;
+           
         }
         private GastosIngresos findGastoIngreso( string codigo)
         {
@@ -1048,17 +1040,9 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-            return null;
+           
         }
-        public string dateFormat(DateTime date)
-        {
-            DateTime dateTime = DateTime.MinValue;
-            if (date == dateTime)
-            {
-                date = new DateTime(1900, 1, 1);
-            }
-            return "'" + date.ToString("yyyy-dd-MM") + "'";
-        }
+       
         public int boolToInt(bool val)
         {
             return val ? 1 : 0;
@@ -1902,12 +1886,12 @@ namespace katal.conexion.model.dao
         public void insertdetalleTemporal(Comprobante comprobante)
         {
             bool  wlresta = false;
-            int var = 0;
+         
             string CCta = "";
             string CCta2 = "";
             string CCta1 = "";
             string CCtaPercep = "";
-            decimal TDebe = 0;
+         
             string CCtaImportacion = "";
             string CCtaImpPerc_Igv = "";
             ConceptosGenerales conceptosGenerales = new ConceptosGenerales();
@@ -2049,7 +2033,7 @@ namespace katal.conexion.model.dao
 
             }
             //commienza cuenta 60
-            int item = 0;
+           /* int item = 0;
             string cta = "";
             string Fam = "";
             string resp = "";
@@ -2058,7 +2042,7 @@ namespace katal.conexion.model.dao
                 if (frms == "SD")
             {
                 //csql += "select * from comcab where CCTD='" & FrmFacSinGuiaRapido.Text1(6).Text & "' and CCNUMSER='" & FrmFacSinGuiaRap;
-            }
+            }*/
         }
 
         public List<ContableDet> findallContableDet()
@@ -2254,7 +2238,7 @@ namespace katal.conexion.model.dao
         {
 
             bool hayRegistros = false;
-            string data = "";
+            
 
             ConceptosGenerales conceptos = new ConceptosGenerales();
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
@@ -2293,8 +2277,7 @@ namespace katal.conexion.model.dao
         {
 
             bool hayRegistros = false;
-            string data = "";
-
+            
             ConceptoGral conceptos = new ConceptoGral();
             string conexion = Conexion.CadenaGeneral("014", "BDCOMUN", "CONCEPTOGRAL");
             string find = $"SELECT * FROM {conexion} WHERE Concepto_Codigo = '{concepto}'";
@@ -2340,7 +2323,7 @@ namespace katal.conexion.model.dao
 
             string sCmd = "use BDWENCO  ";
             sCmd += $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = '{nombreColumn}' AND TABLE_NAME = '{nombreTabla}'";
-            bool exite = false;
+           
 
             try
             {

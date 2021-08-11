@@ -8,19 +8,15 @@ using katal.conexion.model.entity;
 
 namespace katal.conexion.model.dao
 {
-    public class AreaDao : Obligatorio<Area>
+    public class AreaDao : Obligatorio
     {
         private Conexion objConexion;
         private SqlCommand comando;
 
-        public AreaDao()
-        {
-            ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
-
-            if (user != null)
-            {
-                objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
-            }///014BDCOMUN
+        public AreaDao(string  codEmpresa):base(codEmpresa)
+        {                     
+           objConexion = Conexion.saberEstado();
+            ///014BDCOMUN
         }
         public void create(Area obj)
         {
@@ -28,7 +24,7 @@ namespace katal.conexion.model.dao
             string create = "insert into AREA (AREA_CODIGO,AREA_DESCRIPCION)values('" + obj.AREA_CODIGO + "','" + obj.AREA_DESCRIPCION + "')";
             try
             {
-                comando = new SqlCommand(create, objConexion.getCon());
+                comando = new SqlCommand(conexionComun( create), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -48,7 +44,7 @@ namespace katal.conexion.model.dao
             string delete = "delete from AREA where AREA_CODIGO='" + obj.AREA_CODIGO + "'";
             try
             {
-                comando = new SqlCommand(delete, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(delete), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -68,7 +64,7 @@ namespace katal.conexion.model.dao
             string delete = "delete from AREA where AREA_CODIGO='" + AREA_CODIGO + "'";
             try
             {
-                comando = new SqlCommand(delete, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(delete), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -90,7 +86,7 @@ namespace katal.conexion.model.dao
             string find = "select*from AREA where AREA_CODIGO='" + obj.AREA_CODIGO + "' ";
             try
             {
-                comando = new SqlCommand(find, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -122,7 +118,7 @@ namespace katal.conexion.model.dao
             Area area = new Area();
             try
             {
-                comando = new SqlCommand(find, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -157,7 +153,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT * FROM AREA";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -187,7 +183,7 @@ namespace katal.conexion.model.dao
             string update = "update  AREA set AREA_DESCRIPCION='" + obj.AREA_DESCRIPCION + "' where AREA_CODIGO='" + obj.AREA_CODIGO + "'";
             try
             {
-                comando = new SqlCommand(update, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(update), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }

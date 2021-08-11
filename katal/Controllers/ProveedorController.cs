@@ -8,14 +8,14 @@ using katal.conexion.model.neg;
 using katal.Model;
 namespace katal.Controllers
 {
-    public class ProveedorController : Controller
+    public class ProveedorController :BaseController
     {
         // GET: Proveedor
 
         private ProveedorNeg userNeg;
         public ProveedorController()
         {
-            userNeg = new ProveedorNeg();
+            userNeg = new ProveedorNeg(codEmpresa);
         }
         public ActionResult Index()
         {

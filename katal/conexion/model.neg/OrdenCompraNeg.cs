@@ -12,9 +12,9 @@ namespace katal.conexion.model.neg
     {
 
         private OrdenCompraDao objUserDao;
-        public OrdenCompraNeg()
+        public OrdenCompraNeg(string codEmpresa)
         {
-            objUserDao = new OrdenCompraDao();
+            objUserDao = new OrdenCompraDao(codEmpresa);
         }
         public List<OrdenCompra> findAll(DateRangePickerModel dateRange)
         {

@@ -8,25 +8,16 @@ using katal.Model;
 
 namespace katal.conexion.model.dao
 {
-    public class OrdenCompraDao : Obligatorio<OrdenCompra>
+    public class OrdenCompraDao : Obligatorio
     {
         private Conexion objConexion;
         private SqlCommand comando;
 
-
-        List<OrdenCompra> OrdenCompras;
-        public OrdenCompraDao()
+        public OrdenCompraDao(string codEmpresa):base(codEmpresa)
         {
-            if (OrdenCompras == null)
-            {
-                OrdenCompras = new List<OrdenCompra>();
-            }
-
-            ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
-            if (user != null)
-            {
-                objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
-            }
+           
+          objConexion = Conexion.saberEstado();
+           
         }
         public void create(OrdenCompra orden)
         {
@@ -47,7 +38,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand(insert, objConexion.getCon());
+                comando = new SqlCommand(conexionComun( insert), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -87,7 +78,7 @@ namespace katal.conexion.model.dao
             });
             try
             {
-                comando = new SqlCommand(item, objConexion.getCon());
+                comando = new SqlCommand( conexionComun(item), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -108,7 +99,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand(SQLd, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(SQLd), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -128,7 +119,7 @@ namespace katal.conexion.model.dao
             string strsql = "DELETE FROM COMOVC WHERE OC_CNUMORD='" + obj.OC_CNUMORD + "'";
             try
             {
-                comando = new SqlCommand(strsql, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(strsql), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -158,7 +149,7 @@ namespace katal.conexion.model.dao
             OrdenCompra user = new OrdenCompra();
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
@@ -206,7 +197,7 @@ namespace katal.conexion.model.dao
                     user.EST_NOMBRE = read[39].ToString();
 
 
-                    OrdenCompras.Add(user);
+                   
                 }
             }
             catch (Exception)
@@ -224,12 +215,12 @@ namespace katal.conexion.model.dao
 
         public List<OrdenCompra> findAll()
         {
-
+            List<OrdenCompra> OrdenCompras = new List<OrdenCompra>();
 
             string findAll = "SELECT TOP (100) * FROM comovc, estado_oc WHERE comovc.oc_csitord = estado_oc.est_codigo ";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -295,11 +286,11 @@ namespace katal.conexion.model.dao
         public List<OrdenCompra> findAll(DateRangePickerModel dateRange)
         {
 
-
-            string findAll = "SELECT * FROM comovc, estado_oc WHERE comovc.oc_csitord = estado_oc.est_codigo and OC_DFECDOC Between '" + dateRange.Start.ToString("yyyy-MM-ddTHH:mm:ss") + "' and '" + dateRange.End.ToString("yyyy-MM-ddTHH:mm:ss") + "'";
+            List<OrdenCompra> OrdenCompras = new List<OrdenCompra>();
+            string findAll = "SELECT * FROM comovc, estado_oc WHERE comovc.oc_csitord = estado_oc.est_codigo and OC_DFECDOC Between " + dateFormat( dateRange.Start) + " and " + dateFormat(dateRange.End) + "";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -365,11 +356,11 @@ namespace katal.conexion.model.dao
         {
             List<DetalleOrdenCompra> listUsers = new List<DetalleOrdenCompra>();
 
-            OrdenCompra ordenCompra = OrdenCompras.Find(X => X.OC_CNUMORD == oc_cnumord);// ver si exite
+          
             string findAll = "SELECT * FROM comovd WHERE comovd.oc_cnumord = '" + oc_cnumord + "'";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -414,7 +405,7 @@ namespace katal.conexion.model.dao
 
                     listUsers.Add(user);
                 }
-                ordenCompra.detalles = listUsers;
+               
             }
             catch (Exception)
             {
@@ -437,7 +428,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT COD_FP,DES_FP FROM FORMA_PAGO";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -468,7 +459,7 @@ namespace katal.conexion.model.dao
             string findAll = "Select TCLAVE,TDESCRI from TABAYU  where TCOD= '12'";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -501,7 +492,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT CTNCODIGO, CTDESCRIP FROM NUM_DOCCOMPRAS WHERE CTNCODIGO = 'RQ' OR CTNCODIGO = 'SC'";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -531,7 +522,7 @@ namespace katal.conexion.model.dao
             NumDocCompras user = new NumDocCompras();
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
@@ -559,7 +550,7 @@ namespace katal.conexion.model.dao
             string direccion = "";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
@@ -586,7 +577,7 @@ namespace katal.conexion.model.dao
             string updateNumCompras = "UPDATE num_doccompras SET ctnnumero='" + nroOrden + "' WHERE ctncodigo='OC'";
             try
             {
-                comando = new SqlCommand(updateNumCompras, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(updateNumCompras), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }

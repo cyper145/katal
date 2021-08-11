@@ -13,7 +13,7 @@ namespace katal.Controllers
         private AreaNeg areaNeg;
         public AreasController()
         {
-            areaNeg = new AreaNeg();
+            areaNeg = new AreaNeg(codEmpresa);
         }
         public ActionResult Index()
         {

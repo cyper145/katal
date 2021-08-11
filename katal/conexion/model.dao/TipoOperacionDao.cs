@@ -7,26 +7,25 @@ using System.Web;
 
 namespace katal.conexion.model.dao
 {
-    public class TipoOperacionDao
+    public class TipoOperacionDao:Obligatorio
     {
 
         private Conexion objConexion;
         private SqlCommand comando;
-        private string BD;
-        public TipoOperacionDao(string BD)
-        {
-            this.BD = BD;
+       
+        public TipoOperacionDao() 
+        {       
             objConexion = Conexion.saberEstado();
         }
         public List<ServSujDetraccion> findAllDetraccion( string  dateEmision)
         {
             List<ServSujDetraccion> listTipos = new List<ServSujDetraccion>();
 
-            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "Tab_ServSujDetracc");
-            string findAll = $"SELECT codigo, servicio  from {conexion}  Where vigencia is null or vigencia>='{dateEmision}'";
+           
+            string findAll = $"SELECT codigo, servicio  from Tab_ServSujDetracc  Where vigencia is null or vigencia >={dateFormat( dateEmision)}";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -53,11 +52,11 @@ namespace katal.conexion.model.dao
         {
             List<TipoOperacion> listTipos = new List<TipoOperacion>();
 
-            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "Tab_TipoOperacion");
-            string findAll = $"SELECT codigo, tipo_operacion FROM  {conexion}";
+           
+            string findAll = "SELECT codigo, tipo_operacion FROM  Tab_TipoOperacion";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())

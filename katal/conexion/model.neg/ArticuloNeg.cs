@@ -12,9 +12,9 @@ namespace katal.conexion.model.neg
     {
 
         private ArticuloDao objUserDao;
-        public ArticuloNeg()
+        public ArticuloNeg(string codEmpresa)
         {
-            objUserDao = new ArticuloDao();
+            objUserDao = new ArticuloDao(codEmpresa);
         }
         public List<Articulo> findAll()
         {

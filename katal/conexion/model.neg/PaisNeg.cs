@@ -9,9 +9,9 @@ namespace katal.conexion.model.neg
     public class PaisNeg
     {
         private PaisDao objUserDao;
-        public PaisNeg()
+        public PaisNeg(string codEmpresa)
         {
-            objUserDao = new PaisDao();
+            objUserDao = new PaisDao(codEmpresa);
         }
         public List<Pais> findAll()
         {

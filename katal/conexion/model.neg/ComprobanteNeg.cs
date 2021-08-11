@@ -13,13 +13,13 @@ namespace katal.conexion.model.neg
         TipoAnexoDao anexoDao;
         MonedaDao monedaDao;
         TipoOperacionDao TipoOperacion;
-        public ComprobanteNeg()
+        public ComprobanteNeg(string codEmpresa)
         {
-            string bd = "014";// modificar
-            objComprobanteDao = new ComprobanteDao(bd);
-            anexoDao = new TipoAnexoDao(bd);
-            monedaDao = new MonedaDao(bd);
-            TipoOperacion = new TipoOperacionDao(bd);
+           
+            objComprobanteDao = new ComprobanteDao(codEmpresa);
+            anexoDao = new TipoAnexoDao(codEmpresa);
+            monedaDao = new MonedaDao(codEmpresa);
+            TipoOperacion = new TipoOperacionDao();
         }
 
         public void create(Comprobante comprobante)

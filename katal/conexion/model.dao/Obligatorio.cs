@@ -1,13 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace katal.conexion.model.dao
 {
-    interface Obligatorio<cualquierclase>
+    public class  Obligatorio
     {
-        void create(cualquierclase obj);
-        void update(cualquierclase obj);
-        void delete(cualquierclase obj);
-        bool find(cualquierclase obj);
-        List<cualquierclase> findAll();
+       string codEmpresa;
+       public Obligatorio(string codEmpresa="")
+        {
+            this.codEmpresa = codEmpresa;
+        }
+       public string conexionWenco(string consulta)
+        {
+            return Conexion.ConexionCadena("", "BDWENCO", consulta);
+        }
+        public string conexionComun(string consulta)
+        {
+            return Conexion.ConexionCadena(this.codEmpresa, "BDCOMUN", consulta);
+        }
+        public string conexionContabilidad(string consulta)
+        {
+            return Conexion.ConexionCadena(this.codEmpresa, "BDCONTABILIDAD", consulta);
+        }
+        public string conexionCtaPag(string consulta)
+        {
+            return Conexion.ConexionCadena(this.codEmpresa, "BDCTAPAG", consulta);
+        }
+        public string conexionCtaPag(string consulta, int anio)
+        {
+            return Conexion.ConexionCadena(this.codEmpresa, "BDCONT", anio, consulta);
+        }
+        public string dateFormat(DateTime date)
+        {
+            DateTime dateTime = DateTime.MinValue;
+            if (date == dateTime)
+            {
+                date = new DateTime(1900, 1, 1);
+            }
+
+            return $"CONVERT(datetime, '{date}', 103)";
+        }
+        public string dateFormat(string date)
+        {            
+            return $"CONVERT(datetime, '{date}', 103)";
+        }
+
     }
 }

@@ -10,9 +10,9 @@ namespace katal.conexion.model.neg
     public class TipoAnexoNeg
     {
         TipoAnexoDao objAreaDao;
-        public TipoAnexoNeg(string BD)
+        public TipoAnexoNeg(string codEmpresa)
         {
-            objAreaDao = new TipoAnexoDao(BD);
+            objAreaDao = new TipoAnexoDao(codEmpresa);
         }
         public List<TipoAnexo> findAll()
         {

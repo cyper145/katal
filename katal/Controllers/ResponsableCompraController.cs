@@ -12,7 +12,7 @@ namespace katal.Controllers
         private ResponsableCmpNeg responsableNeg;
         public ResponsableCompraController()
         {
-            responsableNeg = new ResponsableCmpNeg();
+            responsableNeg = new ResponsableCmpNeg(codEmpresa);
         }
         public ActionResult Index()
         {

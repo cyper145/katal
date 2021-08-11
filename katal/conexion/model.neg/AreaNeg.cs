@@ -10,9 +10,9 @@ namespace katal.conexion.model.neg
     public class AreaNeg
     {
         AreaDao objAreaDao;
-        public AreaNeg()
+        public AreaNeg(string codEmpresa)
         {
-            objAreaDao = new AreaDao();
+            objAreaDao = new AreaDao(codEmpresa);
         }
         public List<Area> findAll()
         {

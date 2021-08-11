@@ -23,12 +23,12 @@ namespace katal.Controllers
         private RequisicionCompra requisicionCompra;
         public RequisionCompraController()
         {
-            requisicionNeg = new RequisicionCompraNeg();
-            userNeg = new OrdenCompraNeg();
-            articuloNeg = new ArticuloNeg();
-            proveedorNeg = new ProveedorNeg();
-            responsable = new ResponsableCmpNeg();
-            areaNeg = new AreaNeg();
+            requisicionNeg = new RequisicionCompraNeg(codEmpresa);
+            userNeg = new OrdenCompraNeg(codEmpresa);
+            articuloNeg = new ArticuloNeg(codEmpresa);
+            proveedorNeg = new ProveedorNeg(codEmpresa);
+            responsable = new ResponsableCmpNeg(codEmpresa);
+            areaNeg = new AreaNeg(codEmpresa);
 
 
         }

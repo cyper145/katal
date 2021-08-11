@@ -7,7 +7,7 @@ using System.Web;
 
 namespace katal.conexion.model.dao
 {
-    public class DestinoDao
+    public class DestinoDao: Obligatorio
     {
         private Conexion objConexion;
         private SqlCommand comando;
@@ -21,10 +21,10 @@ namespace katal.conexion.model.dao
         {
             List<Destino> listUsers = new List<Destino>();
 
-            string findAll = "select CO_C_CODIG, CO_A_DESCR, CON_IMPSTO FROM [BDWENCO].[dbo].[DESTINO_COMVEN]";
+            string findAll = "select CO_C_CODIG, CO_A_DESCR, CON_IMPSTO FROM DESTINO_COMVEN";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -53,10 +53,10 @@ namespace katal.conexion.model.dao
         public Destino find(string codigo)
         {
             Destino user = new Destino();
-            string findAll = "SELECT CO_C_CODIG, CO_A_DESCR, CON_IMPSTO FROM [BDWENCO].[dbo].[DESTINO_COMVEN] WHERE CO_C_TIPO = 'C' AND CO_C_CODIG = '" + codigo + "'";
+            string findAll = "SELECT CO_C_CODIG, CO_A_DESCR, CON_IMPSTO FROM DESTINO_COMVEN WHERE CO_C_TIPO = 'C' AND CO_C_CODIG = '" + codigo + "'";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())

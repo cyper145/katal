@@ -10,14 +10,14 @@ using katal.Models;
 
 namespace katal.Controllers
 {
-    public class DetalleOrdenCompraController : Controller
+    public class DetalleOrdenCompraController : BaseController
     {
         // GET: DetalleOrdenCompra
         private ProveedorNeg userNeg; // cambiar Proveedor po detalle de orden compra
         // el mainmodel es el model de orden de compra
         public DetalleOrdenCompraController()
         {
-            userNeg = new ProveedorNeg();
+            userNeg = new ProveedorNeg(codEmpresa);
         }
         public ActionResult Index()
         {

@@ -8,25 +8,23 @@ using katal.Model;
 
 namespace katal.conexion.model.dao
 {
-    public class RequisicionCompraDao : Obligatorio<RequisicionCompra>
+    public class RequisicionCompraDao : Obligatorio
     {
         private Conexion objConexion;
         private SqlCommand comando;
 
 
         List<RequisicionCompra> OrdenCompras;
-        public RequisicionCompraDao()
+        public RequisicionCompraDao(string codEmpresa) :base(codEmpresa)
         {
             if (OrdenCompras == null)
             {
                 OrdenCompras = new List<RequisicionCompra>();
             }
 
-            ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
-            if (user != null)
-            {
-                objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
-            }
+          
+             objConexion = Conexion.saberEstado();
+          
         }
         public void create(RequisicionCompra obj)
         {
@@ -38,7 +36,7 @@ namespace katal.conexion.model.dao
             SQLC += obj.GLOSA + "','" + obj.AREA + "','P'," + obj.prioridad+"," +  verDate(obj.FecEntrega) + ")";
             try
             {
-                comando = new SqlCommand(SQLC, objConexion.getCon());
+                comando = new SqlCommand(conexionComun( SQLC), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -65,7 +63,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand(SQLC, objConexion.getCon());
+                comando = new SqlCommand( conexionComun(SQLC), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -98,7 +96,7 @@ namespace katal.conexion.model.dao
            
             try
             {
-                comando = new SqlCommand(item, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(item), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -120,7 +118,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand(SQLd, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(SQLd), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -149,7 +147,7 @@ namespace katal.conexion.model.dao
             string updateNumCompras = "UPDATE num_doccompras SET ctnnumero='" + nroRequerimiento + "' WHERE ctncodigo='RQ'";
             try
             {
-                comando = new SqlCommand(updateNumCompras, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(updateNumCompras), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -168,7 +166,7 @@ namespace katal.conexion.model.dao
             string strsql = "DELETE FROM requisc WHERE nrorequi='" + obj.NROREQUI + "' AND TIPOREQUI='RQ'";
             try
             {
-                comando = new SqlCommand(strsql, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(strsql), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -193,7 +191,7 @@ namespace katal.conexion.model.dao
             RequisicionCompra user = null;
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
@@ -234,7 +232,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT * FROM requisc where tiporequi = 'RQ'";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -278,7 +276,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT * FROM requisc where tiporequi = 'RQ'  and FECREQUI Between '" + dateRange.Start.ToString("yyyy-MM-ddTHH:mm:ss") + "' and '" + dateRange.End.ToString("yyyy-MM-ddTHH:mm:ss") + "'";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -319,7 +317,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT * FROM requisc where tiporequi = 'RQ' and ESTREQUI='P'";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -362,7 +360,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT * FROM REQUISD WHERE tiporequi='RQ' AND REQUISD.NROREQUI = '" + NROREQUI + "'";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -406,7 +404,7 @@ namespace katal.conexion.model.dao
             string findAll = "Select CENCOST_CODIGO,CENCOST_DESCRIPCION from CENTRO_COSTOS WHERE LEN(CENCOST_CODIGO)=(3 )*2";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -436,7 +434,7 @@ namespace katal.conexion.model.dao
             NumDocCompras user = new NumDocCompras();
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())

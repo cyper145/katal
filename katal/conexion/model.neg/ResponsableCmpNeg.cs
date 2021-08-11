@@ -10,9 +10,9 @@ namespace katal.conexion.model.neg
     public class ResponsableCmpNeg
     {
         ResponsableCompraDao objResponsableDao;
-        public ResponsableCmpNeg()
+        public ResponsableCmpNeg(string codEmpresa)
         {
-            objResponsableDao = new ResponsableCompraDao();
+            objResponsableDao = new ResponsableCompraDao(codEmpresa);
         }
         public List<ResponsableCompra> findAll()
         {

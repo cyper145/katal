@@ -11,9 +11,9 @@ namespace katal.conexion.model.neg
     {
 
         private RequisicionCompraDao objUserDao;
-        public RequisicionCompraNeg()
+        public RequisicionCompraNeg(string codEmpresa)
         {
-            objUserDao = new RequisicionCompraDao();
+            objUserDao = new RequisicionCompraDao(codEmpresa);
         }
         public List<RequisicionCompra> findAll()
         {

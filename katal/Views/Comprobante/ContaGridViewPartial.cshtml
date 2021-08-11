@@ -69,7 +69,7 @@
         gridViewSettings.SetEditFormTemplateContent(c =>
         {
 
-            ComprobanteNeg em = new ComprobanteNeg();
+            //ComprobanteNeg em = new ComprobanteNeg();
             Html.DevExpress().FormLayout(layoutSetting =>
             {
                 layoutSetting.Name = "FormLayoutSetting";
@@ -225,6 +225,7 @@
                     i.FieldName = "Maquina";
                     i.ColumnSpan = 6;
                     i.Caption = "Maquina";
+
                     i.NestedExtension().ComboBox(s =>
                     {
                         s.Width = Unit.Percentage(100);
@@ -233,9 +234,10 @@
                         s.Properties.ValidationSettings.SetFocusOnError = true;
                         s.Properties.ValidationSettings.ErrorTextPosition = ErrorTextPosition.Bottom;
                         s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithText;
-                        s.Properties.DataSource = em.findAllMaquinas();
+                        //  s.Properties.DataSource = em.findAllMaquinas();
                         s.Properties.ValueField = "idmaquina";
                         s.Properties.TextField = "maq_codigo";
+                        s.ReadOnly = true;
 
                     });
 

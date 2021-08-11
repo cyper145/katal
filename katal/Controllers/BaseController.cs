@@ -1,3 +1,4 @@
+using katal.Model;
 using System;
 using System.Web.Mvc;
 
@@ -5,7 +6,17 @@ namespace katal.Controllers
 {
     public class BaseController : Controller
     {
+       public  string codEmpresa;
 
+       public BaseController()
+        {
+            if (AuthHelper.IsAuthenticated())
+            {
+                ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
+                codEmpresa = user.codEmpresa;
+            }
+          
+        }
         protected void SafeExecute(Action method)
         {
             try

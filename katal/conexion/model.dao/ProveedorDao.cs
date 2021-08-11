@@ -8,20 +8,18 @@ using katal.Model;
 
 namespace katal.conexion.model.dao
 {
-    public class ProveedorDao : Obligatorio<Proveedor>
+    public class ProveedorDao : Obligatorio
     {
 
 
         private Conexion objConexion;
         private SqlCommand comando;
 
-        public ProveedorDao()
+        public ProveedorDao(string codEmpresa):base(codEmpresa)
         {
-            ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
-            if (user != null)
-            {
-                objConexion = Conexion.saberEstado(user.codEmpresa + "BDCOMUN");
-            }
+          
+             objConexion = Conexion.saberEstado();
+           
         }
         public void create(Proveedor obj)
         {
@@ -44,7 +42,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT prvccodigo,prvcnombre,prvcdirecc,prvctelef1,PRVCRUC FROM maeprov ";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionComun( findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())

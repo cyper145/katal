@@ -25,11 +25,11 @@ namespace katal.Controllers
 
         public OrdenCompraController()
         {
-            requisionNeg = new RequisicionCompraNeg();
-            userNeg = new OrdenCompraNeg();
-            articuloNeg = new ArticuloNeg();
-            proveedorNeg = new ProveedorNeg();
-            responsable = new ResponsableCmpNeg();
+            requisionNeg = new RequisicionCompraNeg(codEmpresa);
+            userNeg = new OrdenCompraNeg(codEmpresa);
+            articuloNeg = new ArticuloNeg(codEmpresa);
+            proveedorNeg = new ProveedorNeg(codEmpresa);
+            responsable = new ResponsableCmpNeg(codEmpresa);
             if (OrdeCurrent == null)
                 OrdeCurrent = new OrdenCompra();
 

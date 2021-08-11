@@ -7,7 +7,7 @@ using katal.conexion.model.entity;
 
 namespace katal.conexion.model.dao
 {
-    public class EmpresaDao
+    public class EmpresaDao : Obligatorio
     {
         private Conexion objConexion;
         private SqlCommand comando;
@@ -24,7 +24,7 @@ namespace katal.conexion.model.dao
             string findAll = "select*from EMPRESA";
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand( conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -52,12 +52,12 @@ namespace katal.conexion.model.dao
         public Empresa findContable(string codigoEmpresa)
         {
 
-            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "EMPRESA");
-            string findAll = $"select EMP_NIVEL from {conexion} where  EMP_CODIGO ='{codigoEmpresa} '"  ;
+           
+            string findAll = $"select EMP_NIVEL from EMPRESA where  EMP_CODIGO ='{codigoEmpresa} '"  ;
             Empresa user = new Empresa();
             try
             {
-                comando = new SqlCommand(findAll, objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())

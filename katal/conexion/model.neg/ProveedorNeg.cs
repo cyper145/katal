@@ -10,9 +10,9 @@ namespace katal.conexion.model.neg
     public class ProveedorNeg
     {
         private ProveedorDao objUserDao;
-        public ProveedorNeg()
+        public ProveedorNeg(string codEmpresa)
         {
-            objUserDao = new ProveedorDao();
+            objUserDao = new ProveedorDao(codEmpresa);
         }
         public List<Proveedor> findAll()
         {

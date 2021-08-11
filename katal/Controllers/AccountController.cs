@@ -42,8 +42,7 @@ namespace katal.Controllers
             if (user!=null)
             {
                 AuthHelper.SignIn(model.UserName, model.Password,user.rol_id, user.empresa, user.rol, model.Empresa);
-                ArticuloDao articuloDao = new ArticuloDao();
-                List<Articulo> nodeModules =  articuloDao.findAll();
+                
 
                 return RedirectToAction("Index", "Home");
             }

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using katal.conexion.model.entity;
 using katal.conexion.model.neg;
+using katal.Model;
 namespace katal.Controllers
 {
     public class AreaController : BaseController
@@ -13,7 +14,8 @@ namespace katal.Controllers
         private AreaNeg areaNeg;
         public AreaController()
         {
-            areaNeg = new AreaNeg();
+           
+            areaNeg = new AreaNeg(codEmpresa);
         }
         // GET: Area
         public ActionResult Index()

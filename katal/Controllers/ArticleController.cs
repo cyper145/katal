@@ -14,7 +14,7 @@ namespace katal.Controllers
         private ArticuloNeg userNeg;
         public ArticleController()
         {
-            userNeg = new ArticuloNeg();
+            userNeg = new ArticuloNeg(codEmpresa);
         }
         // GET: Article
         public ActionResult Index()
