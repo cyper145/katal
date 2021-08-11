@@ -881,3 +881,4 @@ C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.csproj.CopyComplete
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.dll
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.pdb
 C:\Users\cyper\Desktop\katal\katal\katal\obj\Debug\katal.csproj.AssemblyReference.cache
+C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.Reports.Requisicion.resources

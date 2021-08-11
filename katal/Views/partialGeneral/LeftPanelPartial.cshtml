@@ -73,6 +73,10 @@
                {
                    group.Items.Add("Registros Documentos", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Comprobante");
                }
+               if (roleNeg.moduloAsigned(modulos, "modificacion-comprobates"))
+               {
+                   group.Items.Add("Modificacion de Comprobantes", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Comprobante");
+               }
 
                if (roleNeg.moduloAsigned(modulos, "responsable-compra"))
                {

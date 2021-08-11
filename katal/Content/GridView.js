@@ -15,7 +15,9 @@
         var enabled = gridView.GetSelectedRowCount() > 0;
         pageToolbar.GetItemByName("Delete").SetEnabled(enabled);
         pageToolbar.GetItemByName("Export").SetEnabled(enabled);
-        pageToolbar.GetItemByName("transferir").SetEnabled(enabled);
+        if (pageToolbar.GetItemByName("transferir") != null) {
+            pageToolbar.GetItemByName("transferir").SetEnabled(enabled);
+        }
         pageToolbar.GetItemByName("Edit").SetEnabled(gridView.GetFocusedRowIndex() !== -1);
     }
     function onPageToolbarItemClick(s, e) { 
