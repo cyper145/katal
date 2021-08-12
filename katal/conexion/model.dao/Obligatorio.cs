@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace katal.conexion.model.dao
 {
@@ -26,7 +27,7 @@ namespace katal.conexion.model.dao
         {
             return Conexion.ConexionCadena(this.codEmpresa, "BDCTAPAG", consulta);
         }
-        public string conexionCtaPag(string consulta, int anio)
+        public string conexionBDCONT(string consulta, int anio)
         {
             return Conexion.ConexionCadena(this.codEmpresa, "BDCONT", anio, consulta);
         }
@@ -44,6 +45,27 @@ namespace katal.conexion.model.dao
         {            
             return $"CONVERT(datetime, '{date}', 103)";
         }
+        public string numericFormat(decimal numero)
+        {
+            return numero.ToString("F3", CultureInfo.InvariantCulture);
+        }
+        public string rellenar(string dato, int lmax, int lreal, string relleno, bool giro)
+        {
+            string lleno = "";
+            for (int f = 1; f <= lmax-lreal; f++)
+            {
+                lleno += relleno;
+            }
+            if (giro)
+            {
+                return dato.Trim() + lleno;
 
+            }
+            else
+            {
+                return lleno + dato.Trim();
+            }
+        } 
+       
     }
 }

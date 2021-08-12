@@ -41,6 +41,7 @@ namespace katal.Model
         public static decimal TDebe = 0;
       
         public static bool activarRetecion = false;
+        public static bool wlConten = true;// activar desde comprobante
         public static Comprobante comprobante = new Comprobante();
        
 

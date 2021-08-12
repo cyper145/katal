@@ -404,7 +404,7 @@ namespace katal.Controllers
                 {
                     Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
                     // Array codigo = nodes["selectedKeyValues"] ;
-                    if (nodes.selectedKeyValues != null)
+                    if (nodes.selectedKeyValues != null && nodes.selectedKeyValues[0]!=null)
                     {
                         string codigoanexo = nodes.selectedKeyValues[0];
                         Anexo anexo = data.Find(X => X.ANEX_CODIGO == codigoanexo);

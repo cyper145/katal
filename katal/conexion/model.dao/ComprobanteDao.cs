@@ -284,17 +284,22 @@ namespace katal.conexion.model.dao
             insertCabecera(comprobante, tipoCambio, xccodsubdi, mNumerodata);
             ALTERDetalleDrop();
             ALTERDetalleAdd();
-            if (exiteCampo("DETALLE", "ORDFAB"))
+            if (!exiteCampo("DETALLE", "ORDFAB"))
             {
                 ALTERdetalleOrbfa();
             }
             insertDetalle(comprobante, xccodsubdi, mNumerodata);
             updateCom(comprobante, xccodsubdi);
-            transfer(comprobante, anio, mes);
+            transfer(comprobante, anio, mes, xccodsubdi);
         }
 
         private void insertCabecera(Comprobante comprobante, TipoCambio tipoCambio, string codigosub, string codigo)
         {
+            if (tipoCambio == null)
+            {
+                tipoCambio = new TipoCambio();
+            }
+            
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "CABECERA");
             string csql = $"Insert Into {conexion}(CO_C_SUBDI,CO_C_COMPR,CO_D_FECHA,CO_A_GLOSA,CO_C_MONED,";
             csql += "CO_C_CONVE,CO_D_FECCA,CO_N_DEBE,co_n_haber,co_n_debus,co_n_habus,";
@@ -349,10 +354,6 @@ namespace katal.conexion.model.dao
                     csql += "" + (0).ToString("F3", CultureInfo.InvariantCulture) + ",";
 
                 }
-
-
-
-
             }
             else// ME
             {
@@ -371,7 +372,7 @@ namespace katal.conexion.model.dao
 
                 }
             }
-            csql += "TRUE," + dateFormat(comprobante.DVENCE) + ")";
+            csql += "1," + dateFormat(comprobante.DVENCE) + ")";
 
             try
             {
@@ -393,7 +394,7 @@ namespace katal.conexion.model.dao
         public void ALTERDetalleDrop()
         {
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "DETALLE");
-            string alter = "ALTER TABLE {conexion} DROP COLUMN CO_C_SECUE";
+            string alter = $"ALTER TABLE {conexion} DROP COLUMN CO_C_SECUE";
             try
             {
                 comando = new SqlCommand(alter, objConexion.getCon());
@@ -413,7 +414,7 @@ namespace katal.conexion.model.dao
         public void ALTERDetalleAdd()
         {
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "DETALLE");
-            string alter = "ALTER TABLE {conexion} CO_C_SECUE (5) varchar(5) NULL";
+            string alter = $"ALTER TABLE {conexion}  ADD CO_C_SECUE varchar(5) NULL";
             try
             {
                 comando = new SqlCommand(alter, objConexion.getCon());
@@ -465,7 +466,7 @@ namespace katal.conexion.model.dao
 
                 string ANEXO = fValNull(element.CANEXO) + fValNull(element.CCODANEXO);
 
-                item = $"Insert Into {conexion}(CO_C_SUBDI,CO_C_COMPR,CO_D_FECHA,CO_C_CUENT,";
+                item += $"Insert Into {conexion}(CO_C_SUBDI,CO_C_COMPR,CO_D_FECHA,CO_C_CUENT,";
                 item += "CO_D_FECDC,CO_C_CENCO,CO_A_GLOSA,CO_C_DESTI,";
                 item += "CO_C_DOCUM,CO_C_ANEXO,CO_N_DEBE,co_n_debus,";
                 item += "co_n_haber,co_n_habus,CO_C_SECUE,NUMRETRAC,";
@@ -474,9 +475,9 @@ namespace katal.conexion.model.dao
 
                 item += "'" + fValNull(xccodsubdi) + "',";
                 item += "'" + fValNull(xco_c_numer) + "',";
-                item += "'" + dateFormat(comprobante.DRECEPCIO) + "',";
+                item += "" + dateFormat(comprobante.DRECEPCIO) + ",";
                 item += "'" + fValNull(element.CCODCONTA) + "',";
-                item += "'" + dateFormat(comprobante.DEMISION) + "',";
+                item += "" + dateFormat(comprobante.DEMISION) + ",";
                 item += "'" + fValNull(element.CCOSTO) + "',";
                 item += "'" + fValNull(element.CGLOSA) + "',";
                 item += "'" + fValNull(element.CCTADEST) + "',";
@@ -508,8 +509,8 @@ namespace katal.conexion.model.dao
                     item += "" + (0).ToString("F3", CultureInfo.InvariantCulture) + ",";
                     item += "" + (0).ToString("F3", CultureInfo.InvariantCulture) + ",";
                     item += "'" + fValNull(element.CNROITEM) + "','" + fValNull(element.NUMRETRAC) + "',";
-                    item += "'" + dateFormat(element.FECRETRAC) + "',";
-                    item += " '" + dateFormat(comprobante.DVENCE) + "','" + fValNull(element.ORDFAB) + "')";
+                    item += "" + dateFormat(element.FECRETRAC) + ",";
+                    item += "" + dateFormat(comprobante.DVENCE) + ",'" + fValNull(element.ORDFAB) + "')";
                 }
 
                 else // haber
@@ -537,8 +538,8 @@ namespace katal.conexion.model.dao
 
                     }
                     item += "'" + fValNull(element.CNROITEM) + "','" + fValNull(element.NUMRETRAC) + "',";
-                    item += "'" + dateFormat(element.FECRETRAC) + "',";
-                    item += " '" + dateFormat(comprobante.DVENCE) + "','" + fValNull(element.ORDFAB) + "')";
+                    item += "" + dateFormat(element.FECRETRAC) + ",";
+                    item += "" + dateFormat(comprobante.DVENCE) + ",'" + fValNull(element.ORDFAB) + "')";
                 }
             });
             try
@@ -584,8 +585,31 @@ namespace katal.conexion.model.dao
             }
         }
 
+        private void updateComCompCon(Comprobante comprobante, string numero)
+        {
 
-        private void transfer(Comprobante comprobante, int anio, int mes)
+            string csql = $"Update COMPROBANTECAB set ";
+            csql += " COMPCON='" + numero + "' ";
+            csql += " where  camesproc='" + comprobante.CAMESPROC + "' and corden='" + comprobante.CORDEN + "'";
+            try
+            {
+                comando = new SqlCommand(conexionComun( csql), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+        private void transfer(Comprobante comprobante, int anio, int mes, string xccodsubdi)
         {
             string BDMovCab = "CABMOV" + mes.ToString("00.##");
             string BDMovCab2 = "DETMOV" + mes.ToString("00.##");
@@ -596,9 +620,45 @@ namespace katal.conexion.model.dao
             {
                 deleteBDMovCab(comprobante, conexion1);
                 deleteBDMovDet(comprobante, conexion2);
-                deleteBDMovDet(comprobante, conexion3);
+                deleteCompras(comprobante, conexion3);
+            }
+            Cabecera cabecera = findCabecera();
+
+            string numero = mNumeroBDMovCab(anio, mes, xccodsubdi);
+            if (!GridViewHelper.wlConten)
+            {
+                numero = cabecera.CO_C_COMPR;
+            }
+            INSERTBDMovCab(comprobante, conexion1, anio,mes, xccodsubdi, cabecera, numero);
+            INSERTBDMovDet(comprobante, conexion1, anio,mes, xccodsubdi, numero);
+            //Si este movimiento va a compras hacer : ....
+            updateComCompCon(comprobante, numero);
+            if (comprobante.ESTCOMPRA)
+            {
+                guardarCompra(comprobante);
+            }
+            
+
+        }
+        private void guardarCompra(Comprobante comprobante)
+        {
+            string CDOCUM;
+            string CDOCUM1;
+            string Cadena;
+            int lcadena;
+            string CSERIE;
+            if (comprobante.CCODRUC.Trim() != "")
+            {
+                CDOCUM = comprobante.CSERREFER + comprobante.CNUMREFER;
+            }
+            else
+            {
+                Cadena = comprobante.CSERIE.Trim();
+                lcadena = Cadena.Length;
+                CSERIE = rellenar();
             }
         }
+
         public void deleteBDMovCab(Comprobante comprobante, string conexion)
         {
 
@@ -666,19 +726,16 @@ namespace katal.conexion.model.dao
             }
         }
 
-        public void INSERTBDMovCab(Comprobante comprobante, string conexion, int anio, int mes, string codSub)
+        public void INSERTBDMovCab(Comprobante comprobante, string conexion, int anio, int mes, string codSub,Cabecera cabecera ,string  numero)
         {
-            string numero = mNumeroBDMovCab(anio, mes, codSub);
-            // traer la cabecera
-
-            Cabecera cabecera = findCabecera();
+            
             if (cabecera != null)
             {
                 string csql = $"Insert Into {conexion} (SUBDIAR_CODIGO,CMOV_FECHA,CMOV_FECCA,CMOV_C_COMPR,CMOV_MONED,CMOV_CONVE,CMOV_CAMES,";
                 csql += "CMOV_TIPCA,CMOV_GLOSA,CMOV_DEBE,CMOV_HABER,CMOV_DEBUS,CMOV_HABUS,CMOV_L_COMPR,FECH_VCTO) Values(";
                 csql += "'" + fValNull(cabecera.CO_C_SUBDI) + "',";
-                csql += "'" + dateFormat(Conversion.ParseDateTime(cabecera.CO_D_FECHA)) + "',"; 
-                csql += "'" + dateFormat(Conversion.ParseDateTime(cabecera.CO_D_FECCA)) + "',";
+                csql += "" + dateFormat(cabecera.CO_D_FECHA) + ","; 
+                csql += "" + dateFormat(cabecera.CO_D_FECCA) + ",";
                 csql += "'" + numero + "',";
                 csql += "'" + fValNull(cabecera.CO_C_MONED) + "',";
                 csql += "'" + fValNull(cabecera.CO_C_CONVE) + "',";
@@ -686,17 +743,17 @@ namespace katal.conexion.model.dao
                 csql += "" + fValNull(cabecera.CO_N_TIPCA) + ",";
                 csql += "" + fValNull(cabecera.CO_A_GLOSA) + ",";
 
-                csql += "" + fValNull(cabecera.CO_N_DEBE) + ",";
-                csql += "" + fValNull(cabecera.co_n_haber) + ",";
-                csql += "" + fValNull(cabecera.co_n_debus) + ",";
-                csql += "" + fValNull(cabecera.co_n_habus) + ",";
+                csql += "" + numericFormat(cabecera.CO_N_DEBE) + ",";
+                csql += "" + numericFormat(cabecera.co_n_haber) + ",";
+                csql += "" + numericFormat(cabecera.co_n_debus) + ",";
+                csql += "" + numericFormat(cabecera.co_n_habus) + ",";
                 if (comprobante.ESTCOMPRA)
                 {
-                    csql += "1," + dateFormat(Conversion.ParseDateTime(cabecera.FECH_VEN)) + ")";
+                    csql += "1," + dateFormat(cabecera.FECH_VEN) + ")";
                 }
                 else
                 {
-                    csql += "0," + dateFormat(Conversion.ParseDateTime(cabecera.FECH_VEN)) + ")";
+                    csql += "0," + dateFormat(cabecera.FECH_VEN) + ")";
                 }
                 try
                 {
@@ -715,6 +772,73 @@ namespace katal.conexion.model.dao
                 }
             }
         }
+        public void INSERTBDMovDet(Comprobante comprobante, string conexion, int anio, int mes, string codSub,string  MNUMERO)
+        {
+            string mess = mes.ToString("00.##");
+            string tabla = "DETMOV"+ mess;
+            // traer la cabecera
+            List<Detalle> detalles = findDetalle();
+            Cabecera cabecera = findCabecera();
+            string item = "";
+            if (detalles != null)
+            {
+                detalles.ForEach(element => {
+                    // validacion de codigo de serie
+                    string ANEXO = verdata($"PLANCTA_CODIGO=' {element.CO_C_CUENT} '", "plan_cuenta_nacional", 1, "TIPOANEX_CODIGO");
+
+                    item += $"Insert Into {tabla} (SUBDIAR_CODIGO,DMOV_C_COMPR,DMOV_SECUE,DMOV_FECDC,DMOV_FECHA,DMOV_FECVEN,";
+                    item += "DMOV_GLOSA,DMOV_DEBE,DMOV_DEBUS,DMOV_HABER,DMOV_HABUS,DMOV_CUENT,DMOV_DOCUM,DMOV_CENCO,DMOV_ANEXO,DMOV_C_DESTI,DMOV_L_COMPR,DMOV_C_ORDEN) Values(";
+                    item += "'"+ fValNull(element.CO_C_SUBDI) + "',";
+                    item +=  "'" + MNUMERO + "',";
+                    item +=  "'" + fValNull(element.CO_C_SECUE) + "',";
+                    item +=  " " + dateFormat(element.CO_D_FECDC) + " ,";
+                    item += "" + dateFormat(element.CO_D_FECHA) + "," + dateFormat(element.FECHAVENC) + ",";
+                    item += "'" + fValNull(element.CO_A_GLOSA) + "',";
+                    item += "" + numericFormat(element.CO_N_DEBE) + ",";
+                    item += "" + numericFormat(element.co_n_debus ) + ",";
+                    item += "" + numericFormat(element.co_n_haber ) + ",";
+                    item += "" + numericFormat(element.co_n_habus ) + ",";
+                    item += "'" + fValNull(element.CO_C_CUENT) + "',";
+                    item += "'" + fValNull(element.CO_C_DOCUM) + "',";
+                    item += "'" + fValNull(element.CO_C_CENCO) + "',";
+                    if (ANEXO.Trim() != "")
+                    {
+                        item += "'" + fValNull(element.CO_C_ANEXO) + "',";
+                    }
+                    else
+                    {
+                        item += "' ',";
+                    }
+                    item += "'" + fValNull(element.CO_C_DESTI) + "',";
+                    if (comprobante.ESTCOMPRA)
+                    {
+                        item += "1,'" + fValNull(element.ORDFAB) + "')";
+                    }
+                    else
+                    {
+                        item += "0,'" + fValNull(element.ORDFAB) + "')";
+                    }
+
+
+                });
+                try
+                {
+                    comando = new SqlCommand(conexionBDCONT(item, anio), objConexion.getCon());
+                    objConexion.getCon().Open();
+                    comando.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    objConexion.getCon().Close();
+                    objConexion.cerrarConexion();
+                }
+            }
+        }
+
         private Cabecera findCabecera()
         {
            
@@ -732,19 +856,19 @@ namespace katal.conexion.model.dao
                     plan = new Cabecera();
                     plan.CO_C_SUBDI = read[0].ToString();
                     plan.CO_C_COMPR = read[1].ToString();
-                    plan.CO_D_FECHA = read[2].ToString();
+                    plan.CO_D_FECHA =Conversion.ParseDateTime( read[2].ToString());
                     plan.CO_A_GLOSA = read[3].ToString();
                     plan.CO_C_MONED = read[4].ToString();
                     plan.CO_C_CONVE = read[5].ToString();
-                    plan.CO_D_FECCA = read[6].ToString();
-                    plan.CO_N_DEBE = read[7].ToString();
-                    plan.co_n_haber = read[8].ToString();
-                    plan.co_n_debus = read[9].ToString();
-                    plan.co_n_habus = read[10].ToString();
+                    plan.CO_D_FECCA = Conversion.ParseDateTime(read[6].ToString());
+                    plan.CO_N_DEBE = Conversion.ParseDecimal(read[7].ToString());
+                    plan.co_n_haber = Conversion.ParseDecimal(read[8].ToString());
+                    plan.co_n_debus = Conversion.ParseDecimal(read[9].ToString());
+                    plan.co_n_habus = Conversion.ParseDecimal(read[10].ToString());
                     plan.CO_N_TIPCA = read[11].ToString();
                     plan.CO_N_CAMES = read[12].ToString();
-                    plan.CO_L_COMPR = read[13].ToString();
-                    plan.FECH_VEN =    read[14].ToString();
+                    plan.CO_L_COMPR = Conversion.ParseBool(read[13].ToString());
+                    plan.FECH_VEN = Conversion.ParseDateTime(read[14].ToString());
                 
 
                 }
@@ -764,7 +888,59 @@ namespace katal.conexion.model.dao
           
 
         }
-       // public 
+
+
+        private List<Detalle>  findDetalle()
+        {
+
+            List<Detalle> detalles = new List<Detalle>();          
+            string csql = $"SELECT * from detalle  ";
+            try
+            {
+                comando = new SqlCommand(conexionWenco( csql), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Detalle plan = new Detalle();
+                    plan.CO_C_SUBDI = read[0].ToString();
+                    plan.CO_C_COMPR = read[1].ToString();
+                    plan.CO_D_FECHA = Conversion.ParseDateTime(read[2].ToString());
+                    plan.CO_C_CUENT = read[3].ToString();
+                    plan.CO_D_FECDC = Conversion.ParseDateTime(read[4].ToString());
+                    plan.CO_C_CENCO = read[5].ToString();
+                    plan.CO_A_GLOSA = read[6].ToString();
+                    plan.CO_C_DESTI = read[7].ToString();
+                    plan.CO_C_DOCUM = read[8].ToString();
+                    plan.CO_C_ANEXO = read[9].ToString();
+                    plan.CO_N_DEBE = Conversion.ParseDecimal(read[10].ToString());
+                    plan.co_n_debus = Conversion.ParseDecimal(read[11].ToString());
+                    plan.co_n_haber = Conversion.ParseDecimal(read[12].ToString());
+                    plan.co_n_habus = Conversion.ParseDecimal(read[13].ToString());
+                    plan.NUMRETRAC = read[14].ToString();
+                    plan.FECRETRAC = Conversion.ParseDateTime(read[15].ToString());
+                    plan.FECHAVENC = Conversion.ParseDateTime(read[16].ToString());
+                    plan.ORDFAB = read[17].ToString();
+                    plan.CO_C_SECUE = read[18].ToString();
+                    detalles.Add(plan);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return detalles;
+
+
+
+        }
+        // public 
         public void deleteCabeceraTrans()
         {
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "CABECERA");
@@ -884,7 +1060,8 @@ namespace katal.conexion.model.dao
            
             int numero = 0;
             string MNUMERO = "0001";
-            string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV" + mes);
+            string mess = mes.ToString("00.##");
+            string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV" + mess);
 
             string csql = $"Select MAX(CMOV_C_COMPR) AS MAXCOMPR from {conexion} where SUBDIAR_CODIGO='{codSub}'";
 
@@ -1091,9 +1268,6 @@ namespace katal.conexion.model.dao
                 return Valor;
             }
         }
-
-
-
 
         public decimal IIfData(bool verificacion, decimal data1, decimal data2)
         {
