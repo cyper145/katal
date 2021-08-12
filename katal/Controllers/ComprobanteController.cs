@@ -23,7 +23,7 @@ namespace katal.Controllers
         private EmpresaNeg empresaNeg;
         private RequisicionCompraNeg requisicionNeg;
 
-        
+
         public ComprobanteController()
         {
             responsable = new ResponsableCmpNeg(codEmpresa);
@@ -31,7 +31,7 @@ namespace katal.Controllers
             empresaNeg = new EmpresaNeg();
             destinoNeg = new DestinoNeg();
             requisicionNeg = new RequisicionCompraNeg(codEmpresa);
-           
+
             tipoAnexoNeg = new TipoAnexoNeg(codEmpresa);
         }// GET: Comprobante
         public ActionResult Index()
@@ -44,14 +44,22 @@ namespace katal.Controllers
         }
         public ActionResult Contabilizar()
         {
-            GridViewHelper.NivelCOntable = int.Parse(empresaNeg.findContable(GridViewHelper.user.codEmpresa).EMP_NIVEL);
-
-            Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
-            comprobanteNeg.inserdataTemporal(comp);
+            GridViewHelper.NivelCOntable = int.Parse(empresaNeg.findContable(GridViewHelper.user.codEmpresa).EMP_NIVEL);       
             GridViewHelper.contableDets = comprobanteNeg.findallContableDet();
+            calcularDebeHaber();
             return View(GridViewHelper.contableDets);
         }
-
+        private void calcularDebeHaber()
+        {
+            decimal haber = 0;
+            decimal debe = 0;
+            GridViewHelper.contableDets.ForEach(elem => {
+                haber += decimal.Parse( elem.campo2);
+                debe += decimal.Parse( elem.campo1);
+            });
+            GridViewHelper.TDebe = debe;
+            GridViewHelper.THaber = haber;
+        }
         public ActionResult GridViewPartial()
         {
             //determinar el tasa igv
@@ -64,7 +72,7 @@ namespace katal.Controllers
             //List<Comprobante> comp = comprobanteNeg.findAll();
             GridViewHelper.contableDets = comprobanteNeg.findallContableDet();
             return PartialView("ContaGridViewPartial", GridViewHelper.contableDets);
-        } 
+        }
 
         public ActionResult GridViewAddComprobante(ContableDet issue, FormCollection data)
         {
@@ -86,11 +94,11 @@ namespace katal.Controllers
             string OrdenFabricacion = data["gridLookupOrdenFabricacion$State"];
             string DestinoConta = data["gridLookupDestinoConta$State"];
             string AnexoConta = data["gridLookupAnexoConta$State"];
-             issue.CCODCONTA = ValidarRecuperar(PlanCuenta);
-             issue.CCOSTO = ValidarRecuperar(Costos);
-             issue.ORDFAB = ValidarRecuperar(OrdenFabricacion);
-             issue.CCTADEST = ValidarRecuperar(DestinoConta);
-             issue.CCODANEXO = ValidarRecuperar(AnexoConta);
+            issue.CCODCONTA = ValidarRecuperar(PlanCuenta);
+            issue.CCOSTO = ValidarRecuperar(Costos);
+            issue.ORDFAB = ValidarRecuperar(OrdenFabricacion);
+            issue.CCTADEST = ValidarRecuperar(DestinoConta);
+            issue.CCODANEXO = ValidarRecuperar(AnexoConta);
             issue.CDESTCOMP = ValidarRecuperar(DestinoConta);
 
             //gridLookupResponsable$State        
@@ -102,13 +110,13 @@ namespace katal.Controllers
         }
 
         private void AddNewRecordContable(Comprobante issue)
-        {      
-            comprobanteNeg.create(issue, GridViewHelper.NivelCOntable);          
+        {
+            comprobanteNeg.create(issue, GridViewHelper.NivelCOntable);
         }
 
         public JsonResult cargardata()
         {
-            int CODIGO = GridViewHelper.contableDets.Count+1;
+            int CODIGO = GridViewHelper.contableDets.Count + 1;
             string next = CODIGO.ToString("00000.##");
             Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
             RespuestaCDataComprobante respuestaCData = new RespuestaCDataComprobante();
@@ -129,7 +137,7 @@ namespace katal.Controllers
             {
                 return RedirectToAction("index", "Report", new { codigo = codigo });
             }
-            if(customAction== "transferir")
+            if (customAction == "transferir")
             {
                 PerformTransfer();
             }
@@ -177,7 +185,7 @@ namespace katal.Controllers
             string tipoProveerdor = data["gridLookupTipoAnexo$State"];
             string proveedor = data["gridLookupAnexo$State"];
             string tipoDocumento = data["gridLookupTipoDoc$State"];
-            string codConversion= data["gridLookupMoneda$State"];
+            string codConversion = data["gridLookupMoneda$State"];
 
             string codDestino = data["gridLookupDestino$State"];
             string codResponsable = data["gridLookupResponsable$State"];
@@ -191,79 +199,17 @@ namespace katal.Controllers
             issue.CONVERSION_CODIGO = ValidarRecuperar(codConversion);
             issue.CDESTCOMP = ValidarRecuperar(codDestino);
             issue.RESPONSABLE_CODIGO = ValidarRecuperar(codResponsable);
-            ViewData["dar"] = issue.CORDEN;
-            ViewData["dar"] = issue.ANEX_CODIGO;
-            ViewData["dar"] = issue.ANEX_DESCRIPCION;
-            ViewData["dar"] = issue.TIPODOCU_CODIGO;
-            ViewData["dar"] = issue.CSERIE;
-            ViewData["dar"] = issue.DEMISION;
-            ViewData["dar"] = issue.DRECEPCIO;
-            ViewData["dar"] = issue.TIPOMON_CODIGO;
-            ViewData["dar"] = issue.NIMPORTE;
-            ViewData["dar"] = issue.TIPOCAMBIO_VALOR;
-            ViewData["dar"] = issue.CDESCRIPC;
-            ViewData["dar"] = issue.RESPONSABLE_CODIGO;
-            ViewData["dar"] = issue.CESTADO;
-            ViewData["dar"] = issue.NSALDO;
-            ViewData["dar"] = issue.CCODCONTA;
-            ViewData["dar"] = issue.CFORMPAGO;
-            ViewData["dar"] = issue.CSERREFER;
-            ViewData["dar"] = issue.CNUMREFER;
-            ViewData["dar"] = issue.CONVERSION_CODIGO;
-            ViewData["dar"] = issue.DREGISTRO;
-            ViewData["dar"] = issue.CTIPPROV;
-            ViewData["dar"] = issue.CNRORUC;
-            ViewData["dar"] = issue.ESTCOMPRA;
-            ViewData["dar"] = issue.CDESTCOMP;
-            ViewData["dar"] = issue.DIASPAGO;
-            ViewData["dar"] = issue.CIGVAPLIC;
-            ViewData["dar"] = issue.CCONCEPT;
-            ViewData["dar"] = issue.DFECREF;
-            ViewData["dar"] = issue.NTASAIGV;
-            ViewData["dar"] = issue.NIGV;
-            ViewData["dar"] = issue.NPORCE;
-            ViewData["dar"] = issue.CCODRUC;
-            ViewData["dar"] = issue.LHONOR;
-            ViewData["dar"] = issue.NIR4;
-            ViewData["dar"] = issue.NIES;
-            ViewData["dar"] = issue.NTOTRH;
-            ViewData["dar"] = issue.NBASEIMP;
-            ViewData["dar"] = issue.NVALCIF;
-            ViewData["dar"] = issue.DCONTAB;
-            ViewData["dar"] = issue.CSALDINI;
-            ViewData["dar"] = issue.NPERCEPCION;
-            ViewData["dar"] = issue.NUMRETRAC;
-            ViewData["dar"] = issue.FECRETRAC;
-            ViewData["dar"] = issue.CNUMORDCO;
-            ViewData["dar"] = issue.CO_L_RETE;
-            ViewData["dar"] = issue.LDETRACCION;
-            ViewData["dar"] = issue.NTASADETRACCION;
-            ViewData["dar"] = issue.DETRACCION;
-            ViewData["dar"] = issue.COD_SERVDETRACC;
-            ViewData["dar"] = issue.COD_TIPOOPERACION;
-            ViewData["dar"] = issue.NIMPORTEREF;
-            ViewData["dar"] = issue.RCO_TIPO;
-            ViewData["dar"] = issue.RCO_SERIE;
-            ViewData["dar"] = issue.RCO_NUMERO;
-            ViewData["dar"] = issue.RCO_FECHA;
-            ViewData["dar"] = issue.flg_RNTNODOMICILIADO;
-            ViewData["dar"] = issue.CAOCOMPRA;
-
-
-
-            
-
 
             issue.TIPOCAMBIO_VALOR = issue.TIPOCAMBIO_VALOR > issue.TIPOCAMBIO_VALOR2 ? issue.TIPOCAMBIO_VALOR : issue.TIPOCAMBIO_VALOR2;
 
             issue.ANEX_DESCRIPCION = data["gridLookupAnexo"];
             issue.CORDEN = comprobanteNeg.funcAutoNum();
-            issue.LDETRACCION = GridViewHelper.comprobante.DDetraccion=="0" || GridViewHelper.comprobante.DDetraccion==null ?false:true;
+            issue.LDETRACCION = GridViewHelper.comprobante.DDetraccion == "0" || GridViewHelper.comprobante.DDetraccion == null ? false : true;
             issue.NUMRETRAC = GridViewHelper.comprobante.DDocumento;
             issue.NTASADETRACCION = GridViewHelper.comprobante.DTasa;
             issue.FECRETRAC = GridViewHelper.comprobante.DFecha;
-            issue.COD_TIPOOPERACION= GridViewHelper.comprobante.tipoOperacion;
-            issue.COD_SERVDETRACC= GridViewHelper.comprobante.DtipoServicio;
+            issue.COD_TIPOOPERACION = GridViewHelper.comprobante.tipoOperacion;
+            issue.COD_SERVDETRACC = GridViewHelper.comprobante.DtipoServicio;
             issue.CCODCONTA = GridViewHelper.comprobante.CCODCONTA;
             issue.CNRORUC = GridViewHelper.comprobante.CNRORUC;
 
@@ -334,55 +280,7 @@ namespace katal.Controllers
             ViewData["dar"] = issue.flg_RNTNODOMICILIADO;
             ViewData["dar"] = issue.CAOCOMPRA;
 
-            /*
-            string[] word = codArticulodata.Split(',');
-            string dataRequisicion = codArticulodata[0] + word[2] + "," + word[14] + "," + word[15] + "," + codArticulodata[codArticulodata.Length - 1];
-            Dictionary<string, JArray> nodes = JsonConvert.DeserializeObject<Dictionary<string, JArray>>(dataRequisicion);
-            JArray proveedor = nodes["gridLookupProveedor"];
-            JArray docref = nodes["gridLookupDocRef"];
-            JArray nroRef = nodes["gridLookupNroRef"];
 
-            issue.oc_ccodpro = proveedor.First.ToString();
-            issue.OC_CDOCREF = docref.First.ToString();
-            issue.OC_CNRODOCREF = nroRef.First.ToString();
-            var codArticulo = data["gridLookupProveedor"];
-            issue.OC_CRAZSOC = codArticulo.ToString();
-
-            issue.OC_CSITORD = "03";
-            issue.EST_NOMBRE = "EMITIDA";
-            issue.OC_CSOLICT = issue.RESPONSABLE_CODIGO;
-            /*
-            var length =   HttpUtility.HtmlDecode(data["grid"]);
-            Dictionary<string, object> nodes = JsonConvert.DeserializeObject<Dictionary<string, object>>(length);
-            var datad =  nodes["batchEditClientModifiedValues"].ToString();
-            Dictionary<string, object> nodeinsert = JsonConvert.DeserializeObject<Dictionary<string, object>>(datad);
-            var datainsert = nodeinsert["EditState"].ToString();
-            Dictionary<string, object> nodeinsertreal = JsonConvert.DeserializeObject<Dictionary<string, object>>(datainsert);
-            var datainsertreal = nodeinsertreal["insertedRowValues"].ToString();
-            Dictionary<string, object> insertreal = JsonConvert.DeserializeObject<Dictionary<string, object>>(datainsertreal);
-
-            List<DetalleOrdenCompra> articulos = new List<DetalleOrdenCompra>();
-            foreach (var entry in insertreal)
-            {
-                string dataArticulo = entry.Value.ToString();
-
-                DetalleOrdenCompra articulo = JsonConvert.DeserializeObject<DetalleOrdenCompra>(dataArticulo);
-                articulos.Add(articulo);
-            }
-            */
-            /*
-            issue.detalles = GridViewHelper.detalles;
-
-            decimal importe = 0;
-            GridViewHelper.detalles.ForEach((elem) =>
-            {
-
-                importe += elem.OC_NTOTVEN;
-            }
-            );
-            issue.OC_NVENTA = importe;
-            issue.OC_NIMPORT = importe;
-            */
             return UpdateModelWithDataValidation(issue, AddNewRecord);
         }
 
@@ -390,7 +288,7 @@ namespace katal.Controllers
         {
             //GridViewHelper.Comprobantes.Add(issue);
 
-             comprobanteNeg.create(issue);
+            comprobanteNeg.create(issue);
             // GridViewHelper.ClearDetalles();
         }
         [ValidateAntiForgeryToken]
@@ -404,8 +302,6 @@ namespace katal.Controllers
             string tipoDocumento = data["gridLookupTipoDoc$State"];
             string destino = data["gridLookupTipoDoc$State"];
 
-
-            
             issue.CCONCEPT = ValidarRecuperar(concepto);
             issue.CTIPPROV = ValidarRecuperar(tipoProveerdor);
             issue.ANEX_CODIGO = ValidarRecuperar(proveedor);
@@ -442,11 +338,13 @@ namespace katal.Controllers
                 SafeExecute(() => metodo(issue));
                 if (issue.ContableDet == null)
                 {
+                    Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
+                    comprobanteNeg.inserdataTemporal(comp);
                     return RedirectToAction("contabilizar");
                 }
                 else
                 {
-                    return PartialView("ContaGridViewPartial");
+                    return ContaGridViewPartial();
                 }
             }
             else
@@ -483,7 +381,7 @@ namespace katal.Controllers
         public ActionResult MultiSelectTipoAnexo(string TIPOANEX_CODIGO = "-1")
         {
             ViewData["TipoAnexo"] = tipoAnexoNeg.findAll();
-            
+
 
             if (TIPOANEX_CODIGO == "-1")
                 TIPOANEX_CODIGO = "";
@@ -500,7 +398,7 @@ namespace katal.Controllers
             if (dataR != null)
             {
                 string dar = dataR["gridLookupAnexo$State"];
-                
+
                 string ver = HttpUtility.HtmlDecode(dar);
                 if (ver != null)
                 {
@@ -524,13 +422,13 @@ namespace katal.Controllers
         public ActionResult MultiSelectAnexoConta(string ANEX_CODIGO = "-1", FormCollection dataR = null)
         {
             List<Anexo> data = tipoAnexoNeg.findAllAnexo();
-            ViewData["Anexo"] = data;         
+            ViewData["Anexo"] = data;
             if (ANEX_CODIGO == "-1")
                 ANEX_CODIGO = "-1";
             return PartialView("MultiSelectAnexoConta", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
 
         }
-        
+
         public ActionResult MultiSelectTipoDoc(string TIPDOC_CODIGO = "-1", FormCollection dataR = null)
         {
             ViewData["TipoDoc"] = tipoAnexoNeg.findAllTipoDocumento();
@@ -582,13 +480,13 @@ namespace katal.Controllers
 
         }
 
-        
 
- public ActionResult MultiSelectDestinoConta(string CO_C_CODIG = "-1", FormCollection dataR = null)
+
+        public ActionResult MultiSelectDestinoConta(string CO_C_CODIG = "-1", FormCollection dataR = null)
         {
             ViewData["Destino"] = destinoNeg.findAll();
 
-            
+
             if (CO_C_CODIG == "-1")
                 CO_C_CODIG = "";
             return PartialView("MultiSelectDestinoConta", new Destino() { CO_C_CODIG = CO_C_CODIG });
@@ -659,7 +557,7 @@ namespace katal.Controllers
             if (CODIGO != "" && CODIGO != null)
             {
                 anexo = tipoAnexoNeg.findTipoDocumento(CODIGO);
-                
+
             }
             //string Gastos_Codigo = "";
             return Json(new { tipodocumento = anexo }, JsonRequestBehavior.AllowGet);
@@ -682,8 +580,8 @@ namespace katal.Controllers
                         respuesta.opcion = false;
                         respuesta.especial = true;
                         break;
-                    case "VTA":                     
-                        respuesta.data =  anexo.TIPOCAMB_VENTA;
+                    case "VTA":
+                        respuesta.data = anexo.TIPOCAMB_VENTA;
                         respuesta.dataEspecial = "0.000";
                         respuesta.opcion = true;
                         respuesta.especial = false;
@@ -709,7 +607,7 @@ namespace katal.Controllers
         {
             return PartialView("partialPopup");
         }
-        public ActionResult MultiSelectdetraccion(string codigo = "-1", string DFecha= "", string DDocumento = "", FormCollection dataR = null)
+        public ActionResult MultiSelectdetraccion(string codigo = "-1", string DFecha = "", string DDocumento = "", FormCollection dataR = null)
         {
             ViewData["Detraccion"] = comprobanteNeg.findAllDetraccion(DateTime.Now.ToShortDateString());
             if (dataR.Count > 0)
@@ -718,11 +616,11 @@ namespace katal.Controllers
                 string tipoDetraccion = dataR["gridLookupDetraccion$State"];
 
                 string[] word = dar.Split(',');
-                string dataDetraccion = dar[0] + word[1] + "," +word[2] + "," + word[3] + dar[dar.Length - 1];
+                string dataDetraccion = dar[0] + word[1] + "," + word[2] + "," + word[3] + dar[dar.Length - 1];
                 Dictionary<string, Object> info = JsonConvert.DeserializeObject<Dictionary<string, Object>>(dataDetraccion);
                 GridViewHelper.comprobante.DDetraccion = info["DDetraccion"].ToString();
                 GridViewHelper.comprobante.DTasa = info["DTasa"] == null ? 0 : Decimal.Parse(info["DTasa"].ToString());
-                GridViewHelper.comprobante.DDocumento = info["DDocumento"] == null?"":info["DDocumento"].ToString();
+                GridViewHelper.comprobante.DDocumento = info["DDocumento"] == null ? "" : info["DDocumento"].ToString();
 
                 string ver = HttpUtility.HtmlDecode(tipoDetraccion);
                 if (ver != null)
@@ -731,7 +629,7 @@ namespace katal.Controllers
                     // Array codigo = nodes["selectedKeyValues"] ;
                     if (nodes.selectedKeyValues != null)
                     {
-                        GridViewHelper.comprobante.DtipoServicio= nodes.selectedKeyValues[0];
+                        GridViewHelper.comprobante.DtipoServicio = nodes.selectedKeyValues[0];
                         // COVMON_CODIGO = GridViewHelper.COVMON_CODIGO;
                     }
                 }
@@ -743,7 +641,7 @@ namespace katal.Controllers
                 codigo = "";
             return PartialView("MultiSelectdetraccion", new ServSujDetraccion() { codigo = codigo });
         }
-        public ActionResult MultiSelectTipoOperacion(string CODIGO = "-1",FormCollection dataR = null)
+        public ActionResult MultiSelectTipoOperacion(string CODIGO = "-1", FormCollection dataR = null)
         {
             ViewData["TipoOperacion"] = comprobanteNeg.findAllTipoOperacion();
             if (dataR.Count > 0)
@@ -755,7 +653,7 @@ namespace katal.Controllers
                 string dataDetraccion = dar[0] + word[1] + "," + word[2] + "," + word[3] + dar[dar.Length - 1];
                 Dictionary<string, Object> info = JsonConvert.DeserializeObject<Dictionary<string, Object>>(dataDetraccion);
                 GridViewHelper.comprobante.DDetraccion = info["DDetraccion"].ToString();
-                GridViewHelper.comprobante.DTasa = info["DTasa"] == null ? 0 : Decimal.Parse( info["DTasa"].ToString());
+                GridViewHelper.comprobante.DTasa = info["DTasa"] == null ? 0 : Decimal.Parse(info["DTasa"].ToString());
                 GridViewHelper.comprobante.DDocumento = info["DDocumento"] == null ? "" : info["DDocumento"].ToString();
 
                 string ver = HttpUtility.HtmlDecode(tipoDetraccion);
@@ -778,10 +676,26 @@ namespace katal.Controllers
         }
 
         // VER CONPROBANTE
-        public ActionResult MultiSelectPlanCuenta(string PLANCTA_CODIGO = "-1")
+        public ActionResult MultiSelectPlanCuenta(string PLANCTA_CODIGO = "-1", FormCollection dataR = null)
         {
             ViewData["PlanCuenta"] = comprobanteNeg.findAllCuentasNacionales(GridViewHelper.NivelCOntable);
+            if (dataR != null)
+            {
+                string dar = dataR["gridLookupPlanCuenta$State"];
 
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        GridViewHelper.PLANCTA_CODIGO = nodes.selectedKeyValues[0];
+                        PLANCTA_CODIGO = GridViewHelper.PLANCTA_CODIGO;
+                    }
+                }
+
+            }
 
             if (PLANCTA_CODIGO == "-1")
                 PLANCTA_CODIGO = "";
@@ -791,8 +705,6 @@ namespace katal.Controllers
 
         public ActionResult MultiSelectCentroCostos(string CENCOST_CODIGO = "-1")
         {
-
-
             ViewData["centro_costos"] = requisicionNeg.findAllCentroCostos();
             if (CENCOST_CODIGO == "-1")
                 CENCOST_CODIGO = "";
@@ -813,7 +725,7 @@ namespace katal.Controllers
         // POST: /Account/SignIn
         [HttpPost]
         [AllowAnonymous]
-        
+
         public ActionResult PopupControl(SignInViewModel model, string returnUrl)
         {
             return PartialView("GridViewPartial");
@@ -821,12 +733,12 @@ namespace katal.Controllers
 
         public JsonResult changeDFecha(DateTime DFecha)
         {
-            GridViewHelper.comprobante.DFecha=DFecha;
+            GridViewHelper.comprobante.DFecha = DFecha;
             return Json(new { respuesta = "" }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult habilitarRetencion()
         {
-            bool retencion= GridViewHelper.activarRetecion;
+            bool retencion = GridViewHelper.activarRetecion;
             return Json(new { retencion = retencion }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult HabilitarCalculados()
@@ -857,12 +769,74 @@ namespace katal.Controllers
         public JsonResult obtenerGastos()
         {
             RespuestaGastos retencion = new RespuestaGastos();
-            
+
             retencion.mnGasto1 = GridViewHelper.comprobante.gasto1;
             retencion.mnGasto2 = GridViewHelper.comprobante.gasto2;
 
             return Json(new { retencion = retencion }, JsonRequestBehavior.AllowGet);
         }
-        
+        public JsonResult ChangePlanCuenta()
+        {
+           
+            string xco_c_conco = "";
+            string xco_c_tipo = "N";
+            bool xco_c_cenco = false;
+
+            string xcanexo = "";
+            bool activeCenco = false;
+            bool activeOrb = false;
+            bool activeCtaDest = false;
+            bool activeAnexo = false;
+            decimal xnvalor = 0;
+
+            RespuestaPlan respuesta = new RespuestaPlan(); 
+            PlanCuentaNacional planCuenta = comprobanteNeg.findCuentasNacionales(GridViewHelper.PLANCTA_CODIGO, GridViewHelper.NivelCOntable);
+            if (planCuenta != null)
+            {
+                xcanexo = planCuenta.TIPOANEX_CODIGO;
+
+                xco_c_conco = planCuenta.PLANCTA_CON_COSTO;
+                xco_c_cenco =  planCuenta.PLANCTA_CENTCOST;
+                if (xco_c_conco != null && xco_c_conco.Trim()!="")
+                {
+                    GastosIngresos gastosIngresos = comprobanteNeg.findGastoIngreso(xco_c_conco);
+                    if (gastosIngresos != null)
+                    {
+                        xco_c_tipo = gastosIngresos.GASING_TIPO;
+                    }
+                }
+                xnvalor = Math.Abs(GridViewHelper.THaber - GridViewHelper.TDebe);
+                if (xco_c_cenco)
+                {
+                    activeCenco = true;
+                    if (comprobanteNeg.ExisteConceptoCGORDEN())
+                    {
+                        if (comprobanteNeg.verdataCGORDEN())
+                        {
+                            activeOrb = true;
+                        }
+                    }
+                }
+                if (xco_c_cenco && xco_c_tipo== "S")
+                {
+                    activeCtaDest = true;
+                }
+                if (xcanexo.Trim()!="")
+                {
+                    activeAnexo = true;
+                }
+            }
+            respuesta.activeAnexo = activeAnexo;
+            respuesta.activeCenco = activeCenco;
+            respuesta.activeCtaDest = activeCtaDest;
+            respuesta.activeOrb = activeOrb;
+            respuesta.xcanexo = xcanexo;
+            respuesta.xnvalor = xnvalor;
+
+
+
+            return Json(new { retencion = respuesta }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

@@ -25,6 +25,8 @@ namespace katal.Model
         public static string Gastos_Codigo = "";
         public static string TIPDOC_CODIGO = "";
         public static string COVMON_CODIGO = "";
+        public static string PLANCTA_CODIGO = "";
+        
         public static string RUC = "";
 
         public static string CO_C_CODIG = "";
@@ -35,6 +37,9 @@ namespace katal.Model
         public static string COMP_CNUMERO = "";
         public static int NivelCOntable = 0;
         public static decimal tasa = 0;
+        public static decimal THaber = 0;
+        public static decimal TDebe = 0;
+      
         public static bool activarRetecion = false;
         public static Comprobante comprobante = new Comprobante();
        

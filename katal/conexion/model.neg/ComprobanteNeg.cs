@@ -126,5 +126,24 @@ namespace katal.conexion.model.neg
         {
            return  objComprobanteDao.findallContableDet();
         }
+        public PlanCuentaNacional findCuentasNacionales(string xccodcuenta, int NivelContable = 4)
+        {
+            return objComprobanteDao.findCuentasNacionales(xccodcuenta, NivelContable);
+        }
+        public GastosIngresos findGastoIngreso(string codigo)
+        {
+            return objComprobanteDao.findGastoIngreso(codigo);
+
+        }
+        public bool ExisteConceptoCGORDEN()
+        {
+            return objComprobanteDao.ExisteConcepto("CGORDEN");
+        }
+
+        public bool verdataCGORDEN()
+        {
+            string data = objComprobanteDao.verdata("CONCGRAL_CODIGO='CGORDEN'", "CONCEPTOS_GENERALES", 1, "CONCGRAL_CONTEL");
+            return data =="1"?true:false;
+        }
     }
 }

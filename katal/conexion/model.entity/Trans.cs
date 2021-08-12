@@ -37,5 +37,13 @@ namespace katal.conexion.model.entity
         public string GLOSA  { get; set; }
       
     }
-
+    public class RespuestaPlan
+    {
+       public  string xcanexo { get; set; }
+        public bool activeCenco { get; set; }
+        public bool activeOrb { get; set; }
+        public bool activeCtaDest { get; set; }
+        public bool activeAnexo { get; set; }
+        public  decimal xnvalor { get; set; }
+    }
 }

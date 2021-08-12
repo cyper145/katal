@@ -14,12 +14,12 @@
 
     settings.Columns.Add("PLANCTA_CODIGO").Width = Unit.Percentage(10);
     settings.Columns.Add("PLANCTA_DESCRIPCION").Width = Unit.Percentage(90);
-   
+
 
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
-    settings.Properties.TextFormatString = "{1}";
+    settings.Properties.TextFormatString = "{0} - {1}";
 
     settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
@@ -29,6 +29,7 @@
     settings.GridViewProperties.SettingsPager.PageSize = 7;
 
     //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
+    settings.GridViewClientSideEvents.EndCallback = "OnChangePlan";// ver re
 
     settings.DataBound = (sender, e) =>
     {

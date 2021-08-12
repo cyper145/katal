@@ -295,17 +295,17 @@ namespace katal.conexion.model.dao
 
         private void insertCabecera(Comprobante comprobante, TipoCambio tipoCambio, string codigosub, string codigo)
         {
-            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "CABECERA");
             string csql = $"Insert Into {conexion}(CO_C_SUBDI,CO_C_COMPR,CO_D_FECHA,CO_A_GLOSA,CO_C_MONED,";
             csql += "CO_C_CONVE,CO_D_FECCA,CO_N_DEBE,co_n_haber,co_n_debus,co_n_habus,";
             csql += "CO_N_TIPCA,CO_N_CAMES,CO_L_COMPR,FECH_VEN) Values(";
             csql += "'" + fValNull(codigosub) + "',";
             csql += "'" + fValNull(codigo) + "',";
-            csql += "'" + dateFormat(comprobante.DEMISION) + "',";
+            csql += "" + dateFormat(comprobante.DEMISION) + ",";
             csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
             csql += "'" + fValNull(comprobante.TIPOMON_CODIGO) + "',";
             csql += "'" + fValNull(comprobante.CONVERSION_CODIGO) + "',";
-            csql += "'" + dateFormat(comprobante.DEMISION) + "',";
+            csql += "" + dateFormat(comprobante.DEMISION) + ",";
             //comprobante.NIMPORTE.ToString("F3", CultureInfo.InvariantCulture)
             if (comprobante.TIPOMON_CODIGO == "MN")
             {
@@ -918,7 +918,8 @@ namespace katal.conexion.model.dao
         {
 
             CabMov plan = null;
-            string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV" + mes);
+            string mess = mes.ToString("00.##");
+            string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV" + mess);
             string csql = $"SELECT * from {conexion}  WHERE  SUBDIAR_CODIGO = '{codsu}'  and CMOV_C_COMPR='{codigo}'";
             try
             {
@@ -975,7 +976,7 @@ namespace katal.conexion.model.dao
 
             TipoCambio plan = null;
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "TIPO_CAMBIO");
-            string csql = $"SELECT * from {conexion}  WHERE  TIPOMON_CODIGO = 'ME' AND TIPOCAMB_FECHA ='{dateFormat( Demision)}' ";
+            string csql = $"SELECT * from {conexion}  WHERE  TIPOMON_CODIGO = 'ME' AND TIPOCAMB_FECHA ={dateFormat( Demision)} ";
             try
             {
                 comando = new SqlCommand(csql, objConexion.getCon());
@@ -1008,15 +1009,14 @@ namespace katal.conexion.model.dao
 
            
         }
-        private GastosIngresos findGastoIngreso( string codigo)
+        public  GastosIngresos findGastoIngreso( string codigo)
         {
 
             GastosIngresos plan = null;
-            string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "GASTOS_INGRESOS");
-            string csql = $"SELECT * from {conexion}  WHERE  GASING_CODIGO = '{codigo }' ";
+            string csql = $"SELECT * from GASTOS_INGRESOS  WHERE  GASING_CODIGO = '{codigo }' ";
             try
             {
-                comando = new SqlCommand(csql, objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad( csql), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -1053,7 +1053,7 @@ namespace katal.conexion.model.dao
             try
             {
                 string CadenaD = "SELECT EDOC_OBLIGA FROM ESTADODOC WHERE EDOC_CLAVE = '1'";
-                comando = new SqlCommand(CadenaD, objConexion.getCon());
+                comando = new SqlCommand(conexionComun( CadenaD), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader readinterno = comando.ExecuteReader();
                 if (readinterno.Read())
@@ -1188,7 +1188,7 @@ namespace katal.conexion.model.dao
             string cadena = "SELECT Concepto_Logico FROM CONCEPTOGRAL WHERE Concepto_Codigo='NUMEAUTO'";
             try
             {
-                comando = new SqlCommand(cadena, objConexion.getCon());
+                comando = new SqlCommand(conexionComun( cadena), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 bool hayRegistros = read.Read();
@@ -1198,7 +1198,7 @@ namespace katal.conexion.model.dao
                     bool codigo = Conversion.ParseBool(read[0].ToString());
                     read.Close();
                     cadena = "SELECT MAX(CORDEN) AS MAXORDEN FROM COMPROBANTECAB WHERE CAMESPROC = '" + msAnoMesProc + "'";
-                    comando = new SqlCommand(cadena, objConexion.getCon());
+                    comando = new SqlCommand(conexionComun(cadena), objConexion.getCon());
                     // objConexion.getCon().Open();
                     SqlDataReader readd = comando.ExecuteReader();
                     bool hayRegistrosdd = readd.Read();
@@ -1612,7 +1612,7 @@ namespace katal.conexion.model.dao
         public PlanCuentaNacional findCuentasNacionales(string xccodcuenta,int NivelContable = 4 )
         {
 
-            PlanCuentaNacional plan = new PlanCuentaNacional();
+            PlanCuentaNacional plan = null;
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "PLAN_CUENTA_NACIONAL");
             string findAll = $"SELECT * from {conexion}  WHERE  PLANCTA_NIVEL = {NivelContable } AND PLANCTA_CODIGO='{xccodcuenta}'";
             try
@@ -1622,7 +1622,7 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    
+                    plan = new PlanCuentaNacional();
                     plan.PLANCTA_CODIGO = read[0].ToString();
                     plan.PLANCTA_DESCRIPCION = read[1].ToString();
                     plan.PLANCTA_NIVEL = read[2].ToString();
@@ -1736,14 +1736,15 @@ namespace katal.conexion.model.dao
 
             string conexion = Conexion.CadenaGeneral("014", "BDCTAPAG", "Gastos");
             string findAll = $"select GASTOS_CODIGO, GASTOS_DESCRIPCION, GASTOS_MONEDA, GASTOS_HONORARIO, GASTOS_CUENTACON,GASTOS_DSCTO1, GASTOS_DSCTO2,Gastos_Cta1,Gastos_Cta2 FROM {conexion} WHERE GASTOS_CODIGO = '" + codigo + "'" ;
-            Gasto gasto = new Gasto();
+            Gasto gasto = null;
             try
             {
                 comando = new SqlCommand(findAll, objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
-                {                    
+                {
+                    gasto = new Gasto();
                     gasto.Gastos_Codigo = read[0].ToString();
                     gasto.Gastos_Descripcion = read[1].ToString();
                     gasto.Gastos_Moneda= read[2].ToString();
@@ -1797,12 +1798,16 @@ namespace katal.conexion.model.dao
             return hayRegistros;
         }
 
+
+        
+
         public bool ExitedataConceptos()
         {
             bool hayRegistros = false;
             bool data = false;
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
             string find = $"SELECT* FROM {conexion} WHERE CONCGRAL_CODIGO = 'AGERET'";
+
             try
             {
                 comando = new SqlCommand(find, objConexion.getCon());
@@ -1827,18 +1832,48 @@ namespace katal.conexion.model.dao
             return data;
         }
 
+        public bool ExisteConcepto(string concepto)
+        {
+            bool hayRegistros = false;
+            bool data = false;
+            string find = $"SELECT* FROM CONCEPTOS_GENERALES WHERE CONCGRAL_CODIGO = '{concepto}'";
+
+            try
+            {
+                comando = new SqlCommand (conexionContabilidad( find), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    data = Conversion.ParseBool(read[6].ToString());
+                }
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            
+        }
+
         // VER LA FORMA COMO USAR DE FORMA GENERAL
         public string ConceptosGenerales(string concepto )
         {
             
             bool hayRegistros = false;
             string data = "";
-            ConceptosGenerales conceptos = new ConceptosGenerales();
-            string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
-            string find = $"SELECT * FROM {conexion} WHERE CONCGRAL_CODIGO = '{concepto}'";
+            ConceptosGenerales conceptos = new ConceptosGenerales();        
+            string find = $"SELECT * FROM CONCEPTOS_GENERALES WHERE CONCGRAL_CODIGO = '{concepto}'";
             try
             {
-                comando = new SqlCommand(find, objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad( find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -1942,8 +1977,8 @@ namespace katal.conexion.model.dao
 
             if (Conversion.Parseint( comprobante.RESPONSABLE_CODIGO) == 10)
             {
-                string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
-                CCtaImportacion = verdata("CONCGRAL_CODIGO='IMPCARGO'", conexion, 1, "CONCGRAL_CONTEC");
+                
+                CCtaImportacion = verdata("CONCGRAL_CODIGO='IMPCARGO'", "CONCEPTOS_GENERALES", 1, "CONCGRAL_CONTEC");
                
             }
             
@@ -2021,8 +2056,8 @@ namespace katal.conexion.model.dao
                 {
                     if(int.Parse(comprobante.RESPONSABLE_CODIGO) == 10)
                     {
-                        string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
-                        CCtaImpPerc_Igv = verdata("CONCGRAL_CODIGO='IGVPERC'", conexion, 1, "CONCGRAL_CONTEC");
+                        
+                        CCtaImpPerc_Igv = verdata("CONCGRAL_CODIGO='IGVPERC'", "CONCEPTOS_GENERALES", 1, "CONCGRAL_CONTEC");
                     }
                     insertImpor(comprobante, CCtaImpPerc_Igv);
                     insertImpor2(comprobante);
@@ -2080,7 +2115,7 @@ namespace katal.conexion.model.dao
                     area.FECRETRAC =Conversion.ParseDateTime( read[14].ToString());
                     area.ORDFAB= read[15].ToString();
                     area.codmaquina= read[16].ToString();
-                    area.cantidad=Conversion.Parseint( read[17].ToString());
+                    area.cantidad=Conversion.ParseDecimal( read[17].ToString());
                     area.campo1 = read[18].ToString();
                     area.campo2 = read[19].ToString();
 
@@ -2278,7 +2313,7 @@ namespace katal.conexion.model.dao
 
             bool hayRegistros = false;
             
-            ConceptoGral conceptos = new ConceptoGral();
+            ConceptoGral conceptos = null;
             string conexion = Conexion.CadenaGeneral("014", "BDCOMUN", "CONCEPTOGRAL");
             string find = $"SELECT * FROM {conexion} WHERE Concepto_Codigo = '{concepto}'";
             try
@@ -2289,6 +2324,7 @@ namespace katal.conexion.model.dao
                 hayRegistros = read.Read();
                 if (hayRegistros)
                 {
+                    conceptos = new ConceptoGral();
                     conceptos.Concepto_Codigo = read[0].ToString();
                     conceptos.Concepto_Descripcion = read[1].ToString();
                     conceptos.Concepto_Tipo = read[2].ToString();
@@ -3257,7 +3293,7 @@ namespace katal.conexion.model.dao
        
             try
             {
-                comando = new SqlCommand(cf, objConexion.getCon());
+                comando = new SqlCommand(conexionComun( cf), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
@@ -3319,13 +3355,14 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
-        private string verdata(string condicion, string tabla, int param, string camdev)
+        public  string verdata(string condicion, string tabla, int param, string camdev)
         {
             string verdata = "";
             string CAD = $"SELECT* FROM  {tabla} WHERE   {condicion}";
             try
             {
-                comando = new SqlCommand(CAD, objConexion.getCon());
+                //TODO ES PARTE SE PUED GENERALIZAR
+                comando = new SqlCommand(conexionContabilidad( CAD), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())

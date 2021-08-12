@@ -19,115 +19,28 @@
     </style>
     <script>
 
-
-    function CloseGridLookup() {
-        gridLookup.ConfirmCurrentSelection();
-        console.log(datax)
-        gridLookup.HideDropDown();
-    }
-    function CloseGridLookupProveedor() {
-        console.log(gridLookupProveedor);
-        gridLookupProveedor.ConfirmCurrentSelection();
-        gridLookupProveedor.HideDropDown();
-        }
-        //onchangeCambio{}
-
-        function onchangeCambio(s, e) {
-
-            OC_NTIPCAM.SetText("3.120");
-        }
-
-
-        function OnGridRowNroClick(s, e) {
-            console.log(gridLookupTipoAnexo);
-            console.log(gridLookupTipoAnexo.EditValue);
-
-            $.getJSON('/Comprobante/CargarTipoAnexoMoneda', function (resp) {
+       
+        function OnChangePlan(s, e) {        
+            $.getJSON('/Comprobante/ChangePlanCuenta', function (resp) {
                 $.each(resp, function (k, v) {
 
-                    gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
-                    TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
+                    NVALOR.SetText(v.xnvalor);
+                    gridLookupCostos.SetVisible(v.activeCenco);
+                    gridLookupOrdenFabricacion.SetVisible(v.activeOrb);
+                    gridLookupDestinoConta.SetVisible(v.activeCtaDest);
+                    gridLookupAnexoConta.SetVisible(v.activeAnexo);
+                    gridLookupAnexoConta.SetValue(v.xcanexo);
                 });
-            });
-            //var g = gridLookupTipoAnexo.GetGridView();
-           // g.Refresh();
-        }
-        function OnChangeMoneda(s, e) {
-
-            let fecha = DEMISION.GetText();
-            $.getJSON('/Comprobante/CargarTipoMoneda?fecha=' + fecha, function (resp) {
-                $.each(resp, function (k, v) {
-                    console.log(v);
-
-                    TipoCambio_Valor.SetText(v.data);
-                    TipoCambio_Valor12.SetText(v.dataEspecial);
-                    //gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
-                    //TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
-                });
-            });
-        }
-
-        //OnGridRowResponsableClick
-        function OnGridRowResponsableClick(s, e) {
-
-            var g = gridLookupResponsable.GetGridView();
-            g.GetRowValues(e.visibleIndex, 'RESPONSABLE_CODIGO;RESPONSABLE_NOMBRE', OnGetRowResponsableValues);
-        }
-        function OnGetRowResponsableValues(Value) {
-            //  OC_CRAZSOC.SetText(Value[0]);
-            RESPONSABLE_CODIGO.SetText(Value[0]);
-        }
-        function OnGridRowClick(s, e) {
-            console.log("dd")
-            var g = gridLookupProveedor.GetGridView();
-            g.GetRowValues(e.visibleIndex, 'PRVCNOMBRE;PRVCRUC', OnGetRowValues);
-       }
-        function OnGetRowValues(Value) {
-          //  OC_CRAZSOC.SetText(Value[0]);
-            RUC.SetText(Value[1]);
-        }
-
-
-
-
-
-
-        function OnGridArticuloRowClick(s, e) {
-            var g = gridLookup.GetGridView();
-            g.GetRowValues(e.visibleIndex, 'description;unidad', OnGetRowArticuloValues);
-        }
-        function OnGetRowArticuloValues(Value) {
-
-            var data = document.getElementById("grid_DXEFL_DXEditor3_I");
-            data.value = Value[1];
-
-            var cantidad = document.getElementById("grid_DXEFL_DXEditor4_I");
-            var precio = document.getElementById("grid_DXEFL_DXEditor5_I");
-            var descuento = document.getElementById("grid_DXEFL_DXEditor6_I");
-
-            cantidad.Value = 0;
-            precio.Value = 0.00;
-            descuento.Value = 0.00;
-            var PrecioTotal = document.getElementById("grid_DXEFL_DXEditor7_I");
-
-            PrecioTotal.value = 0.00;
-        }
-
-
-        
-        
-
+            });         
+        }      
         function onDataConta() {
             if (CNROITEM.GetText() == "") {
-
                 $.getJSON('/Comprobante/cargardata', function (resp) {
                     $.each(resp, function (k, v) {
                         CNROITEM.SetText(v.NROITEM);
                         CGLOSA.SetText(v.GLOSA);
                     });
                 });
-
-
             }
 
         }
@@ -144,44 +57,11 @@
 
 
         }
-        function tasaIgv() {
-            if (NTASAIGV.GetText() == "") {
-                NTASAIGV.SetText("18");
-                //f.setDate(f.getDate() + 2);
-                // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
-            }
-        }
+      
 
 
-    function OnClick(s, e) {
-        if ($("#myForm").valid()) {
-            if (GridView.batchEditApi.HasChanges())
-                GridView.UpdateEdit();
-            else
-                GridView.PerformCallback();
-        }
-    }
-    function OnEndCallback(s, e) {
-        if (s.cpSuccessFlag)
-        {
-            alert("All changes were saved");
-            window.location = "@Url.Action("Success","Test1")";
-        }
-    }
-    function OnBeginCallback(s, e) {
-    	if (e.command == "UPDATEEDIT" || e.command == "CUSTOMCALLBACK")
-    		e.customArgs = $.extend(e.customArgs, GetEditorValues());
-    }
-    function GetEditorValues() {
-    	return MVCxClientUtils.GetSerializedEditorValuesInContainer("myForm");
-        }
-
-    function restartButtonClicked() {
-            gridView.FocusedRowIndex = -1;
-
-            gridView.UnselectRows();
-            gridView.Refresh();
-        }
+    
+   
 
 
 
