@@ -10,9 +10,6 @@ namespace katal.conexion.model.dao
     public class MonedaDao:Obligatorio
     {
 
-        private Conexion objConexion;
-        private SqlCommand comando;
-        
         public MonedaDao(string codEmpresa ):base(codEmpresa)
         {
             

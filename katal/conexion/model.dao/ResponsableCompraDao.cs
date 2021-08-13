@@ -10,9 +10,7 @@ namespace katal.conexion.model.dao
 {
     public class ResponsableCompraDao:Obligatorio
     {
-        private Conexion objConexion;
-        private SqlCommand comando;
-
+       
         public ResponsableCompraDao(string codEmpresa) :base(codEmpresa)
         {
             

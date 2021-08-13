@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 namespace katal.conexion.model.dao
 {
-    class Conexion
+    public class Conexion
     {
         //singleton
         private static Conexion objConexion = null;

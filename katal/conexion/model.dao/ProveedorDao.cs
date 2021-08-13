@@ -11,10 +11,6 @@ namespace katal.conexion.model.dao
     public class ProveedorDao : Obligatorio
     {
 
-
-        private Conexion objConexion;
-        private SqlCommand comando;
-
         public ProveedorDao(string codEmpresa):base(codEmpresa)
         {
           

@@ -9,10 +9,7 @@ using katal.Model;
 namespace katal.conexion.model.dao
 {
     public class OrdenCompraDao : Obligatorio
-    {
-        private Conexion objConexion;
-        private SqlCommand comando;
-
+    {      
         public OrdenCompraDao(string codEmpresa):base(codEmpresa)
         {
            

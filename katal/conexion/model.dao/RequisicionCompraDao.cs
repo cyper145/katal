@@ -10,10 +10,7 @@ namespace katal.conexion.model.dao
 {
     public class RequisicionCompraDao : Obligatorio
     {
-        private Conexion objConexion;
-        private SqlCommand comando;
-
-
+       
         List<RequisicionCompra> OrdenCompras;
         public RequisicionCompraDao(string codEmpresa) :base(codEmpresa)
         {

@@ -9,8 +9,8 @@ namespace katal.conexion.model.dao
 {
     public class DestinoDao: Obligatorio
     {
-        private Conexion objConexion;
-        private SqlCommand comando;
+       
+
         public DestinoDao()
         {
            

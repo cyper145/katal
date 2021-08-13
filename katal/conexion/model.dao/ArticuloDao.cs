@@ -11,8 +11,8 @@ namespace katal.conexion.model.dao
     public class ArticuloDao : Obligatorio
     {
 
-        private Conexion objConexion;
-        private SqlCommand comando;
+       
+
 
         public ArticuloDao(string codEmpresa) : base(codEmpresa)
         {        

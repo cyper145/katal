@@ -9,8 +9,8 @@ namespace katal.conexion.model.dao
     public class TipoAnexoDao:Obligatorio
     {
 
-        private Conexion objConexion;
-        private SqlCommand comando;
+       
+
        
         public TipoAnexoDao(string codEmpresa) :base(codEmpresa)
         {

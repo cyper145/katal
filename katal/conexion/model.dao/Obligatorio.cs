@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Globalization;
 
 namespace katal.conexion.model.dao
 {
     public class  Obligatorio
     {
-       string codEmpresa;
-       public Obligatorio(string codEmpresa="")
+        string codEmpresa;
+        protected Conexion objConexion;
+        protected SqlCommand comando;
+        public Obligatorio(string codEmpresa="")
         {
             this.codEmpresa = codEmpresa;
         }
@@ -49,6 +52,17 @@ namespace katal.conexion.model.dao
         {
             return numero.ToString("F3", CultureInfo.InvariantCulture);
         }
+        public string ternario(bool verificacion, string data1, string data2)
+        {
+            if (verificacion)
+            {
+                return data1;
+            }
+            else
+            {
+                return data2;
+            }
+        }
         public string rellenar(string dato, int lmax, int lreal, string relleno, bool giro)
         {
             string lleno = "";
@@ -65,7 +79,103 @@ namespace katal.conexion.model.dao
             {
                 return lleno + dato.Trim();
             }
-        } 
-       
+        }
+        protected bool existeTabla(int conexionType, string nombreTabla)
+        {
+
+            string sCmd = $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE  TABLE_NAME = '{nombreTabla}'";
+            try
+            {
+                string consulta = sCmd;
+                switch (conexionType)
+                {
+                    case 1:// wenco
+                        consulta = conexionWenco(consulta);
+                        break;
+                    case 2:// comun
+                        consulta = conexionComun(consulta);
+                        break;
+                    case 3:// contabilidad
+                        consulta = conexionContabilidad(consulta);
+                        break;
+                    case 4:// ctaspagar
+                        consulta = conexionCtaPag(consulta);
+                        break;
+                }
+                comando = new SqlCommand(consulta, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    int exiteint = Conversion.Parseint(read[0].ToString());
+                    return exiteint > 0;
+                }
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return false;
+        }
+
+        protected bool existeColumna(int conexionType, string columna, string nombreTabla)
+        {
+
+            string sCmd = $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME={columna}  TABLE_NAME = '{nombreTabla}'";
+            try
+            {
+                string consulta = sCmd;
+                if (conexionType > 4)
+                {
+                    consulta = conexionBDCONT(consulta, conexionType);
+                }
+                else
+                {
+                    switch (conexionType)
+                    {
+                        case 1:// wenco
+                                consulta = conexionWenco(consulta);
+                            break;
+                        case 2:// comun
+                            consulta = conexionComun(consulta);
+                            break;
+                        case 3:// contabilidad
+                            consulta = conexionContabilidad(consulta);
+                            break;
+                        case 4:// ctaspagar
+                            consulta = conexionCtaPag(consulta);
+                            break;
+                        
+
+                    }
+                }
+                
+                comando = new SqlCommand(consulta, objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    int exiteint = Conversion.Parseint(read[0].ToString());
+                    return exiteint > 0;
+                }
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return false;
+        }
     }
 }

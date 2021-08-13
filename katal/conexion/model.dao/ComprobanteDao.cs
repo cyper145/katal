@@ -13,10 +13,7 @@ namespace katal.conexion.model.dao
     public class ComprobanteDao : Obligatorio
     {
 
-        private Conexion objConexion;
-        private SqlCommand comando;
-        
-
+       
         public ComprobanteDao(string codEmpresa):base(codEmpresa)
         {                   
           objConexion = Conexion.saberEstado();             
@@ -215,8 +212,8 @@ namespace katal.conexion.model.dao
             csql += $"'{comprobante.CTIPPROV }',";
             csql += $"'{comprobante.ANEX_CODIGO }',";
             csql += $"'{comprobante.TIPODOCU_CODIGO }',";
-            csql += $"'{comprobante.CNUMERO }',";
             csql += $"'{comprobante.CSERIE }',";
+            csql += $"'{comprobante.CNUMERO }',";
             csql += $"'{comprobante.ContableDet.CCTADEST }',";
             csql += $"'{comprobante.ContableDet.CCOSTO }',";
             csql += $"'{comprobante.ContableDet.CCODSUBDI }',";
@@ -276,7 +273,29 @@ namespace katal.conexion.model.dao
             string BDTransacCon = "BDCONT" + anio;
             string BDMovCab = "CABMOV" + mes;
             string BDMovDet = "DETMOV" + mes;
-            string mNumerodata = mNumero(anio, mes, xccodsubdi);
+            string mNumerodata = mNumero(anio, mes, xccodsubdi);// ver mas detalle
+            /*
+            if (wlConten == false)
+            {
+                frmTConta3.text1 = MNUMERO;
+                RestauraPuntero();
+                frmTConta3.Show(1);
+                if (frmTConta3.Vale)
+                {
+                    if (frmTConta3.Valor != "")
+                        MNUMERO = frmTConta3.Valor;
+                }
+                else
+                    return;
+                zco_c_numer = Format(MNUMERO, "0000");
+                xco_c_numer = zco_c_numer;
+            }
+            else
+            {
+                zco_c_numer = Format(MNUMERO, "0000");
+                xco_c_numer = zco_c_numer;
+            };
+            */
             // ver el formato de data
             CabMov cabMov = findCabMov(anio, mes, xccodsubdi, mNumerodata);
             TipoCambio tipoCambio = findTcamabio(comprobante.DEMISION);
@@ -290,7 +309,7 @@ namespace katal.conexion.model.dao
             }
             insertDetalle(comprobante, xccodsubdi, mNumerodata);
             updateCom(comprobante, xccodsubdi);
-            transfer(comprobante, anio, mes, xccodsubdi);
+            transfer(comprobante, anio, mes, xccodsubdi,wco_l_resta,xco_a_glosa, mNumerodata);
         }
 
         private void insertCabecera(Comprobante comprobante, TipoCambio tipoCambio, string codigosub, string codigo)
@@ -609,7 +628,7 @@ namespace katal.conexion.model.dao
         }
 
 
-        private void transfer(Comprobante comprobante, int anio, int mes, string xccodsubdi)
+        private void transfer(Comprobante comprobante, int anio, int mes, string xccodsubdi, bool wco_l_resta, string glosa,string xco_c_numer)
         {
             string BDMovCab = "CABMOV" + mes.ToString("00.##");
             string BDMovCab2 = "DETMOV" + mes.ToString("00.##");
@@ -629,18 +648,151 @@ namespace katal.conexion.model.dao
             {
                 numero = cabecera.CO_C_COMPR;
             }
-            INSERTBDMovCab(comprobante, conexion1, anio,mes, xccodsubdi, cabecera, numero);
+            INSERTBDMovCab(comprobante, anio, BDMovCab, cabecera, numero);
             INSERTBDMovDet(comprobante, conexion1, anio,mes, xccodsubdi, numero);
             //Si este movimiento va a compras hacer : ....
             updateComCompCon(comprobante, numero);
             if (comprobante.ESTCOMPRA)
             {
-                guardarCompra(comprobante);
+                string mess = mes.ToString("00.##");
+                guardarCompra(comprobante, xccodsubdi, anio , mess, numero, wco_l_resta, glosa, xco_c_numer);
             }
-            
+
+            //
+            string conta;
+
+            conta = xccodsubdi + xco_c_numer;
+
+            updateComCompCon2(comprobante, conta);
+            updateComEstado(comprobante);
+            /* guardado para cuentas por pagar
+            Set rsEmp = New ADODB.Recordset 'Verifica de que exista BDContabilidad antes de hacer el enlace
+        Set rsEmp = cConeWenco.Execute("exec sp_existebasededatos '" & VGEMP_CODIGO & "BDCTAPAG'")
+        If Not rsEmp.EOF Then
+            Set rs = New ADODB.Recordset
+
+            sCamesproc = Mid(MaskEdBox1, 7, 4) & Mid(MaskEdBox1, 4, 2)
+            csql = "SELECT * FROM ComprobanteCab WHERE EMP_CODIGO='" & VGEMP_CODIGO & "' AND ANEX_cODIGO='" & text1(1) & "' "
+            csql = csql & " AND TIPODOCU_CODIGO='" & text1(4) & "' AND CSERIE='" & text1(5) & "' AND CNUMERO='" & text1(6) & "' AND CNRORUC='" & text1(2) & "'"
+            csql = csql & " AND CAMESPROC='" & sCamesproc & "' "
+
+
+            rs.Open csql, CN_CTAPAG, adOpenKeyset, adLockOptimistic
+            If rs.RecordCount > 0 Then
+                csql = "UPDATE  COMPROBANTECAB SET CESTADO=3 WHERE EMP_CODIGO='" & VGEMP_CODIGO & "' AND ANEX_cODIGO='" & text1(1) & "' "
+                csql = csql & " AND TIPODOCU_CODIGO='" & text1(4) & "' AND CSERIE='" & text1(5) & "' AND CNUMERO='" & text1(6) & "' AND CNRORUC='" & text1(2) & "'"
+                csql = csql & " AND CAMESPROC='" & sCamesproc & "' "
+                CN_CTAPAG.Execute csql
+            End If
+        End If*/
+
 
         }
-        private void guardarCompra(Comprobante comprobante)
+
+        private void ComprobanteDet(Comprobante comprobante, string conta)
+        {
+            List<ContableDet> detalles = findContableDet();
+            string csql = "";
+            
+            
+            detalles.ForEach(element => {
+                // validacion de codigo de serie
+
+                csql = "Insert Into ComprobanteDet (EMP_CODIGO,CORDEN,CNROITEM,TIPODOCU_CODIGO,";
+                csql +=  "CCODPROVE,CSERIE,CNUMERO,CTIPPROV,NVALOR,CCONCEPT,Subdiario_Codigo,";
+                csql +=  "Cencost_Codigo,CCODCONTA,CCTADEST,CTIPO,CGLOSA,CAMESPROC,COMPCON,Anex_Codigo,CANEXO,ORDENFAB, codmaquina, cantidad) Values(";
+                csql += "'" + fValNull(comprobante.EMP_CODIGO) + "',";
+                csql += "'" + fValNull(comprobante.CORDEN) + "',";
+                csql += "'" + fValNull(element.CNROITEM) + "',";
+                csql += "'" + fValNull(element.CTIPDOC) + "',";
+                csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+                csql += "'" + fValNull(element.CSERDOC) + "',";
+                csql += "'" + fValNull(element.CNUMDOC) + "',";
+                csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+                csql += "" + numericFormat(element.NVALOR) + ",";
+                csql += "'" + fValNull(comprobante.CCONCEPT) + "',";
+
+                csql +=  "'" + fValNull(element.CCODSUBDI) + "',";
+                csql +=  "'" + fValNull(element.CCOSTO) + "',";
+                csql += "'" + fValNull(element.CCODCONTA) + "',";
+                csql += "'" + fValNull(element.CCTADEST) + "',";
+                csql += "'" + fValNull(element.CTIPO) + "',";
+                csql += "'" + fValNull(element.CGLOSA) + "',";
+                csql += "'" + fValNull(comprobante.CAMESPROC) + "',";
+                csql += "'" + fValNull(conta) + "',";
+                csql += "'" + fValNull(element.CCODANEXO) + "',";
+                csql += "'" + fValNull(element.CANEXO) + "',";
+                csql += "'" + fValNull(element.ORDFAB) + "',";
+                csql += fValNull(element.codmaquina) + ",";
+                csql += numericFormat(element.cantidad) + ")";
+
+            });
+            try
+            {
+                comando = new SqlCommand(conexionComun( csql), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+        }
+
+
+        private void updateComCompCon2(Comprobante comprobante, string conta)
+        {
+
+            string csql = $"Update COMPROBANTECAB set ";
+            csql += " COMPCON='" + conta + "' ";
+            csql += " where  camesproc='" + comprobante.CAMESPROC + "' and corden='" + comprobante.CORDEN + "'";
+            try
+            {
+                comando = new SqlCommand(conexionComun(csql), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void updateComEstado(Comprobante comprobante)
+        {
+
+            string csql = $"Update COMPROBANTECAB set ";
+            csql += " CESTADO='" + 3 + "' ";
+            csql += " where  camesproc='" + comprobante.CAMESPROC + "' and corden='" + comprobante.CORDEN +  "' AND CESTADO<>'4' AND CESTADO<>'2'";
+            try
+            {
+                comando = new SqlCommand(conexionComun(csql), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        private void guardarCompra(Comprobante comprobante, string xccodsubdi,int  anio , string mesFormat,string numero, bool wco_l_resta, string glosa, string xco_c_numer)
         {
             string CDOCUM;
             string CDOCUM1;
@@ -655,9 +807,398 @@ namespace katal.conexion.model.dao
             {
                 Cadena = comprobante.CSERIE.Trim();
                 lcadena = Cadena.Length;
-                CSERIE = rellenar();
+                CSERIE = rellenar(Cadena, 4,lcadena," ",true);
+                CDOCUM = CSERIE + comprobante.CNUMERO;
+                CDOCUM1 = comprobante.CSERREFER + comprobante.CNUMREFER;
             }
+            string csql = "INSERT INTO COMPRAS (CO_C_CUENT, CO_C_MES, CO_C_SUBDI, CO_C_COMPR, CO_D_FECHA, CO_C_PROVE, CO_C_TPDOC, CO_C_DOCUM, CO_L_REFER, ";
+            if (comprobante.CCODRUC.Trim() != "")
+            {
+                csql += "CO_C_TPDRF, CO_C_DCREF, CO_D_FECDC, CO_C_MONED, CO_N_MONTO, CO_N_IGV, CO_N_MTOUS, CO_N_IGVUS, ";
+            }
+            else
+            {
+                csql += "CO_C_TPDRF, CO_C_DCREF, CO_D_FECRF, CO_D_FECDC, CO_C_MONED, CO_N_MONTO, CO_N_IGV, CO_N_MTOUS, CO_N_IGVUS, ";
+            }
+
+            csql += "CO_N_TASA, CO_C_CONVE, CO_N_TIPCA, CO_N_CAMES, CO_D_FECCA, CO_A_GLOSA, CO_A_MOVIM, CO_C_RUC, ";
+            csql += "CO_A_RAZON, CO_C_DESTI, CO_N_PORCE, CO_L_APLIC, CO_N_VALCI, NPERCEPCION";
+
+            if(existeColumna(anio, "COMPRAS", "CO_D_FECHAVTO")){
+                csql += ",CO_D_FECHAVTO";
+            }
+            if(existeColumna(anio, "COMPRAS", "CO_L_RETE"))
+            {
+                csql += ",CO_L_RETE";
+            }
+
+            csql += ",CO_NUM_RETRAC, CO_FEC_RETRAC,CO_L_DETRACCION,CO_N_TASADETRACC,CO_N_IMPORTEREF,RCO_TIPO,RCO_SERIE,RCO_NUMERO,";
+            csql += "RCO_FECHA,";
+            csql +=  "flg_RNTNODOMICILIADO,CO_L_ANULA) VALUES(";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "', ";
+            csql += "'" + fValNull(mesFormat) + "', ";
+            csql += "'" + fValNull(xccodsubdi) + "', ";
+            csql +=  "'" +numero + "', ";
+            csql += "" + dateFormat(comprobante.DRECEPCIO) + ", ";
+
+            if (comprobante.CCODRUC.Trim() != "")
+            {
+                csql += "'" + fValNull(comprobante.CCODRUC) + "', ";   //' TO FIELD CO_C_PROVE,
+                csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',"; //'  TO FIELD  CO_C_TPDOC,
+
+                if (fValNull(CDOCUM) != " ")
+                    csql +=  "'" + fValNull(CDOCUM) + "', "; // TO FIELD  CO_C_DOCUM,
+                else
+                    csql +=  "' ', ";// TO FIELD CO_C_DOCUM,
+                csql +=  "1, "; // TO FIELD CO_L_REFER,
+                csql +=  "'" + fValNull(comprobante.CTDREFER) + "', ";
+                csql += "'" + fValNull(comprobante.CSERREFER + comprobante.CNUMREFER) + "', ";
+                csql +=  "" + dateFormat(comprobante.DEMISION) + ", ";
+            }
+            else
+            {
+                csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "', ";
+                csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "', ";
+                csql += "'" + fValNull(CDOCUM) + "', ";
+                csql += "0,";
+                csql += "' ', ";
+                csql += "' ', ";
+                csql += "" + dateFormat(comprobante.DFECREF) + ", " + dateFormat(comprobante.DEMISION) + ", ";
+            }
+            csql += "'" + fValNull(comprobante.TIPOMON_CODIGO) + "', ";
+            if (wco_l_resta)
+            {
+                if (comprobante.TIPOMON_CODIGO == "MN")
+                {
+                    switch (comprobante.CDESTCOMP)
+                    {
+                        case "006": // Honorarios con 4ta Categ. e IES:
+                            {
+                                csql += "" +numericFormat(comprobante.NTOTRH  - comprobante.NIR4  - comprobante.NIES* -1) + ", ";
+                                csql += "" +numericFormat(comprobante.NIGV  * -1) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR!= 0)
+                                {
+                                    csql += "" + numericFormat((comprobante.NTOTRH  - comprobante.NIR4  - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR)* -1) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
+                                }
+                                else
+                                {
+                                    csql += "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
+                                }
+
+                                break;
+                            }
+
+                        case "007": // Honorario afec. sólo por 4ta categ.
+
+                            {
+                                csql += "" + numericFormat(comprobante.NTOTRH  - comprobante.NIR4 * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR != 0)
+                                {
+                                    csql += "" + numericFormat((comprobante.NTOTRH  - comprobante.NIR4 ) / (comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
+                                }
+                                else
+                                {
+                                    csql += "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
+                                }
+
+                                break;
+                            }
+
+                        case "008": // Honorario afec. sólo por IES
+                 
+                            {
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIES * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR != 0)
+                                {
+                                    csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
+                                }
+                                else
+                                {
+                                    csql += "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
+                                }
+
+                                break;
+                            }
+
+                        default:
+                            {
+                                csql = csql + "" + numericFormat(comprobante.NIMPORTE * -1) + ", ";
+                                csql = csql + "" + numericFormat(comprobante.NIGV * -1) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR != 0)
+                                {
+                                    csql = csql + "" + numericFormat((comprobante.NIMPORTE / comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
+                                    csql = csql + "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
+                                }
+                                else
+                                {
+                                    csql +=  "" + numericFormat(0) + ", ";
+                                    csql +=  "" + numericFormat(0) + ", ";
+                                }
+
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    switch (comprobante.CDESTCOMP)
+                    {
+                        case "006":// Honorarios con 4ta Categ. e IES
+                       
+                            {
+                                csql +=  "" + numericFormat((comprobante.NTOTRH  - comprobante.NIR4 - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql +=  "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql +=  "" + numericFormat((comprobante.NTOTRH  - comprobante.NIR4 - comprobante.NIES) * -1) + ", ";
+                                csql +=  "" + numericFormat(comprobante.NIGV * -1) + ", ";
+                                break;
+                            }
+
+                        case "007" // Honorario afec. sólo por 4ta categ.
+                 :
+                            {
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
+
+                              
+                                break;
+                            }
+
+                        case "008": // Honorario afec. sólo por IES
+                            {
+                                csql += "" + numericFormat((comprobante.NTOTRH  - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH  - comprobante.NIES) * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
+
+                                
+                                break;
+                            }
+
+                        default:
+                            {
+                                csql += "" + numericFormat((comprobante.NIMPORTE) * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat((comprobante.NIMPORTE) * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
+                                
+                                break;
+                            }
+                    }
+
+                }
+            }
+            else
+            {
+                // Modif Yimmy Suyco 31/01/2002 - El Valor CIF no debe sumarse al total segun contabilidad solo se guarda en un campo aparte
+
+                if (comprobante.TIPOMON_CODIGO == "MN")
+                {
+                    switch (comprobante.CDESTCOMP)
+                    {
+                        case "006": // Honorarios con 4ta Categ. e IES:
+                            {
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR != 0)
+                                {
+                                    csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                }
+                                else
+                                {
+                                    csql += "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
+                                }
+
+                                break;
+                            }
+
+                        case "007": // Honorario afec. sólo por 4ta categ.
+
+                            {
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIR4 ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV ) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR != 0)
+                                {
+                                    csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) / (comprobante.TIPOCAMBIO_VALOR)) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                }
+                                else
+                                {
+                                    csql += "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
+                                }
+
+                                break;
+                            }
+
+                        case "008": // Honorario afec. sólo por IES
+
+                            {
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIES ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV ) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR != 0)
+                                {
+                                    csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR)) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                }
+                                else
+                                {
+                                    csql += "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
+                                }
+
+                                break;
+                            }
+
+                        default:
+                            {
+                                csql = csql + "" + numericFormat(comprobante.NIMPORTE ) + ", ";
+                                csql = csql + "" + numericFormat(comprobante.NIGV ) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR != 0)
+                                {
+                                    csql = csql + "" + numericFormat((comprobante.NIMPORTE / comprobante.TIPOCAMBIO_VALOR)) + ", ";
+                                    csql = csql + "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                }
+                                else
+                                {
+                                    csql += "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
+                                }
+
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    switch (comprobante.CDESTCOMP)
+                    {
+                        case "006":// Honorarios con 4ta Categ. e IES
+
+                            {
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV ) + ", ";
+                                break;
+                            }
+
+                        case "007": // Honorario afec. sólo por 4ta categ.
+                 
+                            {
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) * comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
+
+
+                                break;
+                            }
+
+                        case "008": // Honorario afec. sólo por IES
+                            {
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
+
+
+                                break;
+                            }
+
+                        default:
+                            {
+                                csql += "" + numericFormat((comprobante.NIMPORTE) * comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                                csql += "" + numericFormat((comprobante.NIMPORTE) ) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV ) + ", ";
+
+                                break;
+                            }
+                    }
+
+                }
+            }
+
+
+            csql += "" + numericFormat(comprobante.NTASAIGV) + ", ";
+            csql += "'" + fValNull(comprobante.CONVERSION_CODIGO) + "', ";
+
+            if (comprobante.TIPOMON_CODIGO == "MN")
+                csql += "" + numericFormat(1 / comprobante.TIPOCAMBIO_VALOR ) + ", ";
+            else
+                csql += "" + numericFormat( comprobante.TIPOCAMBIO_VALOR) + ", ";
+            if (comprobante.CONVERSION_CODIGO == "ESP")
+                csql +=  "" + numericFormat(comprobante.TIPOCAMBIO_VALOR ) + ", ";
+            else
+                csql += "" + 0 + ", ";
+            csql += ternario(comprobante.CONVERSION_CODIGO == "FEC", "" + dateFormat(comprobante.DCONTAB) + ", ", "NULL, ");
+            csql += "'" + fValNull(glosa) + "', ";
+            csql += "'" + fValNull(glosa) + "', ";
+
+
+            if (comprobante.ANEX_CODIGO == "99999999")
+            {
+                csql += "'" + fValNull(comprobante.CNRORUC) + "', ";
+                csql += "'" + fValNull(comprobante.ANEX_DESCRIPCION) + "', ";
+            }
+            else
+            {
+                csql += "'" + fValNull("") + "', ";
+                csql += "'" + fValNull("") + "', ";
+            }
+            csql += "'" + fValNull(comprobante.CDESTCOMP) + "', ";
+            if (comprobante.NPORCE > 0)
+                csql += "" + numericFormat(comprobante.NPORCE) + ", ";
+            else
+                csql += "" + numericFormat(0) + ", ";
+            if (comprobante.CIGVAPLIC)
+                csql +=  "1, ";
+            else
+                csql += "0, ";
+            csql +=  "" + numericFormat(comprobante.NVALCIF) + "," + numericFormat(comprobante.NPERCEPCION);
+            if (existeColumna(anio, "CO_D_FECHAVTO", "COMPRAS"))
+                csql += "," + dateFormat(comprobante.DVENCE) + "";
+            if (existeColumna(anio, "CO_L_RETE", "COMPRAS"))
+                csql += "," + comprobante.CO_L_RETE + "";
+            csql += ",'" + fValNull(comprobante.NUMRETRAC) + "'," + dateFormat(comprobante.FECRETRAC);
+            csql += "," + ternario(comprobante.LDETRACCION, "1", "0") + "," + numericFormat(comprobante.NTASADETRACCION) + ",";
+            csql += "" + numericFormat(comprobante.NIMPORTEREF) + ",";
+            csql += "'" + fValNull(comprobante.RCO_TIPO) + "', ";
+            csql += "'" + fValNull(comprobante.RCO_SERIE) + "', ";
+            csql += "'" + fValNull(comprobante.RCO_NUMERO) + "', ";
+            csql +=  "" + dateFormat(comprobante.RCO_FECHA) + ", ";
+            csql += "" + comprobante.flg_RNTNODOMICILIADO + ",0) ";
+            try
+            {
+                comando = new SqlCommand(conexionBDCONT(csql, anio), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
         }
+
+
 
         public void deleteBDMovCab(Comprobante comprobante, string conexion)
         {
@@ -726,12 +1267,12 @@ namespace katal.conexion.model.dao
             }
         }
 
-        public void INSERTBDMovCab(Comprobante comprobante, string conexion, int anio, int mes, string codSub,Cabecera cabecera ,string  numero)
+        public void INSERTBDMovCab(Comprobante comprobante, int anio, string mes,Cabecera cabecera ,string  numero)
         {
             
             if (cabecera != null)
             {
-                string csql = $"Insert Into {conexion} (SUBDIAR_CODIGO,CMOV_FECHA,CMOV_FECCA,CMOV_C_COMPR,CMOV_MONED,CMOV_CONVE,CMOV_CAMES,";
+                string csql = $"Insert Into {mes} (SUBDIAR_CODIGO,CMOV_FECHA,CMOV_FECCA,CMOV_C_COMPR,CMOV_MONED,CMOV_CONVE,CMOV_CAMES,";
                 csql += "CMOV_TIPCA,CMOV_GLOSA,CMOV_DEBE,CMOV_HABER,CMOV_DEBUS,CMOV_HABUS,CMOV_L_COMPR,FECH_VCTO) Values(";
                 csql += "'" + fValNull(cabecera.CO_C_SUBDI) + "',";
                 csql += "" + dateFormat(cabecera.CO_D_FECHA) + ","; 
@@ -741,7 +1282,7 @@ namespace katal.conexion.model.dao
                 csql += "'" + fValNull(cabecera.CO_C_CONVE) + "',";
                 csql += "" + fValNull(cabecera.CO_N_CAMES) + ",";
                 csql += "" + fValNull(cabecera.CO_N_TIPCA) + ",";
-                csql += "" + fValNull(cabecera.CO_A_GLOSA) + ",";
+                csql += "'" + fValNull(cabecera.CO_A_GLOSA) + "',";
 
                 csql += "" + numericFormat(cabecera.CO_N_DEBE) + ",";
                 csql += "" + numericFormat(cabecera.co_n_haber) + ",";
@@ -757,7 +1298,7 @@ namespace katal.conexion.model.dao
                 }
                 try
                 {
-                    comando = new SqlCommand(csql, objConexion.getCon());
+                    comando = new SqlCommand(conexionBDCONT( csql, anio), objConexion.getCon());
                     objConexion.getCon().Open();
                     comando.ExecuteNonQuery();
                 }
@@ -1025,6 +1566,7 @@ namespace katal.conexion.model.dao
         {
             
             string MNUMERO = "0001";
+            int numer = 0;
             string mess = mes.ToString("00.##");
             string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV"+ mess);
 
@@ -1038,7 +1580,8 @@ namespace katal.conexion.model.dao
                 if (read.Read())
                 {
 
-                    MNUMERO = read[0].ToString() + 1;
+                    numer = int.Parse(read[0].ToString()) + 1;
+                    MNUMERO = numer.ToString("0000.##");
                 }
                 
             }

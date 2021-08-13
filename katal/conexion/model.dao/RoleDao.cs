@@ -7,12 +7,8 @@ namespace katal.conexion.model.dao
     class RoleDao : Obligatorio
     {
 
-        private Conexion objConexion;
-        private SqlCommand comando;
-
         public RoleDao()
-        {
-            
+        {           
             // solo en este caso
             objConexion = Conexion.saberEstado();
         }
