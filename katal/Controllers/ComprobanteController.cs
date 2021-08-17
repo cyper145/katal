@@ -284,12 +284,12 @@ namespace katal.Controllers
             return UpdateModelWithDataValidation(issue, AddNewRecord);
         }
 
-        private void AddNewRecord(Comprobante issue)
+        private void   AddNewRecord(Comprobante issue)
         {
             //GridViewHelper.Comprobantes.Add(issue);
 
-            comprobanteNeg.create(issue);
-            // GridViewHelper.ClearDetalles();
+            GridViewHelper.respuesta=  comprobanteNeg.create(issue);
+           
         }
         [ValidateAntiForgeryToken]
         public ActionResult GridViewUpdatePartial(Comprobante issue, FormCollection data)
@@ -338,6 +338,11 @@ namespace katal.Controllers
                 SafeExecute(() => metodo(issue));
                 if (issue.ContableDet == null)
                 {
+                    if (!GridViewHelper.respuesta)
+                    {
+                        ViewBag.GeneralError = "error al guardar Documento ";
+                        return  PartialView("GridViewPartial");
+                    }
                     Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
                     comprobanteNeg.inserdataTemporal(comp);
                     return RedirectToAction("contabilizar");

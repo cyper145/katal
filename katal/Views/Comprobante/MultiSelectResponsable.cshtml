@@ -12,7 +12,7 @@
     // settings.CommandColumn.ShowSelectCheckbox = true;
     settings.Columns.Add("RESPONSABLE_CODIGO").Width = Unit.Percentage(10);
     settings.Columns.Add("RESPONSABLE_NOMBRE").Width = Unit.Percentage(90);
-
+    settings.Properties.ClientSideEvents.KeyDown = "KeyDownResponsable";
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;

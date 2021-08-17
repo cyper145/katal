@@ -19,7 +19,7 @@ namespace katal.conexion.model.dao
           objConexion = Conexion.saberEstado();             
         }
 
-        public void create(Comprobante obj)
+        public bool create(Comprobante obj)
         {
             DateTime date = DateTime.Now;
             string sEstado = "";
@@ -31,8 +31,7 @@ namespace katal.conexion.model.dao
             string verificacion = verificaDoc_cxc(obj.ANEX_CODIGO, obj.TIPODOCU_CODIGO, obj.CSERIE, obj.CNUMERO);
 
             string cCorre = "";
-
-
+           
             try
             {
                 if (verificacion != "" && verificacion != "El Documento Esta en Cuentas x Pagar")
@@ -148,10 +147,13 @@ namespace katal.conexion.model.dao
                 comando = new SqlCommand(CadenaD, objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
+                return true;
             }
             catch (Exception)
-            {
+            { 
+                return false;
                 throw;
+               
             }
             finally
             {
@@ -634,7 +636,7 @@ namespace katal.conexion.model.dao
             string BDMovCab2 = "DETMOV" + mes.ToString("00.##");
             string conexion1 = Conexion.CadenaGeneral("014", "BDCONT" + anio, BDMovCab);
             string conexion2 = Conexion.CadenaGeneral("014", "BDCONT" + anio, BDMovCab2);
-            string conexion3 = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "Compras");
+            string conexion3 = Conexion.CadenaGeneral("014", "BDCONT" + anio, "Compras");
             if (comprobante.COMPCON != null && comprobante.COMPCON.Trim() != "")
             {
                 deleteBDMovCab(comprobante, conexion1);
@@ -665,6 +667,9 @@ namespace katal.conexion.model.dao
 
             updateComCompCon2(comprobante, conta);
             updateComEstado(comprobante);
+
+
+          
             /* guardado para cuentas por pagar
             Set rsEmp = New ADODB.Recordset 'Verifica de que exista BDContabilidad antes de hacer el enlace
         Set rsEmp = cConeWenco.Execute("exec sp_existebasededatos '" & VGEMP_CODIGO & "BDCTAPAG'")
@@ -685,7 +690,7 @@ namespace katal.conexion.model.dao
                 CN_CTAPAG.Execute csql
             End If
         End If*/
-
+            ComprobanteDet(comprobante, conta);
 
         }
 
@@ -722,8 +727,8 @@ namespace katal.conexion.model.dao
                 csql += "'" + fValNull(conta) + "',";
                 csql += "'" + fValNull(element.CCODANEXO) + "',";
                 csql += "'" + fValNull(element.CANEXO) + "',";
-                csql += "'" + fValNull(element.ORDFAB) + "',";
-                csql += fValNull(element.codmaquina) + ",";
+                csql += "'" + fValNull(element.ORDFAB) + "','";
+                csql += fValNull(element.codmaquina) + "',";
                 csql += numericFormat(element.cantidad) + ")";
 
             });
@@ -1249,7 +1254,7 @@ namespace katal.conexion.model.dao
 
             string data1 = comprobante.COMPCON.Substring(0, 2);
             string data2 = comprobante.COMPCON.Substring(2, 4);
-            string delete = $"delete from {conexion} where SUBDIAR_CODIGO='{data1}' and CO_C_COMPR='{data2}'";
+            string delete = $"delete from {conexion} where CO_C_SUBDI='{data1}' and CO_C_COMPR='{data2}'";
             try
             {
                 comando = new SqlCommand(delete, objConexion.getCon());

@@ -66,12 +66,18 @@
         gridViewSettings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+       
+        gridViewSettings.SettingsText.PopupEditFormCaption= "Contabilizar Documento de Proveedores";// para el titulo de diferentes 
+      
+
         gridViewSettings.SetEditFormTemplateContent(c =>
         {
-
             //ComprobanteNeg em = new ComprobanteNeg();
             Html.DevExpress().FormLayout(layoutSetting =>
             {
+
+
+
                 layoutSetting.Name = "FormLayoutSetting";
 
                 layoutSetting.Width = Unit.Percentage(100);
@@ -81,6 +87,8 @@
                 layoutSetting.UseDefaultPaddings = false;
 
                 layoutSetting.ColumnCount = 12;
+
+
 
                 var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
                 {
@@ -274,8 +282,7 @@
                 });
 
 
-            }).Bind(ViewData["Object"] ?? c.DataItem).Render();
-
+            }).Bind(ViewData["Object"] ?? c.DataItem).Render() ;
         });
 
 
@@ -306,6 +313,8 @@
             columnSettings.Caption = "Haber";
             columnSettings.Width = Unit.Pixel(100);
         });
+        gridViewSettings.EnableCallbackAnimation = true;
+        gridViewSettings.Height = Unit.Percentage(100);
 
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
@@ -319,6 +328,7 @@
     {
         gridView.SetEditErrorText(ViewBag.GeneralError);
     }
+
 }
 
 @gridView.Bind(Model).GetHtml()

@@ -66,7 +66,7 @@
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
 
-
+        gridViewSettings.SettingsText.PopupEditFormCaption = "Registro de Documentos";
 
 
         gridViewSettings.SetEditFormTemplateContent(c =>
@@ -99,7 +99,7 @@
 
                     i.FieldName = "CORDEN";
                     i.Caption = "Nro. Orden";
-                   
+
                     i.ColumnSpan = 6;
                     i.NestedExtension().TextBox(t =>
                     {
@@ -501,7 +501,7 @@
                     {
 
                         t.Width = Unit.Percentage(10);
-                       
+
                     });
 
                 });//1
@@ -564,7 +564,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownForma";
                     });
 
                 });
@@ -759,7 +759,7 @@
                     {
                         t.Properties.ValidationSettings.Display = Display.Dynamic;
                         t.ShowModelErrors = true;
-
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownGlosa";
                     });
 
                 });

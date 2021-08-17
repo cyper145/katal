@@ -22,9 +22,9 @@ namespace katal.conexion.model.neg
             TipoOperacion = new TipoOperacionDao();
         }
 
-        public void create(Comprobante comprobante)
+        public bool create(Comprobante comprobante)
         {
-            objComprobanteDao.create(comprobante);
+            return objComprobanteDao.create(comprobante);
         }
         public void create(Comprobante comprobante, int nivelContable)
         {

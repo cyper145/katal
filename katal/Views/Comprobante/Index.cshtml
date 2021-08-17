@@ -182,8 +182,6 @@
             }
         }
         function KeyDownDestino(s, e) {
-
-
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
                 NBASEIMP.Focus();
@@ -203,6 +201,28 @@
             cambioIgv();
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
+                gridLookupResponsable.Focus();
+            }
+        }
+
+        function KeyDownResponsable(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+
+                CFORMPAGO.Focus();
+            }
+        }
+        function KeyDownForma(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+
+                CDESCRIPC.Focus();
+            }
+        }
+        function KeyDownGlosa(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                
                 btnUpdate.Focus();
             }
         }
@@ -279,12 +299,6 @@
           //  OC_CRAZSOC.SetText(Value[0]);
             RUC.SetText(Value[1]);
         }
-
-
-
-
-
-
         function OnGridArticuloRowClick(s, e) {
             var g = gridLookup.GetGridView();
             g.GetRowValues(e.visibleIndex, 'description;unidad', OnGetRowArticuloValues);
@@ -393,6 +407,8 @@
               //  OC_DFECDOC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
                 DRECEPCIO.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
                 DEMISION.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                DIASPAGO.SetText(0);
+                DVENCE.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
                 //f.setDate(f.getDate() + 2);
                // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
             }
