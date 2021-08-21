@@ -14,7 +14,13 @@ namespace katal.conexion.model.dao
         {
             this.codEmpresa = codEmpresa;
         }
-       public string conexionWenco(string consulta)
+    
+        public string CodEmpresa
+        {
+            get { return codEmpresa; }
+            
+        }
+        public string conexionWenco(string consulta)
         {
             return Conexion.ConexionCadena("", "BDWENCO", consulta);
         }

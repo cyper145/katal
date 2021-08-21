@@ -196,4 +196,27 @@ namespace katal.conexion.model.entity
 
 
     }
+
+
+    public class ComprobanteDetraccion
+    {
+        public string anex_codigo { get; set; }
+        public string cnroruc { get; set; }
+        public string anex_descripcion { get; set; }
+        public string tipodocu_codigo { get; set; }
+        public string cserie { get; set; }
+        public string cnumero { get; set; }
+        public DateTime demision { get; set; }
+        public string tipomon_codigo { get; set; }
+        public decimal nimporte { get; set; }
+        public decimal ntasadetraccion { get; set; }
+        public decimal detraccion { get; set; }
+        public decimal tipocambio_valor { get; set; }
+        public decimal saldo { get; set; }
+        public string cod_servdetracc { get; set; }
+        public string cod_tipooperacion { get; set; }
+        public decimal ImpPagar { get; set; }
+        public int codigo { get; set; }
+
+    }
 }

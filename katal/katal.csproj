@@ -319,6 +319,26 @@
     <Content Include="Views\Comprobante\MultiSelectOrdenFabricacion.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectDestinoConta.cshtml" />
     <Content Include="Views\Comprobante\MultiSelectAnexoConta.cshtml" />
+    <Content Include="Views\GenerarDetraccion\Index.cshtml" />
+    <Content Include="Views\GenerarDetraccion\Contabilizar.cshtml" />
+    <Content Include="Views\GenerarDetraccion\ContaGridViewPartial.cshtml" />
+    <Content Include="Views\GenerarDetraccion\GridViewPartial.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectAnexo.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectAnexoConta.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectCentroCostos.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectDestino.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectDestinoConta.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectdetraccion.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectGasto.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectMoneda.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectOrdenFabricacion.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectPlanCuenta.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectResponsable.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectTipoAnexo.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectTipoDoc.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectTipoDocRef.cshtml" />
+    <Content Include="Views\GenerarDetraccion\MultiSelectTipoOperacion.cshtml" />
+    <Content Include="Views\GenerarDetraccion\partialPopup.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -335,10 +355,12 @@
     <Compile Include="Code\Helpers\GridViewExportHelper.cs" />
     <Compile Include="Code\Helpers\GridViewFeaturesHelper.cs" />
     <Compile Include="Code\Helpers\GridViewToolbarHelper.cs" />
+    <Compile Include="Code\ManejoArchivo.cs" />
     <Compile Include="Code\RoleHelper.cs" />
     <Compile Include="conexion\model.dao\AreaDao.cs" />
     <Compile Include="conexion\model.dao\ArticuloDao.cs" />
     <Compile Include="conexion\model.dao\ComprobanteDao.cs" />
+    <Compile Include="conexion\model.dao\ComprobanteDetraccionDao.cs" />
     <Compile Include="conexion\model.dao\Conexion.cs" />
     <Compile Include="conexion\model.dao\Conversion.cs" />
     <Compile Include="conexion\model.dao\DestinoDao.cs" />
@@ -390,6 +412,7 @@
     <Compile Include="conexion\model.entity\User.cs" />
     <Compile Include="conexion\model.neg\AreaNeg.cs" />
     <Compile Include="conexion\model.neg\ArticuloNeg.cs" />
+    <Compile Include="conexion\model.neg\ComprobanteDNeg.cs" />
     <Compile Include="conexion\model.neg\ComprobanteNeg.cs" />
     <Compile Include="conexion\model.neg\DestinoNeg.cs" />
     <Compile Include="conexion\model.neg\EmpresaNeg.cs" />
@@ -408,6 +431,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ComprobanteController.cs" />
     <Compile Include="Controllers\DetalleOrdenCompraController.cs" />
+    <Compile Include="Controllers\GenerarDetraccionController.cs" />
     <Compile Include="Controllers\GridViewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrdenCompraController.cs" />

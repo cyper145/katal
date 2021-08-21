@@ -1,0 +1,285 @@
+﻿
+@using katal.conexion.model.entity;
+
+@using katal.Model;
+@model List<ComprobanteDetraccion>
+@{
+
+    var gridView = Html.DevExpress().GridView<ComprobanteDetraccion>(gridViewSettings =>
+    {
+        gridViewSettings.Name = "gridView";
+        gridViewSettings.KeyFieldName = "codigo";
+
+        gridViewSettings.CallbackRouteValues = new
+        {
+            Controller = "GenerarDetraccion",
+            Action = "GridViewPartial"
+        };
+        gridViewSettings.CustomActionRouteValues = new { Controller = "GenerarDetraccion", Action = "GridViewCustomActionPartial" };
+        gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "GenerarDetraccion", Action = "GridViewAddNewPartial" };
+        gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "GenerarDetraccion", Action = "GridViewUpdatePartial" };
+
+
+
+        gridViewSettings.EnablePagingGestures = AutoBoolean.False;
+
+        gridViewSettings.ControlStyle.CssClass = "grid-view";
+        gridViewSettings.Width = Unit.Percentage(100);
+        gridViewSettings.Height = Unit.Percentage(100);
+
+        gridViewSettings.Styles.Cell.Wrap = DefaultBoolean.False;
+        gridViewSettings.Styles.PagerBottomPanel.CssClass = "pager";
+        gridViewSettings.Styles.FocusedRow.CssClass = "focused";
+
+        gridViewSettings.SettingsBehavior.AllowFocusedRow = true;
+        //    gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+        gridViewSettings.SettingsBehavior.AllowEllipsisInText = true;
+        gridViewSettings.SettingsBehavior.AllowDragDrop = false;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+        gridViewSettings.SearchPanelEditorCreate = (sender, e) =>
+        {
+            e.EditorProperties = new DateEditProperties();
+        };
+        gridViewSettings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        gridViewSettings.SettingsEditing.EditFormColumnCount = 2;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        gridViewSettings.Settings.VerticalScrollBarMode = ScrollBarMode.Hidden;
+        gridViewSettings.Settings.HorizontalScrollBarMode = ScrollBarMode.Auto;
+        gridViewSettings.Settings.ShowHeaderFilterButton = true;
+
+        gridViewSettings.SettingsPager.PageSize = 20;
+        gridViewSettings.SettingsPager.EnableAdaptivity = true;
+        gridViewSettings.SettingsPager.PageSizeItemSettings.Visible = true;
+
+        gridViewSettings.SettingsExport.EnableClientSideExportAPI = true;
+        gridViewSettings.SettingsExport.ExportSelectedRowsOnly = true;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 300;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 300;
+        gridViewSettings.EditFormLayoutProperties.UseDefaultPaddings = false;
+        gridViewSettings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+        gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+        gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+        gridViewSettings.SettingsText.PopupEditFormCaption = "Detraccion";
+
+
+        gridViewSettings.SetEditFormTemplateContent(c =>
+        {
+
+
+            Html.DevExpress().FormLayout(layoutSetting =>
+            {
+                layoutSetting.Name = "FormLayoutSetting";
+
+                layoutSetting.Width = Unit.Percentage(100);
+
+                layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+                layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+                layoutSetting.UseDefaultPaddings = false;
+
+                layoutSetting.ColumnCount = 12;
+
+                var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Caption = "Registro";
+                    groupSettings.ShowCaption = DefaultBoolean.False;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                    groupSettings.ColumnCount = 12;
+                    groupSettings.ColumnSpan = 12;
+                });
+
+                groupItem.Items.Add(i =>
+                {
+
+                    i.FieldName = "ImpPagar";
+                    i.Caption = "Importe a Pagar";
+
+                    i.ColumnSpan = 12;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                       
+
+                        // t.Properties.ClientSideEvents.Init = "onData";
+                    });
+                });
+
+
+
+                layoutSetting.Items.Add(itemSettings =>
+                {
+                    itemSettings.ColumnSpan = 12;
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                }).SetNestedContent(() =>
+                {
+                    ViewContext.Writer.Write("<div style='float:right'>");
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnUpdate";
+                            btnSettings.Text = "Grabar";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
+
+                            //I want to Hide Update Button when FirstName is "John"
+
+                        }).Render();
+
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnCancel";
+                            btnSettings.Text = "Cancel";
+                            btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";
+                        }).Render();
+                    ViewContext.Writer.Write("</div>");
+                });
+
+
+            }).Bind(ViewData["Object"] ?? c.DataItem).Render();
+
+        });
+
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "codigo";
+            columnSettings.Caption = "Sec";
+           
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "anex_codigo";
+            columnSettings.Caption = "Anexo ";
+            columnSettings.Visible = false;
+            columnSettings.Width = Unit.Pixel(120);
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "cnroruc";
+            columnSettings.Caption = "RUC";
+            columnSettings.Width = Unit.Pixel(120);
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "anex_descripcion";
+            columnSettings.Caption = "Proveedor";
+            columnSettings.Width = Unit.Pixel(250);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "tipodocu_codigo";
+            columnSettings.Caption = "Tipo Documento";
+
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "cserie";
+            columnSettings.Caption = "Serie";
+
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "cnumero";
+            columnSettings.Caption = "Número";
+            columnSettings.Width = Unit.Pixel(100);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "demision";
+            columnSettings.Caption = "F. Emisión";
+            columnSettings.Width = Unit.Pixel(140);
+            columnSettings.ColumnType = MVCxGridViewColumnType.DateEdit;
+        });
+
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "cod_servdetracc";
+            columnSettings.Caption = "Cod.Serv.";
+
+
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "cod_tipooperacion";
+            columnSettings.Caption = "Tip.Operac.";
+
+        });
+     
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "tipomon_codigo";
+            columnSettings.Caption = "Mon";
+
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "nimporte";
+            columnSettings.Caption = "Base Imp.";
+
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "ntasadetraccion";
+            columnSettings.Caption = "T% Detrac.";
+
+
+        });
+        
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "detraccion";
+            columnSettings.Caption = "Imp.Detracc.";
+
+
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "tipocambio_valor";
+            columnSettings.Caption = "T/C.";
+
+
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "saldo";
+            columnSettings.Caption = "Detracc.S/.";
+
+
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "ImpPagar";
+            columnSettings.Caption = "Importe a Pagar";
+
+
+        });
+
+
+
+
+        gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
+        gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
+        //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";
+        gridViewSettings.CellEditorInitialize = (s, e) =>
+        {
+            ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
+        };
+    });
+    if (ViewBag.GeneralError != null)
+    {
+        gridView.SetEditErrorText(ViewBag.GeneralError);
+    }
+}
+
+@gridView.Bind(Model).GetHtml()
+

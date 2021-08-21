@@ -1,0 +1,700 @@
+﻿
+@{
+    ViewBag.Title = "GridView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/GridView.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/SignInRegister.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/SignInRegister.js")"></script>
+    <style>
+        .edit_form .editFormButton {
+            width: calc(20% - 2px);
+        }
+
+        form.edit_form {
+            margin: 30px 20px
+        }
+    </style>
+    <script>
+
+
+    function CloseGridLookup() {
+        gridLookup.ConfirmCurrentSelection();
+        console.log(datax)
+        gridLookup.HideDropDown();
+    }
+    function CloseGridLookupProveedor() {
+        console.log(gridLookupProveedor);
+        gridLookupProveedor.ConfirmCurrentSelection();
+        gridLookupProveedor.HideDropDown();
+        }
+        //onchangeCambio{}
+
+        function onchangeCambio(s, e) {
+
+            OC_NTIPCAM.SetText("3.120");
+        }
+
+
+        function ocultar( id) {
+            let elemet = document.getElementById(id);
+            elemet.style.display = "none";
+        }
+        function mostrar(id) {
+            let elemet = document.getElementById(id);
+            elemet.style.display = "block";
+        }
+        function OnGridRowNroClick(s, e) {
+
+
+            $.getJSON('/Comprobante/CargarTipoAnexoMoneda', function (resp) {
+                $.each(resp, function (k, v) {
+                    if (v.gasto == null) {
+                        return;
+                    }
+                    gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
+                    TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
+
+                    if (v.gasto.Gastos_Honorario) {
+                        // habilitar cambos de total y ir 4ta
+                        FormLayoutSetting.GetItemByName("groupNTASAIGV").SetVisible(false);
+                        FormLayoutSetting.GetItemByName("groupNBASEIMP").SetVisible(false);
+                        FormLayoutSetting.GetItemByName("groupNPERCEPCION").SetVisible(false);
+                        FormLayoutSetting.GetItemByName("groupNIGV").SetVisible(false);
+                        FormLayoutSetting.GetItemByName("groupNIMPORTE").SetVisible(false);
+                        FormLayoutSetting.GetItemByName("groupMontoPagar").SetVisible(false);
+                        FormLayoutSetting.GetItemByName("groupNTOTRH").SetVisible(true);
+                        FormLayoutSetting.GetItemByName("groupNIR4").SetVisible(true);
+                        FormLayoutSetting.GetItemByName("groupNIES").SetVisible(true);
+                    }
+                    else {
+                        FormLayoutSetting.GetItemByName("groupNTASAIGV").SetVisible(true);
+                        FormLayoutSetting.GetItemByName("groupNBASEIMP").SetVisible(true);
+                        FormLayoutSetting.GetItemByName("groupNPERCEPCION").SetVisible(true);
+                        FormLayoutSetting.GetItemByName("groupNIGV").SetVisible(true);
+                        FormLayoutSetting.GetItemByName("groupNIMPORTE").SetVisible(true);
+                        FormLayoutSetting.GetItemByName("groupMontoPagar").SetVisible(true);
+                        FormLayoutSetting.GetItemByName("groupNTOTRH").SetVisible(false);
+                        FormLayoutSetting.GetItemByName("groupNIR4").SetVisible(false);
+                        FormLayoutSetting.GetItemByName("groupNIES").SetVisible(false);
+
+                    }
+
+
+                    //ver que se muestre
+                });
+            });
+            //var g = gridLookupTipoAnexo.GetGridView();
+           // g.Refresh();
+        }
+
+        function OnGridRowClickGasto(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupAnexo.Focus();
+            }
+        }
+
+
+        function KeyDownAnexo(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupTipoDoc.Focus();
+            }
+
+        }
+        function OnGridDatatipoDoc(s, e) {
+            $.getJSON('/Comprobante/CargarTipoDocumento', function (resp) {
+                $.each(resp, function (k, v) {
+                    if (v.TIPDOC_REFERENCIA) {
+                        RCO_SERIE.SetReadOnly(false);
+                        gridLookupTipoDocRef.SetReadOnly(false);
+                        RCO_NUMERO.SetReadOnly(false);
+
+                    }
+                    else {
+
+                        RCO_SERIE.SetReadOnly(true);
+                        gridLookupTipoDocRef.SetReadOnly(true);
+                        RCO_NUMERO.SetReadOnly(true);
+                    }
+
+
+                });
+            });
+        }
+
+
+        function KeyDownTipoDoc(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CSERIE.Focus();
+            }
+
+        }
+        function downSerie(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CNUMERO.Focus();
+            }
+        }
+
+        function downNumero(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CAOCOMPRA.Focus();
+            }
+        }
+        function downCAOCOMPRA(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                DIASPAGO.Focus();
+            }
+        }
+        function downDIASPAGO(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupMoneda.Focus();
+
+            }
+        }
+
+        function downTipoConversion(s, e) {
+
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupDestino.Focus();
+
+            }
+        }
+        function KeyDownDestino(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                NBASEIMP.Focus();
+
+            }
+        }
+        function KeyDownNBASEIMP(s, e) {
+
+            cambioIgvBase();
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                NPERCEPCION.Focus();
+            }
+        }
+        function KeyDownNPERCEPCION(s, e) {
+
+            cambioIgv();
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupResponsable.Focus();
+            }
+        }
+
+        function KeyDownResponsable(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+
+                CFORMPAGO.Focus();
+            }
+        }
+        function KeyDownForma(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+
+                CDESCRIPC.Focus();
+            }
+        }
+        function KeyDownGlosa(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+
+                btnUpdate.Focus();
+            }
+        }
+        function initEstCompra(s, e) {
+            // Checked
+            ESTCOMPRA.SetChecked(true);
+        }
+        function initLPASOIMP(s, e) {
+            // Checked
+            LPASOIMP.SetChecked(true);
+        }
+
+
+        function habilitarRetencion(s, e) {
+            $.getJSON('/Comprobante/habilitarRetencion', function (resp) {
+                $.each(resp, function (k, v) {
+                    if (v.retencion) {
+                        FormLayoutSetting.GetItemByName("groupCO_L_RETE").SetVisible(true);
+                    }
+                    else {
+                        FormLayoutSetting.GetItemByName("groupCO_L_RETE").SetVisible(false);
+                    }
+
+                });
+            });
+        }
+
+        function OnGridChangeDestino(s, e) {
+            $.getJSON('/Comprobante/HabilitarCalculados', function (resp) {
+                $.each(resp, function (k, v) {
+                    if (v.opcion) {
+                        NTASAIGV.SetText(v.tasaIGV);
+                        NIGV.SetText(v.montoIGV);
+                    }
+                    else {
+                        NTASAIGV.SetText(v.tasaIGV);
+                    }
+
+                });
+            });
+        }
+
+        function OnChangeMoneda(s, e) {
+
+            let fecha = DEMISION.GetText();
+            $.getJSON('/Comprobante/CargarTipoMoneda?fecha=' + fecha, function (resp) {
+                $.each(resp, function (k, v) {
+                    console.log(v);
+
+                    TIPOCAMBIO_VALOR.SetText(v.data);
+                    TIPOCAMBIO_VALOR2.SetText(v.dataEspecial);
+                    //gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
+                    //TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
+                });
+            });
+        }
+
+        //OnGridRowResponsableClick
+        function OnGridRowResponsableClick(s, e) {
+
+            var g = gridLookupResponsable.GetGridView();
+            g.GetRowValues(e.visibleIndex, 'RESPONSABLE_CODIGO;RESPONSABLE_NOMBRE', OnGetRowResponsableValues);
+        }
+        function OnGetRowResponsableValues(Value) {
+            //  OC_CRAZSOC.SetText(Value[0]);
+            RESPONSABLE_CODIGO.SetText(Value[0]);
+        }
+        function OnGridRowClick(s, e) {
+            console.log("dd")
+            var g = gridLookupProveedor.GetGridView();
+            g.GetRowValues(e.visibleIndex, 'PRVCNOMBRE;PRVCRUC', OnGetRowValues);
+       }
+        function OnGetRowValues(Value) {
+          //  OC_CRAZSOC.SetText(Value[0]);
+            RUC.SetText(Value[1]);
+        }
+        function OnGridArticuloRowClick(s, e) {
+            var g = gridLookup.GetGridView();
+            g.GetRowValues(e.visibleIndex, 'description;unidad', OnGetRowArticuloValues);
+        }
+        function OnGetRowArticuloValues(Value) {
+
+            var data = document.getElementById("grid_DXEFL_DXEditor3_I");
+            data.value = Value[1];
+
+            var cantidad = document.getElementById("grid_DXEFL_DXEditor4_I");
+            var precio = document.getElementById("grid_DXEFL_DXEditor5_I");
+            var descuento = document.getElementById("grid_DXEFL_DXEditor6_I");
+
+            cantidad.Value = 0;
+            precio.Value = 0.00;
+            descuento.Value = 0.00;
+            var PrecioTotal = document.getElementById("grid_DXEFL_DXEditor7_I");
+
+            PrecioTotal.value = 0.00;
+        }
+
+
+        function changegCalcularPrecioCantidad(s, e) {
+            var data = document.getElementById("grid_DXEFL_DXEditor5_I");
+            let datadescuento = document.getElementById("grid_DXEFL_DXEditor6_I");
+            let precioUnitario = 0;
+            let cantidad = 0;
+            let descuento = 0;
+
+            if (datadescuento.value != "") {
+                descuento = parseFloat(datadescuento.value);
+            }
+            if (data.value == "" || data.value == NaN) {
+                precioUnitario = 0;
+            }
+            else {
+                precioUnitario = parseFloat(data.value);
+            }
+            if (s.GetText() == "") {
+                cantidad = 0;
+            }
+            else {
+                cantidad = parseFloat(s.GetText());
+            }
+            var PrecioTotal = document.getElementById("grid_DXEFL_DXEditor7_I");
+
+            PrecioTotal.value = precioUnitario * cantidad*(1-descuento/100);
+
+        }
+        function changegCalcularPrecioPunitario(s, e) {
+
+
+            let datadescuento = document.getElementById("grid_DXEFL_DXEditor6_I");
+            let descuento = 0;
+
+            if (datadescuento.value != "") {
+                descuento = parseFloat(datadescuento.value);
+            }
+            var data = document.getElementById("grid_DXEFL_DXEditor4_I");// cantidad
+            let precioUnitario=0;
+            let cantidad=0;
+            if (data.value == "" || data.value == NaN) {
+                cantidad = 0;
+            }
+            else {
+                cantidad = parseFloat(data.value);
+            }
+            if (s.GetText() == "") {
+                precioUnitario = 0;
+            }
+            else {
+                precioUnitario = parseFloat(s.GetText());
+            }
+
+            var PrecioTotal = document.getElementById("grid_DXEFL_DXEditor7_I");
+
+            PrecioTotal.value = precioUnitario * cantidad * (1 - descuento / 100);
+        }
+
+        function onData() {
+            if (OC_CNUMORD.GetText() == "") {
+
+                $.getJSON('/OrdenCompra/nroDera', function (resp) {
+                    $.each(resp, function (k, v) {
+                        OC_CNUMORD.SetText(v);
+                    });
+                });
+
+
+            }
+
+        }
+        function OnChangeDfecha(s, e) {
+
+            let fecha = DFecha.GetText();
+            $.getJSON('/Comprobante/changeDFecha?DFecha=' + fecha, function (resp) {
+                $.each(resp, function (k, v) {
+
+                });
+            });
+        }
+        function DateEmision() {
+
+            if (DRECEPCIO.GetText() == "") {
+                let f = new Date();
+              //  OC_DFECDOC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                DRECEPCIO.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                DEMISION.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                DIASPAGO.SetText(0);
+                DVENCE.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                //f.setDate(f.getDate() + 2);
+               // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+            }
+        }
+        function changeDiasPago() {
+
+            let data = DEMISION.GetText().split("/");
+            let date = new Date(data[2], data[1]-1,data[0] );
+            let nrodias = 0
+            if (esEntero(DIASPAGO.GetText())) {
+                nrodias = parseInt(DIASPAGO.GetText());
+            }
+            let dateVence = addDays(date, nrodias)
+
+            DVENCE.SetValue(dateVence);
+        }
+
+        function esEntero(numero) {
+            let isNumero = false;
+            if (isNaN(numero)) {
+                isNumero= false;
+            } else {
+                if (numero % 1 == 0) {
+                    isNumero = true;
+                } else {
+                    isNumero =false;
+                }
+            }
+            return numero
+        }
+
+        function addDays(date, days) {
+            var result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+
+        function tasaIgv() {
+            if (NTASAIGV.GetText() == "") {
+                NTASAIGV.SetText("18");
+
+            }
+        }
+        function cambioIgv() {
+            let importepercepcion = 0;
+            if (NPERCEPCION.GetText() != "") {
+                importepercepcion= parseFloat(NPERCEPCION.GetText());
+            }
+
+            let baseimporte = parseFloat(NBASEIMP.GetText());
+            let tasaigv = parseFloat(NTASAIGV.GetText());
+
+            let montoigv = baseimporte * tasaigv / 100;
+            let totaligv = montoigv + baseimporte;
+            let totalpagar = totaligv + importepercepcion
+            NIGV.SetText(montoigv);
+            NIMPORTE.SetText(totaligv);
+            MontoPagar.SetText(totalpagar);
+        }
+
+
+        function cambioIgvBase() {
+             let codDes= gridLookupDestino.GetValue()[0]
+            let baseimporte = 0;
+            if (NBASEIMP.GetText() != "") {
+                baseimporte = parseFloat(NBASEIMP.GetText());
+            }
+            let tasaigv = 0
+            if (NTASAIGV.GetText() != "") {
+                tasaigv = parseFloat(NTASAIGV.GetText());
+            }
+
+            if (baseimporte != 0) {
+                if (codDes != "006" && codDes != "007" && codDes != "008" ) {
+                    let montoigv = baseimporte * tasaigv / 100;
+                    let totaligv = montoigv + baseimporte;
+                    NIGV.SetText(montoigv);
+                    NIMPORTE.SetText(totaligv);
+                    /*
+                    lblValDecl = Format(Val(txtTotalVta) - Val(txtMontoIGV), "###0.00")
+                    'If mnGasto1 = 0 Then
+                    'lblValCalc = 0
+                    'Else
+                    '   lblValCalc = Format((Val(txtMontoIGV) / mnGasto1) * 100, "###0.00")
+                    'End If
+                    lblValCalc = Format(txtMontoIGV, "###0.00")
+                    lblValInaf = Format(Val(lblValDecl) - Val(lblValCalc), "###0.00")*/
+                }
+            }
+            else {
+
+                NIGV.SetText(0);
+                NIMPORTE.SetText(0);
+                MontoPagar.SetText(0);
+            }
+
+
+        }
+
+        function cambioIgvTotalhonorarios() {
+            let codDes = gridLookupDestino.GetValue()[0];
+            let totalhonorarios = 0;
+            if (NTOTRH.GetText() != "") {
+                totalhonorarios = parseFloat(NTOTRH.GetText());
+            }
+            $.getJSON('/Comprobante/obtenerGastos', function (resp) {
+                $.each(resp, function (k, v) {
+                    let n4 = 0;
+                    let nies = 0;
+                    switch (codDes) {
+                        case '004':
+                            NIR4.SetText(0.00);
+                            NIES.SetText(0.00);
+                            break;
+                        case '006':
+                             n4 = totalhonorarios * v.mnGasto1 / 100;
+                             nies = totalhonorarios * v.mnGasto2 / 100;
+                            NIR4.SetText(n4);
+                            NIES.SetText(nies);
+                            break;
+                        case '007':
+                             n4 = totalhonorarios * v.mnGasto1 / 100;
+                             nies = 0;
+                            NIR4.SetText(n4);
+                            NIES.SetText(nies);
+                            break;
+                        case '008':
+                             n4 = 0;
+                             nies = totalhonorarios * v.mnGasto2 / 100;
+                            NIR4.SetText(n4);
+                            NIES.SetText(nies);
+                            break;
+
+                    }
+
+
+                });
+            });
+
+
+       }
+
+
+    function OnClick(s, e) {
+        if ($("#myForm").valid()) {
+            if (GridView.batchEditApi.HasChanges())
+                GridView.UpdateEdit();
+            else
+                GridView.PerformCallback();
+        }
+    }
+
+    function OnBeginCallback(s, e) {
+    	if (e.command == "UPDATEEDIT" || e.command == "CUSTOMCALLBACK")
+    		e.customArgs = $.extend(e.customArgs, GetEditorValues());
+    }
+    function GetEditorValues() {
+    	return MVCxClientUtils.GetSerializedEditorValuesInContainer("myForm");
+        }
+
+    function restartButtonClicked() {
+            gridView.FocusedRowIndex = -1;
+
+            gridView.UnselectRows();
+            gridView.Refresh();
+        }
+
+
+
+    </script>
+
+
+
+
+
+}
+
+
+@section PageToolbar {
+    @Html.DevExpress().Menu(menuSettings =>
+{
+    menuSettings.Name = "pageToolbar";
+
+    menuSettings.ItemAutoWidth = false;
+    menuSettings.AllowSelectItem = false;
+    menuSettings.ApplyItemStyleToTemplates = true;
+
+    menuSettings.SettingsAdaptivity.Enabled = true;
+    menuSettings.SettingsAdaptivity.EnableAutoHideRootItems = true;
+    menuSettings.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+    menuSettings.SettingsAdaptivity.CollapseRootItemsToIconsAtWindowInnerWidth = 600;
+
+    menuSettings.Width = Unit.Percentage(100);
+    menuSettings.ControlStyle.SeparatorWidth = Unit.Pixel(0);
+    menuSettings.ControlStyle.CssClass = "page-toolbar";
+
+    menuSettings.Styles.Item.CssClass = "item";
+    menuSettings.Styles.Item.VerticalAlign = VerticalAlign.Middle;
+    menuSettings.Styles.Item.HorizontalAlign = HorizontalAlign.Left;
+    menuSettings.Images.Item.Width = Unit.Pixel(16);
+    menuSettings.Images.Item.Height = Unit.Pixel(16);
+
+    menuSettings.Items.Add(item =>
+    {
+        item.Enabled = false;
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Generar Archivo Masivo Detracciones</h1>"));
+    });
+  
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "Edit";
+        item.Text = "Detraccion";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "Content/Images/edit.svg";
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "exportTxt";
+        item.Text = "GenerarTxt";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "Content/Images/Article.svg";
+    });
+ 
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "ToggleFilterPanel";
+        item.Text = "";
+        item.GroupName = "Filter";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 1;
+        item.Image.Url = "Content/Images/search.svg";
+        item.Image.UrlChecked = "Content/Images/search-selected.svg";
+    });
+    menuSettings.ClientSideEvents.ItemClick = "onPageToolbarItemClickComprobante";
+}).GetHtml()
+
+    @Html.DevExpress().Panel(panelSettings =>
+    {
+        panelSettings.Name = "filterPanel";
+    panelSettings.Collapsible = true;
+    panelSettings.ControlStyle.CssClass = "filter-panel";
+
+    panelSettings.SettingsCollapsing.ExpandEffect = PanelExpandEffect.Slide;
+    panelSettings.SettingsCollapsing.AnimationType = AnimationType.None;
+    panelSettings.SettingsCollapsing.ExpandButton.Visible = false;
+
+    panelSettings.SetContent(() =>
+        {
+            Html.DevExpress().ButtonEdit(buttonEditSettings =>
+            {
+            buttonEditSettings.Name = "searchButtonEdit";
+            buttonEditSettings.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.Always;
+            buttonEditSettings.Properties.Caption = "Search";
+            buttonEditSettings.Width = Unit.Percentage(100);
+        }).GetHtml();
+    });
+
+    panelSettings.ClientSideEvents.Expanded = "onFilterPanelExpanded";
+    panelSettings.ClientSideEvents.Collapsed = "adjustPageControls";
+}).GetHtml()
+}
+
+
+
+@section LeftPanelContent {
+    @Html.Partial("~/Views/partialGeneral/LeftPanelPartial.cshtml");
+}
+
+@section RightPanelContent {
+    <div class="settings-content">
+        <h2>Settings</h2>
+        <p>Place your content here</p>
+    </div>
+}
+@* comentario
+    @Html.Partial("DateRangePicker")
+*@
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Partial("GridViewPartial")
+    @Html.Partial("partialPopup")
+
+}
+

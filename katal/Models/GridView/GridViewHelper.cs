@@ -16,6 +16,7 @@ namespace katal.Model
 
         public static List<OrdenCompra> OrdenCompras = new List<OrdenCompra>();
         public static List<Comprobante> Comprobantes= new List<Comprobante>();
+        public static List<ComprobanteDetraccion> ComprobantesD= new List<ComprobanteDetraccion>();
         public static List<ContableDet> contableDets= new List<ContableDet>();
 
         public static List<DetalleRequisicion> detalleRequisicions = new List<DetalleRequisicion>();

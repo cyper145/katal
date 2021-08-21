@@ -18,6 +18,9 @@
         if (pageToolbar.GetItemByName("transferir") != null) {
             pageToolbar.GetItemByName("transferir").SetEnabled(enabled);
         }
+        if (pageToolbar.GetItemByName("exportTxt") != null) {
+            pageToolbar.GetItemByName("exportTxt").SetEnabled(enabled);
+        }
         pageToolbar.GetItemByName("Edit").SetEnabled(gridView.GetFocusedRowIndex() !== -1);
     }
     function onPageToolbarItemClick(s, e) { 
@@ -47,6 +50,10 @@
                 console.log("dar");
                 TransferirRecords();
                 break;
+            case "exportTxt":
+                console.log("dar");
+                exportTxtRecords();
+                break;
         }
     }
     function TransferirRecords() {
@@ -57,6 +64,10 @@
     function getSelectedTransferir(values) {
         gridView.PerformCallback({ customAction: 'transferir', codigo: selectdId });
     }
+
+    
+
+
 
     function ExportSelectedRecords() {
         
@@ -69,7 +80,7 @@
 
 
     function deleteSelectedRecords() {
-        if(confirm('Confirm Delete?')) {
+        if(confirm('Confirm Delete? ratitas')) {
             gridView.GetSelectedFieldValues("OC_CNUMORD", getSelectedFieldValuesCallback);
         }
     }
@@ -199,8 +210,22 @@
                 ExportSelectedRecords()
                 //gridView.ExportTo(ASPxClientGridViewExportFormat.Xlsx);
                 break;
+            case "exportTxt":
+                console.log("dar");
+                exportTxtRecords();
+                break;
         }
     }
+
+    function exportTxtRecords() {
+
+        gridView.GetSelectedFieldValues("codigo", getSelectedexportTxt);
+
+    }
+    function getSelectedexportTxt(values) {
+        gridView.PerformCallback({ customAction: 'exportTxt', codigo: selectdId });
+    }
+
     function OnGridFocusedRowChangedComprobante(s,e) {
         s.GetRowValues(s.GetFocusedRowIndex(), 'OC_CNUMORD', OnGetRowValuesComprobante);
     }
