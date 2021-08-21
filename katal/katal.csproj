@@ -339,6 +339,10 @@
     <Content Include="Views\GenerarDetraccion\MultiSelectTipoDocRef.cshtml" />
     <Content Include="Views\GenerarDetraccion\MultiSelectTipoOperacion.cshtml" />
     <Content Include="Views\GenerarDetraccion\partialPopup.cshtml" />
+    <Content Include="Views\ModificarComprobante\Index.cshtml" />
+    <Content Include="Views\ModificarComprobante\Contabilizar.cshtml" />
+    <Content Include="Views\ProvisionContabilidad\Index.cshtml" />
+    <Content Include="Views\ProvisionContabilidad\Contabilizar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -434,8 +438,10 @@
     <Compile Include="Controllers\GenerarDetraccionController.cs" />
     <Compile Include="Controllers\GridViewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ModificarComprobanteController.cs" />
     <Compile Include="Controllers\OrdenCompraController.cs" />
     <Compile Include="Controllers\ProveedorController.cs" />
+    <Compile Include="Controllers\ProvisionContabilidadController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RequisionCompraController.cs" />
     <Compile Include="Controllers\ResponsableCompraController.cs" />

@@ -1,0 +1,41 @@
+﻿
+
+@Html.DevExpress().GridLookup(settings =>
+{
+    //settings.Properties.Caption = "Area:";
+
+    settings.Name = "gridLookupAnexo";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "Comprobante", Action = "MultiSelectAnexo", ANEX_CODIGO = Model.ANEX_CODIGO };
+
+    settings.KeyFieldName = "ANEX_CODIGO";
+
+    //settings.CommandColumn.Visible = true;
+    // settings.CommandColumn.ShowSelectCheckbox = true;
+
+    settings.Columns.Add("ANEX_CODIGO").Width = Unit.Percentage(10);
+    settings.Columns.Add("ANEX_DESCRIPCION").Width = Unit.Percentage(80);
+    settings.Columns.Add("ANEX_RUC").Width = Unit.Percentage(10);
+
+    settings.Width = Unit.Percentage(100);
+
+    settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
+    settings.Properties.TextFormatString = "{1}";
+    settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexo";
+
+    settings.GridViewProperties.Settings.ShowFilterRow = true;
+    settings.GridViewProperties.Settings.ShowColumnHeaders = false;
+    settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
+    //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
+    settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
+    settings.GridViewProperties.SettingsPager.PageSize = 7;
+
+    //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
+    
+    settings.DataBound = (sender, e) =>
+    {
+        var gridLookup = (MVCxGridLookup)sender;
+        gridLookup.GridView.Width = Unit.Percentage(100);
+    };
+}).BindList(ViewData["Anexo"]).Bind(Model.ANEX_CODIGO).GetHtml()
+
+

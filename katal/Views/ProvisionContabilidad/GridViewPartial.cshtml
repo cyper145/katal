@@ -1,0 +1,1045 @@
+﻿
+@using katal.conexion.model.entity;
+
+@using katal.Model;
+@model List<Comprobante>
+@{
+
+    var gridView = Html.DevExpress().GridView<Comprobante>(gridViewSettings =>
+    {
+        gridViewSettings.Name = "gridView";
+        gridViewSettings.KeyFieldName = "codigo";
+
+        gridViewSettings.CallbackRouteValues = new
+        {
+            Controller = "Comprobante",
+            Action = "GridViewPartial"
+        };
+        gridViewSettings.CustomActionRouteValues = new { Controller = "Comprobante", Action = "GridViewCustomActionPartial" };
+        gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Comprobante", Action = "GridViewAddNewPartial" };
+        gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Comprobante", Action = "GridViewUpdatePartial" };
+
+
+
+        gridViewSettings.EnablePagingGestures = AutoBoolean.False;
+
+        gridViewSettings.ControlStyle.CssClass = "grid-view";
+        gridViewSettings.Width = Unit.Percentage(100);
+        gridViewSettings.Height = Unit.Percentage(100);
+
+        gridViewSettings.Styles.Cell.Wrap = DefaultBoolean.False;
+        gridViewSettings.Styles.PagerBottomPanel.CssClass = "pager";
+        gridViewSettings.Styles.FocusedRow.CssClass = "focused";
+
+        gridViewSettings.SettingsBehavior.AllowFocusedRow = true;
+        //    gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+        gridViewSettings.SettingsBehavior.AllowEllipsisInText = true;
+        gridViewSettings.SettingsBehavior.AllowDragDrop = false;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+        gridViewSettings.SearchPanelEditorCreate = (sender, e) =>
+        {
+            e.EditorProperties = new DateEditProperties();
+        };
+        gridViewSettings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        gridViewSettings.SettingsEditing.EditFormColumnCount = 2;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        gridViewSettings.Settings.VerticalScrollBarMode = ScrollBarMode.Hidden;
+        gridViewSettings.Settings.HorizontalScrollBarMode = ScrollBarMode.Auto;
+        gridViewSettings.Settings.ShowHeaderFilterButton = true;
+
+        gridViewSettings.SettingsPager.PageSize = 50;
+        gridViewSettings.SettingsPager.EnableAdaptivity = true;
+        gridViewSettings.SettingsPager.PageSizeItemSettings.Visible = true;
+
+        gridViewSettings.SettingsExport.EnableClientSideExportAPI = true;
+        gridViewSettings.SettingsExport.ExportSelectedRowsOnly = true;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1200;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 1200;
+        gridViewSettings.EditFormLayoutProperties.UseDefaultPaddings = false;
+        gridViewSettings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+        gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+        gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+        gridViewSettings.SettingsText.PopupEditFormCaption = "Registro de Documentos";
+
+
+        gridViewSettings.SetEditFormTemplateContent(c =>
+        {
+
+
+            Html.DevExpress().FormLayout(layoutSetting =>
+            {
+                layoutSetting.Name = "FormLayoutSetting";
+
+                layoutSetting.Width = Unit.Percentage(100);
+
+                layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+                layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+                layoutSetting.UseDefaultPaddings = false;
+
+                layoutSetting.ColumnCount = 12;
+
+                var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Caption = "Registro";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                    groupSettings.ColumnCount = 12;
+                    groupSettings.ColumnSpan = 12;
+                });
+
+                groupItem.Items.Add(i =>
+                {
+
+                    i.FieldName = "CORDEN";
+                    i.Caption = "Nro. Orden";
+
+                    i.ColumnSpan = 6;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.ReadOnly = true;
+                        t.Width = Unit.Percentage(25);
+                        // t.Properties.ClientSideEvents.Init = "onData";
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CCONCEPT";
+                    i.Caption = "Concepto";
+                    i.ColumnSpan = 6;
+
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectGasto", new { Gastos_Codigo = DataBinder.Eval(c.DataItem, "CCONCEPT") });
+                    });
+                });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CTIPPROV";
+                    i.Caption = "Anexo";
+                    i.ColumnSpan = 6;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectTipoAnexo", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CTIPPROV") });
+                    });
+                });
+
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "ANEX_CODIGO";
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.ColumnSpan = 6;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectAnexo", new { ANEX_CODIGO = DataBinder.Eval(c.DataItem, "ANEX_CODIGO") });
+                    });
+                });
+
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "TIPODOCU_CODIGO";
+                    i.Caption = "Documento";
+                    i.ColumnSpan = 4;
+
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectTipoDoc", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "TIPODOCU_CODIGO") });
+                    });
+                });
+
+
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "CSERIE";
+                    i.ColumnSpan = 1;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        //t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.KeyDown = "downSerie";
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "CNUMERO";
+                    i.ColumnSpan = 1;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        // t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.KeyDown = "downNumero";
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "CAOCOMPRA";
+                    i.ColumnSpan = 3;
+                    i.Caption = "O/C-O/S";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        // t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.KeyDown = "downCAOCOMPRA";
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "DRECEPCIO";
+                    i.Caption = "Fech. Recep.";
+                    i.ColumnSpan = 3;
+                    i.NestedExtension().DateEdit(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.Init = "DateEmision";
+                    });
+                });
+
+                //tercera fila
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "DEMISION";
+                    i.Caption = "Fech. Emi.";
+                    i.ColumnSpan = 3;
+                    i.NestedExtension().DateEdit(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.Init = "DateEmision";
+                        t.Properties.ClientSideEvents.DateChanged = "changeDiasPago";
+
+                    });
+                });
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "DVENCE";
+                    i.Caption = "Fech. Venc.";
+                    i.ColumnSpan = 3;
+                    i.NestedExtension().DateEdit(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.ReadOnly = true;
+
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "DIASPAGO";
+                    i.ColumnSpan = 2;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "changeDiasPago";
+                        t.Properties.ClientSideEvents.LostFocus = "changeDiasPago";
+                        t.Properties.ClientSideEvents.KeyDown = "downDIASPAGO";
+                        // t.ReadOnly = true;
+                    });
+                });
+
+
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "LPASOIMP";
+                    i.Caption = "Transferir a cuentas por pagar";
+                    i.ColumnSpan = 4;
+                    i.NestedExtension().CheckBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        //  t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.Init = "initLPASOIMP";
+
+                    });
+                });
+
+
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "MONEDA";
+                    // i.ColumnSpan = 3;
+                    i.ColumnSpan = 12;
+                    i.RowSpan = 2;
+
+                    i.Caption = "Converion Monetaria";
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().Label(t =>
+                    {
+
+                    });
+
+                });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "TIPOMON_CODIGO";
+                    // i.ColumnSpan = 3;
+                    i.ColumnSpan = 3;
+                    i.Caption = "Moneda";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+
+                });
+
+
+                groupItem.Items.Add(i =>
+
+                {
+
+
+                    i.FieldName = "CONVERSION_CODIGO";
+                    i.Caption = "Tpo. Conv.";
+                    i.ColumnSpan = 3;
+
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectMoneda", new { COVMON_CODIGO = DataBinder.Eval(c.DataItem, "CONVERSION_CODIGO") });
+                    });
+
+
+                });
+                /*
+                                groupItem.Items.Add(i =>
+
+                                {
+                                    i.FieldName = "DCONTAB";
+                                    i.ColumnSpan = 2;
+                                    i.ShowCaption = DefaultBoolean.False;
+
+                                    i.NestedExtension().DateEdit(t =>
+                                    {
+                                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                                        t.ShowModelErrors = true;
+                                        t.Date = DateTime.Now;
+                                        t.Properties.ClientSideEvents.Init = "DateEmision";
+                                    });
+                                });
+
+                                groupItem.Items.Add(i =>
+                                {
+                                    i.FieldName = "COVMON_DESCRIPCION";
+                                    i.ColumnSpan =1;
+                                    i.ShowCaption = DefaultBoolean.False;
+                                    i.NestedExtension().TextBox(t =>
+                                    {
+                                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                                        t.ShowModelErrors = true;
+                                    });
+
+                                });
+                                */
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "TIPOCAMBIO_VALOR";
+                    i.ColumnSpan = 3;
+                    i.Caption = "T/C";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "TIPOCAMBIO_VALOR2";
+                    i.ColumnSpan = 3;
+                    i.Caption = "T/C Especial";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+
+                });
+
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "Acomprasd";
+                    i.ColumnSpan = 12;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().Label(t =>
+                    {
+
+                    });
+
+                });
+
+
+
+                groupItem.Items.Add(i =>
+
+                {
+                    i.FieldName = "CDESTCOMP";
+                    i.Caption = "Destino";
+                    i.ColumnSpan = 4;
+
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectDestino", new { CO_C_CODIG = DataBinder.Eval(c.DataItem, "CDESTCOMP") });
+                    });
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "ESTCOMPRA";
+                    i.ColumnSpan = 2;
+                    i.Caption = "A compras?";
+                    i.NestedExtension().CheckBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Checked = true;
+                        t.Properties.ClientSideEvents.Init = "initEstCompra";
+
+                    });
+
+                });
+
+                //1
+
+                var groupItem3 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupCO_L_RETE";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+                    groupSettings.ClientVisible = false;
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+
+                groupItem3.Items.Add(i =>
+
+                {
+
+                    i.FieldName = "CO_L_RETE";
+                    //i.ColumnSpan = 3;
+                    i.ColumnSpan = 2;
+                    i.Caption = "Retención IGV";
+                    i.CaptionSettings.AllowWrapCaption = DefaultBoolean.True;
+                    i.NestedExtension().ComboBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.SelectedIndex = 0;
+                        t.Properties.ValueType = typeof(string);
+                        t.Properties.Items.Add("SI", "1");
+                        t.Properties.Items.Add("NO ", "0");
+
+                        t.Properties.ClientSideEvents.Init = "habilitarRetencion";
+
+                    });
+                });
+
+
+
+                groupItem.Items.Add(itemSettings =>
+                {
+                    itemSettings.ColumnSpan = 2;
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                }).SetNestedContent(() =>
+                {
+
+                    Html.DevExpress().Button(
+
+                        btnSettings =>
+                        {
+                            btnSettings.Width = Unit.Percentage(100);
+                            btnSettings.Name = "btShowModal";
+                            btnSettings.Text = "Defraccion";
+                            btnSettings.ClientSideEvents.Click = "function(s, e) { pcModalMode.Show(); }";
+
+
+                        }).Render();
+
+
+
+                });//2
+
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CIGVAPLIC";
+                    i.ColumnSpan = 1;
+                    i.Caption = "IGV por Aplicar";
+                    i.CaptionSettings.AllowWrapCaption = DefaultBoolean.False;
+
+                    i.NestedExtension().CheckBox(t =>
+                    {
+
+                        t.Width = Unit.Percentage(10);
+
+                    });
+
+                });//1
+
+
+                // otro
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "space";
+                    i.ColumnSpan = 12;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().Label(t =>
+                    {
+
+                    });
+
+                });
+
+                var groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupRESPONSABLE_CODIGO";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 3;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 3;
+                    groupSettings.CssClass = "groupNTASAIGV";
+
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "RESPONSABLE_CODIGO";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Responsable";
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectResponsable", new { oc_csolict = DataBinder.Eval(c.DataItem, "RESPONSABLE_CODIGO") });
+                    });
+
+                });
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupCFORMPAGO";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 3;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 3;
+                    groupSettings.CssClass = "groupNTASAIGV";
+
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "CFORMPAGO";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Forma Pago";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownForma";
+                    });
+
+                });
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupNTOTRH";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+                    groupSettings.ClientVisible = false;
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "NTOTRH";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Total";
+
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgvTotalhonorarios";
+                        t.Properties.ClientSideEvents.LostFocus = "cambioIgvTotalhonorarios";
+
+                    });
+
+                });
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupNIR4";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+                    groupSettings.ClientVisible = false;
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "NIR4";
+                    i.ColumnSpan = 2;
+                    i.Caption = "IR 4TA";
+
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                    });
+
+                });
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupNIES";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+                    groupSettings.ClientVisible = false;
+
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "NIES";
+                    i.ColumnSpan = 2;
+                    i.Caption = "I.E.S.";
+
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                    });
+
+                });
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupNTASAIGV";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "NTASAIGV";
+                    i.ColumnSpan =2;
+                    i.Caption = "Tasa IGV";
+
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        //t.Properties.ClientSideEvents.Init = "tasaIgv";
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                    });
+
+                });
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupNBASEIMP";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "NBASEIMP";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Base imponible";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        //  t.Properties.ClientSideEvents.TextChanged = "cambioIgvBase";
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownNBASEIMP";
+
+
+                    });
+
+                });
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupNPERCEPCION";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "NPERCEPCION";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Importe Percepción";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        //t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownNPERCEPCION";
+
+                    });
+
+                });
+
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupCDESCRIPC";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 6;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 6;
+                    groupSettings.CssClass = "groupNTASAIGV";
+
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "CDESCRIPC";
+                    i.ColumnSpan = 6;
+
+                    i.Caption = "Glosa";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownGlosa";
+                    });
+
+                });
+
+
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupNIGV";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "NIGV";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Monto Igv";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                    });
+
+                });
+
+
+
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupNIMPORTE";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "NIMPORTE";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Monto Total";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                    });
+
+                });
+
+                groupItem2 = groupItem.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Name = "groupMontoPagar";
+                    groupSettings.ShowCaption = DefaultBoolean.True;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.None;
+                    groupSettings.ColumnCount = 2;
+                    groupSettings.Paddings.Padding = Unit.Pixel(0);
+                    groupSettings.ColumnSpan = 2;
+                    groupSettings.CssClass = "groupNTASAIGV";
+
+
+                    groupSettings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+                });
+                groupItem2.Items.Add(i =>
+                {
+                    i.FieldName = "MontoPagar";// CALCULADO
+                    i.ColumnSpan = 2;
+                    i.Caption = "Monto Pagar";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.ReadOnly = true;
+                        t.Properties.ClientSideEvents.TextChanged = "cambioIgv";
+                    });
+
+                });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "space2";
+                    i.ColumnSpan = 12;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.NestedExtension().Label(t =>
+                    {
+
+                    });
+
+                });
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "RCO_TIPO";
+                    i.ColumnSpan = 4;
+                    i.Caption = "Ref. Comprobante:";
+                    //i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+                    i.SetNestedContent(() =>
+                    {
+                        Html.RenderAction("MultiSelectTipoDocRef", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "CTDREFER") });
+
+                    });
+
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "RCO_SERIE";
+                    i.ColumnSpan = 2;
+                    i.ShowCaption =DefaultBoolean.False;
+                    i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+
+                    });
+
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "RCO_NUMERO";
+                    i.ColumnSpan = 2;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                    });
+
+                });
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "RCO_FECHA";
+                    i.ColumnSpan = 2;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+                    i.NestedExtension().DateEdit(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                    });
+
+                });
+                groupItem.Items.Add(i =>
+                {
+
+                    i.FieldName = "flg_RNTNODOMICILIADO";
+                    i.ColumnSpan = 2;
+                    i.Caption = "Renta No Domiciliado";
+                    //  i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+                    i.NestedExtension().CheckBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+
+                    });
+
+                });
+
+
+                layoutSetting.Items.Add(itemSettings =>
+                {
+                    itemSettings.ColumnSpan = 12;
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                }).SetNestedContent(() =>
+                {
+                    ViewContext.Writer.Write("<div style='float:right'>");
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnUpdate";
+                            btnSettings.Text = "Grabar";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
+
+                            //I want to Hide Update Button when FirstName is "John"
+
+                        }).Render();
+
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnCancel";
+                            btnSettings.Text = "Cancel";
+                            btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";
+                        }).Render();
+                    ViewContext.Writer.Write("</div>");
+                });
+
+
+            }).Bind(ViewData["Object"] ?? c.DataItem).Render();
+
+        });
+
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "codigo";
+            columnSettings.Caption = "Orde";
+            columnSettings.Visible = false;
+            columnSettings.Width = Unit.Pixel(300);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "CORDEN";
+            columnSettings.Caption = "Orden";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "ANEX_DESCRIPCION";
+            columnSettings.Caption = "Provedor";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "DEMISION";
+            columnSettings.Caption = "Fecha";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "documento";
+            columnSettings.Caption = "documento";
+            columnSettings.Width = Unit.Pixel(300);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "TIPOMON_CODIGO";
+            columnSettings.Caption = "MON.";
+            columnSettings.Width = Unit.Pixel(200);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "NIGV";
+            columnSettings.Caption = "I.G.V";
+            columnSettings.Width = Unit.Pixel(70);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "NIMPORTE";
+            columnSettings.Caption = "Importe";
+            columnSettings.Width = Unit.Pixel(170);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "CESTADO";
+            columnSettings.Caption = "Estado";
+            columnSettings.Width = Unit.Pixel(170);
+
+        });
+        gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
+        gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
+        //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";
+        gridViewSettings.CellEditorInitialize = (s, e) =>
+        {
+            ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
+        };
+    });
+    if (ViewBag.GeneralError != null)
+    {
+        gridView.SetEditErrorText(ViewBag.GeneralError);
+    }
+}
+
+@gridView.Bind(Model).GetHtml()
+

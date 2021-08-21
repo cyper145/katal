@@ -1,0 +1,332 @@
+﻿
+@{
+    ViewBag.Title = "Contabilizar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/GridView.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/SignInRegister.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/SignInRegister.js")"></script>
+    <style>
+        .edit_form .editFormButton {
+            width: calc(20% - 2px);
+        }
+
+        form.edit_form {
+            margin: 30px 20px
+        }
+    </style>
+    <script>
+
+       
+        function OnChangePlan(s, e) {        
+            $.getJSON('/Comprobante/ChangePlanCuenta', function (resp) {
+                $.each(resp, function (k, v) {
+
+                    NVALOR.SetText(v.xnvalor);
+                    gridLookupCostos.SetVisible(v.activeCenco);
+                    gridLookupOrdenFabricacion.SetVisible(v.activeOrb);
+                    gridLookupDestinoConta.SetVisible(v.activeCtaDest);
+                    gridLookupAnexoConta.SetVisible(v.activeAnexo);
+                    gridLookupAnexoConta.SetValue(v.xcanexo);
+                });
+            });         
+        }      
+        function onDataConta() {
+            if (CNROITEM.GetText() == "") {
+                $.getJSON('/Comprobante/cargardata', function (resp) {
+                    $.each(resp, function (k, v) {
+                        CNROITEM.SetText(v.NROITEM);
+                        CGLOSA.SetText(v.GLOSA);
+                    });
+                });
+            }
+
+        }
+        function DateEmision() {
+
+            if (DRECEPCIO.GetText() == "") {
+                let f = new Date();
+              //  OC_DFECDOC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                DRECEPCIO.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                DEMISION.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                //f.setDate(f.getDate() + 2);
+               // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+            }
+
+
+        }
+      
+
+
+    
+   
+
+
+
+    </script>
+
+
+
+
+
+}
+
+
+@section PageToolbar {
+    @Html.DevExpress().Menu(menuSettings =>
+{
+    menuSettings.Name = "pageToolbarConta";
+
+    menuSettings.ItemAutoWidth = false;
+    menuSettings.AllowSelectItem = false;
+    menuSettings.ApplyItemStyleToTemplates = true;
+
+    menuSettings.SettingsAdaptivity.Enabled = true;
+    menuSettings.SettingsAdaptivity.EnableAutoHideRootItems = true;
+    menuSettings.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+    menuSettings.SettingsAdaptivity.CollapseRootItemsToIconsAtWindowInnerWidth = 600;
+
+    menuSettings.Width = Unit.Percentage(100);
+    menuSettings.ControlStyle.SeparatorWidth = Unit.Pixel(0);
+    menuSettings.ControlStyle.CssClass = "page-toolbar";
+
+    menuSettings.Styles.Item.CssClass = "item";
+    menuSettings.Styles.Item.VerticalAlign = VerticalAlign.Middle;
+    menuSettings.Styles.Item.HorizontalAlign = HorizontalAlign.Left;
+    menuSettings.Images.Item.Width = Unit.Pixel(16);
+    menuSettings.Images.Item.Height = Unit.Pixel(16);
+
+    menuSettings.Items.Add(item =>
+    {
+        item.Enabled = false;
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Documentos</h1>"));
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "New";
+        item.Text = "Registro";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "/Content/Images/add.svg";
+
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "EDIT";
+        item.Text = "editar";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "/Content/Images/edit.svg";
+
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "transferir";
+        item.Text = "Transferir";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "/Content/Images/registar.svg";
+
+    });
+
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "Delete";
+        item.Text = "salir";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "/Content/Images/delete.svg";
+    });
+
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "ToggleFilterPanel";
+        item.Text = "";
+        item.GroupName = "Filter";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 1;
+        item.Image.Url = "/Content/Images/search.svg";
+        item.Image.UrlChecked = "/Content/Images/search-selected.svg";
+    });
+    menuSettings.ClientSideEvents.ItemClick = "onPageToolbarItemClick";//
+}).GetHtml()
+
+    @Html.DevExpress().Panel(panelSettings =>
+    {
+        panelSettings.Name = "filterPanel";
+    panelSettings.Collapsible = true;
+    panelSettings.ControlStyle.CssClass = "filter-panel";
+
+    panelSettings.SettingsCollapsing.ExpandEffect = PanelExpandEffect.Slide;
+    panelSettings.SettingsCollapsing.AnimationType = AnimationType.None;
+    panelSettings.SettingsCollapsing.ExpandButton.Visible = false;
+
+    panelSettings.SetContent(() =>
+        {
+            Html.DevExpress().ButtonEdit(buttonEditSettings =>
+            {
+            buttonEditSettings.Name = "searchButtonEdit";
+            buttonEditSettings.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.Always;
+            buttonEditSettings.Properties.Caption = "Search";
+            buttonEditSettings.Width = Unit.Percentage(100);
+        }).GetHtml();
+    });
+
+    panelSettings.ClientSideEvents.Expanded = "onFilterPanelExpanded";
+    panelSettings.ClientSideEvents.Collapsed = "adjustPageControls";
+}).GetHtml()
+}
+
+
+
+@section LeftPanelContent {
+    @Html.Partial("~/Views/partialGeneral/LeftPanelPartial.cshtml");
+}
+
+@section RightPanelContent {
+    <div class="settings-content">
+        <h2>Settings</h2>
+        <p>Place your content here</p>
+    </div>
+}
+@* comentario
+    @Html.Partial("DateRangePicker")
+*@
+@using (Html.BeginForm())
+{
+    /*
+    @Html.DevExpress().FormLayout(settings =>
+      {
+          settings.Name = "formLayout";
+          settings.UseDefaultPaddings = false;
+          settings.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+          settings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+          settings.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(0);
+          settings.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+          settings.ColumnCount = 1;
+          var groupItem = settings.Items.AddGroupItem(i =>
+          {
+              i.ShowCaption = DefaultBoolean.False;
+              i.GroupBoxDecoration = GroupBoxDecoration.None;
+              i.Paddings.Padding = Unit.Pixel(16);
+
+          });
+          groupItem.Items.Add(m => m.UserName, i =>
+          {
+              i.NestedExtension().TextBox(s =>
+              {
+                  AssignTextBoxSettings(s);
+                  s.Properties.ClientSideEvents.Init = "function(s, e){ s.Focus(); }";
+              });
+          });
+
+
+          groupItem.Items.Add(m => m.Email, i =>
+          {
+              i.NestedExtension().TextBox(s =>
+              {
+                  AssignTextBoxSettings(s);
+              });
+          });
+
+          groupItem.Items.Add(m => m.Password, i =>
+          {
+              i.NestedExtension().ButtonEdit(s =>
+              {
+                  s.Width = Unit.Percentage(100);
+                  s.ShowModelErrors = true;
+                  s.Properties.ValidationSettings.Display = Display.Dynamic;
+                  s.Properties.ValidationSettings.SetFocusOnError = true;
+                  s.Properties.ValidationSettings.ErrorTextPosition = ErrorTextPosition.Bottom;
+                  s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithText;
+                  s.Properties.ValidationSettings.ErrorFrameStyle.Wrap = DefaultBoolean.True;
+                  // s.Properties.ValidationSettings.
+
+                  s.Properties.Password = true;
+                  s.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.Never;
+                  s.Properties.ClientSideEvents.ButtonClick = "onPasswordButtonEditButtonClick";
+                  s.Properties.ClientSideEvents.KeyUp = "onPasswordTextChanged";
+                  s.Properties.ButtonStyle.Border.BorderWidth = Unit.Pixel(0);
+                  s.Properties.ButtonStyle.Width = Unit.Pixel(6);
+                  s.Properties.ButtonStyle.CssClass = "eye-button";
+                  s.Properties.ButtonStyle.HoverStyle.BackColor = System.Drawing.Color.Transparent;
+                  s.Properties.ButtonStyle.PressedStyle.BackColor = System.Drawing.Color.Transparent;
+
+                  s.SetButtonTemplateContent("<div></div>");
+                  s.Properties.Buttons.Add();
+              });
+          });
+
+          groupItem.Items.Add(m => m.ConfirmPassword, i =>
+          {
+              i.NestedExtension().ButtonEdit(s =>
+              {
+                  s.Width = Unit.Percentage(100);
+                  s.ShowModelErrors = true;
+                  s.Properties.ValidationSettings.Display = Display.Dynamic;
+                  s.Properties.ValidationSettings.SetFocusOnError = true;
+                  s.Properties.ValidationSettings.ErrorTextPosition = ErrorTextPosition.Bottom;
+                  s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithText;
+                  s.Properties.ValidationSettings.ErrorFrameStyle.Wrap = DefaultBoolean.True;
+
+                  s.Properties.Password = true;
+                  s.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.Never;
+                  s.Properties.ClientSideEvents.ButtonClick = "onPasswordButtonEditButtonClick";
+
+
+                  s.Properties.ButtonStyle.Border.BorderWidth = Unit.Pixel(0);
+                  s.Properties.ButtonStyle.Width = Unit.Pixel(6);
+                  s.Properties.ButtonStyle.CssClass = "eye-button";
+                  s.Properties.ButtonStyle.HoverStyle.BackColor = System.Drawing.Color.Transparent;
+                  s.Properties.ButtonStyle.PressedStyle.BackColor = System.Drawing.Color.Transparent;
+
+                  s.SetButtonTemplateContent("<div></div>");
+                  s.Properties.Buttons.Add();
+              });
+          });
+
+          groupItem.Items.Add(itemSettings =>
+          {
+              itemSettings.ShowCaption = DefaultBoolean.False;
+              itemSettings.Visible = ViewBag.GeneralError != null;
+              itemSettings.SetNestedContent(() =>
+              {
+                  ViewContext.Writer.Write("<div class=\"formLayout-generalErrorText\">" + @ViewBag.GeneralError + "</div>");
+              });
+          });
+
+          groupItem = settings.Items.AddGroupItem(i =>
+          {
+              i.ShowCaption = DefaultBoolean.False;
+              i.GroupBoxDecoration = GroupBoxDecoration.HeadingLine;
+              i.Paddings.PaddingTop = Unit.Pixel(13);
+              i.Paddings.PaddingBottom = Unit.Pixel(13);
+            //  i.ColumnSpan = 2;
+              i.GroupBoxStyle.CssClass = "formLayout-groupBox";
+          });
+          groupItem.Items.Add(i =>
+          {
+              i.ShowCaption = DefaultBoolean.False;
+              i.HorizontalAlign = FormLayoutHorizontalAlign.Center;
+
+              i.Paddings.Padding = Unit.Pixel(0);
+              i.NestedExtension().Button(s =>
+              {
+                  s.Name = "RegisterButton";
+                  s.Width = Unit.Pixel(200);
+                  s.Text = "Create an account";
+                  s.UseSubmitBehavior = true;
+              });
+          });
+
+      }).GetHtml()
+    */
+    @Html.AntiForgeryToken()
+
+    @Html.Partial("ContaGridViewPartial")
+}
+
+
+

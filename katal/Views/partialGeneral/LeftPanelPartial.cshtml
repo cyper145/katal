@@ -73,13 +73,14 @@
                {
                    group.Items.Add("Registros Documentos", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Comprobante");
                }
-               if (roleNeg.moduloAsigned(modulos, "provisión-contabilidad"))
+               if (roleNeg.moduloAsigned(modulos, "provision-contabilidad"))
                {
-                   group.Items.Add("Provisión a Contabilidad", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Comprobante");
+                   group.Items.Add("Provisión a Contabilidad", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/ProvisionContabilidad");
                }
                if (roleNeg.moduloAsigned(modulos, "modificacion-comprobates"))
                {
-                   group.Items.Add("Modificacion de Comprobantes", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Comprobante");
+                   
+                   group.Items.Add("Modificacion de Comprobantes", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/ModificarComprobante");
                }
                if (roleNeg.moduloAsigned(modulos, "generar-Detracc"))
                {
