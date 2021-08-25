@@ -214,7 +214,21 @@
                 console.log("dar");
                 exportTxtRecords();
                 break;
+            case "registar":
+                console.log("da2222");
+                registarRecords();
+                break;
+             
         }
+    }
+
+    function registarRecords() {
+
+        gridView.GetSelectedFieldValues("codigo", getSelectedRegistarRecords);
+
+    }
+    function getSelectedRegistarRecords(values) {
+        gridView.PerformCallback({ customAction: 'registar', codigo: selectdId });
     }
 
     function exportTxtRecords() {

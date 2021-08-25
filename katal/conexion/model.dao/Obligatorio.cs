@@ -40,6 +40,12 @@ namespace katal.conexion.model.dao
         {
             return Conexion.ConexionCadena(this.codEmpresa, "BDCONT", anio, consulta);
         }
+
+        public string conexionBDCBT(string consulta, int anio)
+        {
+            return Conexion.ConexionCadena(this.codEmpresa, "BDCBT", anio, consulta);
+        }
+
         public string dateFormat(DateTime date)
         {
             DateTime dateTime = DateTime.MinValue;

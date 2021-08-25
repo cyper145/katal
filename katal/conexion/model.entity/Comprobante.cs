@@ -217,6 +217,12 @@ namespace katal.conexion.model.entity
         public string cod_tipooperacion { get; set; }
         public decimal ImpPagar { get; set; }
         public int codigo { get; set; }
+        public string estado { get; set; }
+        public decimal restante { get; set; }
 
+        public ComprobanteDetraccion()
+        {
+            estado = "Faltante";
+        }
     }
 }

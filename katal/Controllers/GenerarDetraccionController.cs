@@ -140,9 +140,26 @@ namespace katal.Controllers
         private void PerformExportTxt()
         {
             List<ComprobanteDetraccion> list = GridViewHelper.ComprobantesD.Where(X => X.ImpPagar > 0).ToList();
-            //userNeg.delete(codigo);
-            ManejoArchivo manejoArchivo = new ManejoArchivo();
-            manejoArchivo.GenerarTXT("dat");
+            //userNeg.delete(codigo);       
+            list.ForEach(X =>
+            {
+                
+                X.restante = X.saldo - X.ImpPagar;
+                if (X.restante == 0)
+                {
+                    X.estado = "P";
+                }
+                else
+                {
+                    if(X.restante != X.saldo)
+                    {
+                        X.estado = "I";
+                    }
+                }
+            });
+
+            comprobanteDNeg.updateDetail(list);
+            
 
         }
         private void PerformDelete(string codigo)

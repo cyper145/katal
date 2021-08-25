@@ -103,7 +103,7 @@
                     i.ColumnSpan = 12;
                     i.NestedExtension().TextBox(t =>
                     {
-                       
+
 
                         // t.Properties.ClientSideEvents.Init = "onData";
                     });
@@ -150,7 +150,7 @@
         {
             columnSettings.FieldName = "codigo";
             columnSettings.Caption = "Sec";
-           
+
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
@@ -213,7 +213,7 @@
             columnSettings.Caption = "Tip.Operac.";
 
         });
-     
+
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "tipomon_codigo";
@@ -234,7 +234,7 @@
 
 
         });
-        
+
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "detraccion";
@@ -259,14 +259,24 @@
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "ImpPagar";
-            columnSettings.Caption = "Importe a Pagar";
+            columnSettings.Caption = "Imp. a Pagar";
 
 
         });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "estado";
+            columnSettings.Caption = "Estado de detraccion";
 
 
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "restante";
+            columnSettings.Caption = "Imp. Restante";
 
-
+        });
+        
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
         //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";

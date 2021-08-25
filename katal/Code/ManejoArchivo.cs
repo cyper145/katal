@@ -13,7 +13,7 @@ namespace katal.Code
         // para crear el archivo
         public void GenerarTXT(string texto)
         {
-            string rutaCompleta = @" D:\miarchivo.txt";
+            string rutaCompleta = @" C:\Users\cyper\Desktop\miarchivo.txt";
            // string texto = "HOLA MUNDO ";
 
             using (StreamWriter mylogs = File.AppendText(rutaCompleta))         //se crea el archivo
