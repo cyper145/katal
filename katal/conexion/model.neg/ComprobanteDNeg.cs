@@ -19,9 +19,9 @@ namespace katal.conexion.model.neg
            
         }
 
-        public List<ComprobanteDetraccion> findAll()
+        public List<ComprobanteDetraccion> findAll(DateRangePickerModel dateRange )
         {
-            return objComprobanteDao.findAll();
+            return objComprobanteDao.findAll(dateRange);
         }
         public  void updateDetail(List<ComprobanteDetraccion> obj)
         {

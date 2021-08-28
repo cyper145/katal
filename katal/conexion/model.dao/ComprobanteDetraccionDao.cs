@@ -15,15 +15,18 @@ namespace katal.conexion.model.dao
             ///014BDCOMUN
         }
 
-        public List<ComprobanteDetraccion> findAll()
+        public List<ComprobanteDetraccion> findAll(DateRangePickerModel dateRange)
         {
 
             List<ComprobanteDetraccion> listAreas = new List<ComprobanteDetraccion>();
             DateTime DATE = DateTime.Now;
             string findAll = "Select * From ";
-            findAll += "(SELECT anex_codigo, cnroruc, anex_descripcion, tipodocu_codigo, cserie, cnumero, demision, tipomon_codigo, nimporte, ntasadetraccion, detraccion, tipocambio_valor as tc, isnull(round(CASE tipomon_codigo WHEN 'MN' THEN detraccion ELSE detraccion * tipocambio_valor END, 0) - isnull(b.pagos, 0), 0) as saldo, cod_servdetracc, cod_tipooperacion, b.CB_L_ESTADO,b.CB_N_RESTANTE";
+            findAll += "(SELECT anex_codigo, cnroruc, anex_descripcion, tipodocu_codigo, cserie, cnumero, demision, tipomon_codigo, nimporte, ntasadetraccion, detraccion, tipocambio_valor as tc, isnull(round(CASE tipomon_codigo WHEN 'MN' THEN detraccion ELSE detraccion * tipocambio_valor END, 0) - isnull(b.pagos, 0), 0) as saldo, cod_servdetracc, cod_tipooperacion, LESTADODETRACCION,RESTANTE";
             findAll += $" From[{this.CodEmpresa}BDCOMUN].dbo.comprobanteCab a left join(Select cb_c_anexo, cb_c_tpdoc, REPLACE(cb_c_docum, ' ', '') ";
             findAll += $"as cb_c_docum,CB_L_ESTADO,CB_N_RESTANTE,  sum(cb_n_mtomn) as pagos From [{this.CodEmpresa}BDCBT{DATE.Year}].dbo.dmov_banco Where cb_c_conce = '015' Group by cb_c_anexo, cb_c_tpdoc, cb_c_docum,CB_L_ESTADO,CB_N_RESTANTE)b On '03' + a.anex_codigo = b.cb_c_anexo and a.tipodocu_codigo = b.cb_c_tpdoc and a.cserie + a.cnumero = b.cb_c_docum Where ldetraccion = 1 and len(a.NUMRETRAC) = 0 and case tipomon_codigo When 'MN' then nimporte else nimporte* tipocambio_valor end > 700) as Det Where saldo> 0";
+            findAll += $" and demision Between  {dateFormat(dateRange.Start)} and {dateFormat(dateRange.End)}";
+
+
             try
             {
                 comando = new SqlCommand(findAll, objConexion.getCon());
@@ -49,10 +52,9 @@ namespace katal.conexion.model.dao
                     area.saldo = Conversion.ParseDecimal(read[12].ToString());
                     area.cod_servdetracc = read[13].ToString();
                     area.cod_tipooperacion = read[14].ToString();
-                    area.estado = read[15].ToString()==""? "F" : read[15].ToString();
+                    area.estado = read[15].ToString()==""? "Pendiente" : read[15].ToString();
                     area.restante =Conversion.ParseDecimal( read[16].ToString());
                     area.codigo = i;
-
                     listAreas.Add(area);
                 }
             }
@@ -75,25 +77,26 @@ namespace katal.conexion.model.dao
         
             string item = "";
 
-            DateTime dateTime = DateTime.Now;
+            
 
             obj.ForEach(element => {
 
                 // anex_codigo
                 //cnumero
-                //cserie
+                //cserie//}
+                // LESTADODETRACCION,RESTANTE
+                //
                 //tipodocu_codigo
-                item += $"UPDATE DMOV_BANCO SET CB_L_ESTADO = '{element.estado}',CB_N_RESTANTE = {element.restante}  ";
-                item += $"WHERE CB_C_ANEXO ='{"03"+element.anex_codigo}' and ";
-                item += $" cb_c_docum ='{element.cserie}{element.cnumero}' and ";
-                item += $" cb_c_tpdoc ='{element.tipodocu_codigo}'\n";
-
-
+                item += $"UPDATE COMPROBANTECAB SET LESTADODETRACCION = '{element.estado}',RESTANTE = {element.restante}  ";
+                item += $"WHERE anex_codigo ='{element.anex_codigo}' and ";
+                item += $" cserie ='{element.cserie}' and ";
+                item += $" cnumero ='{element.cnumero}' and ";
+                item += $" tipodocu_codigo ='{element.tipodocu_codigo}'\n";
             });
 
             try
             {
-                comando = new SqlCommand(conexionBDCBT(item, dateTime.Year), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(item), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }

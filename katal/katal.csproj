@@ -379,6 +379,7 @@
     <Content Include="Views\ProvisionContabilidad\MultiSelectTipoDocRef.cshtml" />
     <Content Include="Views\ProvisionContabilidad\MultiSelectTipoOperacion.cshtml" />
     <Content Include="Views\ProvisionContabilidad\partialPopup.cshtml" />
+    <Content Include="Views\GenerarDetraccion\DateRangePicker.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

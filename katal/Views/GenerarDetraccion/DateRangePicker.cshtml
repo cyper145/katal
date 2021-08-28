@@ -1,0 +1,120 @@
+﻿@using katal.Model;
+@functions{
+    protected void PrepareDateEditSettings(MVCxFormLayoutItem item)
+    {
+        item.NestedExtension().DateEdit(date =>
+        {
+            date.ShowModelErrors = true;
+            date.Properties.ClientSideEvents.DateChanged = "UpdateInfo";
+            date.Properties.ValidationSettings.Display = Display.Dynamic;
+            date.Properties.ValidationSettings.SetFocusOnError = true;
+            date.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+            date.Properties.ValidationSettings.CausesValidation = true;
+            date.Properties.CalendarProperties.Columns = 2;
+            date.Properties.CalendarProperties.FastNavProperties.DisplayMode = FastNavigationDisplayMode.Inline;
+        });
+    }
+}
+
+
+
+@section AdditionalResources {
+<script src="@Url.Content(" ~ /Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content(" ~ /Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<style type="text/css">
+    .pickerGroupContainer,
+    .pickerFormLayout > .dxflGroupSys {
+        padding-left: 0 !important;
+    }
+</style>
+}
+
+@{
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+}
+
+<script type="text/javascript">
+    function UpdateInfo() {
+        var daysTotal = End.GetRangeDayCount();
+        Info.SetText(daysTotal !== -1 ? daysTotal + ' days' : '');
+    }
+    $(document).ready(function () {
+        if (Boolean('@(ViewBag.SuccessValidation)'))
+            alert('The form has been submitted successfully.');
+    });
+    function UpdateInfodey() {
+        console.log(Start);
+        console.log(End);
+    }
+</script>
+
+@using (Html.BeginForm("DateRangePicker", "GenerarDetraccion", FormMethod.Post))
+{
+    @Html.DevExpress().FormLayout(settings =>
+{
+    settings.Name = "Picker";
+    settings.RequiredMarkDisplayMode = RequiredMarkMode.None;
+    settings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.ControlStyle.CssClass = "pickerFormLayout";
+    settings.UseDefaultPaddings = true;
+    settings.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 600;
+    settings.Width = Unit.Percentage(60);
+    var pickerGroup = settings.Items.AddGroupItem(i =>
+    {
+        i.Caption = "Date Range Picker";
+        i.ColCount = 4;
+        i.UseDefaultPaddings = false;
+        i.GroupBoxDecoration = GroupBoxDecoration.None;
+    });
+    pickerGroup.ParentContainerStyle.CssClass = "pickerGroupContainer";
+
+
+    pickerGroup.Items.Add(i =>
+    {
+        i.Caption = "Desde";
+        i.NestedExtension().DateEdit(tb =>
+        {
+            tb.Name = "Start";
+
+            tb.Date = GridViewHelper.dateRange.Start;
+            tb.Properties.ClientSideEvents.DateChanged = "UpdateInfodey";
+            tb.Width = Unit.Percentage(100);
+        });
+    });
+    pickerGroup.Items.Add(i =>
+    {
+        i.Caption = "hasta";
+
+        i.NestedExtension().DateEdit(tb =>
+        {
+            tb.Name = "End";
+
+            tb.Date=GridViewHelper.dateRange.End;
+            tb.Width = Unit.Percentage(100);
+        });
+    });
+
+
+    pickerGroup.Items.Add(i =>
+    {
+        i.NestedExtension().Button(btn =>
+        {
+            btn.Name = "Submit";
+            btn.UseSubmitBehavior = true;
+            btn.Text = "Consultar";
+        });
+        i.ShowCaption = DefaultBoolean.False;
+        i.VerticalAlign = FormLayoutVerticalAlign.Bottom;
+        i.Width = Unit.Percentage(30);
+    });
+    pickerGroup.Items.Add(i =>
+    {
+        i.NestedExtensionType = FormLayoutNestedExtensionItemType.ValidationSummary;
+        i.ShowCaption = DefaultBoolean.False;
+        i.Width = Unit.Percentage(10);
+
+    });
+}).Bind(GridViewHelper.dateRange).GetHtml()
+}

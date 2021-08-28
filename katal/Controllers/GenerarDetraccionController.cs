@@ -38,9 +38,9 @@ namespace katal.Controllers
         }// GET: Comprobante
         public ActionResult Index()
         {
-
+            
             GridViewHelper.activarRetecion = comprobanteNeg.habilitarRetencion();
-            List<ComprobanteDetraccion> comp = comprobanteDNeg.findAll();
+            List<ComprobanteDetraccion> comp = comprobanteDNeg.findAll(GridViewHelper.dateRange);
             GridViewHelper.ComprobantesD = comp;
             return View(GridViewHelper.ComprobantesD);
         }
@@ -147,15 +147,9 @@ namespace katal.Controllers
                 X.restante = X.saldo - X.ImpPagar;
                 if (X.restante == 0)
                 {
-                    X.estado = "P";
+                    X.estado = "Pagado";
                 }
-                else
-                {
-                    if(X.restante != X.saldo)
-                    {
-                        X.estado = "I";
-                    }
-                }
+               
             });
 
             comprobanteDNeg.updateDetail(list);
@@ -558,168 +552,25 @@ namespace katal.Controllers
             return PartialView("MultiSelectTipoOperacion", new TipoOperacion() { CODIGO = CODIGO });
         }
 
-        // VER CONPROBANTE
-        public ActionResult MultiSelectPlanCuenta(string PLANCTA_CODIGO = "-1", FormCollection dataR = null)
+        public ActionResult DateRangePicker()
         {
-            ViewData["PlanCuenta"] = comprobanteNeg.findAllCuentasNacionales(GridViewHelper.NivelCOntable);
-            if (dataR != null)
-            {
-                string dar = dataR["gridLookupPlanCuenta$State"];
-
-                string ver = HttpUtility.HtmlDecode(dar);
-                if (ver != null)
-                {
-                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
-                    // Array codigo = nodes["selectedKeyValues"] ;
-                    if (nodes.selectedKeyValues != null)
-                    {
-                        GridViewHelper.PLANCTA_CODIGO = nodes.selectedKeyValues[0];
-                        PLANCTA_CODIGO = GridViewHelper.PLANCTA_CODIGO;
-                    }
-                }
-
-            }
-
-            if (PLANCTA_CODIGO == "-1")
-                PLANCTA_CODIGO = "";
-            return PartialView("MultiSelectPlanCuenta", new PlanCuentaNacional() { PLANCTA_CODIGO = PLANCTA_CODIGO });
-
+            return PartialView("DateRangePicker");
         }
-
-        public ActionResult MultiSelectCentroCostos(string CENCOST_CODIGO = "-1")
-        {
-            ViewData["centro_costos"] = requisicionNeg.findAllCentroCostos();
-            if (CENCOST_CODIGO == "-1")
-                CENCOST_CODIGO = "";
-            return PartialView("MultiSelectCentroCostos", new CentroCosto() { CENCOST_CODIGO = CENCOST_CODIGO });
-
-        }
-        public ActionResult MultiSelectOrdenFabricacion(string OF_COD = "-1")
-        {
-            ViewData["OrdenFabricacion"] = comprobanteNeg.findAllOrdenFabricacion();
-
-
-            if (OF_COD == "-1")
-                OF_COD = "";
-            return PartialView("MultiSelectOrdenFabricacion", new OrdenFabricacion() { OF_COD = OF_COD });
-        }
-
-
-        // POST: /Account/SignIn
         [HttpPost]
-        [AllowAnonymous]
-
-        public ActionResult PopupControl(SignInViewModel model, string returnUrl)
+        public ActionResult DateRangePicker(FormCollection data)
         {
-            return PartialView("GridViewPartial");
-        }
-
-        public JsonResult changeDFecha(DateTime DFecha)
-        {
-            GridViewHelper.comprobante.DFecha = DFecha;
-            return Json(new { respuesta = "" }, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult habilitarRetencion()
-        {
-            bool retencion = GridViewHelper.activarRetecion;
-            return Json(new { retencion = retencion }, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult HabilitarCalculados()
-        {
-
-            string CODIGO = GridViewHelper.CO_C_CODIG;
-            Destino destino = new Destino();
-            RespuestaDestino respuesta = new RespuestaDestino();
-            if (CODIGO != "" && CODIGO != null)
+            if (Request.Params["Submit"] == null)
+                ModelState.Clear();
+            else
             {
-                destino = destinoNeg.find(CODIGO);
-                if (destino.CON_IMPSTO == "N")
-                {
-                    respuesta.montoIGV = 0;
-                    respuesta.tasaIGV = 0;
-                    respuesta.opcion = true;
-
-                    //NTASAIGV NIGV
-                }
-                else
-                {
-                    respuesta.opcion = false;
-                    respuesta.tasaIGV = GridViewHelper.tasa;
-                }
+                GridViewHelper.dateRange.End = DateTime.Parse(Request.Params["End"]);
+                GridViewHelper.dateRange.Start = DateTime.Parse(Request.Params["Start"]);
             }
-            return Json(new { respuesta = respuesta }, JsonRequestBehavior.AllowGet);
+
+            return RedirectToAction("index");
         }
-        public JsonResult obtenerGastos()
-        {
-            RespuestaGastos retencion = new RespuestaGastos();
-
-            retencion.mnGasto1 = GridViewHelper.comprobante.gasto1;
-            retencion.mnGasto2 = GridViewHelper.comprobante.gasto2;
-
-            return Json(new { retencion = retencion }, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult ChangePlanCuenta()
-        {
-
-            string xco_c_conco = "";
-            string xco_c_tipo = "N";
-            bool xco_c_cenco = false;
-
-            string xcanexo = "";
-            bool activeCenco = false;
-            bool activeOrb = false;
-            bool activeCtaDest = false;
-            bool activeAnexo = false;
-            decimal xnvalor = 0;
-
-            RespuestaPlan respuesta = new RespuestaPlan();
-            PlanCuentaNacional planCuenta = comprobanteNeg.findCuentasNacionales(GridViewHelper.PLANCTA_CODIGO, GridViewHelper.NivelCOntable);
-            if (planCuenta != null)
-            {
-                xcanexo = planCuenta.TIPOANEX_CODIGO;
-
-                xco_c_conco = planCuenta.PLANCTA_CON_COSTO;
-                xco_c_cenco = planCuenta.PLANCTA_CENTCOST;
-                if (xco_c_conco != null && xco_c_conco.Trim() != "")
-                {
-                    GastosIngresos gastosIngresos = comprobanteNeg.findGastoIngreso(xco_c_conco);
-                    if (gastosIngresos != null)
-                    {
-                        xco_c_tipo = gastosIngresos.GASING_TIPO;
-                    }
-                }
-                xnvalor = Math.Abs(GridViewHelper.THaber - GridViewHelper.TDebe);
-                if (xco_c_cenco)
-                {
-                    activeCenco = true;
-                    if (comprobanteNeg.ExisteConceptoCGORDEN())
-                    {
-                        if (comprobanteNeg.verdataCGORDEN())
-                        {
-                            activeOrb = true;
-                        }
-                    }
-                }
-                if (xco_c_cenco && xco_c_tipo == "S")
-                {
-                    activeCtaDest = true;
-                }
-                if (xcanexo.Trim() != "")
-                {
-                    activeAnexo = true;
-                }
-            }
-            respuesta.activeAnexo = activeAnexo;
-            respuesta.activeCenco = activeCenco;
-            respuesta.activeCtaDest = activeCtaDest;
-            respuesta.activeOrb = activeOrb;
-            respuesta.xcanexo = xcanexo;
-            respuesta.xnvalor = xnvalor;
 
 
-
-            return Json(new { retencion = respuesta }, JsonRequestBehavior.AllowGet);
-        }
 
     }
 }
