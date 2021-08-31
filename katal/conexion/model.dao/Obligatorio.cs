@@ -5,20 +5,20 @@ using System.Globalization;
 
 namespace katal.conexion.model.dao
 {
-    public class  Obligatorio
+    public class Obligatorio
     {
         string codEmpresa;
         protected Conexion objConexion;
         protected SqlCommand comando;
-        public Obligatorio(string codEmpresa="")
+        public Obligatorio(string codEmpresa = "")
         {
             this.codEmpresa = codEmpresa;
         }
-    
+
         public string CodEmpresa
         {
             get { return codEmpresa; }
-            
+
         }
         public string conexionWenco(string consulta)
         {
@@ -57,7 +57,7 @@ namespace katal.conexion.model.dao
             return $"CONVERT(datetime, '{date}', 103)";
         }
         public string dateFormat(string date)
-        {            
+        {
             return $"CONVERT(datetime, '{date}', 103)";
         }
         public string numericFormat(decimal numero)
@@ -78,7 +78,7 @@ namespace katal.conexion.model.dao
         public string rellenar(string dato, int lmax, int lreal, string relleno, bool giro)
         {
             string lleno = "";
-            for (int f = 1; f <= lmax-lreal; f++)
+            for (int f = 1; f <= lmax - lreal; f++)
             {
                 lleno += relleno;
             }
@@ -152,7 +152,7 @@ namespace katal.conexion.model.dao
                     switch (conexionType)
                     {
                         case 1:// wenco
-                                consulta = conexionWenco(consulta);
+                            consulta = conexionWenco(consulta);
                             break;
                         case 2:// comun
                             consulta = conexionComun(consulta);
@@ -163,11 +163,11 @@ namespace katal.conexion.model.dao
                         case 4:// ctaspagar
                             consulta = conexionCtaPag(consulta);
                             break;
-                        
+
 
                     }
                 }
-                
+
                 comando = new SqlCommand(consulta, objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
@@ -189,5 +189,11 @@ namespace katal.conexion.model.dao
             }
             return false;
         }
+
+        protected string conversionCampo(int dato, string text1, string text2)
+        {
+            return dato == 3 ? text1 : text2;
+        }
+
     }
 }

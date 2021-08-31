@@ -2012,7 +2012,8 @@ namespace katal.conexion.model.dao
                     comp.CNUMORDCO = read[13].ToString();
                     comp.CDESCRIPC = read[14].ToString();
                     comp.RESPONSABLE_CODIGO = read[15].ToString();
-                    comp.CESTADO = read[16].ToString();
+                    comp.CESTADO = conversionCampo(Conversion.Parseint(read[16].ToString()), "CONTABILIZADO", "SIN CONTABILIZAR" +
+                        "");
                     comp.NSALDO = Conversion.ParseDecimal(read[17].ToString());
                     comp.NMONTPROG = Conversion.ParseDecimal(read[18].ToString());
                     comp.LCANJEADO = Conversion.ParseBool(read[19].ToString());
@@ -2176,7 +2177,9 @@ namespace katal.conexion.model.dao
                     comp.CNUMORDCO = read[13].ToString();
                     comp.CDESCRIPC = read[14].ToString();
                     comp.RESPONSABLE_CODIGO = read[15].ToString();
-                    comp.CESTADO = read[16].ToString();
+                    comp.CESTADO = conversionCampo( Conversion.Parseint( read[16].ToString()), "CONTABILIZADO","SIN CONTABILIZAR" +
+                        "");
+                    
                     comp.NSALDO = Conversion.ParseDecimal(read[17].ToString());
                     comp.NMONTPROG = Conversion.ParseDecimal(read[18].ToString());
                     comp.LCANJEADO = Conversion.ParseBool(read[19].ToString());
@@ -2268,6 +2271,7 @@ namespace katal.conexion.model.dao
             return comp;
 
         } 
+
         public List<Gasto> findAllGastos()
         {
             List<Gasto> listGastos = new List<Gasto>();

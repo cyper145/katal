@@ -75,10 +75,7 @@ namespace katal.conexion.model.dao
         public void updateDetail(List<ComprobanteDetraccion> obj)
         {
         
-            string item = "";
-
-            
-
+            string item = "";           
             obj.ForEach(element => {
 
                 // anex_codigo

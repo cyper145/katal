@@ -72,6 +72,7 @@
 
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
 
+        gridViewSettings.SettingsResizing.ColumnResizeMode = ColumnResizeMode.Control;
 
         gridViewSettings.SetEditFormTemplateContent(c=> {
 
@@ -535,7 +536,7 @@
             columnSettings.Visible = false;
 
         });
-       
+
 
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";

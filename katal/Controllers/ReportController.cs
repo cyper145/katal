@@ -24,5 +24,8 @@ namespace katal.Controllers
             report.RequestParameters = false;
             return View(new DevExpress.XtraReports.Web.CachedReportSourceWeb(report));
         }
+
+        
+
     }
 }

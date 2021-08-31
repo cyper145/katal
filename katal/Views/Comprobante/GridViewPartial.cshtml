@@ -67,8 +67,7 @@
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
 
         gridViewSettings.SettingsText.PopupEditFormCaption = "Registro de Documentos";
-
-
+        gridViewSettings.SettingsResizing.ColumnResizeMode = ColumnResizeMode.Control;
         gridViewSettings.SetEditFormTemplateContent(c =>
         {
 
@@ -974,13 +973,13 @@
             columnSettings.FieldName = "codigo";
             columnSettings.Caption = "Orde";
             columnSettings.Visible = false;
-            columnSettings.Width = Unit.Pixel(300);
+
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "CORDEN";
             columnSettings.Caption = "Orden";
-            columnSettings.Width = Unit.Pixel(300);
+
         });
 
         gridViewSettings.Columns.Add(columnSettings =>
@@ -994,31 +993,33 @@
         {
             columnSettings.FieldName = "DEMISION";
             columnSettings.Caption = "Fecha";
-            columnSettings.Width = Unit.Pixel(300);
+
+            columnSettings.ColumnType = MVCxGridViewColumnType.DateEdit;
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "documento";
-            columnSettings.Caption = "documento";
-            columnSettings.Width = Unit.Pixel(300);
+            columnSettings.Caption = "Documento";
+            columnSettings.Width = Unit.Pixel(200);
+
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "TIPOMON_CODIGO";
             columnSettings.Caption = "MON.";
-            columnSettings.Width = Unit.Pixel(200);
+
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "NIGV";
             columnSettings.Caption = "I.G.V";
-            columnSettings.Width = Unit.Pixel(70);
+            columnSettings.Width = Unit.Pixel(110);
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "NIMPORTE";
             columnSettings.Caption = "Importe";
-            columnSettings.Width = Unit.Pixel(170);
+            columnSettings.Width = Unit.Pixel(110);
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
@@ -1027,6 +1028,17 @@
             columnSettings.Width = Unit.Pixel(170);
 
         });
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "COMPCON";
+            columnSettings.Caption = "Comp.Contable";
+            columnSettings.Width = Unit.Pixel(170);
+
+        });
+
+        // Comp.Contable
+
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
         //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";
