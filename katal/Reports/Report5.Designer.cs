@@ -401,6 +401,8 @@ namespace katal.Reports
             // xrTableCell2
             // 
             this.xrTableCell2.CanShrink = true;
+            this.xrTableCell2.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "?PROV2")});
             this.xrTableCell2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.xrTableCell2.Name = "xrTableCell2";
             this.xrTableCell2.StylePriority.UseFont = false;
@@ -430,10 +432,13 @@ namespace katal.Reports
             // xrTableCell4
             // 
             this.xrTableCell4.CanShrink = true;
+            this.xrTableCell4.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "?end")});
             this.xrTableCell4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.xrTableCell4.Name = "xrTableCell4";
             this.xrTableCell4.StylePriority.UseFont = false;
             this.xrTableCell4.Text = "fecha2";
+            this.xrTableCell4.TextFormatString = "{0:d/MM/yyyy}";
             this.xrTableCell4.Weight = 1.3680312174875988D;
             // 
             // invoiceInfoTable
@@ -498,6 +503,8 @@ namespace katal.Reports
             // invoiceNumber
             // 
             this.invoiceNumber.CanShrink = true;
+            this.invoiceNumber.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "?star")});
             this.invoiceNumber.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.invoiceNumber.Name = "invoiceNumber";
             this.invoiceNumber.StylePriority.UseFont = false;
