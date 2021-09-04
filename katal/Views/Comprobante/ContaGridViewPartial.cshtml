@@ -66,9 +66,9 @@
         gridViewSettings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
         gridViewSettings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
-       
+
         gridViewSettings.SettingsText.PopupEditFormCaption= "Contabilizar Documento de Proveedores";// para el titulo de diferentes 
-      
+
 
         gridViewSettings.SetEditFormTemplateContent(c =>
         {
@@ -305,6 +305,9 @@
             columnSettings.FieldName = "campo1";
             columnSettings.Caption = "Debe";
             columnSettings.Width = Unit.Pixel(300);
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
         });
 
         gridViewSettings.Columns.Add(columnSettings =>
@@ -312,6 +315,9 @@
             columnSettings.FieldName = "campo2";
             columnSettings.Caption = "Haber";
             columnSettings.Width = Unit.Pixel(100);
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
         });
         gridViewSettings.EnableCallbackAnimation = true;
         gridViewSettings.Height = Unit.Percentage(100);

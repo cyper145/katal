@@ -493,6 +493,9 @@
             columnSettings.FieldName = "OC_NIMPORT";
             columnSettings.Caption = "Importe";
             columnSettings.Width = Unit.Pixel(170);
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
 
         });
         gridViewSettings.Columns.Add(columnSettings =>

@@ -225,6 +225,9 @@
         {
             columnSettings.FieldName = "nimporte";
             columnSettings.Caption = "Base Imp.";
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
 
         });
         gridViewSettings.Columns.Add(columnSettings =>
@@ -232,20 +235,26 @@
             columnSettings.FieldName = "ntasadetraccion";
             columnSettings.Caption = "T% Detrac.";
 
-
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
         });
 
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "detraccion";
             columnSettings.Caption = "Imp.Detracc.";
-
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
 
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "tipocambio_valor";
-            columnSettings.Caption = "T/C.";
+            columnSettings.Caption = "T/C."; columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F3";
 
 
         });
@@ -253,7 +262,9 @@
         {
             columnSettings.FieldName = "saldo";
             columnSettings.Caption = "Detracc.S/.";
-
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
 
         });
         gridViewSettings.Columns.Add(columnSettings =>
@@ -261,7 +272,9 @@
             columnSettings.FieldName = "ImpPagar";
             columnSettings.Caption = "Imp. a Pagar";
 
-
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
@@ -274,9 +287,12 @@
         {
             columnSettings.FieldName = "restante";
             columnSettings.Caption = "Imp. Restante";
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
 
         });
-        
+
         gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
         gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
         //gridViewSettings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedComprobante";

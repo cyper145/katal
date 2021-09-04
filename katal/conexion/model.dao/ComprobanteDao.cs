@@ -19,6 +19,16 @@ namespace katal.conexion.model.dao
           objConexion = Conexion.saberEstado();             
         }
 
+        //public ComprobanteDao reporte()
+        /*{
+            string sp=""
+            SqlCommand sql_cmnd = new SqlCommand(sp, sqlCon);
+            sql_cmnd.Parameters.AddWithValue("@usuario", SqlDbType.NVarChar).Value = usuario;
+            sql_cmnd.Parameters.AddWithValue("@cuenta", SqlDbType.NVarChar).Value = cuenta;
+            sql_cmnd.CommandType = CommandType.StoredProcedure;
+        //*}*/
+
+
         public bool create(Comprobante obj)
         {
             DateTime date = DateTime.Now;
@@ -240,7 +250,6 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
-
         public void transferir(Comprobante comprobante, int nivelContable)
         {
             string xccodsubdi = "";

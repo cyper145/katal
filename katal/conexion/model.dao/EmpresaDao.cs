@@ -38,7 +38,6 @@ namespace katal.conexion.model.dao
             }
             catch (Exception)
             {
-
                 throw;
             }
             finally

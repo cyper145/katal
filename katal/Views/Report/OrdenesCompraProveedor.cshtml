@@ -1,0 +1,16 @@
+﻿
+
+@{
+    ViewBag.Title = "Report Ordenes de compra Proveedor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+    settings.Name = "WebDocumentViewer3";
+   // settings.ClientSideEvents.CustomizeParameterEditors = "customizeParameterEditors";
+}).Bind(Model).GetHtml()
+
+@section LeftPanelContent {
+    @Html.Partial("~/Views/partialGeneral/LeftPanelPartial.cshtml");
+}

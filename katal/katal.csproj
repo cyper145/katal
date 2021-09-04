@@ -380,6 +380,9 @@
     <Content Include="Views\ProvisionContabilidad\MultiSelectTipoOperacion.cshtml" />
     <Content Include="Views\ProvisionContabilidad\partialPopup.cshtml" />
     <Content Include="Views\GenerarDetraccion\DateRangePicker.cshtml" />
+    <Content Include="Views\Report\OrdenesCompraProveedor.cshtml" />
+    <Content Include="Views\ReporteOrdenCompra\Index.cshtml" />
+    <Content Include="Views\ReporteOrdenCompra\DateRangePicker.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -480,6 +483,7 @@
     <Compile Include="Controllers\ProveedorController.cs" />
     <Compile Include="Controllers\ProvisionContabilidadController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\ReporteOrdenCompraController.cs" />
     <Compile Include="Controllers\RequisionCompraController.cs" />
     <Compile Include="Controllers\ResponsableCompraController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
@@ -519,6 +523,18 @@
     <Compile Include="Reports\Report3.Designer.cs">
       <DependentUpon>Report3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports\Report4.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Report4.Designer.cs">
+      <DependentUpon>Report4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Report5.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Report5.Designer.cs">
+      <DependentUpon>Report5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reports\ReportOrden.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -554,6 +570,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Report3.resx">
       <DependentUpon>Report3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Report4.resx">
+      <DependentUpon>Report4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Report5.resx">
+      <DependentUpon>Report5.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\ReportOrden.resx">
       <DependentUpon>ReportOrden.cs</DependentUpon>

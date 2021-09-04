@@ -1014,12 +1014,21 @@
             columnSettings.FieldName = "NIGV";
             columnSettings.Caption = "I.G.V";
             columnSettings.Width = Unit.Pixel(110);
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F3";
+           
+          
+
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {
             columnSettings.FieldName = "NIMPORTE";
             columnSettings.Caption = "Importe";
             columnSettings.Width = Unit.Pixel(110);
+            columnSettings.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = columnSettings.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
         });
         gridViewSettings.Columns.Add(columnSettings =>
         {

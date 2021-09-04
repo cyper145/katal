@@ -843,5 +843,13 @@ namespace katal.Controllers
             return Json(new { retencion = respuesta }, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult REPORTECOMPROBANTE()
+        {
+            List<Comprobante> gastosIngresos = comprobanteNeg.findAll();
+
+            return Json(new {  gastosIngresos }, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

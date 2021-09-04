@@ -26,11 +26,11 @@ namespace katal.conexion.model.dao
         public void create(RequisicionCompra obj)
         {
 
-            string FECREQUI = obj.FECREQUI.ToString("yyyy/dd/MM");
+            string FECREQUI = dateFormat( obj.FECREQUI);
             string SQLC = "INSERT INTO requisc (nrorequi,tiporequi,codsolic,fecrequi,";
-            SQLC += "glosa,area, estrequi,prioridad,FecEntrega) VALUES ('" + obj.NROREQUI + "','RQ','" + obj.CODSOLIC + "','";
-            SQLC += FECREQUI + "','";
-            SQLC += obj.GLOSA + "','" + obj.AREA + "','P'," + obj.prioridad+"," +  verDate(obj.FecEntrega) + ")";
+            SQLC += "glosa,area, estrequi,prioridad,FecEntrega) VALUES ('" + obj.NROREQUI + "','RQ','" + obj.CODSOLIC + "',";
+            SQLC += FECREQUI + ",'";
+            SQLC += obj.GLOSA + "','" + obj.AREA + "','P'," + obj.prioridad+"," +  dateFormat(obj.FecEntrega) + ")";
             try
             {
                 comando = new SqlCommand(conexionComun( SQLC), objConexion.getCon());

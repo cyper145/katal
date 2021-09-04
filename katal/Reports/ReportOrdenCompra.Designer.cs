@@ -30,8 +30,8 @@ namespace katal.Reports
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportOrdenCompra));
             DevExpress.XtraReports.UI.XRSummary xrSummary1 = new DevExpress.XtraReports.UI.XRSummary();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportOrdenCompra));
             DevExpress.DataAccess.Sql.SelectQuery selectQuery1 = new DevExpress.DataAccess.Sql.SelectQuery();
             DevExpress.DataAccess.Sql.Column column1 = new DevExpress.DataAccess.Sql.Column();
             DevExpress.DataAccess.Sql.ColumnExpression columnExpression1 = new DevExpress.DataAccess.Sql.ColumnExpression();
@@ -228,6 +228,15 @@ namespace katal.Reports
             this.lineTotal = new DevExpress.XtraReports.UI.XRTableCell();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
+            this.xrLine4 = new DevExpress.XtraReports.UI.XRLine();
+            this.summariesTable = new DevExpress.XtraReports.UI.XRTable();
+            this.totalRow = new DevExpress.XtraReports.UI.XRTableRow();
+            this.totalCaption = new DevExpress.XtraReports.UI.XRTableCell();
+            this.total = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrLabel4 = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel3 = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel2 = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             this.GroupHeader2 = new DevExpress.XtraReports.UI.GroupHeaderBand();
             this.xrTable2 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow5 = new DevExpress.XtraReports.UI.XRTableRow();
@@ -279,10 +288,6 @@ namespace katal.Reports
             this.invoiceNumber = new DevExpress.XtraReports.UI.XRTableCell();
             this.GroupFooter1 = new DevExpress.XtraReports.UI.GroupFooterBand();
             this.xrLine3 = new DevExpress.XtraReports.UI.XRLine();
-            this.summariesTable = new DevExpress.XtraReports.UI.XRTable();
-            this.totalRow = new DevExpress.XtraReports.UI.XRTableRow();
-            this.totalCaption = new DevExpress.XtraReports.UI.XRTableCell();
-            this.total = new DevExpress.XtraReports.UI.XRTableCell();
             this.GroupHeader1 = new DevExpress.XtraReports.UI.GroupHeaderBand();
             this.xrLine2 = new DevExpress.XtraReports.UI.XRLine();
             this.headerTable = new DevExpress.XtraReports.UI.XRTable();
@@ -302,17 +307,12 @@ namespace katal.Reports
             this.parameter1 = new DevExpress.XtraReports.Parameters.Parameter();
             this.sqlDataSource3 = new DevExpress.DataAccess.Sql.SqlDataSource(this.components);
             this.objectDataSource1 = new DevExpress.DataAccess.ObjectBinding.ObjectDataSource(this.components);
-            this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabel2 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabel3 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabel4 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLine4 = new DevExpress.XtraReports.UI.XRLine();
             ((System.ComponentModel.ISupportInitialize)(this.detailTable)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.summariesTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.customerTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceNumberTable)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.summariesTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.headerTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
@@ -321,7 +321,7 @@ namespace katal.Reports
             // 
             this.Detail.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.detailTable});
-            this.Detail.HeightF = 46F;
+            this.Detail.HeightF = 46.83334F;
             this.Detail.KeepTogether = true;
             this.Detail.Name = "Detail";
             this.Detail.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
@@ -402,6 +402,7 @@ namespace katal.Reports
             this.productName.Name = "productName";
             this.productName.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 5, 0, 100F);
             this.productName.StylePriority.UsePadding = false;
+            this.productName.TextFormatString = "{0:f0}";
             this.productName.Weight = 1.0438343062700071D;
             // 
             // unitPrice
@@ -414,7 +415,7 @@ namespace katal.Reports
             this.unitPrice.StylePriority.UsePadding = false;
             this.unitPrice.StylePriority.UseTextAlignment = false;
             this.unitPrice.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
-            this.unitPrice.TextFormatString = "{0:S/.0.00}";
+            this.unitPrice.TextFormatString = "{0:f}";
             this.unitPrice.Weight = 0.8890672142284064D;
             // 
             // lineTotal
@@ -430,7 +431,7 @@ namespace katal.Reports
             this.lineTotal.StylePriority.UsePadding = false;
             this.lineTotal.StylePriority.UseTextAlignment = false;
             this.lineTotal.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
-            this.lineTotal.TextFormatString = "{0:S/.0.00}";
+            this.lineTotal.TextFormatString = "{0:f}";
             this.lineTotal.Weight = 1.0154078431416802D;
             // 
             // TopMargin
@@ -454,6 +455,100 @@ namespace katal.Reports
             this.BottomMargin.Name = "BottomMargin";
             this.BottomMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.BottomMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
+            // 
+            // xrLine4
+            // 
+            this.xrLine4.LocationFloat = new DevExpress.Utils.PointFloat(815.583F, 146.8333F);
+            this.xrLine4.Name = "xrLine4";
+            this.xrLine4.SizeF = new System.Drawing.SizeF(283.3333F, 2.5F);
+            // 
+            // summariesTable
+            // 
+            this.summariesTable.ForeColor = System.Drawing.Color.Black;
+            this.summariesTable.LocationFloat = new DevExpress.Utils.PointFloat(663.1266F, 23.66664F);
+            this.summariesTable.Name = "summariesTable";
+            this.summariesTable.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
+            this.totalRow});
+            this.summariesTable.SizeF = new System.Drawing.SizeF(435.7896F, 22.99998F);
+            this.summariesTable.StylePriority.UseForeColor = false;
+            // 
+            // totalRow
+            // 
+            this.totalRow.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.totalCaption,
+            this.total});
+            this.totalRow.Name = "totalRow";
+            this.totalRow.Weight = 1.3199999999999998D;
+            // 
+            // totalCaption
+            // 
+            this.totalCaption.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.totalCaption.Name = "totalCaption";
+            this.totalCaption.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 5, 100F);
+            this.totalCaption.StylePriority.UseFont = false;
+            this.totalCaption.StylePriority.UsePadding = false;
+            this.totalCaption.StylePriority.UseTextAlignment = false;
+            this.totalCaption.Text = "TOTAL";
+            this.totalCaption.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
+            this.totalCaption.Weight = 1.5060970566200949D;
+            // 
+            // total
+            // 
+            this.total.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "Sum([LineTotalCalcField])")});
+            this.total.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.total.Name = "total";
+            this.total.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 5, 100F);
+            this.total.StylePriority.UseFont = false;
+            this.total.StylePriority.UsePadding = false;
+            this.total.StylePriority.UseTextAlignment = false;
+            xrSummary1.Running = DevExpress.XtraReports.UI.SummaryRunning.Group;
+            this.total.Summary = xrSummary1;
+            this.total.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
+            this.total.TextFormatString = "{0:f}";
+            this.total.Weight = 1.762063996706426D;
+            // 
+            // xrLabel4
+            // 
+            this.xrLabel4.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OC_NIGV]")});
+            this.xrLabel4.LocationFloat = new DevExpress.Utils.PointFloat(473.8074F, 23.66664F);
+            this.xrLabel4.Multiline = true;
+            this.xrLabel4.Name = "xrLabel4";
+            this.xrLabel4.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel4.SizeF = new System.Drawing.SizeF(100F, 23F);
+            this.xrLabel4.Text = "IGV 18%  ";
+            this.xrLabel4.TextFormatString = "{0:f}";
+            // 
+            // xrLabel3
+            // 
+            this.xrLabel3.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OC_NVENTA]")});
+            this.xrLabel3.LocationFloat = new DevExpress.Utils.PointFloat(127.9741F, 23.66664F);
+            this.xrLabel3.Multiline = true;
+            this.xrLabel3.Name = "xrLabel3";
+            this.xrLabel3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel3.SizeF = new System.Drawing.SizeF(100F, 23F);
+            this.xrLabel3.Text = "IGV 18%  ";
+            this.xrLabel3.TextFormatString = "{0:f}";
+            // 
+            // xrLabel2
+            // 
+            this.xrLabel2.LocationFloat = new DevExpress.Utils.PointFloat(373.8074F, 23.66664F);
+            this.xrLabel2.Multiline = true;
+            this.xrLabel2.Name = "xrLabel2";
+            this.xrLabel2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel2.SizeF = new System.Drawing.SizeF(100F, 23F);
+            this.xrLabel2.Text = "IGV 18%  ";
+            // 
+            // xrLabel1
+            // 
+            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(27.97407F, 23.66664F);
+            this.xrLabel1.Multiline = true;
+            this.xrLabel1.Name = "xrLabel1";
+            this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel1.SizeF = new System.Drawing.SizeF(100F, 23F);
+            this.xrLabel1.Text = "Valor Venta";
             // 
             // GroupHeader2
             // 
@@ -878,18 +973,18 @@ namespace katal.Reports
             // xrLine1
             // 
             this.xrLine1.ForeColor = System.Drawing.Color.Gray;
-            this.xrLine1.LocationFloat = new DevExpress.Utils.PointFloat(237.5F, 78.99999F);
+            this.xrLine1.LocationFloat = new DevExpress.Utils.PointFloat(170.0218F, 79.00002F);
             this.xrLine1.Name = "xrLine1";
-            this.xrLine1.SizeF = new System.Drawing.SizeF(628.9996F, 10F);
+            this.xrLine1.SizeF = new System.Drawing.SizeF(754.8339F, 10F);
             this.xrLine1.StylePriority.UseForeColor = false;
             // 
             // invoiceNumberTable
             // 
-            this.invoiceNumberTable.LocationFloat = new DevExpress.Utils.PointFloat(237.5F, 10F);
+            this.invoiceNumberTable.LocationFloat = new DevExpress.Utils.PointFloat(170.0218F, 10F);
             this.invoiceNumberTable.Name = "invoiceNumberTable";
             this.invoiceNumberTable.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.invoiceNumberRow});
-            this.invoiceNumberTable.SizeF = new System.Drawing.SizeF(629.0007F, 68.99999F);
+            this.invoiceNumberTable.SizeF = new System.Drawing.SizeF(754.834F, 68.99999F);
             // 
             // invoiceNumberRow
             // 
@@ -919,7 +1014,7 @@ namespace katal.Reports
             this.invoiceNumber.StylePriority.UseTextAlignment = false;
             this.invoiceNumber.TextAlignment = DevExpress.XtraPrinting.TextAlignment.BottomLeft;
             this.invoiceNumber.TextFormatString = "{0}";
-            this.invoiceNumber.Weight = 0.90951794933017061D;
+            this.invoiceNumber.Weight = 1.7121840405821036D;
             // 
             // GroupFooter1
             // 
@@ -940,52 +1035,6 @@ namespace katal.Reports
             this.xrLine3.Name = "xrLine3";
             this.xrLine3.SizeF = new System.Drawing.SizeF(1139F, 10F);
             this.xrLine3.StylePriority.UseForeColor = false;
-            // 
-            // summariesTable
-            // 
-            this.summariesTable.ForeColor = System.Drawing.Color.Black;
-            this.summariesTable.LocationFloat = new DevExpress.Utils.PointFloat(663.1266F, 23.66664F);
-            this.summariesTable.Name = "summariesTable";
-            this.summariesTable.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
-            this.totalRow});
-            this.summariesTable.SizeF = new System.Drawing.SizeF(435.7896F, 22.99998F);
-            this.summariesTable.StylePriority.UseForeColor = false;
-            // 
-            // totalRow
-            // 
-            this.totalRow.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.totalCaption,
-            this.total});
-            this.totalRow.Name = "totalRow";
-            this.totalRow.Weight = 1.3199999999999998D;
-            // 
-            // totalCaption
-            // 
-            this.totalCaption.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.totalCaption.Name = "totalCaption";
-            this.totalCaption.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 5, 100F);
-            this.totalCaption.StylePriority.UseFont = false;
-            this.totalCaption.StylePriority.UsePadding = false;
-            this.totalCaption.StylePriority.UseTextAlignment = false;
-            this.totalCaption.Text = "TOTAL";
-            this.totalCaption.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
-            this.totalCaption.Weight = 1.5060970566200949D;
-            // 
-            // total
-            // 
-            this.total.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "sumSum([LineTotalCalcField])")});
-            this.total.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.total.Name = "total";
-            this.total.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 5, 100F);
-            this.total.StylePriority.UseFont = false;
-            this.total.StylePriority.UsePadding = false;
-            this.total.StylePriority.UseTextAlignment = false;
-            xrSummary1.Running = DevExpress.XtraReports.UI.SummaryRunning.Group;
-            this.total.Summary = xrSummary1;
-            this.total.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
-            this.total.TextFormatString = "{0:S/.0.00}";
-            this.total.Weight = 1.762063996706426D;
             // 
             // GroupHeader1
             // 
@@ -1541,52 +1590,6 @@ namespace katal.Reports
             this.objectDataSource1.DataSource = typeof(katal.conexion.model.entity.OrdenCompra);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
-            // xrLabel1
-            // 
-            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(27.97407F, 23.66664F);
-            this.xrLabel1.Multiline = true;
-            this.xrLabel1.Name = "xrLabel1";
-            this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel1.SizeF = new System.Drawing.SizeF(100F, 23F);
-            this.xrLabel1.Text = "Valor Venta";
-            // 
-            // xrLabel2
-            // 
-            this.xrLabel2.LocationFloat = new DevExpress.Utils.PointFloat(373.8074F, 23.66664F);
-            this.xrLabel2.Multiline = true;
-            this.xrLabel2.Name = "xrLabel2";
-            this.xrLabel2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel2.SizeF = new System.Drawing.SizeF(100F, 23F);
-            this.xrLabel2.Text = "IGV 18%  ";
-            // 
-            // xrLabel3
-            // 
-            this.xrLabel3.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OC_NVENTA]")});
-            this.xrLabel3.LocationFloat = new DevExpress.Utils.PointFloat(127.9741F, 23.66664F);
-            this.xrLabel3.Multiline = true;
-            this.xrLabel3.Name = "xrLabel3";
-            this.xrLabel3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel3.SizeF = new System.Drawing.SizeF(100F, 23F);
-            this.xrLabel3.Text = "IGV 18%  ";
-            // 
-            // xrLabel4
-            // 
-            this.xrLabel4.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OC_NIGV]")});
-            this.xrLabel4.LocationFloat = new DevExpress.Utils.PointFloat(473.8074F, 23.66664F);
-            this.xrLabel4.Multiline = true;
-            this.xrLabel4.Name = "xrLabel4";
-            this.xrLabel4.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel4.SizeF = new System.Drawing.SizeF(100F, 23F);
-            this.xrLabel4.Text = "IGV 18%  ";
-            // 
-            // xrLine4
-            // 
-            this.xrLine4.LocationFloat = new DevExpress.Utils.PointFloat(815.583F, 146.8333F);
-            this.xrLine4.Name = "xrLine4";
-            this.xrLine4.SizeF = new System.Drawing.SizeF(283.3333F, 2.5F);
-            // 
             // ReportOrdenCompra
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -1618,11 +1621,11 @@ namespace katal.Reports
             this.baseControlStyle});
             this.Version = "20.1";
             ((System.ComponentModel.ISupportInitialize)(this.detailTable)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.summariesTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.customerTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceNumberTable)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.summariesTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.headerTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();

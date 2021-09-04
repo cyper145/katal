@@ -13,7 +13,6 @@ namespace katal.Controllers
     public class GridViewController : BaseController
     {
 
-
         private UserNeg userNeg;
         public GridViewController()
         {
