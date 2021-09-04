@@ -383,6 +383,10 @@
     <Content Include="Views\Report\OrdenesCompraProveedor.cshtml" />
     <Content Include="Views\ReporteOrdenCompra\Index.cshtml" />
     <Content Include="Views\ReporteOrdenCompra\DateRangePicker.cshtml" />
+    <Content Include="Views\ReporteOrdenCompra\MultiSelectProveedor.cshtml" />
+    <Content Include="Views\ReporteOrdenCompra\MultiSelectProveedor2.cshtml" />
+    <Content Include="Views\ReporteOrdenCompra\MultiselectEstadoDoc.cshtml" />
+    <Content Include="Views\ReporteOrdenCompra\MultiselectEstadoDoc2.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -409,6 +413,7 @@
     <Compile Include="conexion\model.dao\Conversion.cs" />
     <Compile Include="conexion\model.dao\DestinoDao.cs" />
     <Compile Include="conexion\model.dao\EmpresaDao.cs" />
+    <Compile Include="conexion\model.dao\EstadoDocDao.cs" />
     <Compile Include="conexion\model.dao\MonedaDao.cs" />
     <Compile Include="conexion\model.dao\Obligatorio.cs" />
     <Compile Include="conexion\model.dao\OrdenCompraDao.cs" />
@@ -431,6 +436,7 @@
     <Compile Include="conexion\model.entity\Destino.cs" />
     <Compile Include="conexion\model.entity\EjercicioContable.cs" />
     <Compile Include="conexion\model.entity\Empresa.cs" />
+    <Compile Include="conexion\model.entity\EstadoDoc.cs" />
     <Compile Include="conexion\model.entity\FormaPago.cs" />
     <Compile Include="conexion\model.entity\Gasto.cs" />
     <Compile Include="conexion\model.entity\gastoTipoAnexo.cs" />
@@ -460,6 +466,7 @@
     <Compile Include="conexion\model.neg\ComprobanteNeg.cs" />
     <Compile Include="conexion\model.neg\DestinoNeg.cs" />
     <Compile Include="conexion\model.neg\EmpresaNeg.cs" />
+    <Compile Include="conexion\model.neg\EstadoDocNeg.cs" />
     <Compile Include="conexion\model.neg\OrdenCompraNeg.cs" />
     <Compile Include="conexion\model.neg\PaisNeg.cs" />
     <Compile Include="conexion\model.neg\ProveedorNeg.cs" />

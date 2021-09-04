@@ -50,7 +50,7 @@
     }
 </script>
 
-@using (Html.BeginForm("DateRangePicker", "OrdenCompra", FormMethod.Post))
+@using (Html.BeginForm("cargarReporte", "ReporteOrdenCompra", FormMethod.Post))
 {
     @Html.DevExpress().FormLayout(settings =>
 {
@@ -62,40 +62,115 @@
     settings.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
     settings.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 600;
     settings.Width = Unit.Percentage(60);
+    settings.ColumnCount = 12;
     var pickerGroup = settings.Items.AddGroupItem(i =>
     {
-        i.Caption = "Date Range Picker";
-        i.ColCount = 4;
+        i.Caption = "Proveedor";
+        i.ColumnSpan = 6;
+        i.ColCount = 8;
         i.UseDefaultPaddings = false;
-        i.GroupBoxDecoration = GroupBoxDecoration.None;
+        i.GroupBoxDecoration = GroupBoxDecoration.Default;
     });
     pickerGroup.ParentContainerStyle.CssClass = "pickerGroupContainer";
 
 
     pickerGroup.Items.Add(i =>
     {
+
+        i.Name = "Prov1";
+
         i.Caption = "Desde";
+
+        i.ColumnSpan = 8;
+        i.SetNestedContent(() =>
+        {
+            Html.RenderAction("MultiSelectProveedor");
+        });
+    });
+    pickerGroup.Items.Add(i =>
+    {
+
+        i.Name = "Prov2";
+
+        i.Caption = "Hasta";
+
+        i.ColumnSpan = 8;
+        i.SetNestedContent(() =>
+        {
+            Html.RenderAction("MultiSelectProveedor2");
+        });
+    });
+    pickerGroup = settings.Items.AddGroupItem(i =>
+    {
+        i.Caption = "Estado";
+        i.ColumnSpan = 6;
+        i.ColCount = 8;
+        i.UseDefaultPaddings = false;
+        i.GroupBoxDecoration = GroupBoxDecoration.Default;
+    });
+
+
+
+    pickerGroup.Items.Add(i =>
+    {
+
+        i.Name = "Estado1";
+
+        i.Caption = "Desde";
+
+        i.ColumnSpan = 8;
+        i.SetNestedContent(() =>
+        {
+            Html.RenderAction("MultiSelectEstadoDoc");
+        });
+    });
+    pickerGroup.Items.Add(i =>
+    {
+        i.Name = "Estado2";
+
+        i.Caption = "Hasta";
+
+        i.ColumnSpan = 8;
+        i.SetNestedContent(() =>
+        {
+            Html.RenderAction("MultiSelectEstadoDoc2");
+        });
+    });
+
+    pickerGroup = settings.Items.AddGroupItem(i =>
+    {
+        i.Caption = "Fecha";
+        i.ColumnSpan = 12;
+        i.ColCount = 8;
+        i.UseDefaultPaddings = false;
+        i.GroupBoxDecoration = GroupBoxDecoration.Default;
+    });
+    pickerGroup.Items.Add(i =>
+    {
+        i.Caption = "Desde";
+        i.ColumnSpan = 4;
         i.NestedExtension().DateEdit(tb =>
         {
             tb.Name = "Start";
 
-            tb.Date = GridViewHelper.dateRange.Start;
+            tb.Date = DateTime.Now;
             tb.Properties.ClientSideEvents.DateChanged = "UpdateInfodey";
             tb.Width = Unit.Percentage(100);
         });
     });
     pickerGroup.Items.Add(i =>
     {
-        i.Caption = "hasta";
-
+        i.Caption = "Hasta";
+        i.ColumnSpan = 4;
         i.NestedExtension().DateEdit(tb =>
         {
             tb.Name = "End";
-
-            tb.Date=GridViewHelper.dateRange.End;
+            tb.Date = DateTime.Now;
+            tb.Properties.ClientSideEvents.DateChanged = "UpdateInfodey";
             tb.Width = Unit.Percentage(100);
         });
     });
+
 
 
     pickerGroup.Items.Add(i =>
@@ -115,7 +190,7 @@
         i.NestedExtensionType = FormLayoutNestedExtensionItemType.ValidationSummary;
         i.ShowCaption = DefaultBoolean.False;
         i.Width = Unit.Percentage(10);
-       
+
     });
 }).Bind(GridViewHelper.dateRange).GetHtml()
 }

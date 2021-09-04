@@ -1,10 +1,11 @@
-﻿@using katal.Model;
+﻿
+@using katal.Model;
 
 @Html.DevExpress().GridLookup(settings =>
 {
-   
+    
     settings.Name = "gridLookupProveedor";
-    settings.GridViewProperties.CallbackRouteValues = new { Controller = "OrdenCompra", Action = "MultiSelectProveedor", CurrentCategory = Model.PRVCCODIGO };
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "ReporteOrdenCompra", Action = "MultiSelectProveedor", CurrentCategory = Model.PRVCCODIGO };
 
     settings.KeyFieldName = "PRVCCODIGO";
 
@@ -12,7 +13,7 @@
     // settings.CommandColumn.ShowSelectCheckbox = true;
     settings.Columns.Add("PRVCCODIGO").Visible = false;
     settings.Columns.Add("PRVCRUC").Width = Unit.Percentage(10);
-    settings.Columns.Add("PRVCNOMBRE").Width= Unit.Percentage(90);
+    settings.Columns.Add("PRVCNOMBRE").Width = Unit.Percentage(90);
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
@@ -24,7 +25,7 @@
     //settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
     settings.GridViewProperties.SettingsPager.PageSize = 7;
 
-    settings.GridViewClientSideEvents.RowClick = "OnGridRowClick";
+   // settings.GridViewClientSideEvents.RowClick = "OnGridRowClick";
 
     settings.DataBound = (sender, e) =>
     {
