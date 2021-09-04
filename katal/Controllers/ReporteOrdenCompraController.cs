@@ -66,7 +66,7 @@ namespace katal.Controllers
             }
 
             
-            return RedirectToAction("OrdenesCompraProveedor", "Report", new { codigo = "014", estado1 = esta1, estado2 = esta2, PROV1 = prov1, PROV2 = prov2, });
+            return RedirectToAction("OrdenesCompraProveedor", "Report", new { codigo = "014",  star= DateTime.Parse(Request.Params["Start"]), end = DateTime.Parse(Request.Params["End"]), estado1 = esta1, estado2 = esta2, PROV1 = prov1, PROV2 = prov2, });
         }
 
         

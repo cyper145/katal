@@ -43,6 +43,7 @@ namespace katal.Reports
             DevExpress.DataAccess.Sql.QueryParameter queryParameter8 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter9 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter10 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.CustomSqlQuery customSqlQuery3 = new DevExpress.DataAccess.Sql.CustomSqlQuery();
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.detailTable = new DevExpress.XtraReports.UI.XRTable();
             this.detailTableRow = new DevExpress.XtraReports.UI.XRTableRow();
@@ -109,6 +110,9 @@ namespace katal.Reports
             this.ESTADO2 = new DevExpress.XtraReports.Parameters.Parameter();
             this.PROV1 = new DevExpress.XtraReports.Parameters.Parameter();
             this.PROV2 = new DevExpress.XtraReports.Parameters.Parameter();
+            this.sqlDataSource3 = new DevExpress.DataAccess.Sql.SqlDataSource(this.components);
+            this.star = new DevExpress.XtraReports.Parameters.Parameter();
+            this.end = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.detailTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceInfoTable)).BeginInit();
@@ -215,6 +219,7 @@ namespace katal.Reports
             this.xrTableCell13.StylePriority.UseTextAlignment = false;
             this.xrTableCell13.Text = "xrTableCell13";
             this.xrTableCell13.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
+            this.xrTableCell13.TextFormatString = "{0:f0}";
             this.xrTableCell13.Weight = 0.27636798275976526D;
             // 
             // xrTableCell14
@@ -246,6 +251,7 @@ namespace katal.Reports
             this.xrTableCell15.StylePriority.UseTextAlignment = false;
             this.xrTableCell15.Text = "xrTableCell15";
             this.xrTableCell15.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
+            this.xrTableCell15.TextFormatString = "{0:f}";
             this.xrTableCell15.Weight = 0.33320223833781643D;
             // 
             // xrTableCell17
@@ -294,6 +300,7 @@ namespace katal.Reports
             this.xrTableCell18.StylePriority.UseTextAlignment = false;
             this.xrTableCell18.Text = "xrTableCell18";
             this.xrTableCell18.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
+            this.xrTableCell18.TextFormatString = "{0:d/MM/yyyy}";
             this.xrTableCell18.Weight = 0.31785826539268269D;
             // 
             // xrTableCell19
@@ -310,6 +317,7 @@ namespace katal.Reports
             this.xrTableCell19.StylePriority.UseTextAlignment = false;
             this.xrTableCell19.Text = "xrTableCell19";
             this.xrTableCell19.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
+            this.xrTableCell19.TextFormatString = "{0:d/MM/yyyy}";
             this.xrTableCell19.Weight = 0.30251663963356268D;
             // 
             // xrTableCell20
@@ -459,6 +467,8 @@ namespace katal.Reports
             // invoiceDate
             // 
             this.invoiceDate.CanShrink = true;
+            this.invoiceDate.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "?PROV1")});
             this.invoiceDate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.invoiceDate.Name = "invoiceDate";
             this.invoiceDate.StylePriority.UseFont = false;
@@ -834,6 +844,30 @@ namespace katal.Reports
             this.PROV2.Description = "PROV2";
             this.PROV2.Name = "PROV2";
             // 
+            // sqlDataSource3
+            // 
+            this.sqlDataSource3.ConnectionName = "localhost_WENCO";
+            this.sqlDataSource3.Name = "sqlDataSource3";
+            customSqlQuery3.Name = "Query";
+            customSqlQuery3.Sql = resources.GetString("customSqlQuery3.Sql");
+            this.sqlDataSource3.Queries.AddRange(new DevExpress.DataAccess.Sql.SqlQuery[] {
+            customSqlQuery3});
+            this.sqlDataSource3.ResultSchemaSerializable = resources.GetString("sqlDataSource3.ResultSchemaSerializable");
+            // 
+            // star
+            // 
+            this.star.Description = "star";
+            this.star.Name = "star";
+            this.star.Type = typeof(System.DateTime);
+            this.star.ValueInfo = "2021-09-04";
+            // 
+            // end
+            // 
+            this.end.Description = "end";
+            this.end.Name = "end";
+            this.end.Type = typeof(System.DateTime);
+            this.end.ValueInfo = "2021-09-04";
+            // 
             // Report5
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -847,11 +881,12 @@ namespace katal.Reports
             this.LineTotalCalcField});
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.sqlDataSource1,
-            this.sqlDataSource2});
+            this.sqlDataSource2,
+            this.sqlDataSource3});
             this.DataMember = "Query";
-            this.DataSource = this.sqlDataSource2;
+            this.DataSource = this.sqlDataSource3;
             this.FilterString = "[oc_csitord] >= ?ESTADO1 And [oc_csitord] <= ?ESTADO2 And [oc_ccodpro] >= ?PROV1 " +
-    "And [oc_ccodpro] <= ?PROV2";
+    "And [oc_ccodpro] <= ?PROV2 And [OC_DFECENT] Between(?star, ?end)";
             this.Font = new System.Drawing.Font("Arial", 9.75F);
             this.Landscape = true;
             this.Margins = new System.Drawing.Printing.Margins(10, 10, 10, 50);
@@ -862,7 +897,9 @@ namespace katal.Reports
             this.ESTADO1,
             this.ESTADO2,
             this.PROV1,
-            this.PROV2});
+            this.PROV2,
+            this.star,
+            this.end});
             this.StyleSheet.AddRange(new DevExpress.XtraReports.UI.XRControlStyle[] {
             this.baseControlStyle});
             this.Version = "20.1";
@@ -945,5 +982,8 @@ namespace katal.Reports
         private DevExpress.XtraReports.Parameters.Parameter ESTADO2;
         private DevExpress.XtraReports.Parameters.Parameter PROV1;
         private DevExpress.XtraReports.Parameters.Parameter PROV2;
+        private DevExpress.DataAccess.Sql.SqlDataSource sqlDataSource3;
+        private DevExpress.XtraReports.Parameters.Parameter star;
+        private DevExpress.XtraReports.Parameters.Parameter end;
     }
 }

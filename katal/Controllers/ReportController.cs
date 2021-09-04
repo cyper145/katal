@@ -25,7 +25,7 @@ namespace katal.Controllers
             return View(new DevExpress.XtraReports.Web.CachedReportSourceWeb(report));
         }
 
-        public ActionResult OrdenesCompraProveedor(String codigo, string estado1, string estado2, string PROV1, string PROV2)
+        public ActionResult OrdenesCompraProveedor(String codigo, DateTime star, DateTime end,  string estado1, string estado2, string PROV1, string PROV2)
         {
             Reports.Report5 report = new Reports.Report5();
 
@@ -35,6 +35,8 @@ namespace katal.Controllers
             report.Parameters["ESTADO2"].Value = estado2;
             report.Parameters["PROV1"].Value = PROV1;
             report.Parameters["PROV2"].Value = PROV2;
+            report.Parameters["star"].Value = star;
+            report.Parameters["end"].Value = end;
             
             report.RequestParameters = false;
             return View(new DevExpress.XtraReports.Web.CachedReportSourceWeb(report));
