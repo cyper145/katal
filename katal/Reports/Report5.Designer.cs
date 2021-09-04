@@ -105,6 +105,10 @@ namespace katal.Reports
             this.headerTable = new DevExpress.XtraReports.UI.XRTable();
             this.GroupHeader1 = new DevExpress.XtraReports.UI.GroupHeaderBand();
             this.sqlDataSource2 = new DevExpress.DataAccess.Sql.SqlDataSource(this.components);
+            this.ESTADO1 = new DevExpress.XtraReports.Parameters.Parameter();
+            this.ESTADO2 = new DevExpress.XtraReports.Parameters.Parameter();
+            this.PROV1 = new DevExpress.XtraReports.Parameters.Parameter();
+            this.PROV2 = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.detailTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceInfoTable)).BeginInit();
@@ -810,6 +814,26 @@ namespace katal.Reports
             customSqlQuery2});
             this.sqlDataSource2.ResultSchemaSerializable = resources.GetString("sqlDataSource2.ResultSchemaSerializable");
             // 
+            // ESTADO1
+            // 
+            this.ESTADO1.Description = "estado1";
+            this.ESTADO1.Name = "ESTADO1";
+            // 
+            // ESTADO2
+            // 
+            this.ESTADO2.Description = "ESTADO2";
+            this.ESTADO2.Name = "ESTADO2";
+            // 
+            // PROV1
+            // 
+            this.PROV1.Description = "PROV1";
+            this.PROV1.Name = "PROV1";
+            // 
+            // PROV2
+            // 
+            this.PROV2.Description = "PROV2";
+            this.PROV2.Name = "PROV2";
+            // 
             // Report5
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -826,12 +850,19 @@ namespace katal.Reports
             this.sqlDataSource2});
             this.DataMember = "Query";
             this.DataSource = this.sqlDataSource2;
+            this.FilterString = "[oc_csitord] >= ?ESTADO1 And [oc_csitord] <= ?ESTADO2 And [oc_ccodpro] >= ?PROV1 " +
+    "And [oc_ccodpro] <= ?PROV2";
             this.Font = new System.Drawing.Font("Arial", 9.75F);
             this.Landscape = true;
             this.Margins = new System.Drawing.Printing.Margins(10, 10, 10, 50);
             this.PageHeight = 827;
             this.PageWidth = 1169;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;
+            this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
+            this.ESTADO1,
+            this.ESTADO2,
+            this.PROV1,
+            this.PROV2});
             this.StyleSheet.AddRange(new DevExpress.XtraReports.UI.XRControlStyle[] {
             this.baseControlStyle});
             this.Version = "20.1";
@@ -910,5 +941,9 @@ namespace katal.Reports
         private DevExpress.XtraReports.UI.XRTable headerTable;
         private DevExpress.XtraReports.UI.GroupHeaderBand GroupHeader1;
         private DevExpress.DataAccess.Sql.SqlDataSource sqlDataSource2;
+        private DevExpress.XtraReports.Parameters.Parameter ESTADO1;
+        private DevExpress.XtraReports.Parameters.Parameter ESTADO2;
+        private DevExpress.XtraReports.Parameters.Parameter PROV1;
+        private DevExpress.XtraReports.Parameters.Parameter PROV2;
     }
 }
