@@ -149,6 +149,7 @@
     <Content Include="Content\Images\Article-white.svg" />
     <Content Include="Content\Images\Article.svg" />
     <Content Include="Content\Images\back.svg" />
+    <Content Include="Content\Images\caja-banco.svg" />
     <Content Include="Content\Images\delete.svg" />
     <Content Include="Content\Images\double-close.svg" />
     <Content Include="Content\Images\double.svg" />
@@ -387,6 +388,17 @@
     <Content Include="Views\ReporteOrdenCompra\MultiSelectProveedor2.cshtml" />
     <Content Include="Views\ReporteOrdenCompra\MultiselectEstadoDoc.cshtml" />
     <Content Include="Views\ReporteOrdenCompra\MultiselectEstadoDoc2.cshtml" />
+    <Content Include="Views\MovimientoBanco\Index.cshtml" />
+    <Content Include="Views\MovimientoBanco\DataRequisicionPartial.cshtml" />
+    <Content Include="Views\MovimientoBanco\DateRangePicker.cshtml" />
+    <Content Include="Views\MovimientoBanco\Detail.cshtml" />
+    <Content Include="Views\MovimientoBanco\DetailRequestPartial.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectArea.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectCentroCostos.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectPartial.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectSolicitante.cshtml" />
+    <Content Include="Views\MovimientoBanco\DateRangePicker2.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectBancos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -407,6 +419,7 @@
     <Compile Include="Code\RoleHelper.cs" />
     <Compile Include="conexion\model.dao\AreaDao.cs" />
     <Compile Include="conexion\model.dao\ArticuloDao.cs" />
+    <Compile Include="conexion\model.dao\CajaBanco\CajaBancoDao.cs" />
     <Compile Include="conexion\model.dao\ComprobanteDao.cs" />
     <Compile Include="conexion\model.dao\ComprobanteDetraccionDao.cs" />
     <Compile Include="conexion\model.dao\Conexion.cs" />
@@ -429,6 +442,7 @@
     <Compile Include="conexion\model.entity\Articulo.cs" />
     <Compile Include="conexion\model.entity\Cabecera.cs" />
     <Compile Include="conexion\model.entity\CabMov.cs" />
+    <Compile Include="conexion\model.entity\cajaBanco\CajaBanco.cs" />
     <Compile Include="conexion\model.entity\CentroCosto.cs" />
     <Compile Include="conexion\model.entity\Compra.cs" />
     <Compile Include="conexion\model.entity\Comprobante.cs" />
@@ -462,6 +476,7 @@
     <Compile Include="conexion\model.entity\User.cs" />
     <Compile Include="conexion\model.neg\AreaNeg.cs" />
     <Compile Include="conexion\model.neg\ArticuloNeg.cs" />
+    <Compile Include="conexion\model.neg\cajaBanco\CajaBancoNeg.cs" />
     <Compile Include="conexion\model.neg\ComprobanteDNeg.cs" />
     <Compile Include="conexion\model.neg\ComprobanteNeg.cs" />
     <Compile Include="conexion\model.neg\DestinoNeg.cs" />
@@ -480,6 +495,7 @@
     <Compile Include="Controllers\AreasController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CajaBanco\MovimientoBancoController.cs" />
     <Compile Include="Controllers\ComprobanteController.cs" />
     <Compile Include="Controllers\DetalleOrdenCompraController.cs" />
     <Compile Include="Controllers\GenerarDetraccionController.cs" />

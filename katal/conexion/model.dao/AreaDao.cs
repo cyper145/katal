@@ -197,5 +197,7 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
+    
+    
     }
 }

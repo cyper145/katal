@@ -26,7 +26,9 @@
                group.Expanded = false;
                //guardar la seccion los modulos y programas
                group.Visible = roleNeg.moduloAsigned(modulos, "seguridad") == true ? true : false;
-               group.Text = "seguridad";
+               group.Text = "Seguridad";
+               group.HeaderStyle.Font.Size = FontUnit.Larger;
+               group.HeaderStyle.HoverStyle.BackColor = System.Drawing.Color.FromArgb(230, 230, 230);
                if (roleNeg.moduloAsigned(modulos, "usuario"))
                {
                    group.Items.Add("Usuarios", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/GridView");
@@ -50,6 +52,8 @@
                group.Visible = roleNeg.moduloAsigned(modulos, "compras") == true ? true : false;
                group.Text = "Compras";
                group.Expanded = false;
+               group.HeaderStyle.Font.Size = FontUnit.Larger;
+               group.HeaderStyle.HoverStyle.BackColor = System.Drawing.Color.FromArgb(230, 230, 230);
                if (roleNeg.moduloAsigned(modulos, "articulos"))
                {
                    group.Items.Add("Articulos", "ratas", "~/Content/NavBar/BO_Scheduler.png", "/Article");
@@ -95,11 +99,22 @@
            settings.Groups.Add(group =>
            {
                group.Expanded = false;
-               group.Visible = roleNeg.moduloAsigned(modulos, "ventas") == true ? true : false;
-               group.Text = "Ventas";
+               group.Visible = roleNeg.moduloAsigned(modulos, "caja_banco") == true ? true : false;
+               group.Text = "Caja Banco";
+               group.HeaderStyle.Font.Size = FontUnit.Larger;
+               group.HeaderStyle.HoverStyle.BackColor = System.Drawing.Color.FromArgb(230,230, 230);
+
+               //group.HeaderStyle.w = true;
+
+               group.HeaderImage.Url = "~/Content/Images/caja-banco.svg";
+
+               group.HeaderImage.Height = Unit.Pixel(20);
+
                if (roleNeg.moduloAsigned(modulos, "cotizaciones"))
                {
-                   group.Items.Add("Cotizaciones", "ratas", "~/Content/NavBar/BO_Scheduler.png", "GridView");
+                   var dar=  group.Items.Add("Moviemientos", "ratas", "~/Content/Images/dinero.svg", "MovimientoBanco");
+                   dar.Image.Height= Unit.Pixel(25);
+                  
                }
            });
        }).GetHtml()

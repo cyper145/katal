@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using katal.conexion.model.entity;
 using katal.conexion.model.neg;
+using System.Web;
+using Newtonsoft.Json;
 
 namespace katal.Model
 {
@@ -44,9 +46,11 @@ namespace katal.Model
         public static bool activarRetecion = false;
         public static bool respuesta = false;
         public static bool wlConten = true;// activar desde comprobante
-        public static Comprobante comprobante = new Comprobante();
        
-
+        public static Comprobante comprobante = new Comprobante();
+        // caja banco
+        public static bool activeData=false;
+        public static string codigobanco = "";
 
         public static DateRangePickerModel dateRange = new DateRangePickerModel();
         public static void GetDetalles()
@@ -166,5 +170,22 @@ namespace katal.Model
             List<int> selectedIds = selectedRowIds.Split(',').ToList().ConvertAll(id => int.Parse(id));
             userNeg.DeleteUser(selectedIds);
         }
+
+        public static string ValidarRecuperar(string data)
+        {
+            string respuesta = "";
+            string ver = HttpUtility.HtmlDecode(data);
+            if (ver != null)
+            {
+                Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                // Array codigo = nodes["selectedKeyValues"] ;
+                if (nodes.selectedKeyValues != null)
+                {
+                    respuesta = nodes.selectedKeyValues[0];
+                }
+            }
+            return respuesta;
+        }
+
     }
 }

@@ -1,0 +1,484 @@
+﻿
+@using katal.conexion.model.entity;
+
+@using System.Drawing;
+@using katal.Model;
+@(Html.DevExpress().GridView<MovimientoBanco>(settings => {
+    settings.Name = "gridView";
+    settings.Enabled = GridViewHelper.activeData;
+    settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "DataRequisicionPartial" };
+
+    settings.CustomActionRouteValues = new { Controller = "MovimientoBanco", Action = "GridViewCustomActionPartial" };
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionAddNewPartial" };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionUpdatePartial" };
+    settings.SettingsResizing.ColumnResizeMode = ColumnResizeMode.Control;
+
+
+    settings.ControlStyle.CssClass = "grid-view";
+    settings.Styles.Cell.Wrap = DefaultBoolean.False;
+    settings.Styles.PagerBottomPanel.CssClass = "pager";
+    settings.Styles.FocusedRow.CssClass = "focused";
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1200;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+
+    settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 500;
+
+    settings.EditFormLayoutProperties.UseDefaultPaddings = false;
+
+    settings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+
+    settings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+
+
+    settings.Settings.ShowFilterRowMenu = true;
+
+    settings.SettingsBehavior.AllowFocusedRow = true;
+    // settings.SettingsBehavior.
+    settings.KeyFieldName = "CB_C_Secue";
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "CB_C_Secue";
+        column.Caption = "Secuencia";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "Opera";
+        column.Caption = "Operacion";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "docu";
+        column.Caption = "Documento";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "MONTO";
+        column.Caption = "Monto MN";
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "Conta";
+        column.Caption = "Contab.";
+    });
+
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "Anula";
+        column.Caption = "Anulado";
+    });
+
+    //Anulado
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "CB_C_Fecha";
+        column.Caption = "Fecha.";
+        column.ColumnType = MVCxGridViewColumnType.DateEdit;
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "CB_C_Anexo";
+        column.Caption = "Anexo";
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "CB_A_REFER";
+        column.Caption = "Glosa";
+    });
+
+
+    /*
+    t.Properties.Items.Add("NORMAL", 0);
+    t.Properties.Items.Add("MEDIA", 1);
+    t.Properties.Items.Add("ALTA", 2);
+    */
+
+
+
+
+
+
+
+    // settings.FormatConditions.
+
+    settings.SetEditFormTemplateContent(c =>
+    {
+
+
+        Html.DevExpress().FormLayout(layoutSetting =>
+        {
+
+            layoutSetting.Name = "FormLayoutSetting";
+
+            layoutSetting.Width = Unit.Percentage(100);
+
+            layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+            layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+            layoutSetting.UseDefaultPaddings = false;
+
+
+
+            var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+            {
+                groupSettings.Caption = "Registro de movimiento";
+                //  groupSettings.ShowCaption = DefaultBoolean.False;
+                groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                groupSettings.ColumnCount = 12;
+            });
+            groupItem.Items.Add(i =>
+            {
+
+                i.FieldName = "CB_C_Secue";
+                i.Caption = "Sec.";
+
+                i.ColumnSpan = 2;
+                i.NestedExtension().TextBox(t =>
+                {
+                    t.ReadOnly = true;
+
+
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+
+                i.Name = "tipo";
+                i.Caption = "Tipo";
+
+                i.ColumnSpan = 2;
+                i.NestedExtension().ComboBox(t =>
+                {
+                    t.SelectedIndex = 0;
+                    t.Properties.ValueType = typeof(int);
+                    t.Properties.Items.Add("SALIDA", 0);
+                    t.Properties.Items.Add("INGRESO", 1);
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                });
+            });
+
+
+
+            /*
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "Opera";
+                i.Caption = "Operacion";
+                i.ColumnSpan = 4;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectSolicitante", new { Opera = DataBinder.Eval(c.DataItem, "Opera") });
+                });
+            });
+            */
+
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "Opera";
+                i.Caption = "Operacion";
+                i.ColumnSpan = 8;
+                i.NestedExtension().TextBox(t =>
+                {
+                    t.ReadOnly = true;
+                    t.Width = Unit.Percentage(25);
+                    //t.Properties.ClientSideEvents.KeyPress=
+                    // t.Properties.ClientSideEvents.Init = "onData";
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "docu";
+                i.Caption = "Dcmtos.";
+                i.ColumnSpan = 4;
+                i.NestedExtension().TextBox(t =>
+                {
+
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.Name = "serie";
+
+                i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 1;
+                i.NestedExtension().TextBox(t =>
+                {
+
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.Name = "numero";
+                i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 1;
+                i.NestedExtension().TextBox(t =>
+                {
+
+                });
+            });
+
+            groupItem.Items.Add(i =>
+
+            {
+                i.FieldName = "CB_C_Anexo";
+                i.Caption = "Anexo";
+
+                i.ColumnSpan = 3;
+                i.NestedExtension().TextBox(t =>
+                {
+
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "proveedor";
+                i.Caption = "Anexo";
+                i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 3;
+                i.NestedExtension().TextBox(t =>
+                {
+
+                });
+            });
+
+
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "Conversion";
+                i.Caption = "Conversion";
+                //  i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 3;
+                i.NestedExtension().TextBox(t =>
+                {
+
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.Name = "TCEsp";
+                i.Caption = "T/C Esp";
+                // i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 3;
+                i.NestedExtension().TextBox(t =>
+                {
+
+                });
+            });
+
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "FecGiro";
+                i.ColumnSpan = 3;
+                i.Caption = "Fecha Giro";
+                i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
+                i.NestedExtension().DateEdit(t =>
+                {
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                    // t.Properties.ValidationSettings= ValidationSettings
+                    //  t.Properties.AllowNull = true;
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.Name = "FecCobro";
+                i.ColumnSpan = 3;
+                i.Caption = "Fecha Cobro";
+                i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
+                i.NestedExtension().DateEdit(t =>
+                {
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                    // t.Properties.ValidationSettings= ValidationSettings
+                    //  t.Properties.AllowNull = true;
+                });
+            });
+
+
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "MONTO";
+                i.ColumnSpan = 12;
+                i.Caption = "Monto";
+
+                i.NestedExtension().TextBox(t =>
+                {
+
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                    t.Width = Unit.Percentage(25);
+
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.FieldName = "CB_A_REFER";
+                i.ColumnSpan = 6;
+                i.Caption = "Referencia";
+
+                i.NestedExtension().TextBox(t =>
+                {
+
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "Estado";
+                i.ColumnSpan = 2;
+                i.Caption = "Estado";
+
+                i.NestedExtension().TextBox(t =>
+                {
+
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "TipoCambio";
+                i.ColumnSpan = 2;
+                i.Caption = "Tipo";
+
+                i.NestedExtension().TextBox(t =>
+                {
+
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "TC:";
+                i.ColumnSpan = 2;
+                i.Caption = "T/C";
+
+                i.NestedExtension().TextBox(t =>
+                {
+
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "medioPago:";
+                i.ColumnSpan = 6;
+                i.Caption = "medio Pago";
+
+                i.NestedExtension().TextBox(t =>
+                {
+
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "creditos";
+                i.ColumnSpan = 2;
+                i.Caption = "Créditos";
+
+                i.NestedExtension().CheckBox(t =>
+                {
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                    //  t.ReadOnly = true;
+
+
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.Name = "Interface";
+                i.ColumnSpan = 2;
+                i.Caption = "Con Interface.";
+
+                i.NestedExtension().CheckBox(t =>
+                {
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                    //  t.ReadOnly = true;
+
+
+                });
+            });
+
+
+            layoutSetting.Items.Add(itemSettings =>
+            {
+
+                itemSettings.ShowCaption = DefaultBoolean.False;
+                itemSettings.SetNestedContent(() =>
+                {
+                    Html.RenderAction("Detail");
+                });
+            });
+
+            layoutSetting.Items.Add(itemSettings =>
+            {
+                itemSettings.ShowCaption = DefaultBoolean.False;
+            }).SetNestedContent(() =>
+            {
+                ViewContext.Writer.Write("<div style='float:right'>");
+                Html.DevExpress().Button(
+                    btnSettings =>
+                    {
+                        btnSettings.Name = "btnUpdate";
+                        btnSettings.Text = "Grabar";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
+
+                        //I want to Hide Update Button when FirstName is "John"
+
+                    }).Render();
+
+                Html.DevExpress().Button(
+                    btnSettings =>
+                    {
+                        btnSettings.Name = "btnCancel";
+                        btnSettings.Text = "Cancel";
+                        btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";
+                    }).Render();
+                ViewContext.Writer.Write("</div>");
+            });
+
+
+        }).Bind(ViewData["Object"] ?? c.DataItem).Render();
+
+    });
+
+    settings.SettingsSearchPanel.CustomEditorName = "search";
+    settings.SettingsBehavior.AllowFocusedRow = true;
+
+    settings.SettingsExport.EnableClientSideExportAPI = true;
+    settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
+    // settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
+    settings.Width = Unit.Percentage(100);
+
+    katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
+}).Bind(Model).SetEditErrorText(ViewBag.EditError).GetHtml())
