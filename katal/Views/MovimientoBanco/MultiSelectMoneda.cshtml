@@ -1,0 +1,44 @@
+﻿
+
+
+@Html.DevExpress().GridLookup(settings =>
+{
+    //settings.Properties.Caption = "Responsable:";
+
+    settings.Name = "gridLookupMoneda";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectMoneda", COVMON_CODIGO = Model.COVMON_CODIGO };
+
+    settings.KeyFieldName = "COVMON_CODIGO";
+
+    //settings.CommandColumn.Visible = true;
+    // settings.CommandColumn.ShowSelectCheckbox = true;
+    settings.Columns.Add("COVMON_CODIGO").Width = Unit.Percentage(10);
+    settings.Columns.Add("COVMON_DESCRIPCION").Width = Unit.Percentage(90);
+
+    settings.Width = Unit.Percentage(100);
+
+    settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
+    settings.Properties.TextFormatString = "{1}";
+   // settings.Properties.ClientSideEvents.KeyDown = "downTipoConversion";
+
+    settings.GridViewProperties.Settings.ShowFilterRow = false;
+    settings.GridViewProperties.Settings.ShowColumnHeaders = false;
+    settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
+    //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
+    //settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
+    settings.GridViewProperties.SettingsPager.PageSize = 7;
+
+    //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
+//settings.GridViewClientSideEvents.EndCallback = "OnChangeMoneda";
+
+
+//settings.GridViewClientSideEvents.Init = "OnChangeMoneda";
+    // settings.GridViewClientSideEvents. = "OnChangeMoneda";
+
+    settings.DataBound = (sender, e) =>
+    {
+        var gridLookup = (MVCxGridLookup)sender;
+        gridLookup.GridView.Width = Unit.Percentage(100);
+    };
+}).BindList(ViewData["moneda"]).Bind(Model.COVMON_CODIGO).GetHtml()
+

@@ -30,25 +30,48 @@
             data.value = Value[1];
 
         }
+        function OnTipo(s, e) {
+           
 
-        function DateEmision() {
+            $.getJSON('/MovimientoBanco/changeTipo?tipo=' + tipo.GetValue(), function (resp) {
+                $.each(resp, function (k, v) {
 
-
-
-            if (FECREQUI.GetText() == "") {
-                let f = new Date();
-                FECREQUI.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
-            }
-
+                  
+                    //ver que se muestre 
+                });
+            });
+                //var g
 
         }
+        function initTipo(s, e) {
+            $.getJSON('/MovimientoBanco/changeTipo?tipo=' + tipo.GetValue(), function (resp) {
+                $.each(resp, function (k, v) {
+
+
+
+                    //ver que se muestre 
+                });
+            });
+        }
+
+
+
+
+
         function dateInit() {
-            var data = document.getElementById("grid_DXEFL_DXEditor5_I");
-            if (data.value == "") {
-                data.value = FECREQUI.GetText();
-            }
-        }
 
+            if (FecGiro.GetText() == "") {
+                let f = new Date();
+                FecGiro.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+            }
+            if (FecCobro.GetText() == "") {
+                let f = new Date();
+                FecCobro.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+            }
+
+
+        }
+       
         function OnToolbarItemClick(s, e) {
             if (!IsCustomExportToolbarCommand(e.item.name))
                 return;
@@ -118,6 +141,23 @@
         item.AdaptivePriority = 2;
         item.Image.Url = "Content/Images/delete.svg";
     });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "anular";
+        item.Text = "Anular";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "Content/Images/anular.svg";
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "contabilizar";
+        item.Text = "contabilizar";
+        item.Alignment = MenuItemAlignment.Left;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "Content/Images/contabilidad.svg";
+    });
+
     menuSettings.Items.Add(item =>
     {
         item.Name = "Export";

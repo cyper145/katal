@@ -24,6 +24,10 @@ namespace katal.Controllers
 
         // nuevos
         private CajaBancoNeg cajaBancoNeg;
+        private TipoAnexoNeg anexoNeg;
+        private ComprobanteNeg comprobanteNeg;
+
+
         public MovimientoBancoController()
         {
             requisicionNeg = new RequisicionCompraNeg(codEmpresa);
@@ -34,7 +38,8 @@ namespace katal.Controllers
             areaNeg = new AreaNeg(codEmpresa);
 
             cajaBancoNeg = new CajaBancoNeg(codEmpresa);
-
+            anexoNeg = new TipoAnexoNeg(codEmpresa);
+            comprobanteNeg = new ComprobanteNeg(codEmpresa);
         }
         // GET: RequisionCompra
         public ActionResult Index()
@@ -387,6 +392,86 @@ namespace katal.Controllers
 
             return RedirectToAction("index");
         }
+
+        public ActionResult MultiSelectOpciones(string CB_C_CODIG = "-1")
+        {
+            ViewData["tipoOpciones"] = cajaBancoNeg.findAllTipoOpciones(GridViewHelper.TipoOpcion);
+            if (CB_C_CODIG == "-1")
+                CB_C_CODIG = "";
+            return PartialView("MultiSelectOpciones", new TipoOpcionCajaBanco() { CB_C_CODIG = CB_C_CODIG });
+
+        }
+        // determinar si es un ingreso o egreso
+        public JsonResult changeTipo(int tipo)
+        {
+            GridViewHelper.TipoOpcion= tipo;
+
+            ViewData["tipoOpciones"] = cajaBancoNeg.findAllTipoOpciones(GridViewHelper.TipoOpcion);
+            return Json(new { respuesta = "" }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult MultiSelectTipoDoc(string TIPDOC_CODIGO = "-1")
+        {
+            ViewData["TipoDoc"] = anexoNeg.findAllTipoDocumento();
+            if (TIPDOC_CODIGO == "-1")
+                TIPDOC_CODIGO = "";
+            return PartialView("MultiSelectTipoDoc", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
+
+        }
+        public ActionResult MultiSelectTipoAnexo(string TIPOANEX_CODIGO = "-1")
+        {
+          
+            ViewData["TipoAnexo"] = anexoNeg.findAll();
+            if (TIPOANEX_CODIGO == "-1")
+                TIPOANEX_CODIGO = "-1";
+            return PartialView("MultiSelectTipoAnexo", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
+
+        }
+
+        public ActionResult MultiSelectAnexo(string ANEX_CODIGO = "-1")
+        {
+            ViewData["Anexo"] = anexoNeg.findAllAnexo();
+            if (ANEX_CODIGO == "-1")
+                ANEX_CODIGO = "-1";
+            return PartialView("MultiSelectAnexo", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
+
+        }
+
+        public ActionResult MultiSelectMoneda(string COVMON_CODIGO = "-1")
+        {
+             ViewData["moneda"] = comprobanteNeg.findAllMonedas();
+            if (COVMON_CODIGO == "-1")
+                COVMON_CODIGO = "-1";
+            return PartialView("MultiSelectMoneda", new Moneda() { COVMON_CODIGO = COVMON_CODIGO });
+
+        }
+
+        public ActionResult MultiSelectEstadosOperaciones(string CB_C_CODIG = "-1")
+        {
+            ViewData["Estados"] = cajaBancoNeg.findAllTipoEstadosOperaciones("E");
+            if (CB_C_CODIG == "-1")
+                CB_C_CODIG = "-1";
+            return PartialView("MultiSelectEstadosOperaciones", new TipoEstadoOperacion() { CB_C_CODIG = CB_C_CODIG });
+
+        }
+        public ActionResult MultiSelectTiposMovimientos(string CB_C_CODIG = "-1")
+        {
+            ViewData["tiposMovimientos"] = cajaBancoNeg.findAllTipoMovimientos(GridViewHelper.TipoOpcion);
+            if (CB_C_CODIG == "-1")
+                CB_C_CODIG = "-1";
+            return PartialView("MultiSelectTiposMovimientos", new TipoMovimientos() { CB_C_CODIG = CB_C_CODIG });
+
+        }
+        public ActionResult MultiSelectMedioPago(string CODIGO = "-1")
+        {
+            ViewData["MedioPago"] = cajaBancoNeg.findAllMedioPago();
+            if (CODIGO == "-1")
+                CODIGO = "-1";
+            return PartialView("MultiSelectMedioPago", new MedioPago() { CODIGO = CODIGO });
+
+        }
+
+
         #endregion
 
     }

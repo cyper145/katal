@@ -66,7 +66,7 @@
     settings.Columns.Add(column =>
     {
         column.FieldName = "codpro";
-        column.Caption = "código";
+        column.Caption = "Sec";
         column.ColumnType = MVCxGridViewColumnType.ComboBox;
         ComboBoxProperties properties = column.PropertiesEdit as ComboBoxProperties;
 
@@ -84,7 +84,7 @@
     settings.Columns.Add(column =>
     {
         column.FieldName = "DESCPRO";
-        column.Caption = "Descripción";
+        column.Caption = "Concepto";
         column.Width = Unit.Percentage(35);
 
     });
@@ -92,7 +92,7 @@
     settings.Columns.Add(column =>
     {
         column.FieldName = "UNIPRO";
-        column.Caption = "Uni";
+        column.Caption = "Documento";
         column.CellRowSpan = 1;
         column.Width = Unit.Percentage(10);
         column.ColumnType = MVCxGridViewColumnType.TextBox;
@@ -103,7 +103,7 @@
     settings.Columns.Add(column =>
     {
         column.FieldName = "CANTID";
-        column.Caption = "Cantidad";
+        column.Caption = "Monto";
         column.Width = Unit.Percentage(10);
         column.ColumnType = MVCxGridViewColumnType.TextBox;
         TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
@@ -113,66 +113,14 @@
     settings.Columns.Add(column =>
     {
         column.FieldName = "SALDO";
-        column.Caption = "stock";
-        column.Visible = false;
-        column.Width = Unit.Percentage(10);
+        column.Caption = "Referencia";
+      
+       
         column.ColumnType = MVCxGridViewColumnType.TextBox;
         TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
         //  properties.ClientSideEvents.TextChanged = "changegCalcularPrecioPunitario";
     });
-    settings.Columns.Add(column =>
-    {
-        column.FieldName = "FECREQUE";
-        column.Caption = "Fec. Requerim";
-        column.ColumnType = MVCxGridViewColumnType.DateEdit;
-        DateEditProperties properties = column.PropertiesEdit as DateEditProperties;
-        properties.ValidationSettings.RequiredField.IsRequired = false;
-        column.Width = Unit.Percentage(10);
-        properties.ClientSideEvents.Init = "dateInit";
-
-        properties.DisplayFormatString = "yyyy/MM/dd";
-    });
-    settings.Columns.Add(column =>
-    {
-        column.FieldName = "CENCOST";
-        column.Caption = "Centro Costos";
-        column.ColumnType = MVCxGridViewColumnType.ComboBox;
-        ComboBoxProperties properties = column.PropertiesEdit as ComboBoxProperties;
-
-        properties.TextField = "CENCOST_CODIGO";
-        properties.ValueField = "CENCOST_CODIGO";
-        properties.ValueType = typeof(string);
-        properties.DataSource = GridViewHelper.GetCentroCostos();
-        column.Width = Unit.Percentage(10);
-        column.SetEditItemTemplateContent(container =>
-        {
-            Html.RenderAction("MultiSelectCentroCostos", new { CENCOST_CODIGO = DataBinder.Eval(container.DataItem, "CENCOST") });
-        });
-    });
-
-    settings.Columns.Add(column =>
-    {
-        column.FieldName = "REMAQ";
-        column.Caption = "Nro Maquina";
-        column.Visible = false;
-        column.Width = Unit.Percentage(10);
-        column.ColumnType = MVCxGridViewColumnType.TextBox;
-        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
-        //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
-
-    });
-    settings.Columns.Add(column =>
-    {
-        column.FieldName = "ESPTECNICA";
-        column.Caption = "Especificaciones";
-        column.Visible = false;
-        column.Width = Unit.Percentage(10);
-        column.ColumnType = MVCxGridViewColumnType.TextBox;
-        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
-        //properties.Height=
-        //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
-
-    });
+   
     var layout=  settings.EditFormLayoutProperties.Items.AddGroupItem(i => {
 
         i.ShowCaption = DefaultBoolean.False;
@@ -197,11 +145,8 @@
     {
 
         i.ColumnName = "UNIPRO";
-
         i.ColumnSpan = 1;
-
         i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
-
 
     });
     layout.Items.Add(i =>
@@ -213,52 +158,9 @@
 
 
     });
-    /*
-    layout.Items.Add(i =>
-    {
-
-        i.ColumnName = "SALDO";
-        i.ColumnSpan = 1;
-        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
-
-
-    });*/
-    /*
-    layout.Items.Add(i =>
-    {
-
-        i.ColumnName = "FECREQUE";
-
-        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
-        i.ColumnSpan = 2;
-        i.VisibleIndex = 0;
-
-
-    });
-    */
-    /*
-    layout.Items.Add(i =>
-    {
-
-        i.ColumnName = "CENCOST";
-        i.ColumnSpan = 2;
-
-    });
-    */
-    layout.Items.Add(i =>
-    {
-
-        i.ColumnName = "REMAQ";
-        i.ColumnSpan = 3;
-
-    });
-    layout.Items.Add(i =>
-    {
-
-        i.ColumnName = "ESPTECNICA";
-        i.ColumnSpan = 12;
-
-    });
+   
+  
+   
 
     layout.Items.AddCommandItem(i =>
     {

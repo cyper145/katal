@@ -24,6 +24,34 @@ namespace katal.conexion.model.neg
             return cajaBancoDao.findAllMovimientos(banco, moneda);
         }
 
+        public List<TipoOpcionCajaBanco> findAllTipoOpciones( int tipo)
+        {
+            string tipoingresosalida="I";
+            if (tipo == 1)
+            {
+                tipoingresosalida = "S";
+            }
+            return cajaBancoDao.findAllTipoOpciones(tipoingresosalida);
+        }
+        public List<TipoEstadoOperacion> findAllTipoEstadosOperaciones(string tipo)
+        {
+
+            return cajaBancoDao.findAllTipoEstadosOperaciones(tipo);
+        }
+        public List<TipoMovimientos> findAllTipoMovimientos(int tipo)
+        {
+            string tipoIngresosalida = "I";
+            if (tipo == 1)
+            {
+                tipoIngresosalida = "S";
+            }
+            return cajaBancoDao.findAllTipoMovimientos(tipoIngresosalida);
+        }
+        public List<MedioPago> findAllMedioPago()
+        {
+            return cajaBancoDao.findAllMedioPago();
+        }
+
 
     }
 }
