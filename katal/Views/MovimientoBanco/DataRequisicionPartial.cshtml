@@ -142,8 +142,6 @@
                 i.NestedExtension().TextBox(t =>
                 {
                     t.ReadOnly = true;
-
-
                 });
             });
             groupItem.Items.Add(i =>
@@ -157,10 +155,12 @@
                 {
                     t.SelectedIndex = 0;
                     t.Properties.ValueType = typeof(int);
-                    t.Properties.Items.Add("SALIDA", 0);
-                    t.Properties.Items.Add("INGRESO", 1);
+                    t.Properties.Items.Add("INGRESO", 0);
+                    t.Properties.Items.Add("SALIDA",1);
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
+                    t.Properties.ClientSideEvents.SelectedIndexChanged = "OnTipo";
+                    t.Properties.ClientSideEvents.Init = "initTipo";
                 });
             });
 
@@ -184,23 +184,24 @@
                 i.FieldName = "Opera";
                 i.Caption = "Operacion";
                 i.ColumnSpan = 8;
-                i.NestedExtension().TextBox(t =>
+
+                i.SetNestedContent(() =>
                 {
-                    t.ReadOnly = true;
-                    t.Width = Unit.Percentage(25);
-                    //t.Properties.ClientSideEvents.KeyPress=
-                    // t.Properties.ClientSideEvents.Init = "onData";
+                    Html.RenderAction("MultiSelectOpciones", new { CB_C_CODIG = DataBinder.Eval(c.DataItem, "Opera") });
                 });
+
+
             });
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "docu";
                 i.Caption = "Dcmtos.";
                 i.ColumnSpan = 4;
-                i.NestedExtension().TextBox(t =>
+                i.SetNestedContent(() =>
                 {
-
+                    Html.RenderAction("MultiSelectTipoDoc", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "docu") });
                 });
+
             });
             groupItem.Items.Add(i =>
             {
@@ -231,10 +232,13 @@
                 i.Caption = "Anexo";
 
                 i.ColumnSpan = 3;
-                i.NestedExtension().TextBox(t =>
+                i.SetNestedContent(() =>
                 {
-
+                    Html.RenderAction("MultiSelectTipoAnexo", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_Anexo") });
                 });
+
+
+
             });
             groupItem.Items.Add(i =>
 
@@ -243,9 +247,9 @@
                 i.Caption = "Anexo";
                 i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 3;
-                i.NestedExtension().TextBox(t =>
+                i.SetNestedContent(() =>
                 {
-
+                    Html.RenderAction("MultiSelectAnexo");
                 });
             });
 
@@ -257,9 +261,9 @@
                 i.Caption = "Conversion";
                 //  i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 3;
-                i.NestedExtension().TextBox(t =>
+                i.SetNestedContent(() =>
                 {
-
+                    Html.RenderAction("MultiSelectMoneda");
                 });
             });
             groupItem.Items.Add(i =>
@@ -273,7 +277,6 @@
 
                 });
             });
-
             groupItem.Items.Add(i =>
 
             {
@@ -287,6 +290,7 @@
                     t.ShowModelErrors = true;
                     // t.Properties.ValidationSettings= ValidationSettings
                     //  t.Properties.AllowNull = true;
+                    t.Properties.ClientSideEvents.Init = "dateInit";
                 });
             });
             groupItem.Items.Add(i =>
@@ -299,12 +303,8 @@
                 {
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
-                    // t.Properties.ValidationSettings= ValidationSettings
-                    //  t.Properties.AllowNull = true;
                 });
             });
-
-
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "MONTO";
@@ -342,34 +342,27 @@
                 i.ColumnSpan = 2;
                 i.Caption = "Estado";
 
-                i.NestedExtension().TextBox(t =>
+                i.SetNestedContent(() =>
                 {
-
-                    t.Properties.ValidationSettings.Display = Display.Dynamic;
-                    t.ShowModelErrors = true;
-
+                    Html.RenderAction("MultiSelectEstadosOperaciones");
                 });
             });
             groupItem.Items.Add(i =>
 
             {
-                i.Name = "TipoCambio";
-                i.ColumnSpan = 2;
+                i.Name = "TipoMovimiento";
+                i.ColumnSpan = 3;
                 i.Caption = "Tipo";
-
-                i.NestedExtension().TextBox(t =>
+                i.SetNestedContent(() =>
                 {
-
-                    t.Properties.ValidationSettings.Display = Display.Dynamic;
-                    t.ShowModelErrors = true;
-
+                    Html.RenderAction("MultiSelectTiposMovimientos");
                 });
             });
             groupItem.Items.Add(i =>
 
             {
                 i.Name = "TC:";
-                i.ColumnSpan = 2;
+                i.ColumnSpan = 1;
                 i.Caption = "T/C";
 
                 i.NestedExtension().TextBox(t =>
@@ -385,14 +378,11 @@
             {
                 i.Name = "medioPago:";
                 i.ColumnSpan = 6;
-                i.Caption = "medio Pago";
+                i.Caption = "Medio Pago";
 
-                i.NestedExtension().TextBox(t =>
+                i.SetNestedContent(() =>
                 {
-
-                    t.Properties.ValidationSettings.Display = Display.Dynamic;
-                    t.ShowModelErrors = true;
-
+                    Html.RenderAction("MultiSelectMedioPago");
                 });
             });
             groupItem.Items.Add(i =>

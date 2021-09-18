@@ -51,8 +51,13 @@ namespace katal.Model
         // caja banco
         public static bool activeData=false;
         public static string codigobanco = "";
+        public static int TipoOpcion = 0;
 
         public static DateRangePickerModel dateRange = new DateRangePickerModel();
+
+
+
+
         public static void GetDetalles()
         {
             if (detalles == null)

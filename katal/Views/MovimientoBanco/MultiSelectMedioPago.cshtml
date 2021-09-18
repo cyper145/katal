@@ -1,41 +1,42 @@
 ﻿
 
+
 @Html.DevExpress().GridLookup(settings =>
 {
     //settings.Properties.Caption = "Area:";
 
-    settings.Name = "gridLookupAnexo";
-    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectAnexo", ANEX_CODIGO = Model.ANEX_CODIGO };
+    settings.Name = "gridLookupMedioPago";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectMedioPago", CODIGO = Model.CODIGO };
 
-    settings.KeyFieldName = "ANEX_CODIGO";
+    settings.KeyFieldName = "CODIGO";
 
     //settings.CommandColumn.Visible = true;
     // settings.CommandColumn.ShowSelectCheckbox = true;
 
-    settings.Columns.Add("ANEX_CODIGO").Width = Unit.Percentage(10);
-    settings.Columns.Add("ANEX_DESCRIPCION").Width = Unit.Percentage(80);
-    settings.Columns.Add("ANEX_RUC").Width = Unit.Percentage(10);
+    settings.Columns.Add("CODIGO").Width = Unit.Percentage(10);
+    settings.Columns.Add("DESCRIPCION").Width = Unit.Percentage(90);
 
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
-    settings.Properties.TextFormatString = "{1}";
-    //settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexo";
+    settings.Properties.TextFormatString = "{0}-{1}";
 
-    settings.GridViewProperties.Settings.ShowFilterRow = true;
+    settings.GridViewProperties.Settings.ShowFilterRow = false;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
     settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
     //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
-    settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
+    settings.GridViewProperties.SettingsPager.EnableAdaptivity = false;
     settings.GridViewProperties.SettingsPager.PageSize = 7;
 
     //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
-    
+
     settings.DataBound = (sender, e) =>
     {
         var gridLookup = (MVCxGridLookup)sender;
         gridLookup.GridView.Width = Unit.Percentage(100);
     };
-}).BindList(ViewData["Anexo"]).Bind(Model.ANEX_CODIGO).GetHtml()
+}).BindList(ViewData["MedioPago"]).Bind(Model.CODIGO).GetHtml()
+
+
 
 

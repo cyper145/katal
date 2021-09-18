@@ -145,12 +145,15 @@
     <Content Include="Content\GridView.js" />
     <Content Include="Content\Images\adaptive-menu.svg" />
     <Content Include="Content\Images\add.svg" />
+    <Content Include="Content\Images\anular.svg" />
     <Content Include="Content\Images\application.svg" />
     <Content Include="Content\Images\Article-white.svg" />
     <Content Include="Content\Images\Article.svg" />
     <Content Include="Content\Images\back.svg" />
     <Content Include="Content\Images\caja-banco.svg" />
+    <Content Include="Content\Images\contabilidad.svg" />
     <Content Include="Content\Images\delete.svg" />
+    <Content Include="Content\Images\dinero.svg" />
     <Content Include="Content\Images\double-close.svg" />
     <Content Include="Content\Images\double.svg" />
     <Content Include="Content\Images\edit.svg" />
@@ -189,6 +192,7 @@
     <Content Include="Content\Images\priority2.svg" />
     <Content Include="Content\Images\priority3-white.svg" />
     <Content Include="Content\Images\priority3.svg" />
+    <Content Include="Content\Images\registar.svg" />
     <Content Include="Content\Images\Scheduler-white.svg" />
     <Content Include="Content\Images\Scheduler.svg" />
     <Content Include="Content\Images\search-selected.svg" />
@@ -399,6 +403,14 @@
     <Content Include="Views\MovimientoBanco\MultiSelectSolicitante.cshtml" />
     <Content Include="Views\MovimientoBanco\DateRangePicker2.cshtml" />
     <Content Include="Views\MovimientoBanco\MultiSelectBancos.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectOpciones.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectTipoDoc.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectTipoAnexo.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectAnexo.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectMoneda.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectEstadosOperaciones.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectTiposMovimientos.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectMedioPago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -47,4 +47,39 @@ namespace katal.conexion.model.entity
         public string CB_A_REFER { get; set; }
         public string CB_C_NROLI { get; set; }
     }
+
+
+    public class TipoOpcionCajaBanco 
+    {
+        public string CB_C_TIPO { get; set; }
+        public string CB_C_MODO { get; set; }
+        public string CB_C_CODIG { get; set; }
+        public string CB_A_DESCR { get; set; }
+        public string CB_C_TPDOC { get; set; }
+        public string CB_C_AUTOM { get; set; }
+        public string CB_C_FPAGO { get; set; }
+      
+    }
+
+    public class TipoEstadoOperacion
+    {
+        public string CB_C_TIPO { get; set; }
+        public string CB_C_CODIG { get; set; }
+        public string CB_A_DESCR { get; set; }
+    
+    }
+    public class TipoMovimientos
+    {
+        public string CB_C_TIPO { get; set; }
+        public string CB_C_CODIG { get; set; }
+        public string CB_A_DESCR { get; set; }
+
+    }
+    public class MedioPago
+    {
+        public string CODIGO { get; set; }
+        public string DESCRIPCION { get; set; }
+      
+    }
+
 }

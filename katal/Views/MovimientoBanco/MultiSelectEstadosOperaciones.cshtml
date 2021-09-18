@@ -1,26 +1,27 @@
 ﻿
 
+
+
 @Html.DevExpress().GridLookup(settings =>
 {
     //settings.Properties.Caption = "Area:";
 
-    settings.Name = "gridLookupAnexo";
-    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectAnexo", ANEX_CODIGO = Model.ANEX_CODIGO };
+    settings.Name = "gridLookupEstados";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectEstadosOperaciones", CB_C_CODIG = Model.CB_C_CODIG };
 
-    settings.KeyFieldName = "ANEX_CODIGO";
+    settings.KeyFieldName = "CB_C_CODIG";
 
     //settings.CommandColumn.Visible = true;
     // settings.CommandColumn.ShowSelectCheckbox = true;
 
-    settings.Columns.Add("ANEX_CODIGO").Width = Unit.Percentage(10);
-    settings.Columns.Add("ANEX_DESCRIPCION").Width = Unit.Percentage(80);
-    settings.Columns.Add("ANEX_RUC").Width = Unit.Percentage(10);
-
+    settings.Columns.Add("CB_C_CODIG").Width = Unit.Percentage(10);
+    settings.Columns.Add("CB_A_DESCR").Width = Unit.Percentage(80);
+   
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
     settings.Properties.TextFormatString = "{1}";
-    //settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexo";
+//    settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexo";
 
     settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
@@ -30,12 +31,12 @@
     settings.GridViewProperties.SettingsPager.PageSize = 7;
 
     //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
-    
+
     settings.DataBound = (sender, e) =>
     {
         var gridLookup = (MVCxGridLookup)sender;
         gridLookup.GridView.Width = Unit.Percentage(100);
     };
-}).BindList(ViewData["Anexo"]).Bind(Model.ANEX_CODIGO).GetHtml()
+}).BindList(ViewData["Estados"]).Bind(Model.CB_C_CODIG).GetHtml()
 
 
