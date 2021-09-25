@@ -51,10 +51,10 @@ namespace katal.conexion.model.dao
         }
 
 
-        public List<MovimientoBanco> findAllMovimientos(string banco, string moneda )
+        public List<CMovimientoBanco> findAllMovimientos(string banco, string moneda )
         {
 
-            List<MovimientoBanco> cajaBancos = new List<MovimientoBanco>();
+            List<CMovimientoBanco> cajaBancos = new List<CMovimientoBanco>();
             DateTime date = DateTime.Now;
            
             string anios = date.Year.ToString("0000.##");
@@ -67,7 +67,7 @@ namespace katal.conexion.model.dao
                 new SqlParameter("@ANNO", anios),
                 new SqlParameter("@BANCO", banco),
                 new SqlParameter("@MES", mes),
-                new SqlParameter("@MONEDA", anios),
+                new SqlParameter("@MONEDA", moneda),
               
                 };
 
@@ -79,18 +79,18 @@ namespace katal.conexion.model.dao
                 while (read.Read())
                 {
 
-                    MovimientoBanco cajaBanco   = new MovimientoBanco();
-                    cajaBanco.CB_C_Secue        = read[0].ToString();
-                    cajaBanco.Opera             = read[1].ToString();
-                    cajaBanco.docu              = read[2].ToString();
-                    cajaBanco.MONTO             = Conversion.ParseDecimal( read[3].ToString());
-                    cajaBanco.Conta             = read[4].ToString();
-                    cajaBanco.Anula             = read[5].ToString();
-                    cajaBanco.CB_C_Fecha        = Conversion.ParseDateTime( read[6].ToString());
-                    cajaBanco.CB_C_Anexo        = read[7].ToString();
-                    cajaBanco.CB_C_CONTA        = read[8].ToString();
-                    cajaBanco.CB_A_REFER        = read[9].ToString();
-                    cajaBanco.CB_C_NROLI        = read[10].ToString();
+                    CMovimientoBanco cajaBanco   = new CMovimientoBanco();
+                    cajaBanco.CB_C_SECUE         = read[0].ToString();
+                    cajaBanco.CB_C_OPERA         = read[1].ToString();
+                    cajaBanco.CB_C_DOCUM         = read[2].ToString();
+                    cajaBanco.CB_N_MTOMN         = Conversion.ParseDecimal( read[3].ToString());
+                    cajaBanco.CB_L_CONTA         = read[4].ToString();
+                    cajaBanco.CB_L_ANULA         = read[5].ToString();
+                    cajaBanco.CB_D_FECCA         = Conversion.ParseDateTime( read[6].ToString());
+                    cajaBanco.CB_C_ANEXO         = read[7].ToString();
+                    cajaBanco.CB_C_CONTA         = read[8].ToString();
+                    cajaBanco.CB_A_REFER         = read[9].ToString();
+                    cajaBanco.CB_C_NROLI         = read[10].ToString();
 
 
                     cajaBancos.Add(cajaBanco);
@@ -239,5 +239,8 @@ namespace katal.conexion.model.dao
             }
             return tiposcajaBancos;
         }
+
+        //public 
+
     }
 }

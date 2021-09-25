@@ -3,17 +3,14 @@
 
 @using System.Drawing;
 @using katal.Model;
-@(Html.DevExpress().GridView<MovimientoBanco>(settings => {
+@(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
     settings.Name = "gridView";
     settings.Enabled = GridViewHelper.activeData;
     settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "DataRequisicionPartial" };
-
     settings.CustomActionRouteValues = new { Controller = "MovimientoBanco", Action = "GridViewCustomActionPartial" };
     settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionAddNewPartial" };
     settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionUpdatePartial" };
     settings.SettingsResizing.ColumnResizeMode = ColumnResizeMode.Control;
-
-
     settings.ControlStyle.CssClass = "grid-view";
     settings.Styles.Cell.Wrap = DefaultBoolean.False;
     settings.Styles.PagerBottomPanel.CssClass = "pager";
@@ -22,69 +19,62 @@
     settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1200;
     settings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
     settings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
-
     settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
     settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 500;
-
     settings.EditFormLayoutProperties.UseDefaultPaddings = false;
-
     settings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
     settings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
-
     settings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
-
-
     settings.Settings.ShowFilterRowMenu = true;
-
     settings.SettingsBehavior.AllowFocusedRow = true;
     // settings.SettingsBehavior.
-    settings.KeyFieldName = "CB_C_Secue";
+    settings.KeyFieldName = "CB_C_SECUE";
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_Secue";
+        column.FieldName = "CB_C_SECUE";
         column.Caption = "Secuencia";
 
     });
     settings.Columns.Add(column =>
     {
-        column.FieldName = "Opera";
+        column.FieldName = "CB_C_OPERA";
         column.Caption = "Operacion";
 
     });
     settings.Columns.Add(column =>
     {
-        column.FieldName = "docu";
+        column.FieldName = "CB_C_DOCUM";
         column.Caption = "Documento";
 
     });
     settings.Columns.Add(column =>
     {
-        column.FieldName = "MONTO";
+        column.FieldName = "CB_N_MTOMN";
         column.Caption = "Monto MN";
     });
     settings.Columns.Add(column =>
     {
-        column.FieldName = "Conta";
+        column.FieldName = "CB_L_CONTA";
         column.Caption = "Contab.";
     });
 
     settings.Columns.Add(column =>
     {
-        column.FieldName = "Anula";
+        column.FieldName = "CB_L_ANULA";
         column.Caption = "Anulado";
     });
 
     //Anulado
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_Fecha";
+        column.FieldName = "CB_D_FECCA";
         column.Caption = "Fecha.";
         column.ColumnType = MVCxGridViewColumnType.DateEdit;
 
     });
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_Anexo";
+        column.FieldName = "CB_C_ANEXO";
         column.Caption = "Anexo";
     });
     settings.Columns.Add(column =>
@@ -93,38 +83,15 @@
         column.Caption = "Glosa";
     });
 
-
-    /*
-    t.Properties.Items.Add("NORMAL", 0);
-    t.Properties.Items.Add("MEDIA", 1);
-    t.Properties.Items.Add("ALTA", 2);
-    */
-
-
-
-
-
-
-
-    // settings.FormatConditions.
-
     settings.SetEditFormTemplateContent(c =>
     {
-
-
         Html.DevExpress().FormLayout(layoutSetting =>
         {
-
             layoutSetting.Name = "FormLayoutSetting";
-
             layoutSetting.Width = Unit.Percentage(100);
-
             layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
             layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
             layoutSetting.UseDefaultPaddings = false;
-
-
-
             var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
             {
                 groupSettings.Caption = "Registro de movimiento";
@@ -134,10 +101,8 @@
             });
             groupItem.Items.Add(i =>
             {
-
-                i.FieldName = "CB_C_Secue";
+                i.FieldName = "CB_C_SECUE";
                 i.Caption = "Sec.";
-
                 i.ColumnSpan = 2;
                 i.NestedExtension().TextBox(t =>
                 {
@@ -146,66 +111,47 @@
             });
             groupItem.Items.Add(i =>
             {
-
-                i.Name = "tipo";
-                i.Caption = "Tipo";
-
+                i.FieldName = "CB_C_MODO";
+                i.Caption = "Tipo";   
                 i.ColumnSpan = 2;
                 i.NestedExtension().ComboBox(t =>
                 {
-                    t.SelectedIndex = 0;
-                    t.Properties.ValueType = typeof(int);
+                    t.SelectedIndex = 0;               
+                    t.Properties.ValueType = typeof(string);
                     t.Properties.Items.Add("INGRESO", 0);
-                    t.Properties.Items.Add("SALIDA",1);
+                    t.Properties.Items.Add("SALIDA", 1);
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
                     t.Properties.ClientSideEvents.SelectedIndexChanged = "OnTipo";
                     t.Properties.ClientSideEvents.Init = "initTipo";
                 });
             });
-
-
-
-            /*
             groupItem.Items.Add(i =>
             {
-                i.FieldName = "Opera";
-                i.Caption = "Operacion";
-                i.ColumnSpan = 4;
-                i.SetNestedContent(() =>
-                {
-                    Html.RenderAction("MultiSelectSolicitante", new { Opera = DataBinder.Eval(c.DataItem, "Opera") });
-                });
-            });
-            */
-
-            groupItem.Items.Add(i =>
-            {
-                i.FieldName = "Opera";
+                i.FieldName = "CB_C_OPERA";
                 i.Caption = "Operacion";
                 i.ColumnSpan = 8;
 
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectOpciones", new { CB_C_CODIG = DataBinder.Eval(c.DataItem, "Opera") });
+                    Html.RenderAction("MultiSelectOpciones", new { CB_C_CODIG = DataBinder.Eval(c.DataItem, "CB_C_OPERA") });
                 });
-
-
             });
             groupItem.Items.Add(i =>
             {
-                i.FieldName = "docu";
+                i.FieldName = "CB_C_TPDOC";
                 i.Caption = "Dcmtos.";
                 i.ColumnSpan = 4;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectTipoDoc", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "docu") });
+                    Html.RenderAction("MultiSelectTipoDoc", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_TPDOC") });
                 });
 
             });
             groupItem.Items.Add(i =>
             {
-                i.Name = "serie";
+                i.FieldName = "serie";
+
 
                 i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 1;
@@ -216,7 +162,8 @@
             });
             groupItem.Items.Add(i =>
             {
-                i.Name = "numero";
+
+                i.FieldName = "CB_C_DOCUM";
                 i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 1;
                 i.NestedExtension().TextBox(t =>
@@ -228,36 +175,33 @@
             groupItem.Items.Add(i =>
 
             {
-                i.FieldName = "CB_C_Anexo";
+                i.Name = "TipoAnexo";
                 i.Caption = "Anexo";
 
                 i.ColumnSpan = 3;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectTipoAnexo", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_Anexo") });
+                    Html.RenderAction("MultiSelectTipoAnexo" );
                 });
-
-
-
             });
             groupItem.Items.Add(i =>
 
             {
-                i.Name = "proveedor";
-                i.Caption = "Anexo";
+                i.FieldName = "CB_C_ANEXO";           
                 i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 3;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectAnexo");
+                   
+                    Html.RenderAction("MultiSelectAnexo", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXO") });
+
                 });
             });
 
 
             groupItem.Items.Add(i =>
-
             {
-                i.Name = "Conversion";
+                i.FieldName = "CB_C_CONVE";
                 i.Caption = "Conversion";
                 //  i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 3;
@@ -280,7 +224,7 @@
             groupItem.Items.Add(i =>
 
             {
-                i.Name = "FecGiro";
+                i.FieldName = "CB_D_FECCA";
                 i.ColumnSpan = 3;
                 i.Caption = "Fecha Giro";
                 i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
@@ -295,7 +239,7 @@
             });
             groupItem.Items.Add(i =>
             {
-                i.Name = "FecCobro";
+                i.FieldName = "CB_D_FECCOB";
                 i.ColumnSpan = 3;
                 i.Caption = "Fecha Cobro";
                 i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
@@ -307,7 +251,7 @@
             });
             groupItem.Items.Add(i =>
             {
-                i.FieldName = "MONTO";
+                i.FieldName = "CB_N_MTOMN";
                 i.ColumnSpan = 12;
                 i.Caption = "Monto";
 
@@ -321,7 +265,6 @@
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.FieldName = "CB_A_REFER";
                 i.ColumnSpan = 6;
@@ -348,7 +291,6 @@
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.Name = "TipoMovimiento";
                 i.ColumnSpan = 3;
@@ -441,7 +383,7 @@
                         btnSettings.Name = "btnUpdate";
                         btnSettings.Text = "Grabar";
                         btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
-
+                       
                         //I want to Hide Update Button when FirstName is "John"
 
                     }).Render();
@@ -467,7 +409,7 @@
 
     settings.SettingsExport.EnableClientSideExportAPI = true;
     settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
-    // settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
+     settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
     settings.Width = Unit.Percentage(100);
 
     katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);

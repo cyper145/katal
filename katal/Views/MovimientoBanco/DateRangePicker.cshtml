@@ -49,7 +49,7 @@
     }
 </script>
 
-@using (Html.BeginForm("DateRangePicker", "RequisionCompra", FormMethod.Post))
+@using (Html.BeginForm("DateRangePicker", "MovimientoBanco", FormMethod.Post))
 {
     @Html.DevExpress().FormLayout(settings =>
 {
@@ -78,7 +78,7 @@
         {
             tb.Name = "Start";
 
-            tb.Date = GridViewHelper.dateRange.Start;
+            tb.Date = GridViewHelper.dateRangeBanco.Start;
             tb.Properties.ClientSideEvents.DateChanged = "UpdateInfodey";
             tb.Width = Unit.Percentage(100);
         });
@@ -91,7 +91,7 @@
         {
             tb.Name = "End";
 
-            tb.Date=GridViewHelper.dateRange.End;
+            tb.Date=GridViewHelper.dateRangeBanco.End;
             tb.Width = Unit.Percentage(100);
         });
     });

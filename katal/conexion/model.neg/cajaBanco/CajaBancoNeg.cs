@@ -19,7 +19,7 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.findAll();
         }
-        public List<MovimientoBanco> findAllMovimientos(string banco, string moneda)
+        public List<CMovimientoBanco> findAllMovimientos(string banco, string moneda)
         {
             return cajaBancoDao.findAllMovimientos(banco, moneda);
         }

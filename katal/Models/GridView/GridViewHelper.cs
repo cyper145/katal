@@ -54,8 +54,10 @@ namespace katal.Model
         public static int TipoOpcion = 0;
 
         public static DateRangePickerModel dateRange = new DateRangePickerModel();
+        public static DateRangePickerModel dateRangeBanco = new DateRangePickerModel();
 
-
+        // SOLO 
+        public static List<CMovimientoBanco> movimientoBancos= new List<CMovimientoBanco>();
 
 
         public static void GetDetalles()

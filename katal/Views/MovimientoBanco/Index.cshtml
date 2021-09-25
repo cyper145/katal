@@ -20,6 +20,10 @@
 
     <script>
 
+  
+           
+        
+
         function OnGridArticuloRowClick(s, e) {
             var g = gridLookup.GetGridView();
             g.GetRowValues(e.visibleIndex, 'description;unidad', OnGetRowArticuloValues);
@@ -28,45 +32,40 @@
             console.log(Value[0]);
             var data = document.getElementById("grid_DXEFL_DXEditor2_I");
             data.value = Value[1];
-
         }
         function OnTipo(s, e) {
            
-
-            $.getJSON('/MovimientoBanco/changeTipo?tipo=' + tipo.GetValue(), function (resp) {
+            console.log(CB_C_MODO.GetValue());
+            $.getJSON('/MovimientoBanco/changeTipo?tipo=' + CB_C_MODO.GetValue(), function (resp) {
                 $.each(resp, function (k, v) {
 
-                  
+                    console.log("holas2");
                     //ver que se muestre 
                 });
             });
-                //var g
-
         }
         function initTipo(s, e) {
-            $.getJSON('/MovimientoBanco/changeTipo?tipo=' + tipo.GetValue(), function (resp) {
+            if (CB_C_MODO.GetValue() == null) {
+                CB_C_MODO.SetValue(0);
+            }
+            $.getJSON('/MovimientoBanco/changeTipo?tipo=' + CB_C_MODO.GetValue(), function (resp) {
                 $.each(resp, function (k, v) {
 
-
+                    console.log("holas");
 
                     //ver que se muestre 
                 });
             });
         }
-
-
-
-
-
         function dateInit() {
 
-            if (FecGiro.GetText() == "") {
+            if (CB_D_FECCA.GetText() == "") {
                 let f = new Date();
-                FecGiro.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                CB_D_FECCA.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
             }
-            if (FecCobro.GetText() == "") {
+            if (CB_D_FECCOB.GetText() == "") {
                 let f = new Date();
-                FecCobro.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                CB_D_FECCOB.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
             }
 
 
@@ -123,6 +122,7 @@
         item.Alignment = MenuItemAlignment.Left;
         item.AdaptivePriority = 2;
         item.Image.Url = "Content/Images/add.svg";
+       
 
     });
     menuSettings.Items.Add(item =>
@@ -160,7 +160,7 @@
 
     menuSettings.Items.Add(item =>
     {
-        item.Name = "Export";
+        item.Name = "imprimirCaja";
         item.Text = "Imprimir";
         item.Alignment = MenuItemAlignment.Left;
         item.AdaptivePriority = 2;
@@ -176,7 +176,7 @@
         item.Image.Url = "Content/Images/search.svg";
         item.Image.UrlChecked = "Content/Images/search-selected.svg";
     });
-    menuSettings.ClientSideEvents.ItemClick = "onPageToolbarItemClickRequision";
+    menuSettings.ClientSideEvents.ItemClick = "onPageToolbarItemClick";
 }).GetHtml()
 
     @Html.DevExpress().Panel(panelSettings =>

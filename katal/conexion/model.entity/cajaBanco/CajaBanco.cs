@@ -82,4 +82,80 @@ namespace katal.conexion.model.entity
       
     }
 
+
+    public class CMovimientoBanco
+    {
+        public string CB_C_BANCO { get; set; }
+        public string CB_C_MES { get; set; }
+        public string CB_C_SECUE { get; set; }
+        public string CB_C_MODO { get; set; }
+        public string CB_C_OPERA { get; set; }
+        public DateTime CB_D_FECHA { get; set; }
+        public string CB_C_TPDOC { get; set; }
+        public string CB_C_DOCUM { get; set; }
+        public string CB_C_ANEXO { get; set; }
+        public string CB_C_CONVE { get; set; }
+        public decimal CB_N_CAMES { get; set; }
+        public DateTime CB_D_FECCA { get; set; }
+        public decimal CB_N_TIPCA { get; set; }
+        public decimal CB_N_MTOMN { get; set; }
+        public decimal CB_N_MTOME { get; set; }
+        public string CB_C_CONTA { get; set; }
+        public string CB_C_NROLI { get; set; }
+        public string CB_C_FACTU { get; set; }
+        public string CB_L_CONTA { get; set; }
+        public string CB_L_ANULA { get; set; }
+        public string CB_A_REFER { get; set; }
+        public string CB_C_ESTAD { get; set; }
+        public string CB_C_ESTRET { get; set; }
+        public string CB_RETLET { get; set; }
+        public string CB_D_FECCOB { get; set; }
+        public string CB_TRANSBCO { get; set; }
+        public string CB_TIPMOV { get; set; }
+        public string CB_MEDIO { get; set; }
+        public string CB_DMEDIO { get; set; }
+        public string CB_USUARIO { get; set; }
+
+
+        /*public string CB_C_Secue   CB_C_SECUE { get; set; }
+        public string Opera CB_C_OPERA   { get; set; }
+        public string docu CB_C_TPDOC { get; set; }
+        public decimal MONTO  CB_N_MTOMN { get; set; }
+        public string Conta CB_C_CONTA  { get; set; }
+        public string Anula { get; set; }
+        public DateTime CB_C_Fecha  CB_D_FECCA { get; set; }
+        public string CB_C_Anexo  CB_C_ANEXO{ get; set; }
+        public string CB_C_CONTA { get; set; }
+        public string CB_A_REFER { get; set; }
+        public string CB_C_NROLI { get; set; }*/
+
+
+    }
+
+
+    public class DMovimientoBanco
+    {
+        public string CB_C_BANCO { get; set; }
+        public string CB_C_MES { get; set; }
+        public string CB_C_SECUE { get; set; }
+        public string CB_C_SECDE { get; set; }
+        public string CB_C_MODO { get; set; }
+        public string CB_C_CONCE { get; set; }
+        public string CB_C_ANEXO { get; set; }
+        public string CB_C_TPDOC { get; set; }
+        public string CB_C_DOCUM { get; set; }
+        public DateTime CB_D_FECDC { get; set; }
+        public string CB_A_REFER { get; set; }
+        public string CB_C_CUENT { get; set; }
+        public string CB_C_CENCO { get; set; }
+        public string CB_C_DESTI { get; set; }
+        public decimal CB_N_MTOMN { get; set; }
+        public decimal CB_N_MTOME { get; set; }
+        public bool CB_L_ANULA { get; set; }
+        public decimal CB_L_PROGR { get; set; }
+        public string CODDETPLA { get; set; }
+        public string CB_ACUENTA { get; set; }
+        public string CB_L_ESTADO { get; set; }
+        public decimal CB_N_RESTANTE { get; set; }
+    }
 }

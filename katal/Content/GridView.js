@@ -54,8 +54,61 @@
                 console.log("dar");
                 exportTxtRecords();
                 break;
+
+            case "contabilizar":
+                console.log("dar");
+                contabilizarMovCaja();
+                break;
+            case "anular":
+             
+                anularrMovCaja();
+                break;
+            case "imprimirCaja":
+                console.log("dar");
+                imprimirCaja();
+                break;
         }
     }
+    /**
+     * para movimiento cajabanco
+     * 
+     * 
+     * 
+     * */
+    function contabilizarMovCaja() {
+
+        gridView.GetSelectedFieldValues("CB_C_SECUE", getSelectedontabilizar);
+
+    }
+    function getSelectedontabilizar(values) {
+        console.log(selectdId);
+        gridView.PerformCallback({ customAction: 'contabilizar', codigo: selectdId });
+    }
+    function anularrMovCaja() {
+
+        gridView.GetSelectedFieldValues("CB_C_SECUE", getSelectedAnular);
+
+    }
+    function getSelectedAnular(values) {
+        gridView.PerformCallback({ customAction: 'anular', codigo: selectdId });
+    }
+    function imprimirCaja() {
+
+        gridView.GetSelectedFieldValues("CB_C_SECUE", getSelectedimprimirCaja);
+
+    }
+    function getSelectedimprimirCaja(values) {
+        gridView.PerformCallback({ customAction: 'imprimir', codigo: selectdId });
+    }
+
+
+    /**
+    * end para movimiento cajabanco
+    *
+    *
+    *
+    * */
+
     function TransferirRecords() {
 
         gridView.GetSelectedFieldValues("CNROITEM", getSelectedTransferir);
@@ -297,9 +350,16 @@
 
     // para seleccionar elemento
     function OnGridFocusedRowChangedRequision(s, e) {
-        s.GetRowValues(s.GetFocusedRowIndex(), 'NROREQUI', OnGetRowValuesRequision);
+      
+        if (s.keyName != "CB_C_SECUE") {
+            s.GetRowValues(s.GetFocusedRowIndex(), 'NROREQUI', OnGetRowValuesRequision);
+        } else {
+            s.GetRowValues(s.GetFocusedRowIndex(), 'CB_C_SECUE', OnGetRowValuesRequision);
+        }
+      
     }
     function OnGetRowValuesRequision(values) {
+        selectdId = values;
         selectdId = values;
     }
 

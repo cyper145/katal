@@ -25,6 +25,15 @@ namespace katal.Controllers
             return View(new DevExpress.XtraReports.Web.CachedReportSourceWeb(report));
         }
 
+        public ActionResult MovimientoBanco(String codigo)
+        {
+            Reports.MOVIMIENTO report = new Reports.MOVIMIENTO();
+            report.Parameters["SECUENCIA01"].Value = codigo;
+            
+            report.RequestParameters = false;
+            return View(new DevExpress.XtraReports.Web.CachedReportSourceWeb(report));
+        }
+
         public ActionResult OrdenesCompraProveedor(String codigo, DateTime star, DateTime end,  string estado1, string estado2, string PROV1, string PROV2)
         {
             Reports.Report5 report = new Reports.Report5();

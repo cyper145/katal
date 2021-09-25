@@ -411,6 +411,7 @@
     <Content Include="Views\MovimientoBanco\MultiSelectEstadosOperaciones.cshtml" />
     <Content Include="Views\MovimientoBanco\MultiSelectTiposMovimientos.cshtml" />
     <Content Include="Views\MovimientoBanco\MultiSelectMedioPago.cshtml" />
+    <Content Include="Views\Report\MovimientoBanco.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -540,6 +541,18 @@
     </Compile>
     <Compile Include="ReportStorageWebExtension1.cs" />
     <Compile Include="ReportStorageWebExtension2.cs" />
+    <Compile Include="Reports\MOVIMIENTO.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MOVIMIENTO.Designer.cs">
+      <DependentUpon>MOVIMIENTO.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\movimientosCaja.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\movimientosCaja.Designer.cs">
+      <DependentUpon>movimientosCaja.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reports\Report1.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -599,6 +612,12 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\MOVIMIENTO.resx">
+      <DependentUpon>MOVIMIENTO.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\movimientosCaja.resx">
+      <DependentUpon>movimientosCaja.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Report2.resx">
       <DependentUpon>Report2.cs</DependentUpon>
