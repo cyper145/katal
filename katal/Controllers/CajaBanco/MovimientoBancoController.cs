@@ -83,6 +83,8 @@ namespace katal.Controllers
             {
                 movimientoBancos = new List<CMovimientoBanco>();
             }
+
+
             return PartialView("DataRequisicionPartial", movimientoBancos);
         }
 
@@ -284,10 +286,7 @@ namespace katal.Controllers
             return PartialView("DetailRequestPartial", GridViewHelper.movimientoBancosdetalles);
         }
         public ActionResult DetailRequestAddNewPartial(DMovimientoBanco product , FormCollection dataForm)
-        {
-            
-            
-
+        {         
             // product.CENCOST = arraycosto.First.ToString();
             if (ModelState.IsValid)
                 SafeExecute(() => InsertProduct(product));
