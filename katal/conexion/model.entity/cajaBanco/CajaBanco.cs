@@ -158,4 +158,20 @@ namespace katal.conexion.model.entity
         public string CB_L_ESTADO { get; set; }
         public decimal CB_N_RESTANTE { get; set; }
     }
+
+    public class TemporalGC
+    {
+        public string secuencia { get; set; }
+        public string ANEXO { get; set; }
+        public string DOC { get; set; }
+        public string fecha { get; set; }
+        public string cjavco { get; set; }
+        public string concepto { get; set; }
+        public string documento { get; set; }
+        public string tc { get; set; }
+        public string tipmon { get; set; }
+        public string importe { get; set; }
+        
+    }
+
 }

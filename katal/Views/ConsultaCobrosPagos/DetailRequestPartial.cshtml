@@ -3,10 +3,10 @@
 @using katal.Model;
 @(Html.DevExpress().GridView(settings => {
     settings.Name = "grid";
-    settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestPartial", NROREQUI = ViewData["codigoOrden"] };
-    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestAddNewPartial" };
-    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestUpdatePartial" };
-    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestDeletePartial" };
+    settings.CallbackRouteValues = new { Controller = "RequisionCompra", Action = "DetailRequestPartial", NROREQUI = ViewData["codigoOrden"] };
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RequisionCompra", Action = "DetailRequestAddNewPartial" };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RequisionCompra", Action = "DetailRequestUpdatePartial" };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RequisionCompra", Action = "DetailRequestDeletePartial" };
 
     settings.Toolbars.Add(tb => {
         tb.Enabled = true;
@@ -61,18 +61,29 @@
 
 
 
-    settings.KeyFieldName = "CB_C_SECDE";
+    settings.KeyFieldName = "codpro";
 
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_SECDE";
+        column.FieldName = "codpro";
         column.Caption = "Sec";
-        column.ReadOnly = true;
+        column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        ComboBoxProperties properties = column.PropertiesEdit as ComboBoxProperties;
+
+        properties.TextField = "codigo";
+        properties.ValueField = "codigo";
+        properties.ValueType = typeof(string);
+        properties.DataSource = GridViewHelper.getArticulos();
+        column.Width =Unit.Percentage(10);
+        column.SetEditItemTemplateContent(container =>
+        {
+            Html.RenderAction("MultiSelectPartial", new { CurrentCategory = DataBinder.Eval(container.DataItem, "codpro") });
+        });
 
     });
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_CONCE";
+        column.FieldName = "DESCPRO";
         column.Caption = "Concepto";
         column.Width = Unit.Percentage(35);
 
@@ -80,54 +91,36 @@
 
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_TPDOC";
+        column.FieldName = "UNIPRO";
         column.Caption = "Documento";
         column.CellRowSpan = 1;
-
+        column.Width = Unit.Percentage(10);
         column.ColumnType = MVCxGridViewColumnType.TextBox;
         TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
-
+        column.ReadOnly = true;
 
     });
-    if (GridViewHelper.monedabanco == "MN")
-    {
-        settings.Columns.Add(column =>
-        {
-            column.FieldName = "CB_N_MTOMN";
-            column.Caption = "Monto";
-            column.Width = Unit.Percentage(10);
-            column.ColumnType = MVCxGridViewColumnType.TextBox;
-            TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
-           // properties.DisplayFormatString= "00.00"
-            //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
-
-        });
-    }
-    else
-    {
-        settings.Columns.Add(column =>
-        {
-            column.FieldName = "CB_N_MTOME";
-            column.Caption = "Monto";
-            column.Width = Unit.Percentage(10);
-            column.ColumnType = MVCxGridViewColumnType.TextBox;
-            TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
-            //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
-
-        });
-    }
-
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_A_REFER";
+        column.FieldName = "CANTID";
+        column.Caption = "Monto";
+        column.Width = Unit.Percentage(10);
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
+        //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "SALDO";
         column.Caption = "Referencia";
-
-
+      
+       
         column.ColumnType = MVCxGridViewColumnType.TextBox;
         TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
         //  properties.ClientSideEvents.TextChanged = "changegCalcularPrecioPunitario";
     });
-
+   
     var layout=  settings.EditFormLayoutProperties.Items.AddGroupItem(i => {
 
         i.ShowCaption = DefaultBoolean.False;
@@ -139,7 +132,7 @@
     layout.Items.Add(i =>
     {
 
-        i.ColumnName = "CB_C_SECDE";
+        i.ColumnName = "codpro";
         i.ColumnSpan = 6;
 
         i.ShowCaption = DefaultBoolean.False;
@@ -151,7 +144,7 @@
     layout.Items.Add(i =>
     {
 
-        i.ColumnName = "CB_C_CONCE";
+        i.ColumnName = "UNIPRO";
         i.ColumnSpan = 1;
         i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
 
@@ -159,15 +152,15 @@
     layout.Items.Add(i =>
     {
 
-        i.ColumnName = "CB_C_TPDOC";
+        i.ColumnName = "CANTID";
         i.ColumnSpan = 2;
         i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
 
 
     });
-
-
-
+   
+  
+   
 
     layout.Items.AddCommandItem(i =>
     {

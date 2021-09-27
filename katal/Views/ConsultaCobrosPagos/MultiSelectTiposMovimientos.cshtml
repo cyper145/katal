@@ -5,8 +5,8 @@
 {
     //settings.Properties.Caption = "Area:";
 
-    settings.Name = "gridLookupOpciones";
-    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectOpciones", CB_C_CODIG = Model.CB_C_CODIG };
+    settings.Name = "gridLookupTiposMovimientos";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectTiposMovimientos", CB_C_CODIG = Model.CB_C_CODIG };
 
     settings.KeyFieldName = "CB_C_CODIG";
 
@@ -14,29 +14,30 @@
     // settings.CommandColumn.ShowSelectCheckbox = true;
 
     settings.Columns.Add("CB_C_CODIG").Width = Unit.Percentage(10);
-    settings.Columns.Add("CB_A_DESCR").Width = Unit.Percentage(90);
+    settings.Columns.Add("CB_A_DESCR").Width = Unit.Percentage(80);
+   
 
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
-    settings.Properties.TextFormatString = "{0}-{1}";
+    settings.Properties.TextFormatString = "{1}";
+//    settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexo";
 
-    settings.GridViewProperties.Settings.ShowFilterRow = false;
+    settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
     settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
     //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
-    settings.GridViewProperties.SettingsPager.EnableAdaptivity = false;
+    settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
     settings.GridViewProperties.SettingsPager.PageSize = 7;
 
     //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
 
-    settings.GridViewClientSideEvents.EndCallback = "OnGridChangeOperacion";
     settings.DataBound = (sender, e) =>
     {
         var gridLookup = (MVCxGridLookup)sender;
         gridLookup.GridView.Width = Unit.Percentage(100);
     };
-}).BindList(ViewData["tipoOpciones"]).Bind(Model.CB_C_CODIG).GetHtml()
+}).BindList(ViewData["tiposMovimientos"]).Bind(Model.CB_C_CODIG).GetHtml()
 
 
 

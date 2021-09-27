@@ -1,0 +1,95 @@
+﻿
+@using katal.conexion.model.entity;
+
+@using System.Drawing;
+@using katal.Model;
+@(Html.DevExpress().GridView<TemporalGC>(settings => {
+    settings.Name = "gridView";
+    settings.Enabled = GridViewHelper.activeData;
+    settings.CallbackRouteValues = new { Controller = "ConsultaCobrosPagos", Action = "DataRequisicionPartial" };
+    settings.CustomActionRouteValues = new { Controller = "ConsultaCobrosPagos", Action = "GridViewCustomActionPartial" };
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ConsultaCobrosPagos", Action = "RequisicionAddNewPartial" };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ConsultaCobrosPagos", Action = "RequisicionUpdatePartial" };
+    settings.SettingsResizing.ColumnResizeMode = ColumnResizeMode.Control;
+    settings.ControlStyle.CssClass = "grid-view";
+    settings.Styles.Cell.Wrap = DefaultBoolean.False;
+    settings.Styles.PagerBottomPanel.CssClass = "pager";
+    settings.Styles.FocusedRow.CssClass = "focused";
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1200;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+    settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 500;
+    settings.EditFormLayoutProperties.UseDefaultPaddings = false;
+    settings.EditFormLayoutProperties.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.EditFormLayoutProperties.Styles.LayoutGroup.Cell.Paddings.Padding = Unit.Pixel(3);
+    settings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
+    settings.Settings.ShowFilterRowMenu = true;
+    settings.SettingsBehavior.AllowFocusedRow = true;
+    // settings.SettingsBehavior.
+    settings.KeyFieldName = "secuencia";
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "secuencia";
+        column.Caption = "Secuencia";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "ANEXO";
+        column.Caption = "Nombre del Anexo";
+
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "fecha";
+        column.Caption = "Fecha";
+        column.ColumnType = MVCxGridViewColumnType.DateEdit;
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "cjavco";
+        column.Caption = "Caja/Banco";
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "concepto";
+        column.Caption = "Concepto Caja/Banco.";
+    });
+
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "documento";
+        column.Caption = "Doc Cancelado";
+    });
+
+    //Anulado
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "tc";
+        column.Caption = "T/C";
+       
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "tipmon";
+        column.Caption = "Mon";
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "importe";
+        column.Caption = "Importe";
+    });
+
+   
+    settings.SettingsSearchPanel.CustomEditorName = "search";
+    settings.SettingsBehavior.AllowFocusedRow = true;
+
+    settings.SettingsExport.EnableClientSideExportAPI = true;
+    settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
+    settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
+    settings.Width = Unit.Percentage(100);
+
+    katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
+}).Bind(Model).SetEditErrorText(ViewBag.EditError).GetHtml())

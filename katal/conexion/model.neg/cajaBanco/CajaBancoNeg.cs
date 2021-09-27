@@ -19,20 +19,37 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.findAll();
         }
+        public CajaBanco findBanco(string codigo)
+        {
+            return cajaBancoDao.findBanco(codigo);
+        }
+
+
         public List<CMovimientoBanco> findAllMovimientos(string banco, string moneda)
         {
             return cajaBancoDao.findAllMovimientos(banco, moneda);
         }
 
-        public List<TipoOpcionCajaBanco> findAllTipoOpciones( int tipo)
+        public List<TipoOpcionCajaBanco> findAllTipoOpciones(int tipo)
         {
-            string tipoingresosalida="I";
+            string tipoingresosalida = "I";
             if (tipo == 1)
             {
                 tipoingresosalida = "S";
             }
             return cajaBancoDao.findAllTipoOpciones(tipoingresosalida);
         }
+        public TipoOpcionCajaBanco findTipoOpciones(int tipo, string codigoOperacion)
+        {
+            string tipoingresosalida = "I";
+            if (tipo == 1)
+            {
+                tipoingresosalida = "S";
+            }
+            return cajaBancoDao.findTipoOpciones(tipoingresosalida, codigoOperacion);
+        }
+
+
         public List<TipoEstadoOperacion> findAllTipoEstadosOperaciones(string tipo)
         {
 
@@ -51,7 +68,29 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.findAllMedioPago();
         }
+        public string numSec(TipoOpcionCajaBanco cajaBanco, string codigoBanco, DateTime mes)
+        {
+            string numSec = "";
+            if (cajaBanco.CB_C_AUTOM == "N")
+            {
+                numSec = cajaBancoDao.numSec(cajaBanco.CB_C_TPDOC, codigoBanco, mes);
+            }
+            else
+            {
 
+            }
+            return "";
+        }
+
+        public string Busca_Gen(string concepto)
+        {
+            return cajaBancoDao.ConceptosGenerales(concepto);
+        }
+
+        public string Genera_Secuencia(string codigoBanco, DateTime fechaoperacion)
+        {
+            return cajaBancoDao.Genera_Secuencia(codigoBanco, fechaoperacion);
+        }
 
     }
 }

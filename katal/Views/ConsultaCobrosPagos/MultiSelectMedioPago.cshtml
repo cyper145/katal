@@ -5,16 +5,16 @@
 {
     //settings.Properties.Caption = "Area:";
 
-    settings.Name = "gridLookupOpciones";
-    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectOpciones", CB_C_CODIG = Model.CB_C_CODIG };
+    settings.Name = "gridLookupMedioPago";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectMedioPago", CODIGO = Model.CODIGO };
 
-    settings.KeyFieldName = "CB_C_CODIG";
+    settings.KeyFieldName = "CODIGO";
 
     //settings.CommandColumn.Visible = true;
     // settings.CommandColumn.ShowSelectCheckbox = true;
 
-    settings.Columns.Add("CB_C_CODIG").Width = Unit.Percentage(10);
-    settings.Columns.Add("CB_A_DESCR").Width = Unit.Percentage(90);
+    settings.Columns.Add("CODIGO").Width = Unit.Percentage(10);
+    settings.Columns.Add("DESCRIPCION").Width = Unit.Percentage(90);
 
     settings.Width = Unit.Percentage(100);
 
@@ -30,13 +30,13 @@
 
     //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
 
-    settings.GridViewClientSideEvents.EndCallback = "OnGridChangeOperacion";
     settings.DataBound = (sender, e) =>
     {
         var gridLookup = (MVCxGridLookup)sender;
         gridLookup.GridView.Width = Unit.Percentage(100);
     };
-}).BindList(ViewData["tipoOpciones"]).Bind(Model.CB_C_CODIG).GetHtml()
+}).BindList(ViewData["MedioPago"]).Bind(Model.CODIGO).GetHtml()
+
 
 
 

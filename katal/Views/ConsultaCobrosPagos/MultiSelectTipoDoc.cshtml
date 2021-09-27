@@ -1,27 +1,27 @@
 ﻿
-
-
 @Html.DevExpress().GridLookup(settings =>
 {
     //settings.Properties.Caption = "Area:";
 
-    settings.Name = "gridLookupOpciones";
-    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectOpciones", CB_C_CODIG = Model.CB_C_CODIG };
+    settings.Name = "gridLookupTipoDoc";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectTipoDoc", TIPDOC_CODIGO = Model.TIPDOC_CODIGO };
 
-    settings.KeyFieldName = "CB_C_CODIG";
+    settings.KeyFieldName = "TIPDOC_CODIGO";
 
     //settings.CommandColumn.Visible = true;
     // settings.CommandColumn.ShowSelectCheckbox = true;
 
-    settings.Columns.Add("CB_C_CODIG").Width = Unit.Percentage(10);
-    settings.Columns.Add("CB_A_DESCR").Width = Unit.Percentage(90);
+    settings.Columns.Add("TIPDOC_CODIGO").Width = Unit.Percentage(10);
+    settings.Columns.Add("TIPDOC_DESCRIPCION").Width = Unit.Percentage(80);
+    settings.Columns.Add("TIPDOC_REFERENCIA").Width = Unit.Percentage(10);
 
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
     settings.Properties.TextFormatString = "{0}-{1}";
+    //settings.Properties.ClientSideEvents.KeyDown = "KeyDownTipoDoc";
 
-    settings.GridViewProperties.Settings.ShowFilterRow = false;
+    settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
     settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
     //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
@@ -29,14 +29,13 @@
     settings.GridViewProperties.SettingsPager.PageSize = 7;
 
     //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
+    //settings.GridViewClientSideEvents.EndCallback = "OnGridDatatipoDoc";// ver re
 
-    settings.GridViewClientSideEvents.EndCallback = "OnGridChangeOperacion";
     settings.DataBound = (sender, e) =>
     {
         var gridLookup = (MVCxGridLookup)sender;
         gridLookup.GridView.Width = Unit.Percentage(100);
     };
-}).BindList(ViewData["tipoOpciones"]).Bind(Model.CB_C_CODIG).GetHtml()
-
+}).BindList(ViewData["TipoDoc"]).Bind(Model.TIPDOC_CODIGO).GetHtml()
 
 

@@ -106,17 +106,18 @@
                 i.ColumnSpan = 2;
                 i.NestedExtension().TextBox(t =>
                 {
+                    t.Properties.ClientSideEvents.Init = "initSecuencia";
                     t.ReadOnly = true;
                 });
             });
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_C_MODO";
-                i.Caption = "Tipo";   
+                i.Caption = "Tipo";
                 i.ColumnSpan = 2;
                 i.NestedExtension().ComboBox(t =>
                 {
-                    t.SelectedIndex = 0;               
+                    t.SelectedIndex = 0;
                     t.Properties.ValueType = typeof(string);
                     t.Properties.Items.Add("INGRESO", 0);
                     t.Properties.Items.Add("SALIDA", 1);
@@ -131,7 +132,6 @@
                 i.FieldName = "CB_C_OPERA";
                 i.Caption = "Operacion";
                 i.ColumnSpan = 8;
-
                 i.SetNestedContent(() =>
                 {
                     Html.RenderAction("MultiSelectOpciones", new { CB_C_CODIG = DataBinder.Eval(c.DataItem, "CB_C_OPERA") });
@@ -177,7 +177,6 @@
             {
                 i.Name = "TipoAnexo";
                 i.Caption = "Anexo";
-
                 i.ColumnSpan = 3;
                 i.SetNestedContent(() =>
                 {
@@ -187,12 +186,12 @@
             groupItem.Items.Add(i =>
 
             {
-                i.FieldName = "CB_C_ANEXO";           
+                i.FieldName = "CB_C_ANEXO";
                 i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 3;
                 i.SetNestedContent(() =>
                 {
-                   
+
                     Html.RenderAction("MultiSelectAnexo", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXO") });
 
                 });
@@ -355,12 +354,37 @@
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
                     //  t.ReadOnly = true;
-
-
                 });
             });
 
+            groupItem.Items.Add(itemSettings =>
+            {
+                itemSettings.ColumnSpan = 2;
+                itemSettings.ShowCaption = DefaultBoolean.False;
+            }).SetNestedContent(() =>
+            {
 
+                Html.DevExpress().Button(
+
+                    btnSettings =>
+                    {
+                        btnSettings.Width = Unit.Percentage(100);
+                        btnSettings.Name = "btShowModal";
+                        btnSettings.Text = "";
+                        btnSettings.ToolTip = "Guardar";
+                        btnSettings.Images.Image.Url = "Content/Images/save.svg";
+                        btnSettings.Images.Image.Width = Unit.Percentage(10);
+
+
+                        // magia de guardadr
+                        btnSettings.ClientSideEvents.Click = "function(s, e) { pcModalMode.Show(); }";
+
+
+                    }).Render();
+
+
+
+            });//2
             layoutSetting.Items.Add(itemSettings =>
             {
 
@@ -383,7 +407,7 @@
                         btnSettings.Name = "btnUpdate";
                         btnSettings.Text = "Grabar";
                         btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
-                       
+
                         //I want to Hide Update Button when FirstName is "John"
 
                     }).Render();
@@ -398,18 +422,15 @@
                     }).Render();
                 ViewContext.Writer.Write("</div>");
             });
-
-
         }).Bind(ViewData["Object"] ?? c.DataItem).Render();
 
     });
-
     settings.SettingsSearchPanel.CustomEditorName = "search";
     settings.SettingsBehavior.AllowFocusedRow = true;
 
     settings.SettingsExport.EnableClientSideExportAPI = true;
     settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
-     settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
+    settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
     settings.Width = Unit.Percentage(100);
 
     katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);

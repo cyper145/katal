@@ -6,6 +6,7 @@ using katal.conexion.model.entity;
 using katal.conexion.model.neg;
 using System.Web;
 using Newtonsoft.Json;
+using System;
 
 namespace katal.Model
 {
@@ -50,15 +51,20 @@ namespace katal.Model
         public static Comprobante comprobante = new Comprobante();
         // caja banco
         public static bool activeData=false;
+        public static bool activeBancoAnexo=true;
+        public static bool activeBancoTipoAnexo= true;
         public static string codigobanco = "";
+        public static string monedabanco = "";
         public static int TipoOpcion = 0;
+        public static string TipoAnexoBanco = "";
 
         public static DateRangePickerModel dateRange = new DateRangePickerModel();
         public static DateRangePickerModel dateRangeBanco = new DateRangePickerModel();
-
+        public static DateTime dateTime = DateTime.Now;
+        
         // SOLO 
         public static List<CMovimientoBanco> movimientoBancos= new List<CMovimientoBanco>();
-
+        public static List<DMovimientoBanco> movimientoBancosdetalles = new List<DMovimientoBanco>();
 
         public static void GetDetalles()
         {

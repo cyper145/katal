@@ -20,10 +20,6 @@
 
     <script>
 
-  
-           
-        
-
         function OnGridArticuloRowClick(s, e) {
             var g = gridLookup.GetGridView();
             g.GetRowValues(e.visibleIndex, 'description;unidad', OnGetRowArticuloValues);
@@ -139,96 +135,12 @@
     menuSettings.Items.Add(item =>
     {
         item.Enabled = false;
-        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Requision de Compra</h1>"));
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Consulta De Cobros y Pagos</h1>"));
     });
-    menuSettings.Items.Add(item =>
-    {
-        item.Name = "New";
-        item.Text = "Nuevo";
-        item.Alignment = MenuItemAlignment.Left;
-        item.AdaptivePriority = 2;
-        item.Image.Url = "Content/Images/add.svg";
-       
-
-    });
-    menuSettings.Items.Add(item =>
-    {
-        item.Name = "Edit";
-        item.Text = "Editar";
-        item.Alignment = MenuItemAlignment.Left;
-        item.AdaptivePriority = 2;
-        item.Image.Url = "Content/Images/edit.svg";
-    });
-    menuSettings.Items.Add(item =>
-    {
-        item.Name = "Delete";
-        item.Text = "Eliminar";
-        item.Alignment = MenuItemAlignment.Left;
-        item.AdaptivePriority = 2;
-        item.Image.Url = "Content/Images/delete.svg";
-    });
-    menuSettings.Items.Add(item =>
-    {
-        item.Name = "anular";
-        item.Text = "Anular";
-        item.Alignment = MenuItemAlignment.Left;
-        item.AdaptivePriority = 2;
-        item.Image.Url = "Content/Images/anular.svg";
-    });
-    menuSettings.Items.Add(item =>
-    {
-        item.Name = "contabilizar";
-        item.Text = "contabilizar";
-        item.Alignment = MenuItemAlignment.Left;
-        item.AdaptivePriority = 2;
-        item.Image.Url = "Content/Images/contabilidad.svg";
-    });
-
-    menuSettings.Items.Add(item =>
-    {
-        item.Name = "imprimirCaja";
-        item.Text = "Imprimir";
-        item.Alignment = MenuItemAlignment.Left;
-        item.AdaptivePriority = 2;
-        item.Image.Url = "Content/Images/print.svg";
-    });
-    menuSettings.Items.Add(item =>
-    {
-        item.Name = "ToggleFilterPanel";
-        item.Text = "";
-        item.GroupName = "Filter";
-        item.Alignment = MenuItemAlignment.Left;
-        item.AdaptivePriority = 1;
-        item.Image.Url = "Content/Images/search.svg";
-        item.Image.UrlChecked = "Content/Images/search-selected.svg";
-    });
-    menuSettings.ClientSideEvents.ItemClick = "onPageToolbarItemClick";
+   
+ 
 }).GetHtml()
-
-    @Html.DevExpress().Panel(panelSettings =>
-    {
-        panelSettings.Name = "filterPanel";
-    panelSettings.Collapsible = true;
-    panelSettings.ControlStyle.CssClass = "filter-panel";
-
-    panelSettings.SettingsCollapsing.ExpandEffect = PanelExpandEffect.Slide;
-    panelSettings.SettingsCollapsing.AnimationType = AnimationType.None;
-    panelSettings.SettingsCollapsing.ExpandButton.Visible = false;
-
-    panelSettings.SetContent(() =>
-        {
-            Html.DevExpress().ButtonEdit(buttonEditSettings =>
-            {
-            buttonEditSettings.Name = "searchButtonEdit";
-            buttonEditSettings.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.Always;
-            buttonEditSettings.Properties.Caption = "Search";
-            buttonEditSettings.Width = Unit.Percentage(100);
-        }).GetHtml();
-    });
-
-    panelSettings.ClientSideEvents.Expanded = "onFilterPanelExpanded";
-    panelSettings.ClientSideEvents.Collapsed = "adjustPageControls";
-}).GetHtml()
+  
 }
 
 @section LeftPanelContent {
@@ -241,7 +153,7 @@
         <p>Place your content here</p>
     </div>
 }
-@Html.Partial("DateRangePicker2")
+
 @Html.Partial("DateRangePicker")
 
 

@@ -1,0 +1,260 @@
+﻿@using katal.Model;
+@functions{
+    protected void PrepareDateEditSettings(MVCxFormLayoutItem item)
+    {
+        item.NestedExtension().DateEdit(date =>
+        {
+            date.ShowModelErrors = true;
+            date.Properties.ClientSideEvents.DateChanged = "UpdateInfo";
+            date.Properties.ValidationSettings.Display = Display.Dynamic;
+            date.Properties.ValidationSettings.SetFocusOnError = true;
+            date.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+            date.Properties.ValidationSettings.CausesValidation = true;
+            date.Properties.CalendarProperties.Columns = 2;
+            date.Properties.CalendarProperties.FastNavProperties.DisplayMode = FastNavigationDisplayMode.Inline;
+        });
+    }
+}
+
+@section AdditionalResources {
+<script src="@Url.Content(" ~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content(" ~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<style type="text/css">
+    .pickerGroupContainer,
+    .pickerFormLayout > .dxflGroupSys {
+        padding-left: 0 !important;
+    }
+</style>
+}
+
+@{
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+}
+
+<script type="text/javascript">
+    function UpdateInfo() {
+        var daysTotal = End.GetRangeDayCount();
+        Info.SetText(daysTotal !== -1 ? daysTotal + ' days' : '');
+    }
+    $(document).ready(function () {
+        if (Boolean('@(ViewBag.SuccessValidation)'))
+            alert('The form has been submitted successfully.');
+    });
+    function UpdateInfodey() {
+        console.log(Start);
+        console.log(End);
+    }
+</script>
+
+@using (Html.BeginForm("DateRangePicker", "ConsultaCobrosPagos", FormMethod.Post))
+{
+    @Html.DevExpress().FormLayout(settings =>
+{
+    settings.Name = "Picker";
+    settings.RequiredMarkDisplayMode = RequiredMarkMode.None;
+    // settings.SettingsItemCaptions.Location = LayoutItemCaptionLocation.Top;
+    settings.ControlStyle.CssClass = "pickerFormLayout";
+    settings.UseDefaultPaddings = true;
+    settings.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+    settings.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 600;
+    settings.Width = Unit.Percentage(100);
+
+    var pickerGroup = settings.Items.AddGroupItem(i =>
+    {
+        i.Caption = "Opciones de Busqueda";
+        i.ColCount = 12;
+        i.UseDefaultPaddings = false;
+        i.GroupBoxDecoration = GroupBoxDecoration.HeadingLine;
+    });
+    pickerGroup.ParentContainerStyle.CssClass = "pickerGroupContainer";
+
+    var pickerGroup2 = pickerGroup.Items.AddGroupItem(i =>
+    {
+        i.Caption = "tipos consulta";
+        i.ColCount  = 3;
+        i.ColumnSpan = 2;
+        i.UseDefaultPaddings = false;
+        i.GroupBoxDecoration = GroupBoxDecoration.Box;
+
+    });
+    pickerGroup2.Items.Add(i =>
+    {
+        i.FieldName = "CDPagados";
+        i.ColumnSpan =3;
+        i.RowSpan = 2;
+        i.ShowCaption = DefaultBoolean.False;
+        i.NestedExtension().RadioButtonList(t =>
+        {
+            t.ControlStyle.Border.BorderStyle = BorderStyle.None;
+                     
+            t.Properties.Items.Add("Consulta de Documentos Pagados o Cobrados ", 0);
+            t.Properties.Items.Add("Consulta de Documentos que Sustentan Pagados o Cobrados", 1);
+        });
+    });
+    pickerGroup2 = pickerGroup.Items.AddGroupItem(i =>
+    {
+
+        i.ColCount = 6;
+        i.ColumnSpan = 6;
+        i.UseDefaultPaddings = false;
+        i.ShowCaption = DefaultBoolean.False;
+        i.GroupBoxDecoration = GroupBoxDecoration.HeadingLine;
+    });
+
+    var pickerGroup3 = pickerGroup2.Items.AddGroupItem(i =>
+    {
+
+        i.ColCount = 6;
+        i.ColumnSpan = 6;
+        i.UseDefaultPaddings = false;
+        i.Caption = "Datos Anexo";
+        i.GroupBoxDecoration = GroupBoxDecoration.Box;
+    });
+
+    pickerGroup3.Items.Add(i =>
+
+    {
+        i.Name = "TipoAnexo";
+        i.Caption = "Anexo";
+        i.ColumnSpan = 3;
+        i.SetNestedContent(() =>
+        {
+            Html.RenderAction("MultiSelectTipoAnexo");
+        });
+    });
+    pickerGroup3.Items.Add(i =>
+
+    {
+        i.FieldName = "anexo";
+        i.ShowCaption = DefaultBoolean.False;
+        i.ColumnSpan = 3;
+        i.SetNestedContent(() =>
+        {
+            Html.RenderAction("MultiSelectAnexo");
+
+        });
+    });
+
+
+    pickerGroup3 = pickerGroup2.Items.AddGroupItem(i =>
+    {
+        i.ColCount = 6;
+        i.ColumnSpan = 6;
+        i.UseDefaultPaddings = false;
+        i.Caption = "Datos del Documento";
+        i.GroupBoxDecoration = GroupBoxDecoration.Box;
+    });
+
+    pickerGroup3.Items.Add(i =>
+    {
+        i.FieldName = "CB_C_TPDOC";
+        i.Caption = "Dcmtos.";
+        i.ColumnSpan = 4;
+        i.SetNestedContent(() =>
+        {
+            Html.RenderAction("MultiSelectTipoDoc");
+        });
+
+    });
+    pickerGroup3.Items.Add(i =>
+    {
+        i.FieldName = "serie";
+
+
+        i.ShowCaption = DefaultBoolean.False;
+        i.ColumnSpan = 1;
+        i.NestedExtension().TextBox(t =>
+        {
+
+        });
+    });
+    pickerGroup3.Items.Add(i =>
+    {
+
+        i.FieldName = "CB_C_DOCUM";
+        i.ShowCaption = DefaultBoolean.False;
+        i.ColumnSpan = 1;
+        i.NestedExtension().TextBox(t =>
+        {
+
+        });
+    });
+
+
+    pickerGroup2 = pickerGroup.Items.AddGroupItem(i =>
+    {
+
+        i.ColCount = 6;
+        i.ColumnSpan = 4;
+        i.UseDefaultPaddings = false;
+        i.ShowCaption = DefaultBoolean.False;
+        i.GroupBoxDecoration = GroupBoxDecoration.HeadingLine;
+    });
+
+    pickerGroup2.Items.Add(i =>
+    {
+        i.FieldName = "Registro";
+        i.ColumnSpan = 6;
+        i.Caption = "Registro  Fecha del Documento";
+        i.CaptionSettings.HorizontalAlign = FormLayoutHorizontalAlign.Left;
+        i.NestedExtension().CheckBox(t =>
+        {
+            t.Properties.ValidationSettings.Display = Display.Dynamic;
+            t.ShowModelErrors = true;
+            t.Checked = false;
+
+        });
+
+    });
+
+    //
+    pickerGroup2.Items.Add(i =>
+    {
+        i.Caption = "Fecha Inicial";
+        i.ColumnSpan = 6;
+        i.NestedExtension().DateEdit(tb =>
+        {
+            tb.Name = "Start";
+
+            tb.Date = GridViewHelper.dateRangeBanco.Start;
+            tb.Properties.ClientSideEvents.DateChanged = "UpdateInfodey";
+            tb.Width = Unit.Percentage(100);
+        });
+    });
+    pickerGroup2.Items.Add(i =>
+    {
+        i.Caption = "Fecha Final";
+        i.ColumnSpan = 6;
+        i.NestedExtension().DateEdit(tb =>
+        {
+            tb.Name = "End";
+
+            tb.Date=GridViewHelper.dateRangeBanco.End;
+            tb.Width = Unit.Percentage(100);
+        });
+    });
+
+
+    pickerGroup2.Items.Add(i =>
+    {
+        i.ColumnSpan = 6;
+        i.NestedExtension().Button(btn =>
+        {
+            btn.Name = "Submit";
+            btn.UseSubmitBehavior = true;
+            btn.Text = "Consultar";
+        });
+        i.ShowCaption = DefaultBoolean.False;
+        i.VerticalAlign = FormLayoutVerticalAlign.Bottom;
+        i.Width = Unit.Percentage(30);
+    });
+    pickerGroup.Items.Add(i =>
+    {
+        i.NestedExtensionType = FormLayoutNestedExtensionItemType.ValidationSummary;
+        i.ShowCaption = DefaultBoolean.False;
+        i.Width = Unit.Percentage(10);
+
+    });
+}).Bind(GridViewHelper.dateRange).GetHtml()
+}

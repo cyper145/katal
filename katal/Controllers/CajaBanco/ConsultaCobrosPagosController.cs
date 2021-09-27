@@ -11,8 +11,8 @@ using katal.conexion.model.neg;
 using katal.Model;
 namespace katal.Controllers
 {
-   
-    public class MovimientoBancoController : BaseController
+
+    public class ConsultaCobrosPagosController : BaseController
     {
         private OrdenCompraNeg userNeg;
         private RequisicionCompraNeg requisicionNeg;
@@ -26,7 +26,7 @@ namespace katal.Controllers
         private TipoAnexoNeg anexoNeg;
         private ComprobanteNeg comprobanteNeg;
 
-        public MovimientoBancoController()
+        public ConsultaCobrosPagosController()
         {
             requisicionNeg = new RequisicionCompraNeg(codEmpresa);
             userNeg = new OrdenCompraNeg(codEmpresa);
@@ -58,14 +58,14 @@ namespace katal.Controllers
             }
             else
             {
-                movimientoBancos = new  List<CMovimientoBanco>();
+                movimientoBancos = new List<CMovimientoBanco>();
             }
-            return View(movimientoBancos);
+            return View(new List<TemporalGC>());
         }
         public ActionResult DataRequisicionPartial()
         {
             //Sec-Fetch-Mode
-          
+
             List<CMovimientoBanco> movimientoBancos;
             if (GridViewHelper.activeData)
             {
@@ -83,7 +83,7 @@ namespace katal.Controllers
             {
                 movimientoBancos = new List<CMovimientoBanco>();
             }
-            return PartialView("DataRequisicionPartial", movimientoBancos);
+            return PartialView("DataRequisicionPartial", new List<TemporalGC>());
         }
 
         [ValidateInput(false)]
@@ -103,7 +103,7 @@ namespace katal.Controllers
             product.CB_C_CONVE = CB_C_CONVE;
             product.CB_C_ESTAD = CB_C_ESTAD;
             product.CB_TIPMOV = CB_TIPMOV;
-            product.CB_C_SECUE =  ( GridViewHelper.movimientoBancos.Count+1).ToString("0000.##");
+            product.CB_C_SECUE = (GridViewHelper.movimientoBancos.Count + 1).ToString("0000.##");
 
             /*
             // obtener  codarticulo             
@@ -137,13 +137,13 @@ namespace katal.Controllers
                 }
 
             }
-            
+
             return DataRequisicionPartial();
         }
 
         public void InsertProduct(CMovimientoBanco product)
         {
-            GridViewHelper.movimientoBancos.Add(product)  ;
+            GridViewHelper.movimientoBancos.Add(product);
         }
 
         [ValidateInput(false)]
@@ -176,7 +176,7 @@ namespace katal.Controllers
 
         public void UpdateProduct(MovimientoBanco product)
         {
-          //  requisicionNeg.update(product);
+            //  requisicionNeg.update(product);
 
         }
 
@@ -187,7 +187,7 @@ namespace katal.Controllers
                 SafeExecute(() => DeleteProduct(codigo));
             if (customAction == "contabilizar")
             {
-                CMovimientoBanco movimientoBanco=  GridViewHelper.movimientoBancos.Find(X => X.CB_C_SECUE == codigo);
+                CMovimientoBanco movimientoBanco = GridViewHelper.movimientoBancos.Find(X => X.CB_C_SECUE == codigo);
 
                 movimientoBanco.CB_L_CONTA = "*";
             }
@@ -261,7 +261,6 @@ namespace katal.Controllers
                 return PartialView("Detail", GridViewHelper.movimientoBancosdetalles);
             }
             GridViewHelper.detalleRequisicions = requisicionNeg.findAllDetail(requisicionCompra.NROREQUI);
-           // return PartialView("Detail", GridViewHelper.detalleRequisicions);
             return PartialView("Detail", GridViewHelper.movimientoBancosdetalles);
         }
         public ActionResult DetailRequestPartial(string NROREQUI = "-1")
@@ -283,9 +282,18 @@ namespace katal.Controllers
             GridViewHelper.detalleRequisicions = requisicionNeg.findAllDetail(requisicionCompra.NROREQUI);
             return PartialView("DetailRequestPartial", GridViewHelper.movimientoBancosdetalles);
         }
-        public ActionResult DetailRequestAddNewPartial(DMovimientoBanco product , FormCollection dataForm)
+        public ActionResult DetailRequestAddNewPartial(DMovimientoBanco product, FormCollection dataForm)
         {
-            
+            // obtener  codarticulo             
+            var codArticulodata = dataForm["DXMVCEditorsValues"];
+            Dictionary<string, object> nodes = JsonConvert.DeserializeObject<Dictionary<string, object>>(codArticulodata);
+            var codArticulo = nodes["gridLookup"];
+            //var codCosto = nodes["gridLookupCostos"];
+
+            JArray array = (JArray)codArticulo;
+            // JArray arraycosto = (JArray)codCosto;
+
+            var description = dataForm["gridLookup"];
             
 
             // product.CENCOST = arraycosto.First.ToString();
@@ -298,7 +306,7 @@ namespace katal.Controllers
             {
                 return DetailRequestPartial("-1");
             }
-            return DetailRequestPartial("-1");
+            return DetailRequestPartial(ViewData["codigoOrden"].ToString());
         }
         public void InsertProduct(DMovimientoBanco product)
         {
@@ -383,9 +391,17 @@ namespace katal.Controllers
             if (Request.Params["Submit"] == null)
                 ModelState.Clear();
             else
-            {
+            {               
+                string option = data["CDPagados"];
+                string tipoAnexo = GridViewHelper.ValidarRecuperar(data["gridLookupTipoAnexo$State"]);
+                string anexo = GridViewHelper.ValidarRecuperar(data["gridLookupAnexo$State"]);
+                string tipodocu = GridViewHelper.ValidarRecuperar(data["gridLookupTipoDoc$State"]);
+                string serie = data["serie"];
+                string numer = data["CB_C_DOCUM"];
+                string registro = data["Registro"];
                 GridViewHelper.dateRangeBanco.End = DateTime.Parse(Request.Params["End"]);
                 GridViewHelper.dateRangeBanco.Start = DateTime.Parse(Request.Params["Start"]);
+
             }
 
             return RedirectToAction("index");
@@ -431,13 +447,13 @@ namespace katal.Controllers
 
                 }
 
-                
+
             }
 
             return RedirectToAction("index");
         }
         //operacion
-        public ActionResult MultiSelectOpciones( FormCollection data,string CB_C_CODIG = "-1")
+        public ActionResult MultiSelectOpciones(FormCollection data, string CB_C_CODIG = "-1")
         {
             ViewData["tipoOpciones"] = cajaBancoNeg.findAllTipoOpciones(GridViewHelper.TipoOpcion);
             if (data != null)
@@ -451,7 +467,7 @@ namespace katal.Controllers
                     if (nodes.selectedKeyValues != null)
                     {
                         string codigoOperacion = nodes.selectedKeyValues[0];
-                        CajaBanco cajaBanco = cajaBancoNeg.findBanco(GridViewHelper.codigobanco);                   
+                        CajaBanco cajaBanco = cajaBancoNeg.findBanco(GridViewHelper.codigobanco);
                         GridViewHelper.monedabanco = cajaBanco.CB_C_MONED;
                         GridViewHelper.activeData = true;
                         DateTime date = DateTime.Now;
@@ -463,7 +479,7 @@ namespace katal.Controllers
                 }
 
             }
-                if (CB_C_CODIG == "-1")
+            if (CB_C_CODIG == "-1")
                 CB_C_CODIG = "";
             return PartialView("MultiSelectOpciones", new TipoOpcionCajaBanco() { CB_C_CODIG = CB_C_CODIG });
 
@@ -471,7 +487,7 @@ namespace katal.Controllers
         // determinar si es un ingreso o egreso
         public JsonResult changeTipo(int tipo)
         {
-            GridViewHelper.TipoOpcion= tipo;
+            GridViewHelper.TipoOpcion = tipo;
 
             ViewData["tipoOpciones"] = cajaBancoNeg.findAllTipoOpciones(GridViewHelper.TipoOpcion);
             return Json(new { respuesta = "" }, JsonRequestBehavior.AllowGet);
@@ -485,9 +501,9 @@ namespace katal.Controllers
             return PartialView("MultiSelectTipoDoc", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
 
         }
-        public ActionResult MultiSelectTipoAnexo(FormCollection data,string TIPOANEX_CODIGO = "-1")
+        public ActionResult MultiSelectTipoAnexo(FormCollection data, string TIPOANEX_CODIGO = "-1")
         {
-          
+
             ViewData["TipoAnexo"] = anexoNeg.findAll();
             if (data != null)
             {
@@ -520,7 +536,7 @@ namespace katal.Controllers
 
         public ActionResult MultiSelectAnexo(string ANEX_CODIGO = "-1")
         {
-            if (GridViewHelper.TipoAnexoBanco=="")
+            if (GridViewHelper.TipoAnexoBanco == "")
             {
                 ViewData["Anexo"] = new List<Anexo>();
             }
@@ -528,8 +544,8 @@ namespace katal.Controllers
             {
                 ViewData["Anexo"] = anexoNeg.findAllAnexo(GridViewHelper.TipoAnexoBanco);
             }
-          
-           
+
+
             if (ANEX_CODIGO == "-1")
                 ANEX_CODIGO = "-1";
             return PartialView("MultiSelectAnexo", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
@@ -538,7 +554,7 @@ namespace katal.Controllers
 
         public ActionResult MultiSelectMoneda(string COVMON_CODIGO = "-1")
         {
-             ViewData["moneda"] = comprobanteNeg.findAllMonedas();
+            ViewData["moneda"] = comprobanteNeg.findAllMonedas();
             if (COVMON_CODIGO == "-1")
                 COVMON_CODIGO = "-1";
             return PartialView("MultiSelectMoneda", new Moneda() { COVMON_CODIGO = COVMON_CODIGO });
@@ -576,13 +592,13 @@ namespace katal.Controllers
             TipoOpcionCajaBanco operacion = cajaBancoNeg.findTipoOpciones(GridViewHelper.TipoOpcion, codigoOperacion);
             string cadena = cajaBancoNeg.Busca_Gen("OPLABCOCOB");
             bool activar = true;
-           if (GridViewHelper.TipoOpcion==0 && cadena== codigoOperacion)
-            {             
+            if (GridViewHelper.TipoOpcion == 0 && cadena == codigoOperacion)
+            {
                 activar = false;
             }
             else
             {
-                
+
             }
             return Json(new { respuesta = activar }, JsonRequestBehavior.AllowGet);
         }
@@ -590,7 +606,7 @@ namespace katal.Controllers
         public JsonResult Initsecuencia()
         {
 
-            string secuencia = cajaBancoNeg.Genera_Secuencia(GridViewHelper.codigobanco, GridViewHelper.dateTime);                  
+            string secuencia = cajaBancoNeg.Genera_Secuencia(GridViewHelper.codigobanco, GridViewHelper.dateTime);
             return Json(new { respuesta = secuencia }, JsonRequestBehavior.AllowGet);
         }
 

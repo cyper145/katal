@@ -18,9 +18,9 @@ namespace katal.conexion.model.neg
         {
             return objAreaDao.findAll();
         }
-        public List<Anexo> findAllAnexo()
+        public List<Anexo> findAllAnexo(string codigo="")
         {
-            return objAreaDao.findAllAnexo();
+            return objAreaDao.findAllAnexo(codigo);
         }
         public List<TipoDocumento> findAllTipoDocumento()
         {

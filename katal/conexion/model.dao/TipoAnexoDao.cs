@@ -77,10 +77,15 @@ namespace katal.conexion.model.dao
           
         }
      
-        public List<Anexo> findAllAnexo()
+        public List<Anexo> findAllAnexo( string codigo="")
         {
             List<Anexo> listAnexo = new List<Anexo>();          
-            string findAll = $"SELECT ANEX_CODIGO, ANEX_DESCRIPCION, ANEX_RUC FROM ANEXO ";
+            string findAll = $"SELECT ANEX_CODIGO, ANEX_DESCRIPCION, ANEX_RUC FROM ANEXO  WHERE TIPOANEX_CODIGO ='{codigo}' ";
+            if (codigo == "")
+            {
+                 findAll = "SELECT ANEX_CODIGO, ANEX_DESCRIPCION, ANEX_RUC FROM ANEXO   ";
+            }
+
             try
             {
                 comando = new SqlCommand(conexionContabilidad(findAll), objConexion.getCon());

@@ -193,6 +193,7 @@
     <Content Include="Content\Images\priority3-white.svg" />
     <Content Include="Content\Images\priority3.svg" />
     <Content Include="Content\Images\registar.svg" />
+    <Content Include="Content\Images\save.svg" />
     <Content Include="Content\Images\Scheduler-white.svg" />
     <Content Include="Content\Images\Scheduler.svg" />
     <Content Include="Content\Images\search-selected.svg" />
@@ -412,6 +413,12 @@
     <Content Include="Views\MovimientoBanco\MultiSelectTiposMovimientos.cshtml" />
     <Content Include="Views\MovimientoBanco\MultiSelectMedioPago.cshtml" />
     <Content Include="Views\Report\MovimientoBanco.cshtml" />
+    <Content Include="Views\ConsultaCobrosPagos\Index.cshtml" />
+    <Content Include="Views\ConsultaCobrosPagos\DateRangePicker.cshtml" />
+    <Content Include="Views\ConsultaCobrosPagos\DataRequisicionPartial.cshtml" />
+    <Content Include="Views\ConsultaCobrosPagos\MultiSelectAnexo.cshtml" />
+    <Content Include="Views\ConsultaCobrosPagos\MultiSelectTipoDoc.cshtml" />
+    <Content Include="Views\ConsultaCobrosPagos\MultiSelectTipoAnexo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -508,6 +515,7 @@
     <Compile Include="Controllers\AreasController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CajaBanco\ConsultaCobrosPagosController.cs" />
     <Compile Include="Controllers\CajaBanco\MovimientoBancoController.cs" />
     <Compile Include="Controllers\ComprobanteController.cs" />
     <Compile Include="Controllers\DetalleOrdenCompraController.cs" />
