@@ -495,10 +495,10 @@ namespace katal.conexion.model.dao
             List<TemporalGC> tiposcajaBancos = new List<TemporalGC>();
           ;
            
-            string find = $"SELECT distinct * FROM TemporalGC";
+            string find = $"SELECT distinct * FROM TemporalGC ORDER BY FECHA";
             try
             {
-                comando = new SqlCommand(conexionContabilidad(find), objConexion.getCon());
+                comando = new SqlCommand(conexionTemp(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                
@@ -516,7 +516,7 @@ namespace katal.conexion.model.dao
                     conceptos.tc = read[6].ToString();
                     conceptos.tipmon = read[6].ToString();
                     conceptos.importe = read[6].ToString();
-                
+                    tiposcajaBancos.Add(conceptos);
                 }
             }
             catch (Exception)

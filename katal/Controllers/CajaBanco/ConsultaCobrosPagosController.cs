@@ -42,7 +42,7 @@ namespace katal.Controllers
         public ActionResult Index()
         {
             List<CMovimientoBanco> movimientoBancos;
-            if (GridViewHelper.activeData)
+            if (GridViewHelper.activeDataConsulta)
             {
                 // movimientoBancos = cajaBancoNeg.findAllMovimientos(GridViewHelper.codigobanco, "MN");
                 if (GridViewHelper.movimientoBancos.Count == 0)
@@ -67,23 +67,7 @@ namespace katal.Controllers
         {
             //Sec-Fetch-Mode
 
-            List<CMovimientoBanco> movimientoBancos;
-            if (GridViewHelper.activeData)
-            {
-                if (GridViewHelper.movimientoBancos.Count == 0)
-                {
-                    GridViewHelper.movimientoBancos = cajaBancoNeg.findAllMovimientos(GridViewHelper.codigobanco, GridViewHelper.monedabanco);
-                }
-                movimientoBancos = GridViewHelper.movimientoBancos;
-                movimientoBancos = movimientoBancos.Where(X => X.CB_D_FECCA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECCA <= GridViewHelper.dateRangeBanco.End).ToList();
-                CMovimientoBanco movimientoBanco1 = movimientoBancos.Find(X => X.CB_D_FECCA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECCA <= GridViewHelper.dateRangeBanco.End);
-                CMovimientoBanco movimientoBanco2 = GridViewHelper.movimientoBancos.FindLast(X => X.CB_D_FECCA >= GridViewHelper.dateRangeBanco.Start);
-
-            }
-            else
-            {
-                movimientoBancos = new List<CMovimientoBanco>();
-            }
+           
             return PartialView("DataRequisicionPartial", cajaBancoNeg.allTemporal());
         }
 
@@ -106,23 +90,7 @@ namespace katal.Controllers
             product.CB_TIPMOV = CB_TIPMOV;
             product.CB_C_SECUE = (GridViewHelper.movimientoBancos.Count + 1).ToString("0000.##");
 
-            /*
-            // obtener  codarticulo             
-            var codArticulodata = dataForm["DXMVCEditorsValues"];
-
-            string[] word = codArticulodata.Split(',');
-            string dataRequisicion = codArticulodata[0] + word[11] + "," + word[14] + codArticulodata[codArticulodata.Length - 1];
-            Dictionary<string, JArray> nodes = JsonConvert.DeserializeObject<Dictionary<string, JArray>>(dataRequisicion);
-            JArray solicitante = nodes["gridLookupSolicitante"];
-            JArray area = nodes["gridLookupArea"];
-            product.CODSOLIC = solicitante.First.ToString();
-            product.AREA = area.First.ToString();
-            product.TIPOREQUI = "RQ";
-            product.NROREQUI = requisicionNeg.nextNroDocument();
-
-            product.detalles = GridViewHelper.detalleRequisicions;
-
-            ModelState.Remove("FecEntrega");*/
+           
             if (ModelState.IsValid)
                 SafeExecute(() => InsertProduct(product));
             else
@@ -152,21 +120,7 @@ namespace katal.Controllers
         {
 
             string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);
-            // obtener  codarticulo
-            // 
-            /*
-            var codArticulodata = dataForm["DXMVCEditorsValues"];
-
-            string[] word = codArticulodata.Split(',');
-            string dataRequisicion = codArticulodata[0] + word[13] + "," + word[16] + codArticulodata[codArticulodata.Length - 1];
-            Dictionary<string, JArray> nodes = JsonConvert.DeserializeObject<Dictionary<string, JArray>>(dataRequisicion);
-            JArray solicitante = nodes["gridLookupSolicitante"];
-            JArray area = nodes["gridLookupArea"];
-            product.CODSOLIC = solicitante.First.ToString();
-            product.AREA = area.First.ToString();
-            product.detalles = GridViewHelper.detalleRequisicions;
-            ModelState.Remove("FecEntrega");
-            */
+          
             if (ModelState.IsValid)
                 SafeExecute(() => UpdateProduct(product));
             else
@@ -393,6 +347,7 @@ namespace katal.Controllers
                 ModelState.Clear();
             else
             {               
+
                 string option = data["CDPagados"];
                 string tipoAnexo = GridViewHelper.ValidarRecuperar(data["gridLookupTipoAnexo$State"]);
                 string anexo = GridViewHelper.ValidarRecuperar(data["gridLookupAnexo$State"]);

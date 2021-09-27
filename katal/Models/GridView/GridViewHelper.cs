@@ -51,6 +51,7 @@ namespace katal.Model
         public static Comprobante comprobante = new Comprobante();
         // caja banco
         public static bool activeData=false;
+        public static bool activeDataConsulta=false;
         public static bool activeBancoAnexo=true;
         public static bool activeBancoTipoAnexo= true;
         public static string codigobanco = "";
