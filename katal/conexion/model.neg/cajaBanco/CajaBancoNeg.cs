@@ -91,6 +91,9 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.Genera_Secuencia(codigoBanco, fechaoperacion);
         }
-
+        public List<TemporalGC> allTemporal()
+        {
+            return cajaBancoDao.allTemporal();
+        }
     }
 }

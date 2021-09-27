@@ -60,7 +60,8 @@ namespace katal.Controllers
             {
                 movimientoBancos = new List<CMovimientoBanco>();
             }
-            return View(new List<TemporalGC>());
+                    
+            return View(cajaBancoNeg.allTemporal());
         }
         public ActionResult DataRequisicionPartial()
         {
@@ -83,7 +84,7 @@ namespace katal.Controllers
             {
                 movimientoBancos = new List<CMovimientoBanco>();
             }
-            return PartialView("DataRequisicionPartial", new List<TemporalGC>());
+            return PartialView("DataRequisicionPartial", cajaBancoNeg.allTemporal());
         }
 
         [ValidateInput(false)]

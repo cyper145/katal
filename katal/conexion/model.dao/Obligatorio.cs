@@ -51,6 +51,11 @@ namespace katal.conexion.model.dao
         }
 
 
+        public string conexionTemp(string consulta)
+        {
+            return Conexion.ConexionCadena("", "tempdb", consulta);
+        }
+
         public string dateFormat(DateTime date)
         {
             DateTime dateTime = DateTime.MinValue;

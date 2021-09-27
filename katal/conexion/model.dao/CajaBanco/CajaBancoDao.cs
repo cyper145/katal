@@ -489,6 +489,48 @@ namespace katal.conexion.model.dao
         }
 
 
+
+        public List<TemporalGC> allTemporal()
+        {
+            List<TemporalGC> tiposcajaBancos = new List<TemporalGC>();
+          ;
+           
+            string find = $"SELECT distinct * FROM TemporalGC";
+            try
+            {
+                comando = new SqlCommand(conexionContabilidad(find), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+               
+                while (read.Read())
+                {
+                    TemporalGC conceptos = new TemporalGC();
+                    conceptos.secuencia = read[0].ToString();
+                    conceptos.ANEXO = read[1].ToString();
+                    conceptos.DOC = read[2].ToString();
+                    conceptos.fecha = read[3].ToString();
+                    conceptos.cjavco = read[4].ToString();
+                    conceptos.concepto = read[5].ToString();
+                    conceptos.documento = read[6].ToString();
+                    conceptos.documento = read[6].ToString();
+                    conceptos.tc = read[6].ToString();
+                    conceptos.tipmon = read[6].ToString();
+                    conceptos.importe = read[6].ToString();
+                
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return tiposcajaBancos;
+        }
         //public 
 
     }
