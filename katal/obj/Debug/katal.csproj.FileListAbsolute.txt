@@ -1113,3 +1113,8 @@ C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.Reports.MOVIMIE
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.Reports.movimientosCaja.resources
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.Reports.Report4.resources
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.Reports.Report5.resources
+D:\erpnew\katal\katal\obj\Debug\katal.Reports.MOVIMIENTO.resources
+D:\erpnew\katal\katal\obj\Debug\katal.Reports.movimientosCaja.resources
+D:\erpnew\katal\katal\obj\Debug\katal.Reports.Report4.resources
+D:\erpnew\katal\katal\obj\Debug\katal.Reports.Report5.resources
+D:\erpnew\katal\katal\obj\Debug\katal.Reports.Requisicion.resources

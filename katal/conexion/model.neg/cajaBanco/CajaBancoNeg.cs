@@ -91,9 +91,24 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.Genera_Secuencia(codigoBanco, fechaoperacion);
         }
+
+        public string Genera_Secuencia_detalle(string codigoBanco, DateTime fechaoperacion, string secuenciaCab)
+        {
+            return cajaBancoDao.Genera_Secuencia_detalle(codigoBanco, fechaoperacion, secuenciaCab);
+        }
+
         public List<TemporalGC> allTemporal()
         {
             return cajaBancoDao.allTemporal();
+        }
+
+        public List<ConceptoCajaBanco> findAllConceptoCajaBanco(string tipo, string ingresoSalida)
+        {
+            return cajaBancoDao.findAllConceptoCajaBanco(tipo, ingresoSalida);
+        }
+        public List<ConceptoCajaBanco> findAllConceptoCajaBanco(string tipo, string ingresoSalida, string operacion)
+        {
+            return cajaBancoDao.findAllConceptoCajaBanco(tipo, ingresoSalida, operacion);
         }
     }
 }

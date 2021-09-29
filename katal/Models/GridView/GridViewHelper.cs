@@ -51,12 +51,14 @@ namespace katal.Model
         public static Comprobante comprobante = new Comprobante();
         // caja banco
         public static bool activeData=false;
+        public static bool activeDataConsulta=false;
         public static bool activeBancoAnexo=true;
         public static bool activeBancoTipoAnexo= true;
         public static string codigobanco = "";
         public static string monedabanco = "";
         public static int TipoOpcion = 0;
         public static string TipoAnexoBanco = "";
+        public static string TipoAnexoBancoDetalle = "";
 
         public static DateRangePickerModel dateRange = new DateRangePickerModel();
         public static DateRangePickerModel dateRangeBanco = new DateRangePickerModel();

@@ -535,6 +535,8 @@ namespace katal.Controllers
 
         }
 
+
+
         public ActionResult MultiSelectMoneda(string COVMON_CODIGO = "-1")
         {
              ViewData["moneda"] = comprobanteNeg.findAllMonedas();
@@ -579,10 +581,7 @@ namespace katal.Controllers
             {             
                 activar = false;
             }
-            else
-            {
-                
-            }
+           
             return Json(new { respuesta = activar }, JsonRequestBehavior.AllowGet);
         }
 
@@ -592,9 +591,83 @@ namespace katal.Controllers
             string secuencia = cajaBancoNeg.Genera_Secuencia(GridViewHelper.codigobanco, GridViewHelper.dateTime);                  
             return Json(new { respuesta = secuencia }, JsonRequestBehavior.AllowGet);
         }
+        // detalles de Dmov
+        public JsonResult initSecuenciaDetalle(string secuencia)
+        {
+
+            string secuenciaDetalle = cajaBancoNeg.Genera_Secuencia_detalle(GridViewHelper.codigobanco, GridViewHelper.dateTime, secuencia);
+            return Json(new { respuesta = secuenciaDetalle }, JsonRequestBehavior.AllowGet);
+        }
+        
+        public ActionResult MultiSelectConceptoCajaBanco(string CB_C_CODIG = "-1")
+        {
+            string opcion = GridViewHelper.TipoOpcion == 0 ? "I" : "S";
+
+            ViewData["conceptos"] = cajaBancoNeg.findAllConceptoCajaBanco("B", opcion);
+            if (CB_C_CODIG == "-1")
+                CB_C_CODIG = "";
+            return PartialView("MultiSelectConceptoCajaBanco", new ConceptoCajaBanco() { codigo = CB_C_CODIG });
+        }
+
+        public ActionResult MultiSelectTipoAnexoD(FormCollection data, string TIPOANEX_CODIGO = "-1")
+        {
+
+            ViewData["TipoAnexoD"] = anexoNeg.findAll();
+            if (data != null)
+            {
+                string dar = data["gridLookupTipoAnexoD$State"];
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        string tipoAnexo = nodes.selectedKeyValues[0];
+
+                        GridViewHelper.TipoAnexoBancoDetalle = tipoAnexo;
+
+                        ViewData["AnexoD"] = anexoNeg.findAllAnexo(GridViewHelper.TipoAnexoBanco);
+                    }
+                }
+                else
+                {
+                    GridViewHelper.TipoAnexoBancoDetalle = "";
+                }
+
+            }
+            if (TIPOANEX_CODIGO == "-1")
+                TIPOANEX_CODIGO = "-1";
+            return PartialView("MultiSelectTipoAnexoD", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
+
+        }
+
+        public ActionResult MultiSelectAnexoD(string ANEX_CODIGO = "-1")
+        {
+            if (GridViewHelper.TipoAnexoBancoDetalle == "")
+            {
+                ViewData["AnexoD"] = new List<Anexo>();
+            }
+            else
+            {
+                ViewData["AnexoD"] = anexoNeg.findAllAnexo(GridViewHelper.TipoAnexoBanco);
+            }
 
 
+            if (ANEX_CODIGO == "-1")
+                ANEX_CODIGO = "-1";
+            return PartialView("MultiSelectAnexoD", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
 
+        }
+        public ActionResult MultiSelectTipoDocD(string TIPDOC_CODIGO = "-1")
+        {
+            ViewData["TipoDocD"] = anexoNeg.findAllTipoDocumento();
+            if (TIPDOC_CODIGO == "-1")
+                TIPDOC_CODIGO = "";
+            return PartialView("MultiSelectTipoDocD", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
+
+        }
+        
         #endregion
 
     }

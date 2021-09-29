@@ -173,5 +173,20 @@ namespace katal.conexion.model.entity
         public string importe { get; set; }
         
     }
+    public class ConceptoCajaBanco{
+
+        public string CB_C_TIPO { get; set; }
+        public string CB_C_MODO { get; set; }
+        public string CB_C_CODIG { get; set; }
+        public string CB_A_DESCR { get; set; }
+        public string CB_L_TRANS { get; set; }
+        public string CB_C_CUENT { get; set; }
+        public string CB_C_INTER { get; set; }
+        public string CB_C_OPERA { get; set; }
+        public string CB_C_LINEA { get; set; }
+        public string codigo { get; set; }
+       
+    }
+    
 
 }

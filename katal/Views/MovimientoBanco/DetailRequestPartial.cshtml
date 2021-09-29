@@ -8,6 +8,10 @@
     settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestUpdatePartial" };
     settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestDeletePartial" };
 
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1000;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
     settings.Toolbars.Add(tb => {
         tb.Enabled = true;
         tb.Position = GridToolbarPosition.Top;
@@ -45,11 +49,11 @@
     settings.SettingsPager.EnableAdaptivity = true;
 
 
-    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1200;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1000;
 
 
     settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
-    settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 1200;
+    settings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 1000;
 
     settings.EditFormLayoutProperties.UseDefaultPaddings = false;
 
@@ -67,7 +71,7 @@
     {
         column.FieldName = "CB_C_SECDE";
         column.Caption = "Sec";
-        column.ReadOnly = true;
+
 
     });
     settings.Columns.Add(column =>
@@ -84,8 +88,6 @@
         column.Caption = "Documento";
         column.CellRowSpan = 1;
 
-        column.ColumnType = MVCxGridViewColumnType.TextBox;
-        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
 
 
     });
@@ -96,10 +98,7 @@
             column.FieldName = "CB_N_MTOMN";
             column.Caption = "Monto";
             column.Width = Unit.Percentage(10);
-            column.ColumnType = MVCxGridViewColumnType.TextBox;
-            TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
-           // properties.DisplayFormatString= "00.00"
-            //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
+
 
         });
     }
@@ -111,8 +110,7 @@
             column.Caption = "Monto";
             column.Width = Unit.Percentage(10);
             column.ColumnType = MVCxGridViewColumnType.TextBox;
-            TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
-            //   properties.ClientSideEvents.TextChanged = "changegCalcularPrecioCantidad";
+
 
         });
     }
@@ -123,58 +121,118 @@
         column.Caption = "Referencia";
 
 
-        column.ColumnType = MVCxGridViewColumnType.TextBox;
-        TextBoxProperties properties = column.PropertiesEdit as TextBoxProperties;
-        //  properties.ClientSideEvents.TextChanged = "changegCalcularPrecioPunitario";
     });
 
-    var layout=  settings.EditFormLayoutProperties.Items.AddGroupItem(i => {
 
-        i.ShowCaption = DefaultBoolean.False;
-        i.GroupBoxDecoration = GroupBoxDecoration.None;
-        i.ColumnCount = 12;
-        i.SettingsItemCaptions.Location= LayoutItemCaptionLocation.Top;
 
-    });
-    layout.Items.Add(i =>
+    settings.SetEditFormTemplateContent(c =>
     {
+        Html.DevExpress().FormLayout(layoutSetting =>
+        {
+            layoutSetting.Name = "FormLayoutSettingDetalle";
+            layoutSetting.Width = Unit.Percentage(100);
+            layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+            layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+            layoutSetting.UseDefaultPaddings = false;
+            var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+            {
+                groupSettings.Caption = "Nuevo concepto";
+                //  groupSettings.ShowCaption = DefaultBoolean.False;
+                groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                groupSettings.ColumnCount = 12;
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CB_C_SECDE";
+                i.Caption = "Secuencia.";
+                i.ColumnSpan =4;
+                i.NestedExtension().TextBox(t =>
+                {
+                    t.Properties.ClientSideEvents.Init = "initSecuenciaDetalle";
+                    t.ReadOnly = true;
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CB_C_CONCE";
+                i.Caption = "Concepto.";
+                i.ColumnSpan = 5;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectConceptoCajaBanco", new { CB_C_CODIG = DataBinder.Eval(c.DataItem, "CB_C_CONCE") });
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CB_C_MODO";
+                i.Caption = "Secuencia.";
+                i.ColumnSpan = 3;
+                i.NestedExtension().CheckBox(t =>
+                {
 
-        i.ColumnName = "CB_C_SECDE";
-        i.ColumnSpan = 6;
 
-        i.ShowCaption = DefaultBoolean.False;
-        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
+                });
+            });
+            groupItem.Items.Add(i =>
 
+            {
+                i.Name = "TipoAnexo";
+                i.Caption = "Anexo";
+                i.ColumnSpan = 3;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectTipoAnexoD");
+                });
+            });
+            groupItem.Items.Add(i =>
+
+            {
+                i.FieldName = "CB_C_ANEXO";
+                i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 3;
+                i.SetNestedContent(() =>
+                {
+
+                    Html.RenderAction("MultiSelectAnexoD", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXO") });
+
+                });
+            });
+
+
+
+
+            layoutSetting.Items.Add(itemSettings =>
+            {
+                itemSettings.ShowCaption = DefaultBoolean.False;
+            }).SetNestedContent(() =>
+            {
+                ViewContext.Writer.Write("<div style='float:right'>");
+                Html.DevExpress().Button(
+                    btnSettings =>
+                    {
+                        btnSettings.Name = "btnUpdate";
+                        btnSettings.Text = "Grabar";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ grid.UpdateEdit(); }";
+
+                        //I want to Hide Update Button when FirstName is "John"
+
+                    }).Render();
+
+                Html.DevExpress().Button(
+                    btnSettings =>
+                    {
+                        btnSettings.Name = "btnCancel";
+                        btnSettings.Text = "Cancel";
+                        btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ grid.CancelEdit(); }";
+                    }).Render();
+                ViewContext.Writer.Write("</div>");
+            });
+        }).Bind(ViewData["Object"] ?? c.DataItem).Render();
 
     });
 
-    layout.Items.Add(i =>
-    {
 
-        i.ColumnName = "CB_C_CONCE";
-        i.ColumnSpan = 1;
-        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
-
-    });
-    layout.Items.Add(i =>
-    {
-
-        i.ColumnName = "CB_C_TPDOC";
-        i.ColumnSpan = 2;
-        i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
-
-
-    });
-
-
-
-
-    layout.Items.AddCommandItem(i =>
-    {
-        i.ColumnSpan = 12;
-
-        i.HorizontalAlign = FormLayoutHorizontalAlign.Right;
-    });
     settings.Settings.ShowFooter = true;
     settings.SettingsBehavior.AutoExpandAllGroups = true;
 

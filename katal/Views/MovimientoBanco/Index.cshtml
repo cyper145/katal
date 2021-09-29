@@ -108,7 +108,15 @@
                 });
             });
         }
+        function initSecuenciaDetalle(s, e) {
+            $.getJSON('/MovimientoBanco/initSecuenciaDetalle?secuencia=' + CB_C_SECUE.GetText(), function (resp) {
+                $.each(resp, function (k, v) {
+                    CB_C_SECDE.SetText(v);
 
+                    console.log(CB_C_SECDE.GetText(v));
+                });
+            });
+        }
 
     </script>
 }

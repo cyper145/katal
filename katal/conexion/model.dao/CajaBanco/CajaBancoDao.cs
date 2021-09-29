@@ -7,7 +7,7 @@ using katal.conexion.model.entity;
 
 namespace katal.conexion.model.dao
 {
-    public class CajaBancoDao:Obligatorio
+    public class CajaBancoDao : Obligatorio
     {
 
         public CajaBancoDao(string codEmpresa) : base(codEmpresa)
@@ -15,7 +15,7 @@ namespace katal.conexion.model.dao
             objConexion = Conexion.saberEstado();
             ///014BDCOMUN
         }
-            
+
         public List<CajaBanco> findAll()
         {
 
@@ -63,7 +63,7 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    
+
                     cajaBanco.CB_C_CODIG = read[0].ToString();
                     cajaBanco.CB_A_DESCR = read[1].ToString();
                     cajaBanco.CB_C_MONED = read[2].ToString();
@@ -84,24 +84,24 @@ namespace katal.conexion.model.dao
         }
 
 
-        public List<CMovimientoBanco> findAllMovimientos(string banco, string moneda )
+        public List<CMovimientoBanco> findAllMovimientos(string banco, string moneda)
         {
 
             List<CMovimientoBanco> cajaBancos = new List<CMovimientoBanco>();
             DateTime date = DateTime.Now;
-           
+
             string anios = date.Year.ToString("0000.##");
             string mes = date.Month.ToString("00.##");
             string findAll = "SP_CBMOVCALCULAMTO";
             try
             {
-                SqlParameter[] parametros= new SqlParameter[]{
+                SqlParameter[] parametros = new SqlParameter[]{
                 new SqlParameter("@EMP", CodEmpresa),
                 new SqlParameter("@ANNO", anios),
                 new SqlParameter("@BANCO", banco),
                 new SqlParameter("@MES", mes),
                 new SqlParameter("@MONEDA", moneda),
-              
+
                 };
 
                 comando = new SqlCommand(findAll, objConexion.getCon());
@@ -112,24 +112,24 @@ namespace katal.conexion.model.dao
                 while (read.Read())
                 {
 
-                    CMovimientoBanco cajaBanco   = new CMovimientoBanco();
-                    cajaBanco.CB_C_SECUE         = read[0].ToString();
-                    cajaBanco.CB_C_OPERA         = read[1].ToString();
-                    cajaBanco.CB_C_DOCUM         = read[2].ToString();
-                    cajaBanco.CB_N_MTOMN         = Conversion.ParseDecimal( read[3].ToString());
-                    cajaBanco.CB_L_CONTA         = read[4].ToString();
-                    cajaBanco.CB_L_ANULA         = read[5].ToString();
-                    cajaBanco.CB_D_FECCA         = Conversion.ParseDateTime( read[6].ToString());
-                    cajaBanco.CB_C_ANEXO         = read[7].ToString();
-                    cajaBanco.CB_C_CONTA         = read[8].ToString();
-                    cajaBanco.CB_A_REFER         = read[9].ToString();
-                    cajaBanco.CB_C_NROLI         = read[10].ToString();
+                    CMovimientoBanco cajaBanco = new CMovimientoBanco();
+                    cajaBanco.CB_C_SECUE = read[0].ToString();
+                    cajaBanco.CB_C_OPERA = read[1].ToString();
+                    cajaBanco.CB_C_DOCUM = read[2].ToString();
+                    cajaBanco.CB_N_MTOMN = Conversion.ParseDecimal(read[3].ToString());
+                    cajaBanco.CB_L_CONTA = read[4].ToString();
+                    cajaBanco.CB_L_ANULA = read[5].ToString();
+                    cajaBanco.CB_D_FECCA = Conversion.ParseDateTime(read[6].ToString());
+                    cajaBanco.CB_C_ANEXO = read[7].ToString();
+                    cajaBanco.CB_C_CONTA = read[8].ToString();
+                    cajaBanco.CB_A_REFER = read[9].ToString();
+                    cajaBanco.CB_C_NROLI = read[10].ToString();
 
 
                     cajaBancos.Add(cajaBanco);
                 }
 
-                
+
             }
             catch (Exception)
             {
@@ -148,14 +148,14 @@ namespace katal.conexion.model.dao
         {
 
             List<DMovimientoBanco> DetailMovimientos = new List<DMovimientoBanco>();
-           
+
             int anios = dateTime.Year;
             string mes = dateTime.Month.ToString("00.##");
-            
+
             string texto = ternario(moneda == "MN", "CB_N_MTOMN", "CB_N_MTOME");
 
             string findAll = $"SELECT CB_C_SecDE,CB_C_Conce+' ',Cb_C_TpDoc+LEFT(CB_C_Docum,21),{texto},CB_A_Refer  from DMOV_BANCO WHERE CB_C_Banco = '{banco}'";
-                findAll+= $" AND  CB_C_Mes='{mes}' AND CB_C_Secue ='{secuencia}' ORDER BY CB_C_SECDE";
+            findAll += $" AND  CB_C_Mes='{mes}' AND CB_C_Secue ='{secuencia}' ORDER BY CB_C_SECDE";
             try
             {
                 comando = new SqlCommand(conexionBDCBT(findAll, anios), objConexion.getCon());
@@ -169,7 +169,7 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_C_TPDOC = read[2].ToString();
                     if (moneda == "MN")
                     {
-                        cajaBanco.CB_N_MTOMN = Conversion.ParseDecimal( read[3].ToString());
+                        cajaBanco.CB_N_MTOMN = Conversion.ParseDecimal(read[3].ToString());
                     }
                     else
                     {
@@ -201,7 +201,7 @@ namespace katal.conexion.model.dao
 
             string findAll = $"Select CB_C_CODIG,CB_A_DESCR,CB_C_TPDOC,CB_C_FPAGO, CB_C_AUTOM from TIPO_OP_CAJA_BANCO where CB_C_TIPO = 'B'  and CB_C_MODO='{tipoIngresoSalida}'";
 
-        
+
             try
             {
                 comando = new SqlCommand(conexionCajaBanco(findAll), objConexion.getCon());
@@ -246,13 +246,13 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                   
+
                     cajaBanco.CB_C_CODIG = read[0].ToString();
                     cajaBanco.CB_A_DESCR = read[1].ToString();
                     cajaBanco.CB_C_TPDOC = read[2].ToString();
                     cajaBanco.CB_C_FPAGO = read[3].ToString();
                     cajaBanco.CB_C_AUTOM = read[4].ToString();
-                   
+
                 }
             }
             catch (Exception)
@@ -283,7 +283,7 @@ namespace katal.conexion.model.dao
                 {
                     TipoEstadoOperacion cajaBanco = new TipoEstadoOperacion();
                     cajaBanco.CB_C_CODIG = read[0].ToString();
-                    cajaBanco.CB_A_DESCR = read[1].ToString();               
+                    cajaBanco.CB_A_DESCR = read[1].ToString();
                     tiposcajaBancos.Add(cajaBanco);
                 }
             }
@@ -397,7 +397,7 @@ namespace katal.conexion.model.dao
 
 
 
-        public string Genera_Secuencia( string codigoBanco, DateTime fechaoperacion)
+        public string Genera_Secuencia(string codigoBanco, DateTime fechaoperacion)
         {
             List<MedioPago> tiposcajaBancos = new List<MedioPago>();
             string mes = fechaoperacion.ToString("00.##");
@@ -414,11 +414,11 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    nro =Conversion.Parseint(  read[0].ToString());
+                    nro = Conversion.Parseint(read[0].ToString());
                     nro++;
                 }
 
-                secuencia= nro.ToString("0000.##");
+                secuencia = nro.ToString("0000.##");
             }
             catch (Exception)
             {
@@ -433,8 +433,8 @@ namespace katal.conexion.model.dao
             return secuencia;
         }
 
-        
- 
+
+
 
         public string ConceptosGenerales(string concepto)
         {
@@ -493,15 +493,15 @@ namespace katal.conexion.model.dao
         public List<TemporalGC> allTemporal()
         {
             List<TemporalGC> tiposcajaBancos = new List<TemporalGC>();
-          ;
-           
-            string find = $"SELECT distinct * FROM TemporalGC";
+            ;
+
+            string find = $"SELECT distinct * FROM TemporalGC ORDER BY FECHA";
             try
             {
-                comando = new SqlCommand(conexionContabilidad(find), objConexion.getCon());
+                comando = new SqlCommand(conexionTemp(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
-               
+
                 while (read.Read())
                 {
                     TemporalGC conceptos = new TemporalGC();
@@ -516,7 +516,7 @@ namespace katal.conexion.model.dao
                     conceptos.tc = read[6].ToString();
                     conceptos.tipmon = read[6].ToString();
                     conceptos.importe = read[6].ToString();
-                
+                    tiposcajaBancos.Add(conceptos);
                 }
             }
             catch (Exception)
@@ -533,5 +533,117 @@ namespace katal.conexion.model.dao
         }
         //public 
 
+        public List<ConceptoCajaBanco> findAllConceptoCajaBanco(string tipo, string ingresoSalida)
+        {
+
+            List<ConceptoCajaBanco> cajaBancos = new List<ConceptoCajaBanco>();
+            string findAll = "";
+            if (ingresoSalida == "S")
+            {
+                findAll = $"Select CB_C_CODIG,CB_A_DESCR,CB_C_CUENT FROM CONCEPTO_CAJA_BANCO where CB_C_TIPO = '{tipo}'  and CB_C_MODO='I'";
+            }
+            else
+            {
+                findAll = $"Select CB_C_CODIG,CB_A_DESCR,CB_C_CUENT FROM CONCEPTO_CAJA_BANCO where CB_C_TIPO = '{tipo}'  and CB_C_MODO='S'";
+            }
+            try
+            {
+                comando = new SqlCommand(conexionCajaBanco(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    ConceptoCajaBanco cajaBanco = new ConceptoCajaBanco();
+                    cajaBanco.CB_C_CODIG = read[0].ToString();
+                    cajaBanco.CB_A_DESCR = read[1].ToString();
+                    cajaBanco.CB_C_CUENT = read[2].ToString();
+                    cajaBanco.codigo = tipo + ingresoSalida + cajaBanco.CB_C_CODIG ;
+                    cajaBancos.Add(cajaBanco);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return cajaBancos;
+        }
+
+        public List<ConceptoCajaBanco> findAllConceptoCajaBanco(string tipo, string ingresoSalida,string operacion)
+        {
+
+            List<ConceptoCajaBanco> cajaBancos = new List<ConceptoCajaBanco>();
+            string findAll = "";
+            findAll = $"Select CB_C_CODIG,CB_A_DESCR,CB_C_CUENT FROM CONCEPTO_CAJA_BANCO where CB_C_TIPO = '{tipo}'  and CB_C_MODO='{ingresoSalida}' and CB_C_OPERA='{operacion}'";
+
+            try
+            {
+                comando = new SqlCommand(conexionCajaBanco(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    ConceptoCajaBanco cajaBanco = new ConceptoCajaBanco();
+                    cajaBanco.CB_C_CODIG = read[0].ToString();
+                    cajaBanco.CB_A_DESCR = read[1].ToString();
+                    cajaBanco.CB_C_CUENT = read[2].ToString();
+                    cajaBanco.codigo = tipo + ingresoSalida + cajaBanco.CB_C_CODIG;
+                    cajaBancos.Add(cajaBanco);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return cajaBancos;
+        }
+
+
+        public string Genera_Secuencia_detalle(string codigoBanco, DateTime fechaoperacion, string secuenciaCab)
+        {
+            List<MedioPago> tiposcajaBancos = new List<MedioPago>();
+            string mes = fechaoperacion.ToString("00.##");
+            int anio = fechaoperacion.Year;
+            string findAll = "SELECT MAX(CB_C_SECDE) FROM DMOV_BANCO C ";
+            findAll += $" WHERE C.CB_C_Banco='{codigoBanco}' AND C.CB_C_Mes='{mes}' AND CB_C_Secue='{secuenciaCab}'";
+
+            int nro = 1;
+            string secuencia = "0001";
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(findAll, anio), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    nro = Conversion.Parseint(read[0].ToString());
+                    nro++;
+                }
+
+                secuencia = nro.ToString("0000.##");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return secuencia;
+        }
     }
 }

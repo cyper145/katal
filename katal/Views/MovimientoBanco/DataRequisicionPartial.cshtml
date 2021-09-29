@@ -3,7 +3,7 @@
 
 @using System.Drawing;
 @using katal.Model;
-@(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
+me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
     settings.Name = "gridView";
     settings.Enabled = GridViewHelper.activeData;
     settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "DataRequisicionPartial" };
@@ -425,6 +425,9 @@
         }).Bind(ViewData["Object"] ?? c.DataItem).Render();
 
     });
+
+
+
     settings.SettingsSearchPanel.CustomEditorName = "search";
     settings.SettingsBehavior.AllowFocusedRow = true;
 

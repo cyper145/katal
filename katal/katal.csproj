@@ -419,6 +419,10 @@
     <Content Include="Views\ConsultaCobrosPagos\MultiSelectAnexo.cshtml" />
     <Content Include="Views\ConsultaCobrosPagos\MultiSelectTipoDoc.cshtml" />
     <Content Include="Views\ConsultaCobrosPagos\MultiSelectTipoAnexo.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectConceptoCajaBanco.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectAnexoD.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectTipoAnexoD.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectTipoDocD.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
