@@ -17,15 +17,7 @@
     function IsCustomExportToolbarCommand(command) {
         return command == "CustomExportToXLS" || command == "CustomExportToXLSX";
     }
-    function initSecuenciaDetalle(s, e) {
-
-        console.log("eata");
-        $.getJSON('/MovimientoBanco/initSecuenciaDetalle', function (resp) {
-            $.each(resp, function (k, v) {
-                CB_C_SECDE.SetText(v);
-            });
-        });
-    }
+  
 
 </script>
 @Html.Partial("detailRequestPartial")

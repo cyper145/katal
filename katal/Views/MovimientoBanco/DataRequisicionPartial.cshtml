@@ -1,9 +1,7 @@
 ﻿
 @using katal.conexion.model.entity;
-
-@using System.Drawing;
 @using katal.Model;
-me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
+ @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
     settings.Name = "gridView";
     settings.Enabled = GridViewHelper.activeData;
     settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "DataRequisicionPartial" };
@@ -125,6 +123,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
                     t.ShowModelErrors = true;
                     t.Properties.ClientSideEvents.SelectedIndexChanged = "OnTipo";
                     t.Properties.ClientSideEvents.Init = "initTipo";
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownModo";
                 });
             });
             groupItem.Items.Add(i =>
@@ -157,7 +156,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
                 i.ColumnSpan = 1;
                 i.NestedExtension().TextBox(t =>
                 {
-
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownSerie";
                 });
             });
             groupItem.Items.Add(i =>
@@ -168,7 +167,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
                 i.ColumnSpan = 1;
                 i.NestedExtension().TextBox(t =>
                 {
-
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownDocum";
                 });
             });
 
@@ -217,7 +216,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
                 i.ColumnSpan = 3;
                 i.NestedExtension().TextBox(t =>
                 {
-
+                    t.ReadOnly = true;
                 });
             });
             groupItem.Items.Add(i =>
@@ -234,6 +233,8 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
                     // t.Properties.ValidationSettings= ValidationSettings
                     //  t.Properties.AllowNull = true;
                     t.Properties.ClientSideEvents.Init = "dateInit";
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownFechaGiro";
+
                 });
             });
             groupItem.Items.Add(i =>
@@ -246,6 +247,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
                 {
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownFechaCobro";
                 });
             });
             groupItem.Items.Add(i =>
@@ -260,6 +262,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
                     t.Width = Unit.Percentage(25);
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownMonto";
 
                 });
             });
@@ -274,6 +277,8 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
 
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownReferencia";
+                    
 
                 });
             });
@@ -302,7 +307,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
             groupItem.Items.Add(i =>
 
             {
-                i.Name = "TC:";
+                i.Name = "TC";
                 i.ColumnSpan = 1;
                 i.Caption = "T/C";
 
@@ -311,6 +316,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
 
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownTc";
 
                 });
             });
@@ -338,7 +344,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
                     //  t.ReadOnly = true;
-
+                    //   t.Properties.ClientSideEvents.= "KeyDownTc";
 
                 });
             });
@@ -377,7 +383,7 @@ me @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
 
 
                         // magia de guardadr
-                        btnSettings.ClientSideEvents.Click = "function(s, e) { pcModalMode.Show(); }";
+                        //     btnSettings.ClientSideEvents.Click = "function(s, e) { pcModalMode.Show(); }";
 
 
                     }).Render();

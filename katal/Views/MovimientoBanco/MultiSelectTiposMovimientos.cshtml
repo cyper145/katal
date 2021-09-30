@@ -15,13 +15,13 @@
 
     settings.Columns.Add("CB_C_CODIG").Width = Unit.Percentage(10);
     settings.Columns.Add("CB_A_DESCR").Width = Unit.Percentage(80);
-   
+
 
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
     settings.Properties.TextFormatString = "{1}";
-//    settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexo";
+    settings.Properties.ClientSideEvents.KeyDown = "KeyDownTipoMovimiento";
 
     settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;

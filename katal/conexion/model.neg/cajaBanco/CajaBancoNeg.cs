@@ -110,5 +110,10 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.findAllConceptoCajaBanco(tipo, ingresoSalida, operacion);
         }
+
+        public List<TipoMoneda> tipoMonedas()
+        {
+            return cajaBancoDao.tipoMonedas();
+        }
     }
 }

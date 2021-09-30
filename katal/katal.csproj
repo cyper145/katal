@@ -423,6 +423,9 @@
     <Content Include="Views\MovimientoBanco\MultiSelectAnexoD.cshtml" />
     <Content Include="Views\MovimientoBanco\MultiSelectTipoAnexoD.cshtml" />
     <Content Include="Views\MovimientoBanco\MultiSelectTipoDocD.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectTipoMoneda.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectCuenta.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectCuentaDestino.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

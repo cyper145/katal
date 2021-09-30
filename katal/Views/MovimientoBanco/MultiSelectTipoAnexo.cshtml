@@ -14,13 +14,13 @@
 
     settings.Columns.Add("TIPOANEX_CODIGO").Width = Unit.Percentage(10);
     settings.Columns.Add("TIPOANEX_DESCRIPCION").Width = Unit.Percentage(90);
-
+    settings.Properties.ClientSideEvents.KeyDown = "KeyDownTipoAnexo";
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
     settings.Properties.TextFormatString = "{0}-{1}";
 
-   // settings.GridViewProperties.Settings.ShowFilterRow = true;
+    // settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
     //settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
     //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;

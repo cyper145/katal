@@ -67,10 +67,17 @@
                 let f = new Date();
                 CB_D_FECCOB.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
             }
+          
+            
+        }
 
+        function dateInitD() {        
+            if (CB_D_FECDC.GetText() == "") {
+                let f = new Date();
+                CB_D_FECDC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+            }
 
         }
-       
         function OnToolbarItemClick(s, e) {
             if (!IsCustomExportToolbarCommand(e.item.name))
                 return;
@@ -118,6 +125,181 @@
             });
         }
 
+        //teclas acceso 
+        function KeyDownModo(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupOpciones.Focus();
+            }
+
+        }
+        function KeyDownOpciones(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupTipoDoc.Focus();
+            }
+
+        }
+        function KeyDownTipoDoc(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                serie.Focus();
+            }
+        }
+        function KeyDownSerie(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_C_DOCUM.Focus();
+            }
+        }
+        function KeyDownDocum(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupTipoAnexo.Focus();
+            }
+        }
+        function KeyDownTipoAnexo(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupAnexo.Focus();
+            }
+        }
+        function KeyDownAnexo(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupMoneda.Focus();
+            }
+        }
+        function KeyDownMoneda(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_D_FECCA.Focus();
+            }
+        }
+        function KeyDownFechaGiro(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_D_FECCOB.Focus();
+            }
+        }
+        function KeyDownFechaCobro(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_N_MTOMN.Focus();
+            }
+        }
+        function KeyDownMonto(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_A_REFER.Focus();
+            }
+        }
+        function KeyDownReferencia(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupEstados.Focus();
+            }
+        }
+        function KeyDownEstado(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupTiposMovimientos.Focus();
+            }
+        }
+        function KeyDownTipoMovimiento(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                TC.Focus();
+            }
+        }
+        function KeyDownTc(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                creditos.Focus();
+            }
+        }
+        
+        //para detalle 
+        function KeyDownConceptoCajaBanco(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupTipoAnexoD.Focus();
+            }
+        }
+        function KeyDownTipoAnexoD(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupAnexoD.Focus();
+            }
+        }
+        function KeyDownAnexoD(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupTipoDocD.Focus();
+            }
+        }
+        function KeyDownTipoDocD(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                serieD.Focus();
+            }
+        }
+        function KeyDownSerieD(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_C_DOCUMD.Focus();
+            }
+        }
+        function KeyDownDocumD(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_D_FECDC.Focus();
+            }
+        }
+        function KeyDownFecha(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupTipoMoneda.Focus();
+            }
+        }
+        function KeyDownTipoMoneda(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_N_MTOMND.Focus();
+            }
+        }
+        function KeyDownMontoD(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupCostos.Focus();
+            }
+        }
+
+        function KeyDownCentroCto(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupCuenta.Focus();
+            }
+        }
+        function KeyDownCuenta(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupCuentaDestino.Focus();
+            }
+        }
+        function KeyDownCuentaDestino(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                CB_A_REFERD.Focus();
+            }
+        }
     </script>
 }
 @section PageToolbar {
@@ -147,7 +329,7 @@
     menuSettings.Items.Add(item =>
     {
         item.Enabled = false;
-        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Requision de Compra</h1>"));
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Movimiento de Banco</h1>"));
     });
     menuSettings.Items.Add(item =>
     {
@@ -155,9 +337,7 @@
         item.Text = "Nuevo";
         item.Alignment = MenuItemAlignment.Left;
         item.AdaptivePriority = 2;
-        item.Image.Url = "Content/Images/add.svg";
-       
-
+        item.Image.Url = "Content/Images/add.svg";       
     });
     menuSettings.Items.Add(item =>
     {

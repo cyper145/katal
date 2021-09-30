@@ -143,14 +143,14 @@ namespace katal.conexion.model.entity
         public string CB_C_CONCE { get; set; }
         public string CB_C_ANEXO { get; set; }
         public string CB_C_TPDOC { get; set; }
-        public string CB_C_DOCUM { get; set; }
+        public string CB_C_DOCUMD { get; set; }
         public DateTime CB_D_FECDC { get; set; }
-        public string CB_A_REFER { get; set; }
+        public string CB_A_REFERD { get; set; }
         public string CB_C_CUENT { get; set; }
         public string CB_C_CENCO { get; set; }
         public string CB_C_DESTI { get; set; }
-        public decimal CB_N_MTOMN { get; set; }
-        public decimal CB_N_MTOME { get; set; }
+        public decimal CB_N_MTOMND { get; set; }
+        public decimal CB_N_MTOMED { get; set; }
         public bool CB_L_ANULA { get; set; }
         public decimal CB_L_PROGR { get; set; }
         public string CODDETPLA { get; set; }
@@ -186,6 +186,14 @@ namespace katal.conexion.model.entity
         public string CB_C_LINEA { get; set; }
         public string codigo { get; set; }
        
+    }
+
+    public class TipoMoneda
+    {
+        public string TIPOMON_CODIGO { get; set; }
+        public string TIPOMON_DESCRIPCION { get; set; }
+        public string TIPOMON_NACIONALIDAD { get; set; }
+        public string TIPOMON_SIMBOLO { get; set; }    
     }
     
 

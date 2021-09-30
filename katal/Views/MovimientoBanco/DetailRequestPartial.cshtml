@@ -49,7 +49,7 @@
     settings.SettingsPager.EnableAdaptivity = true;
 
 
-    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 1000;
+    settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 900;
 
 
     settings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
@@ -144,7 +144,7 @@
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_C_SECDE";
-                i.Caption = "Secuencia.";
+                i.Caption = "Secuencia";
                 i.ColumnSpan =4;
                 i.NestedExtension().TextBox(t =>
                 {
@@ -155,7 +155,7 @@
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_C_CONCE";
-                i.Caption = "Concepto.";
+                i.Caption = "Concepto";
                 i.ColumnSpan = 5;
                 i.SetNestedContent(() =>
                 {
@@ -165,7 +165,7 @@
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_C_MODO";
-                i.Caption = "Secuencia.";
+                i.Caption = "Concepto I/S";
                 i.ColumnSpan = 3;
                 i.NestedExtension().CheckBox(t =>
                 {
@@ -173,15 +173,17 @@
 
                 });
             });
+
+            //fila dos
             groupItem.Items.Add(i =>
 
             {
                 i.Name = "TipoAnexo";
                 i.Caption = "Anexo";
-                i.ColumnSpan = 3;
+                i.ColumnSpan = 5;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectTipoAnexoD");
+                    Html.RenderAction("MultiSelectTipoAnexoD" );
                 });
             });
             groupItem.Items.Add(i =>
@@ -189,7 +191,7 @@
             {
                 i.FieldName = "CB_C_ANEXO";
                 i.ShowCaption = DefaultBoolean.False;
-                i.ColumnSpan = 3;
+                i.ColumnSpan = 7;
                 i.SetNestedContent(() =>
                 {
 
@@ -198,8 +200,128 @@
                 });
             });
 
+            groupItem.Items.Add(i =>
+
+            {
+                i.FieldName = "CB_C_TPDOC";
+                i.Caption = "Dcmtos.";
+                i.ColumnSpan = 5;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectTipoDocD", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_TPDOC") });
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "serieD";
 
 
+                i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 1;
+                i.NestedExtension().TextBox(t =>
+                {
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownSerieD";
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+
+                i.FieldName = "CB_C_DOCUMD";
+                i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 2;
+                i.NestedExtension().TextBox(t =>
+                {
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownDocumD";
+                });
+            });
+
+            groupItem.Items.Add(i =>
+            {
+
+                i.FieldName = "CB_D_FECDC";
+                i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 4;
+                i.NestedExtension().DateEdit(t =>
+                {
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownFecha";
+                    t.Properties.ClientSideEvents.Init = "dateInitD";
+
+                });
+            });
+
+            groupItem.Items.Add(i =>
+            {
+                i.Name = "monedaD";
+                i.Caption = "Moneda";
+                //  i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan =5;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectTipoMoneda");
+                });
+            });
+
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CB_N_MTOMND";
+                i.Caption = "Monto.";
+                i.ColumnSpan =3;
+                i.NestedExtension().TextBox(t =>
+                {
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownMontoD";
+                });
+            });
+
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CB_C_CENCO";
+                i.Caption = "Centro Ctos";
+                //  i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 4;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectCentroCostos", new { CENCOST_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_CENCO") });
+                });
+            });
+            //MultiSelectCuenta
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CB_C_CUENT";
+                i.Caption = "Cuenta";
+                //  i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 6;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectCuenta", new { PLANCTA_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_CUENT") });
+                });
+            });
+
+
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CB_C_DESTI";
+                i.Caption = "Cta. Destino";
+                //  i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 6;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectCuentaDestino", new { PLANCTA_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_DESTI") });
+                });
+            });
+
+
+            // ultima fila
+
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "CB_A_REFERD";
+                i.Caption = "Referencia";
+                i.ColumnSpan =12;
+                i.NestedExtension().TextBox(t =>
+                {
+
+                });
+            });
 
             layoutSetting.Items.Add(itemSettings =>
             {
@@ -210,7 +332,7 @@
                 Html.DevExpress().Button(
                     btnSettings =>
                     {
-                        btnSettings.Name = "btnUpdate";
+                        btnSettings.Name = "btnUpdateDetalle";
                         btnSettings.Text = "Grabar";
                         btnSettings.ClientSideEvents.Click = "function(s, e){ grid.UpdateEdit(); }";
 
@@ -221,8 +343,8 @@
                 Html.DevExpress().Button(
                     btnSettings =>
                     {
-                        btnSettings.Name = "btnCancel";
-                        btnSettings.Text = "Cancel";
+                        btnSettings.Name = "btnCancelDetalle";
+                        btnSettings.Text = "Cancelar";
                         btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
                         btnSettings.ClientSideEvents.Click = "function(s, e){ grid.CancelEdit(); }";
                     }).Render();

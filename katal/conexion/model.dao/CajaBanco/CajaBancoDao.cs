@@ -169,13 +169,13 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_C_TPDOC = read[2].ToString();
                     if (moneda == "MN")
                     {
-                        cajaBanco.CB_N_MTOMN = Conversion.ParseDecimal(read[3].ToString());
+                        cajaBanco.CB_N_MTOMND = Conversion.ParseDecimal(read[3].ToString());
                     }
                     else
                     {
-                        cajaBanco.CB_N_MTOME = Conversion.ParseDecimal(read[3].ToString());
+                        cajaBanco.CB_N_MTOMED = Conversion.ParseDecimal(read[3].ToString());
                     }
-                    cajaBanco.CB_A_REFER = read[4].ToString();
+                    cajaBanco.CB_A_REFERD = read[4].ToString();
 
                     DetailMovimientos.Add(cajaBanco);
                 }
@@ -645,5 +645,40 @@ namespace katal.conexion.model.dao
             }
             return secuencia;
         }
+
+
+        public List<TipoMoneda> tipoMonedas()
+        {
+            List<TipoMoneda> tipoMonedas = new List<TipoMoneda>();
+            string findAll = "";
+            findAll = "SELECT TIPOMON_CODIGO,TIPOMON_DESCRIPCION FROM TIPO_MONEDA";
+
+            try
+            {
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    TipoMoneda cajaBanco = new TipoMoneda();
+                    cajaBanco.TIPOMON_CODIGO = read[0].ToString();
+                    cajaBanco.TIPOMON_DESCRIPCION = read[1].ToString();
+
+                    tipoMonedas.Add(cajaBanco);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return tipoMonedas;
+        }
+
     }
 }

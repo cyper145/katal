@@ -13,9 +13,11 @@ namespace katal.Controllers
 
 
         private UserNeg userNeg;
+        private EmpresaNeg empresaNeg;
         public AccountController()
         {
             userNeg = new UserNeg();
+            empresaNeg = new EmpresaNeg();
         }
         // GET: /Account/SignIn
         [AllowAnonymous]
@@ -42,8 +44,8 @@ namespace katal.Controllers
             if (user!=null)
             {
                 AuthHelper.SignIn(model.UserName, model.Password,user.rol_id, user.empresa, user.rol, model.Empresa);
-                
 
+                GridViewHelper.NivelCOntable = int.Parse(empresaNeg.findContable(GridViewHelper.user.codEmpresa).EMP_NIVEL);
                 return RedirectToAction("Index", "Home");
             }
                

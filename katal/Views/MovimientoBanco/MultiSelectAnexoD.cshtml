@@ -16,13 +16,13 @@
 
     settings.Columns.Add("ANEX_CODIGO").Width = Unit.Percentage(10);
     settings.Columns.Add("ANEX_DESCRIPCION").Width = Unit.Percentage(80);
-    //settings.Columns.Add("ANEX_RUC").Width = Unit.Percentage(10);
+    settings.Columns.Add("ANEX_RUC").Width = Unit.Percentage(10);
 
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
     settings.Properties.TextFormatString = "{0}-{1}";
-//    settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexo";
+    settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexoD";
 
     settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;

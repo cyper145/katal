@@ -41,7 +41,9 @@ namespace katal.Controllers
         // GET: RequisionCompra
         public ActionResult Index()
         {
-            List<CMovimientoBanco> movimientoBancos;
+            List<CMovimientoBanco> movimientoBancos = new List<CMovimientoBanco>();
+
+            GridViewHelper.movimientoBancosdetalles.Clear();
             if (GridViewHelper.activeData)
             {
                 // movimientoBancos = cajaBancoNeg.findAllMovimientos(GridViewHelper.codigobanco, "MN");
@@ -51,22 +53,15 @@ namespace katal.Controllers
                 }
                 movimientoBancos = GridViewHelper.movimientoBancos;
                 movimientoBancos = movimientoBancos.Where(X => X.CB_D_FECCA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECCA <= GridViewHelper.dateRangeBanco.End).ToList();
-
-                CMovimientoBanco movimientoBanco = movimientoBancos.Find(X => X.CB_D_FECCA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECCA <= GridViewHelper.dateRangeBanco.End);
-
-
             }
-            else
-            {
-                movimientoBancos = new  List<CMovimientoBanco>();
-            }
+           
             return View(movimientoBancos);
         }
         public ActionResult DataRequisicionPartial()
         {
             //Sec-Fetch-Mode
-          
-            List<CMovimientoBanco> movimientoBancos;
+            GridViewHelper.movimientoBancosdetalles.Clear();
+            List<CMovimientoBanco> movimientoBancos = new List<CMovimientoBanco>(); ;
             if (GridViewHelper.activeData)
             {
                 if (GridViewHelper.movimientoBancos.Count == 0)
@@ -75,16 +70,8 @@ namespace katal.Controllers
                 }
                 movimientoBancos = GridViewHelper.movimientoBancos;
                 movimientoBancos = movimientoBancos.Where(X => X.CB_D_FECCA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECCA <= GridViewHelper.dateRangeBanco.End).ToList();
-                CMovimientoBanco movimientoBanco1 = movimientoBancos.Find(X => X.CB_D_FECCA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECCA <= GridViewHelper.dateRangeBanco.End);
-                CMovimientoBanco movimientoBanco2 = GridViewHelper.movimientoBancos.FindLast(X => X.CB_D_FECCA >= GridViewHelper.dateRangeBanco.Start);
-
+            
             }
-            else
-            {
-                movimientoBancos = new List<CMovimientoBanco>();
-            }
-
-
             return PartialView("DataRequisicionPartial", movimientoBancos);
         }
 
@@ -135,7 +122,7 @@ namespace katal.Controllers
                 }
                 else
                 {
-                    ViewData["EditError"] = "Please, correct all errors.";
+                    ViewData["EditError"] = "Falta datos por Ingresar";
                 }
 
             }
@@ -149,29 +136,28 @@ namespace katal.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult RequisicionUpdatePartial(MovimientoBanco product, FormCollection dataForm)
+        public ActionResult RequisicionUpdatePartial(CMovimientoBanco product, FormCollection dataForm)
         {
 
+         
             string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);
-            // obtener  codarticulo
-            // 
-            /*
-            var codArticulodata = dataForm["DXMVCEditorsValues"];
+            string CB_C_TPDOC = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDoc$State"]);
+            string CB_C_ANEXO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupAnexo$State"]);
+            string CB_C_CONVE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupMoneda$State"]);
+            string CB_C_ESTAD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupEstados$State"]);
+            string CB_TIPMOV = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTiposMovimientos$State"]);
 
-            string[] word = codArticulodata.Split(',');
-            string dataRequisicion = codArticulodata[0] + word[13] + "," + word[16] + codArticulodata[codArticulodata.Length - 1];
-            Dictionary<string, JArray> nodes = JsonConvert.DeserializeObject<Dictionary<string, JArray>>(dataRequisicion);
-            JArray solicitante = nodes["gridLookupSolicitante"];
-            JArray area = nodes["gridLookupArea"];
-            product.CODSOLIC = solicitante.First.ToString();
-            product.AREA = area.First.ToString();
-            product.detalles = GridViewHelper.detalleRequisicions;
-            ModelState.Remove("FecEntrega");
-            */
+            product.CB_C_OPERA = CB_C_OPERA;
+            product.CB_C_TPDOC = CB_C_TPDOC;
+            product.CB_C_ANEXO = CB_C_ANEXO;
+            product.CB_C_CONVE = CB_C_CONVE;
+            product.CB_C_ESTAD = CB_C_ESTAD;
+            product.CB_TIPMOV = CB_TIPMOV;
+            product.CB_C_SECUE = (GridViewHelper.movimientoBancos.Count + 1).ToString("0000.##");
             if (ModelState.IsValid)
                 SafeExecute(() => UpdateProduct(product));
             else
-                ViewData["EditError"] = "Please, correct all errors.";
+                ViewData["EditError"] = "KeyDownCuentaDestino";
 
             return DataRequisicionPartial();
         }
@@ -189,9 +175,13 @@ namespace katal.Controllers
                 SafeExecute(() => DeleteProduct(codigo));
             if (customAction == "contabilizar")
             {
-                CMovimientoBanco movimientoBanco=  GridViewHelper.movimientoBancos.Find(X => X.CB_C_SECUE == codigo);
+                if (codigo != "")
+                {
+                    CMovimientoBanco movimientoBanco=  GridViewHelper.movimientoBancos.Find(X => X.CB_C_SECUE == codigo);
 
-                movimientoBanco.CB_L_CONTA = "*";
+                    movimientoBanco.CB_L_CONTA = "*";
+                }
+                
             }
             if (customAction == "anular")
             {
@@ -286,8 +276,35 @@ namespace katal.Controllers
             return PartialView("DetailRequestPartial", GridViewHelper.movimientoBancosdetalles);
         }
         public ActionResult DetailRequestAddNewPartial(DMovimientoBanco product , FormCollection dataForm)
-        {         
+        {
             // product.CENCOST = arraycosto.First.ToString();
+
+            product.CB_C_BANCO = GridViewHelper.codigobanco;
+            product.CB_C_MES = GridViewHelper.dateTime.Month.ToString("00.##");
+            product.CB_C_SECUE = GridViewHelper.dateTime.Month.ToString("00.##");
+            product.CB_C_CONCE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupConceptoCajaBanco$State"]);
+         
+            product.CB_C_ANEXO= GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
+            product.CB_C_TPDOC = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDocD$State"]);
+            product.CB_C_CENCO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCostos$State"]);
+            product.CB_C_CUENT = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCuenta$State"]);
+            product.CB_C_DESTI = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCuentaDestino$State"]);
+           
+            string moneda= GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoMoneda$State"]);
+            if (moneda=="MN")
+            {
+                product.CB_N_MTOMND = product.CB_N_MTOMND;
+
+            }
+            else
+            {
+                product.CB_N_MTOMED = product.CB_N_MTOMND;
+
+            }
+
+
+
+
             if (ModelState.IsValid)
                 SafeExecute(() => InsertProduct(product));
             else
@@ -305,16 +322,21 @@ namespace katal.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult detailRequestUpdatePartial(DetalleRequisicion product, FormCollection dataForm)
+        public ActionResult detailRequestUpdatePartial(CMovimientoBanco product, FormCollection dataForm)
         {
-            var codArticulodata = dataForm["DXMVCEditorsValues"];
-            Dictionary<string, object> nodes = JsonConvert.DeserializeObject<Dictionary<string, object>>(codArticulodata);
-            var codArticulo = nodes["gridLookup"];
+            string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);
+            string CB_C_TPDOC = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDoc$State"]);
+            string CB_C_ANEXO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupAnexo$State"]);
+            string CB_C_CONVE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupMoneda$State"]);
+            string CB_C_ESTAD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupEstados$State"]);
+            string CB_TIPMOV = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTiposMovimientos$State"]);
 
-            JArray array = (JArray)codArticulo;
-            var description = dataForm["gridLookup"];
-            product.codpro = array.First.ToString();
-            product.DESCPRO = description.ToString();
+            product.CB_C_OPERA = CB_C_OPERA;
+            product.CB_C_TPDOC = CB_C_TPDOC;
+            product.CB_C_ANEXO = CB_C_ANEXO;
+            product.CB_C_CONVE = CB_C_CONVE;
+            product.CB_C_ESTAD = CB_C_ESTAD;
+            product.CB_TIPMOV = CB_TIPMOV;
             //Request.Params
             if (ModelState.IsValid)
                 SafeExecute(() => UpdateProduct(product));
@@ -329,19 +351,18 @@ namespace katal.Controllers
 
             return DetailRequestPartial(ViewData["codigoOrden"].ToString());
         }
-        public void UpdateProduct(DetalleRequisicion product)
+        public void UpdateProduct(CMovimientoBanco product)
         {
 
-            DetalleRequisicion detalleOrdenCompra = GridViewHelper.detalleRequisicions.Find(element => element.codpro == product.codpro);
-            detalleOrdenCompra.GLOSA = product.GLOSA;
-            detalleOrdenCompra.CANTID = product.CANTID;
+            CMovimientoBanco detalleOrdenCompra = GridViewHelper.movimientoBancos.Find(element => element.CB_C_SECUE == product.CB_C_SECUE);
+           
             // crear la logica para agregar un producto
         }
         [ValidateInput(false)]
-        public ActionResult DetailRequestDeletePartial(string codpro = "")
+        public ActionResult DetailRequestDeletePartial(string CB_C_SECDE = "")
         {
-            if (codpro != "")
-                SafeExecute(() => Delete(codpro));
+            if (CB_C_SECDE != "")
+                SafeExecute(() => Delete(CB_C_SECDE));
             var data = ViewData["codigoOrden"];
             if (data == null)
             {
@@ -351,7 +372,7 @@ namespace katal.Controllers
         }
         public void Delete(string product)
         {
-            GridViewHelper.detalleRequisicions.Remove(GridViewHelper.detalleRequisicions.Find(element => element.codpro == product));
+            GridViewHelper.movimientoBancosdetalles.Remove(GridViewHelper.movimientoBancosdetalles.Find(element => element.CB_C_SECDE == product));
             // crear la logica para agregar un producto
         }
 
@@ -667,7 +688,34 @@ namespace katal.Controllers
             return PartialView("MultiSelectTipoDocD", new TipoDocumento() { TIPDOC_CODIGO = TIPDOC_CODIGO });
 
         }
-        
+        public ActionResult MultiSelectTipoMoneda(string TIPOMON_CODIGO = "-1")
+        {
+            ViewData["tipoMoneda"] = cajaBancoNeg.tipoMonedas();
+            if (TIPOMON_CODIGO == "-1")
+                TIPOMON_CODIGO = "";
+            return PartialView("MultiSelectTipoMoneda", new TipoMoneda() { TIPOMON_CODIGO = TIPOMON_CODIGO });
+
+        }
+        public ActionResult MultiSelectCuenta(string PLANCTA_CODIGO = "-1", FormCollection dataR = null)
+        {
+            ViewData["cuenta"] = comprobanteNeg.findAllCuentasNacionales(GridViewHelper.NivelCOntable);
+          
+            if (PLANCTA_CODIGO == "-1")
+                PLANCTA_CODIGO = "";
+            return PartialView("MultiSelectCuenta", new PlanCuentaNacional() { PLANCTA_CODIGO = PLANCTA_CODIGO });
+
+        }
+        public ActionResult MultiSelectCuentaDestino(string PLANCTA_CODIGO = "-1", FormCollection dataR = null)
+        {
+            ViewData["cuentaDestino"] = comprobanteNeg.findAllCuentasNacionales(GridViewHelper.NivelCOntable);
+
+            if (PLANCTA_CODIGO == "-1")
+                PLANCTA_CODIGO = "";
+            return PartialView("MultiSelectCuentaDestino", new PlanCuentaNacional() { PLANCTA_CODIGO = PLANCTA_CODIGO });
+
+        }
+       
+
         #endregion
 
     }

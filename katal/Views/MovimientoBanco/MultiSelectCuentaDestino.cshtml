@@ -3,39 +3,38 @@
 {
     //settings.Properties.Caption = "Area:";
 
-    settings.Name = "gridLookupTipoDoc";
-    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectTipoDoc", TIPDOC_CODIGO = Model.TIPDOC_CODIGO };
+    settings.Name = "gridLookupCuentaDestino";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectCuentaDestino", PLANCTA_CODIGO = Model.PLANCTA_CODIGO };
 
-    settings.KeyFieldName = "TIPDOC_CODIGO";
-
+    settings.KeyFieldName = "PLANCTA_CODIGO";
     //settings.CommandColumn.Visible = true;
     // settings.CommandColumn.ShowSelectCheckbox = true;
 
-    settings.Columns.Add("TIPDOC_CODIGO").Width = Unit.Percentage(10);
-    settings.Columns.Add("TIPDOC_DESCRIPCION").Width = Unit.Percentage(80);
-    settings.Columns.Add("TIPDOC_REFERENCIA").Width = Unit.Percentage(10);
+    settings.Columns.Add("PLANCTA_CODIGO").Width = Unit.Percentage(10);
+    settings.Columns.Add("PLANCTA_DESCRIPCION").Width = Unit.Percentage(90);
+
 
     settings.Width = Unit.Percentage(100);
 
     settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
-    settings.Properties.TextFormatString = "{0}-{1}";
-    settings.Properties.ClientSideEvents.KeyDown = "KeyDownTipoDoc";
+    settings.Properties.TextFormatString = "{0} - {1}";
+    settings.Properties.ClientSideEvents.KeyDown = "KeyDownCuentaDestino";
 
     settings.GridViewProperties.Settings.ShowFilterRow = true;
     settings.GridViewProperties.Settings.ShowColumnHeaders = false;
     settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
     //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
-    settings.GridViewProperties.SettingsPager.EnableAdaptivity = false;
+    settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
     settings.GridViewProperties.SettingsPager.PageSize = 7;
 
     //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
-    //settings.GridViewClientSideEvents.EndCallback = "OnGridDatatipoDoc";// ver re
+   // settings.GridViewClientSideEvents.EndCallback = "OnChangePlan";// ver re
 
     settings.DataBound = (sender, e) =>
     {
         var gridLookup = (MVCxGridLookup)sender;
         gridLookup.GridView.Width = Unit.Percentage(100);
     };
-}).BindList(ViewData["TipoDoc"]).Bind(Model.TIPDOC_CODIGO).GetHtml()
+}).BindList(ViewData["cuentaDestino"]).Bind(Model.PLANCTA_CODIGO).GetHtml()
 
 
