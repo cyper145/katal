@@ -89,9 +89,9 @@
         i.NestedExtension().DateEdit(tb =>
         {
             tb.Name = "Proceso";
-            tb.Date=DateTime.Now;
+            tb.Date = GridViewHelper.dateTime;
             tb.Width = Unit.Percentage(100);
-            tb.Enabled = false;
+            //  tb.Enabled = false;
         });
     });
     pickerGroup.Items.Add(i =>

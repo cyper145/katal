@@ -85,6 +85,17 @@ namespace katal.conexion.model.dao
                 return data2;
             }
         }
+        public dynamic ternarioG(bool verificacion, dynamic data1, dynamic data2)
+        {
+            if (verificacion)
+            {
+                return data1;
+            }
+            else
+            {
+                return data2;
+            }
+        }
         public string rellenar(string dato, int lmax, int lreal, string relleno, bool giro)
         {
             string lleno = "";

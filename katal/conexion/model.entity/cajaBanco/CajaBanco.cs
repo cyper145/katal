@@ -109,7 +109,7 @@ namespace katal.conexion.model.entity
         public string CB_C_ESTAD { get; set; }
         public string CB_C_ESTRET { get; set; }
         public string CB_RETLET { get; set; }
-        public string CB_D_FECCOB { get; set; }
+        public DateTime CB_D_FECCOB { get; set; }
         public string CB_TRANSBCO { get; set; }
         public string CB_TIPMOV { get; set; }
         public string CB_MEDIO { get; set; }

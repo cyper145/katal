@@ -210,7 +210,7 @@
             });
             groupItem.Items.Add(i =>
             {
-                i.Name = "TCEsp";
+                i.Name = "CB_N_CAMES";
                 i.Caption = "T/C Esp";
                 // i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 3;
@@ -222,7 +222,7 @@
             groupItem.Items.Add(i =>
 
             {
-                i.FieldName = "CB_D_FECCA";
+                i.FieldName = "CB_D_FECHA";
                 i.ColumnSpan = 3;
                 i.Caption = "Fecha Giro";
                 i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
@@ -383,8 +383,7 @@
 
 
                         // magia de guardadr
-                        //     btnSettings.ClientSideEvents.Click = "function(s, e) { pcModalMode.Show(); }";
-
+                        btnSettings.ClientSideEvents.Click = "probando";
 
                     }).Render();
 

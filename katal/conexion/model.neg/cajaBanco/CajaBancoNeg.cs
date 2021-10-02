@@ -25,9 +25,9 @@ namespace katal.conexion.model.neg
         }
 
 
-        public List<CMovimientoBanco> findAllMovimientos(string banco, string moneda)
+        public List<CMovimientoBanco> findAllMovimientos(string banco, string moneda, DateTime dateTime)
         {
-            return cajaBancoDao.findAllMovimientos(banco, moneda);
+            return cajaBancoDao.findAllMovimientos(banco, moneda,dateTime);
         }
 
         public List<TipoOpcionCajaBanco> findAllTipoOpciones(int tipo)
@@ -115,5 +115,16 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.tipoMonedas();
         }
+
+        public void create(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
+        {
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECCA, obj.CB_D_FECCA,dateTime);
+            obj.CB_N_TIPCA = valortipoCambio;
+            decimal cambio = Math.Round(obj.CB_N_MTOMN * valortipoCambio, 2);
+            obj.CB_N_MTOME = cajaBancoDao.ternarioG(cambioMoneda=="ME", obj.CB_N_MTOME, cambio);
+            obj.CB_N_MTOMN = cajaBancoDao.ternarioG(cambioMoneda=="MN", obj.CB_N_MTOME, cambio);
+            cajaBancoDao.create(obj, codigoBanco, dateTime);
+        }
+
     }
 }

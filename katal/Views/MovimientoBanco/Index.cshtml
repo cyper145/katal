@@ -59,9 +59,9 @@
         }
         function dateInit() {
 
-            if (CB_D_FECCA.GetText() == "") {
+            if (CB_D_FECHA.GetText() == "") {
                 let f = new Date();
-                CB_D_FECCA.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                CB_D_FECHA.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
             }
             if (CB_D_FECCOB.GetText() == "") {
                 let f = new Date();
@@ -124,7 +124,26 @@
                 });
             });
         }
+        function OnGridDatatipoDoc(s, e) {
+            $.getJSON('/Comprobante/CargarTipoDocumento', function (resp) {
+                $.each(resp, function (k, v) {
+                    if (v.TIPDOC_REFERENCIA) {
+                        RCO_SERIE.SetReadOnly(false);
+                        gridLookupTipoDocRef.SetReadOnly(false);
+                        RCO_NUMERO.SetReadOnly(false);
 
+                    }
+                    else {
+
+                        RCO_SERIE.SetReadOnly(true);
+                        gridLookupTipoDocRef.SetReadOnly(true);
+                        RCO_NUMERO.SetReadOnly(true);
+                    }
+
+
+                });
+            });
+        }
         //teclas acceso 
         function KeyDownModo(s, e) {
 
@@ -180,7 +199,7 @@
         function KeyDownMoneda(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                CB_D_FECCA.Focus();
+                CB_D_FECHA.Focus();
             }
         }
         function KeyDownFechaGiro(s, e) {
@@ -300,6 +319,54 @@
                 CB_A_REFERD.Focus();
             }
         }
+        function probando() {
+
+            let objeto = recolectarInfo();
+            objeto = JSON.stringify(objeto);
+            $.getJSON('/MovimientoBanco/grabar?data=' + objeto, function (resp) {
+                $.each(resp, function (k, v) {
+                  
+                });
+            });s
+        }
+        /*string create = ",[CB_C_OPERA],[CB_D_FECHA]";
+        create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_C_ANEXO]  ,[CB_C_CONVE] ,[CB_N_CAMES] ,[CB_N_TIPCA],[CB_N_MTOMN]  
+        ,[CB_N_MTOME] ,[CB_C_CONTA]";
+        create += ",[CB_A_REFER]  ,[CB_C_ESTAD] ,[CB_D_FECCOB],[CB_TIPMOV] ,[CB_MEDIO] ,[CB_DMEDIO] ,[CB_USUARIO])";
+        
+        string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);
+            string CB_C_TPDOC = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDoc$State"]);
+            string CB_C_ANEXO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupAnexo$State"]);
+            string CB_C_CONVE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupMoneda$State"]);
+            string CB_C_ESTAD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupEstados$State"]);
+            string CB_TIPMOV = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTiposMovimientos$State"]);
+        
+        */
+
+
+        function recolectarInfo() {
+
+
+            let objeto = {
+                "CB_C_SECUE": CB_C_SECUE.GetText(),
+                "CB_C_MODO": CB_C_MODO.GetValue(),
+                "CB_C_OPERA": gridLookupOpciones.GetValue() ? gridLookupOpciones.GetValue()[0] : null, 
+                "CB_D_FECHA": CB_D_FECHA.GetValue(),
+                "CB_C_DOCUM": CB_C_DOCUM.GetValue(),            
+                "CB_C_TPDOC": gridLookupTipoDoc.GetValue() ? gridLookupTipoDoc.GetValue()[0] : null,
+                "CB_C_ANEXO": gridLookupAnexo.GetValue() ? gridLookupAnexo.GetValue()[0] : null,
+                "CB_C_CONVE": gridLookupMoneda.GetValue() ? gridLookupMoneda.GetValue()[0] : null, 
+      
+                "CB_A_REFER": CB_A_REFER.GetValue(),
+                "CB_C_ESTAD": gridLookupEstados.GetValue() ? gridLookupEstados.GetValue()[0] : null,
+                "CB_D_FECCOB": CB_D_FECCOB.GetValue(),              
+                "CB_TIPMOV": gridLookupTiposMovimientos.GetValue() ? gridLookupTiposMovimientos.GetValue()[0] : null,
+            
+            }
+        return objeto;
+        }
+
+
     </script>
 }
 @section PageToolbar {
