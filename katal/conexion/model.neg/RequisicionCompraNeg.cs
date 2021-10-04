@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.dao;
+﻿using katal.conexion.model.dao;
 using katal.conexion.model.entity;
+using System.Collections.Generic;
 
 namespace katal.conexion.model.neg
 {
@@ -63,7 +60,7 @@ namespace katal.conexion.model.neg
             objUserDao.createDetail(objUser);
         }
         public void update(RequisicionCompra objUser)
-        {           
+        {
             objUserDao.update(objUser);
             objUserDao.DeleteDetail(objUser.NROREQUI);
             objUserDao.createDetail(objUser);
@@ -77,8 +74,8 @@ namespace katal.conexion.model.neg
                 objUserDao.delete(objRequision);
             }
             // ver como trabajar un respuesta alterna
-           
+
         }
-    
+
     }
 }

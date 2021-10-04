@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.dao;
+﻿using katal.conexion.model.dao;
 using katal.conexion.model.entity;
-using katal.Model;
+using System.Collections.Generic;
 
 namespace katal.conexion.model.neg
 {
@@ -20,7 +16,7 @@ namespace katal.conexion.model.neg
         {
             return objUserDao.findAll(dateRange);
         }
-        public List<DetalleOrdenCompra> findAllDetail( string OC_CNUMORD)
+        public List<DetalleOrdenCompra> findAllDetail(string OC_CNUMORD)
         {
             return objUserDao.findAllDetail(OC_CNUMORD);
         }
@@ -47,7 +43,7 @@ namespace katal.conexion.model.neg
             int nextDocumet = 0;
             if (last != "")
             {
-                nextDocumet= int.Parse(last)+1;
+                nextDocumet = int.Parse(last) + 1;
             }
             string fmt = "0000000000000.##";
             string next = nextDocumet.ToString(fmt);
@@ -57,9 +53,9 @@ namespace katal.conexion.model.neg
         public void create(OrdenCompra orden)
         {
 
-            
+
             string ocprincipal = "";
-            if (orden.OC_PRINCIPAL==null || orden.OC_PRINCIPAL.Trim().Length == 0  )
+            if (orden.OC_PRINCIPAL == null || orden.OC_PRINCIPAL.Trim().Length == 0)
             {
                 ocprincipal = orden.OC_CNUMORD;
                 orden.OC_PRINCIPAL = ocprincipal;
@@ -75,8 +71,8 @@ namespace katal.conexion.model.neg
             objUserDao.updateNroOrden(orden.OC_CNUMORD);
             objUserDao.createDetail(orden);
 
-           
-            
+
+
 
             //obtener la direccion
 
@@ -96,13 +92,14 @@ namespace katal.conexion.model.neg
             // SOLICITADO POR => OC_SOLICITA
 
 
-            
+
 
             string fmt = "000.##";
             int nextDocumet = 0;
             string next = nextDocumet.ToString(fmt);
             // INSERTAR ELEMENTO 
-            orden.detalles.ForEach(element => {
+            orden.detalles.ForEach(element =>
+            {
                 ++nextDocumet;
                 next = nextDocumet.ToString(fmt);
                 string item = "INSERT INTO comovd (oc_cnumord,oc_ccodpro,oc_dfecdoc,oc_citem,";
@@ -115,19 +112,19 @@ namespace katal.conexion.model.neg
                 item += element.OC_CDESREF + "','" + element.OC_CUNIDAD + "','";
                 item += element.OC_CUNIREF + "'," + element.OC_NFACTOR + "," + element.OC_SALDO + "," + element.OC_NCANTID + ",";
                 item += element.OC_NPREUNI + "," + element.OC_NDSCPOR + "," + element.OC_NDESCTO + "," + element.OC_NIGV + ",";
-                item += element.OC_NIGVPOR + ","+ element.OC_NPRENET  + "," + element.OC_NTOTVEN+ "," + element.OC_NTOTNET;
+                item += element.OC_NIGVPOR + "," + element.OC_NPRENET + "," + element.OC_NTOTVEN + "," + element.OC_NTOTNET;
                 item += ",'00','" + element.CENTCOST + "','";
                 item += element.OC_CCOMEN1 + "','" + element.OC_CCOMEN2 + "','" + element.OC_GLOSA + "'," + element.OC_PRECIOVEN + ")";
             });
-          
-                
+
+
         }
         public void delete(string OC_CNUMORD)
         {
             OrdenCompra objRequision = objUserDao.find(OC_CNUMORD);
-           
-                objUserDao.DeleteDetail(objRequision.OC_CNUMORD);
-                objUserDao.delete(objRequision);          
+
+            objUserDao.DeleteDetail(objRequision.OC_CNUMORD);
+            objUserDao.delete(objRequision);
             // ver como trabajar un respuesta alterna
         }
     }

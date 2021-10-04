@@ -1,8 +1,8 @@
 ﻿using katal.Controllers;
+using katal.Model;
 using System;
 using System.Web;
 using System.Web.Mvc;
-using katal.Model;
 
 namespace katal.Filters
 {

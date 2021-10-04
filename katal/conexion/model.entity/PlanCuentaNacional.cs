@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace katal.conexion.model.entity
+﻿namespace katal.conexion.model.entity
 {
     public class PlanCuentaNacional
     {
@@ -22,16 +17,16 @@ namespace katal.conexion.model.entity
         public string PLANCTA_ABONO3 { get; set; }
         public string PLANCTA_PORCENT1 { get; set; }
         public string PLANCTA_PORCENT2 { get; set; }
-        public string PLANCTA_PORCENT3{ get; set; }
+        public string PLANCTA_PORCENT3 { get; set; }
         public string PLANCTA_AJUSTE { get; set; }
         public string PLANCTA_PARTIDA { get; set; }
         public string PLANCTA_DIF_CAMBIO { get; set; }
-        public string PLANCTA_NATURALEZA { get; set; }      
+        public string PLANCTA_NATURALEZA { get; set; }
         public string PLANCTA_MONETARIA { get; set; }
         public string PLANCTA_CON_COSTO { get; set; }
         public string PLANCTA_PLAN_EXTERIOR { get; set; }
         public string PLANCTA_ESTADO { get; set; }
-     
+
     }
 
 }

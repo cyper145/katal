@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using katal.conexion.model.entity;
+﻿using katal.conexion.model.entity;
 using katal.conexion.model.neg;
+using System.Web.Mvc;
 namespace katal.Controllers
 {
     public class AreasController : BaseController
@@ -33,7 +29,7 @@ namespace katal.Controllers
                 ViewData["EditError"] = "Please, correct all errors.";
             return AreasPartial();
         }
-         private void InsertProduct(Area area)
+        private void InsertProduct(Area area)
         {
             areaNeg.create(area);
         }

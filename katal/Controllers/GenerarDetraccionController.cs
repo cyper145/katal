@@ -1,16 +1,12 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using katal.conexion.model.neg;
+using katal.Model;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using katal.conexion.model.neg;
-using katal.conexion.model.entity;
-using katal.Model;
-using Newtonsoft.Json;
-using DevExpress.DataAccess.Native.Json;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using katal.Code;
 
 namespace katal.Controllers
 {
@@ -38,7 +34,7 @@ namespace katal.Controllers
         }// GET: Comprobante
         public ActionResult Index()
         {
-            
+
             GridViewHelper.activarRetecion = comprobanteNeg.habilitarRetencion();
             List<ComprobanteDetraccion> comp = comprobanteDNeg.findAll(GridViewHelper.dateRange);
             GridViewHelper.ComprobantesD = comp;
@@ -55,7 +51,8 @@ namespace katal.Controllers
         {
             decimal haber = 0;
             decimal debe = 0;
-            GridViewHelper.contableDets.ForEach(elem => {
+            GridViewHelper.contableDets.ForEach(elem =>
+            {
                 haber += decimal.Parse(elem.campo2);
                 debe += decimal.Parse(elem.campo1);
             });
@@ -96,7 +93,7 @@ namespace katal.Controllers
             string OrdenFabricacion = data["gridLookupOrdenFabricacion$State"];
             string DestinoConta = data["gridLookupDestinoConta$State"];
             string AnexoConta = data["gridLookupAnexoConta$State"];
-          
+
             return UpdateModelWithDataValidation(issue, AddNewRecordContable);
         }
 
@@ -143,17 +140,17 @@ namespace katal.Controllers
             //userNeg.delete(codigo);       
             list.ForEach(X =>
             {
-                
+
                 X.restante = X.saldo - X.ImpPagar;
                 if (X.restante == 0)
                 {
                     X.estado = "Pagado";
                 }
-               
+
             });
 
             comprobanteDNeg.updateDetail(list);
-            
+
 
         }
         private void PerformDelete(string codigo)
@@ -182,7 +179,7 @@ namespace katal.Controllers
         public ActionResult GridViewAddNewPartial(ComprobanteDetraccion issue, FormCollection data)
         {
 
-            
+
 
 
             return UpdateModelWithDataValidation(issue, AddNewRecord);
@@ -192,12 +189,12 @@ namespace katal.Controllers
         {
             //GridViewHelper.Comprobantes.Add(issue);
 
-          //  GridViewHelper.respuesta = comprobanteNeg.create(issue);
+            //  GridViewHelper.respuesta = comprobanteNeg.create(issue);
 
         }
         [ValidateAntiForgeryToken]
         public ActionResult GridViewUpdatePartial(ComprobanteDetraccion issue, FormCollection data)
-        {          
+        {
             return UpdateModelWithDataValidation(issue, UpdateRecord);
         }
         private void UpdateRecord(ComprobanteDetraccion issue)
@@ -222,7 +219,7 @@ namespace katal.Controllers
 
             if (ModelState.IsValid)
             {
-                SafeExecute(() => metodo(issue));            
+                SafeExecute(() => metodo(issue));
             }
             else
                 ViewBag.GeneralError = "Please, correct all errors.";

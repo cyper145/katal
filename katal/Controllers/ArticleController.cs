@@ -1,8 +1,8 @@
-using System.Web.Mvc;
 using katal.conexion.model.entity;
 using katal.conexion.model.neg;
 using katal.Model;
 using System;
+using System.Web.Mvc;
 
 
 namespace katal.Controllers
@@ -10,7 +10,7 @@ namespace katal.Controllers
     public class ArticleController : BaseController
     {
 
-       
+
         private ArticuloNeg userNeg;
         public ArticleController()
         {
@@ -27,7 +27,7 @@ namespace katal.Controllers
         }
         public ActionResult GridViewPartial()
         {
-           
+
             return PartialView("GridViewPartial", userNeg.findAll());
         }
 
@@ -40,14 +40,14 @@ namespace katal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult GridViewAddNewPartial(User issue)
         {
-           
+
             return UpdateModelWithDataValidation(issue, GridViewHelper.AddNewRecord);
         }
 
         [ValidateAntiForgeryToken]
         public ActionResult GridViewUpdatePartial(User issue)
         {
-            
+
             return UpdateModelWithDataValidation(issue, GridViewHelper.UpdateRecord);
         }
 

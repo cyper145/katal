@@ -1,5 +1,4 @@
-﻿using DevExpress.XtraReports.Web.Extensions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace katal
 {

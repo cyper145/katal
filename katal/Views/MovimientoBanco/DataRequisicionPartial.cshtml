@@ -31,19 +31,16 @@
     {
         column.FieldName = "CB_C_SECUE";
         column.Caption = "Secuencia";
-
     });
     settings.Columns.Add(column =>
     {
         column.FieldName = "CB_C_OPERA";
         column.Caption = "Operacion";
-
     });
     settings.Columns.Add(column =>
     {
         column.FieldName = "CB_C_DOCUM";
         column.Caption = "Documento";
-
     });
     settings.Columns.Add(column =>
     {
@@ -55,7 +52,6 @@
         column.FieldName = "CB_L_CONTA";
         column.Caption = "Contab.";
     });
-
     settings.Columns.Add(column =>
     {
         column.FieldName = "CB_L_ANULA";
@@ -68,7 +64,6 @@
         column.FieldName = "CB_D_FECCA";
         column.Caption = "Fecha.";
         column.ColumnType = MVCxGridViewColumnType.DateEdit;
-
     });
     settings.Columns.Add(column =>
     {
@@ -80,7 +75,6 @@
         column.FieldName = "CB_A_REFER";
         column.Caption = "Glosa";
     });
-
     settings.SetEditFormTemplateContent(c =>
     {
         Html.DevExpress().FormLayout(layoutSetting =>
@@ -183,20 +177,15 @@
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.FieldName = "CB_C_ANEXO";
                 i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 3;
                 i.SetNestedContent(() =>
                 {
-
                     Html.RenderAction("MultiSelectAnexo", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXO") });
-
                 });
             });
-
-
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_C_CONVE";
@@ -220,7 +209,6 @@
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.FieldName = "CB_D_FECHA";
                 i.ColumnSpan = 3;
@@ -234,7 +222,6 @@
                     //  t.Properties.AllowNull = true;
                     t.Properties.ClientSideEvents.Init = "dateInit";
                     t.Properties.ClientSideEvents.KeyDown = "KeyDownFechaGiro";
-
                 });
             });
             groupItem.Items.Add(i =>
@@ -258,12 +245,10 @@
 
                 i.NestedExtension().TextBox(t =>
                 {
-
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
                     t.Width = Unit.Percentage(25);
                     t.Properties.ClientSideEvents.KeyDown = "KeyDownMonto";
-
                 });
             });
             groupItem.Items.Add(i =>
@@ -271,24 +256,18 @@
                 i.FieldName = "CB_A_REFER";
                 i.ColumnSpan = 6;
                 i.Caption = "Referencia";
-
                 i.NestedExtension().TextBox(t =>
                 {
-
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
-                    t.Properties.ClientSideEvents.KeyDown = "KeyDownReferencia";
-                    
-
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownReferencia";                  
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.Name = "Estado";
                 i.ColumnSpan = 2;
                 i.Caption = "Estado";
-
                 i.SetNestedContent(() =>
                 {
                     Html.RenderAction("MultiSelectEstadosOperaciones");
@@ -305,73 +284,56 @@
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.Name = "TC";
                 i.ColumnSpan = 1;
                 i.Caption = "T/C";
-
                 i.NestedExtension().TextBox(t =>
                 {
-
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
                     t.Properties.ClientSideEvents.KeyDown = "KeyDownTc";
-
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.Name = "medioPago:";
                 i.ColumnSpan = 6;
                 i.Caption = "Medio Pago";
-
                 i.SetNestedContent(() =>
                 {
                     Html.RenderAction("MultiSelectMedioPago");
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.Name = "creditos";
                 i.ColumnSpan = 2;
                 i.Caption = "Créditos";
-
                 i.NestedExtension().CheckBox(t =>
                 {
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
-                    t.ShowModelErrors = true;
-                    //  t.ReadOnly = true;
-                    //   t.Properties.ClientSideEvents.= "KeyDownTc";
-
+                    t.ShowModelErrors = true;            
                 });
             });
             groupItem.Items.Add(i =>
-
             {
                 i.Name = "Interface";
                 i.ColumnSpan = 2;
                 i.Caption = "Con Interface.";
-
                 i.NestedExtension().CheckBox(t =>
                 {
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
-                    t.ShowModelErrors = true;
-                    //  t.ReadOnly = true;
+                    t.ShowModelErrors = true;                    //  t.ReadOnly = true;
                 });
             });
-
             groupItem.Items.Add(itemSettings =>
             {
                 itemSettings.ColumnSpan = 2;
                 itemSettings.ShowCaption = DefaultBoolean.False;
             }).SetNestedContent(() =>
             {
-
                 Html.DevExpress().Button(
-
                     btnSettings =>
                     {
                         btnSettings.Width = Unit.Percentage(100);
@@ -380,15 +342,10 @@
                         btnSettings.ToolTip = "Guardar";
                         btnSettings.Images.Image.Url = "Content/Images/save.svg";
                         btnSettings.Images.Image.Width = Unit.Percentage(10);
-
-
                         // magia de guardadr
                         btnSettings.ClientSideEvents.Click = "probando";
 
                     }).Render();
-
-
-
             });//2
             layoutSetting.Items.Add(itemSettings =>
             {
@@ -399,7 +356,6 @@
                     Html.RenderAction("Detail");
                 });
             });
-
             layoutSetting.Items.Add(itemSettings =>
             {
                 itemSettings.ShowCaption = DefaultBoolean.False;
@@ -412,11 +368,7 @@
                         btnSettings.Name = "btnUpdate";
                         btnSettings.Text = "Grabar";
                         btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
-
-                        //I want to Hide Update Button when FirstName is "John"
-
                     }).Render();
-
                 Html.DevExpress().Button(
                     btnSettings =>
                     {
@@ -430,16 +382,11 @@
         }).Bind(ViewData["Object"] ?? c.DataItem).Render();
 
     });
-
-
-
     settings.SettingsSearchPanel.CustomEditorName = "search";
     settings.SettingsBehavior.AllowFocusedRow = true;
-
     settings.SettingsExport.EnableClientSideExportAPI = true;
     settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
     settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
     settings.Width = Unit.Percentage(100);
-
     katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
-}).Bind(Model).SetEditErrorText(ViewBag.EditError).GetHtml())
+}).Bind(Model.cMovimientoBancos).SetEditErrorText(ViewBag.EditError).GetHtml())

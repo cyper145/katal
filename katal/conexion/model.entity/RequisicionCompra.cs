@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
 namespace katal.conexion.model.entity
 {
     public class RequisicionCompra
@@ -39,7 +36,7 @@ namespace katal.conexion.model.entity
         public string GLOSA { get; set; }
         public string REMAQ { get; set; }
         public string TIPOREQUI { get; set; }
-        public string ESPTECNICA { get; set; } 
+        public string ESPTECNICA { get; set; }
         public string stock { get; set; }
     }
 }

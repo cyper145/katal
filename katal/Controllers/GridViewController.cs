@@ -1,12 +1,12 @@
+using katal.conexion.model.entity;
+using katal.conexion.model.neg;
+using katal.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using katal.conexion.model.entity;
-using katal.conexion.model.neg;
-using katal.Model;
 
 namespace katal.Controllers
 {
@@ -86,7 +86,7 @@ namespace katal.Controllers
             string funciones = JsonConvert.SerializeObject(nodeModules);
 
             //negocio.update(rol_id, funciones);
-          
+
             return RedirectToAction("Index", "Role");
         }
         public ActionResult GridViewEmpresaPage(int id)

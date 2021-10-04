@@ -1,14 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using katal.Code.Helpers;
+using katal.conexion.model.entity;
+using katal.conexion.model.neg;
+using katal.Model;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using katal.Code.Helpers;
-using katal.conexion.model.entity;
-using katal.conexion.model.neg;
-using katal.Model;
 namespace katal.Controllers
 {
 
@@ -60,14 +60,14 @@ namespace katal.Controllers
             {
                 movimientoBancos = new List<CMovimientoBanco>();
             }
-                    
+
             return View(cajaBancoNeg.allTemporal());
         }
         public ActionResult DataRequisicionPartial()
         {
             //Sec-Fetch-Mode
 
-           
+
             return PartialView("DataRequisicionPartial", cajaBancoNeg.allTemporal());
         }
 
@@ -90,7 +90,7 @@ namespace katal.Controllers
             product.CB_TIPMOV = CB_TIPMOV;
             product.CB_C_SECUE = (GridViewHelper.movimientoBancos.Count + 1).ToString("0000.##");
 
-           
+
             if (ModelState.IsValid)
                 SafeExecute(() => InsertProduct(product));
             else
@@ -120,7 +120,7 @@ namespace katal.Controllers
         {
 
             string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);
-          
+
             if (ModelState.IsValid)
                 SafeExecute(() => UpdateProduct(product));
             else
@@ -249,7 +249,7 @@ namespace katal.Controllers
             // JArray arraycosto = (JArray)codCosto;
 
             var description = dataForm["gridLookup"];
-            
+
 
             // product.CENCOST = arraycosto.First.ToString();
             if (ModelState.IsValid)
@@ -346,7 +346,7 @@ namespace katal.Controllers
             if (Request.Params["Submit"] == null)
                 ModelState.Clear();
             else
-            {               
+            {
 
                 string option = data["CDPagados"];
                 string tipoAnexo = GridViewHelper.ValidarRecuperar(data["gridLookupTipoAnexo$State"]);
@@ -565,7 +565,7 @@ namespace katal.Controllers
             string secuencia = cajaBancoNeg.Genera_Secuencia(GridViewHelper.codigobanco, GridViewHelper.dateTime);
             return Json(new { respuesta = secuencia }, JsonRequestBehavior.AllowGet);
         }
-       
+
 
 
         #endregion

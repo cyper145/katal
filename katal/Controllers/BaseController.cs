@@ -6,16 +6,16 @@ namespace katal.Controllers
 {
     public class BaseController : Controller
     {
-       public  string codEmpresa;
+        public string codEmpresa;
 
-       public BaseController()
+        public BaseController()
         {
             if (AuthHelper.IsAuthenticated())
             {
                 ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
                 codEmpresa = user.codEmpresa;
             }
-          
+
         }
         protected void SafeExecute(Action method)
         {

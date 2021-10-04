@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.dao
 {
     public class Conversion
     {
-        public static  decimal ParseDecimal(string data)
+        public static decimal ParseDecimal(string data)
         {
             if (data == "")
             {
@@ -50,7 +47,7 @@ namespace katal.conexion.model.dao
             {
                 return bool.Parse(data);
             }
-            
+
         }
         public static bool ParseBool(bool data)
         {

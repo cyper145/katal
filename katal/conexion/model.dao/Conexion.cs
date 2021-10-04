@@ -7,9 +7,9 @@ namespace katal.conexion.model.dao
         //singleton
         private static Conexion objConexion = null;
         private SqlConnection con;
-       // private string nameBaseDatos ;
+        // private string nameBaseDatos ;
         private Conexion()
-        {          
+        {
             con = new SqlConnection(this.cadenaConexion("BDWENCO"));
         }
         private Conexion(string nameBaseDatos)
@@ -25,7 +25,7 @@ namespace katal.conexion.model.dao
             }
             return objConexion;
         }
-        public static Conexion saberEstado(string  nameBasedatos)
+        public static Conexion saberEstado(string nameBasedatos)
         {
 
             if (nameBasedatos == "rol")
@@ -53,7 +53,7 @@ namespace katal.conexion.model.dao
             //return $"data source = SERVIDOR; initial catalog = {nameBaseDatos}; user id = SOPORTE; password = SOPORTE";
             return $"Data Source=DESKTOP-RT71HEQ\\SQLEXPRESS;Initial Catalog={nameBaseDatos}; Integrated Security=True";
         }
-        public static string CadenaGeneral(string codigo, string nameBaseDatosgeneral,string tabla)
+        public static string CadenaGeneral(string codigo, string nameBaseDatosgeneral, string tabla)
         {
             string BD = $"{codigo}{nameBaseDatosgeneral}";
             return $"[{BD}].[dbo].[{tabla}] ";
@@ -63,7 +63,7 @@ namespace katal.conexion.model.dao
 
             return $"Use [{codigo}{basedatos}]  {consulta}";
         }
-        public static string ConexionCadena(string codigo, string basedatos,int anio, string consulta)
+        public static string ConexionCadena(string codigo, string basedatos, int anio, string consulta)
         {
 
             return $"Use [{codigo}{basedatos}{anio}]  {consulta}";

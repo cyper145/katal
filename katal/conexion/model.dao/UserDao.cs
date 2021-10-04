@@ -1,15 +1,14 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Web.Helpers;
-using katal.conexion.model.entity;
-using katal.Model;
 
 namespace katal.conexion.model.dao
 {
     public class UserDao : Obligatorio
     {
-       
+
 
 
         public UserDao()
@@ -146,7 +145,7 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-           
+
         }
 
         public List<User> findAll()
@@ -162,7 +161,7 @@ namespace katal.conexion.model.dao
                 {
                     int id = Convert.ToInt32(read[0].ToString());
                     User userTemp = listUsers.Find(X => X.id == id);
-                    if (listUsers.Find(X=>X.id == Convert.ToInt32(read[0].ToString())) == null)
+                    if (listUsers.Find(X => X.id == Convert.ToInt32(read[0].ToString())) == null)
                     {
                         User user = new User();
                         user.id = id;
@@ -182,9 +181,9 @@ namespace katal.conexion.model.dao
                     }
                     else
                     {
-                        userTemp.rol +=" - " +read[11].ToString();
-                        userTemp.empresa +=" - "+ read[12].ToString();
-                    }                   
+                        userTemp.rol += " - " + read[11].ToString();
+                        userTemp.empresa += " - " + read[12].ToString();
+                    }
                 }
             }
             catch (Exception)
@@ -222,7 +221,7 @@ namespace katal.conexion.model.dao
         public User login(string name, string password, string codEmpresa)
         {
             bool hayRegistros;
-            string findUser =consultaLogin(name, password, codEmpresa) ;
+            string findUser = consultaLogin(name, password, codEmpresa);
             User user = new User();
             try
             {
@@ -275,13 +274,13 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
 
-          
+
         }
-      
-        
+
+
         private string consultaLogin(string name, string password, string codEmpresa)
         {
-            string  consulta = "select U.*, r.name, e.EMP_RAZON_NOMBRE  from dk_users as U inner join dk_empresa_rol_user eu on U.id=eu.user_id inner join EMPRESA e on eu.cod_empres = e.EMP_CODIGO inner join dk_roles r on eu.rol_id = r.id where U.username='" + name + "'" + "AND"+ " e.EMP_CODIGO = '" + codEmpresa + "'" ;
+            string consulta = "select U.*, r.name, e.EMP_RAZON_NOMBRE  from dk_users as U inner join dk_empresa_rol_user eu on U.id=eu.user_id inner join EMPRESA e on eu.cod_empres = e.EMP_CODIGO inner join dk_roles r on eu.rol_id = r.id where U.username='" + name + "'" + "AND" + " e.EMP_CODIGO = '" + codEmpresa + "'";
             return consulta;
         }
         private string consultaLogin()
@@ -290,7 +289,7 @@ namespace katal.conexion.model.dao
             return consulta;
         }
 
-        public static string conexionWencostatic(string consulta )
+        public static string conexionWencostatic(string consulta)
         {
             return Conexion.ConexionCadena("", "BDWENCO", consulta);
         }

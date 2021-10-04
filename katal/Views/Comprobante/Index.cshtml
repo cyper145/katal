@@ -20,15 +20,15 @@
     <script>
 
 
-    function CloseGridLookup() {
-        gridLookup.ConfirmCurrentSelection();
-        console.log(datax)
-        gridLookup.HideDropDown();
-    }
-    function CloseGridLookupProveedor() {
-        console.log(gridLookupProveedor);
-        gridLookupProveedor.ConfirmCurrentSelection();
-        gridLookupProveedor.HideDropDown();
+        function CloseGridLookup() {
+            gridLookup.ConfirmCurrentSelection();
+            console.log(datax)
+            gridLookup.HideDropDown();
+        }
+        function CloseGridLookupProveedor() {
+            console.log(gridLookupProveedor);
+            gridLookupProveedor.ConfirmCurrentSelection();
+            gridLookupProveedor.HideDropDown();
         }
         //onchangeCambio{}
 
@@ -38,7 +38,7 @@
         }
 
 
-        function ocultar( id) {
+        function ocultar(id) {
             let elemet = document.getElementById(id);
             elemet.style.display = "none";
         }
@@ -47,7 +47,7 @@
             elemet.style.display = "block";
         }
         function OnGridRowNroClick(s, e) {
-           
+
 
             $.getJSON('/Comprobante/CargarTipoAnexoMoneda', function (resp) {
                 $.each(resp, function (k, v) {
@@ -56,7 +56,7 @@
                     }
                     gridLookupTipoAnexo.SetValue(v.codigoTipoAnexo);
                     TIPOMON_CODIGO.SetValue(v.gasto.Gastos_Moneda);
-                    
+
                     if (v.gasto.Gastos_Honorario) {
                         // habilitar cambos de total y ir 4ta
                         FormLayoutSetting.GetItemByName("groupNTASAIGV").SetVisible(false);
@@ -81,23 +81,23 @@
                         FormLayoutSetting.GetItemByName("groupNIES").SetVisible(false);
 
                     }
-                   
 
-                    //ver que se muestre 
+
+                    //ver que se muestre
                 });
             });
             //var g = gridLookupTipoAnexo.GetGridView();
-           // g.Refresh();
+            // g.Refresh();
         }
 
         function OnGridRowClickGasto(s, e) {
-           
+
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
                 gridLookupAnexo.Focus();
             }
         }
-        
+
 
         function KeyDownAnexo(s, e) {
 
@@ -105,7 +105,7 @@
             if (keyCode == 13) {
                 gridLookupTipoDoc.Focus();
             }
-         
+
         }
         function OnGridDatatipoDoc(s, e) {
             $.getJSON('/Comprobante/CargarTipoDocumento', function (resp) {
@@ -114,16 +114,16 @@
                         RCO_SERIE.SetReadOnly(false);
                         gridLookupTipoDocRef.SetReadOnly(false);
                         RCO_NUMERO.SetReadOnly(false);
-                       
+
                     }
                     else {
-                      
+
                         RCO_SERIE.SetReadOnly(true);
                         gridLookupTipoDocRef.SetReadOnly(true);
                         RCO_NUMERO.SetReadOnly(true);
                     }
 
-                  
+
                 });
             });
         }
@@ -138,8 +138,8 @@
 
         }
         function downSerie(s, e) {
-           
-           
+
+
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
                 CNUMERO.Focus();
@@ -168,7 +168,7 @@
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
                 gridLookupMoneda.Focus();
-                
+
             }
         }
 
@@ -222,7 +222,7 @@
         function KeyDownGlosa(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                
+
                 btnUpdate.Focus();
             }
         }
@@ -234,13 +234,13 @@
             // Checked
             LPASOIMP.SetChecked(true);
         }
-        
-        
+
+
         function habilitarRetencion(s, e) {
             $.getJSON('/Comprobante/habilitarRetencion', function (resp) {
                 $.each(resp, function (k, v) {
                     if (v.retencion) {
-                        FormLayoutSetting.GetItemByName("groupCO_L_RETE").SetVisible(true);                    
+                        FormLayoutSetting.GetItemByName("groupCO_L_RETE").SetVisible(true);
                     }
                     else {
                         FormLayoutSetting.GetItemByName("groupCO_L_RETE").SetVisible(false);
@@ -255,10 +255,10 @@
                 $.each(resp, function (k, v) {
                     if (v.opcion) {
                         NTASAIGV.SetText(v.tasaIGV);
-                        NIGV.SetText(v.montoIGV);                   
+                        NIGV.SetText(v.montoIGV);
                     }
                     else {
-                        NTASAIGV.SetText(v.tasaIGV);                   
+                        NTASAIGV.SetText(v.tasaIGV);
                     }
 
                 });
@@ -294,9 +294,9 @@
             console.log("dd")
             var g = gridLookupProveedor.GetGridView();
             g.GetRowValues(e.visibleIndex, 'PRVCNOMBRE;PRVCRUC', OnGetRowValues);
-       }
+        }
         function OnGetRowValues(Value) {
-          //  OC_CRAZSOC.SetText(Value[0]);
+            //  OC_CRAZSOC.SetText(Value[0]);
             RUC.SetText(Value[1]);
         }
         function OnGridArticuloRowClick(s, e) {
@@ -345,7 +345,7 @@
             }
             var PrecioTotal = document.getElementById("grid_DXEFL_DXEditor7_I");
 
-            PrecioTotal.value = precioUnitario * cantidad*(1-descuento/100);
+            PrecioTotal.value = precioUnitario * cantidad * (1 - descuento / 100);
 
         }
         function changegCalcularPrecioPunitario(s, e) {
@@ -358,8 +358,8 @@
                 descuento = parseFloat(datadescuento.value);
             }
             var data = document.getElementById("grid_DXEFL_DXEditor4_I");// cantidad
-            let precioUnitario=0;
-            let cantidad=0;
+            let precioUnitario = 0;
+            let cantidad = 0;
             if (data.value == "" || data.value == NaN) {
                 cantidad = 0;
             }
@@ -396,7 +396,7 @@
             let fecha = DFecha.GetText();
             $.getJSON('/Comprobante/changeDFecha?DFecha=' + fecha, function (resp) {
                 $.each(resp, function (k, v) {
-                   
+
                 });
             });
         }
@@ -404,64 +404,64 @@
 
             if (DRECEPCIO.GetText() == "") {
                 let f = new Date();
-              //  OC_DFECDOC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                //  OC_DFECDOC.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
                 DRECEPCIO.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
                 DEMISION.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
                 DIASPAGO.SetText(0);
                 DVENCE.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
                 //f.setDate(f.getDate() + 2);
-               // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+                // OC_DFECENT.SetText(f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
             }
         }
         function changeDiasPago() {
 
             let data = DEMISION.GetText().split("/");
-            let date = new Date(data[2], data[1]-1,data[0] );          
+            let date = new Date(data[2], data[1] - 1, data[0]);
             let nrodias = 0
             if (esEntero(DIASPAGO.GetText())) {
                 nrodias = parseInt(DIASPAGO.GetText());
             }
             let dateVence = addDays(date, nrodias)
-            
+
             DVENCE.SetValue(dateVence);
         }
 
         function esEntero(numero) {
             let isNumero = false;
             if (isNaN(numero)) {
-                isNumero= false;
+                isNumero = false;
             } else {
                 if (numero % 1 == 0) {
                     isNumero = true;
                 } else {
-                    isNumero =false;
+                    isNumero = false;
                 }
             }
             return numero
         }
 
-        function addDays(date, days) {         
+        function addDays(date, days) {
             var result = new Date(date);
             result.setDate(result.getDate() + days);
             return result;
         }
 
-        
+
         function tasaIgv() {
             if (NTASAIGV.GetText() == "") {
                 NTASAIGV.SetText("18");
-              
+
             }
         }
         function cambioIgv() {
             let importepercepcion = 0;
             if (NPERCEPCION.GetText() != "") {
-                importepercepcion= parseFloat(NPERCEPCION.GetText());
+                importepercepcion = parseFloat(NPERCEPCION.GetText());
             }
-           
+
             let baseimporte = parseFloat(NBASEIMP.GetText());
             let tasaigv = parseFloat(NTASAIGV.GetText());
-           
+
             let montoigv = baseimporte * tasaigv / 100;
             let totaligv = montoigv + baseimporte;
             let totalpagar = totaligv + importepercepcion
@@ -472,7 +472,7 @@
 
 
         function cambioIgvBase() {
-             let codDes= gridLookupDestino.GetValue()[0]
+            let codDes = gridLookupDestino.GetValue()[0]
             let baseimporte = 0;
             if (NBASEIMP.GetText() != "") {
                 baseimporte = parseFloat(NBASEIMP.GetText());
@@ -483,11 +483,11 @@
             }
 
             if (baseimporte != 0) {
-                if (codDes != "006" && codDes != "007" && codDes != "008" ) {
+                if (codDes != "006" && codDes != "007" && codDes != "008") {
                     let montoigv = baseimporte * tasaigv / 100;
                     let totaligv = montoigv + baseimporte;
                     NIGV.SetText(montoigv);
-                    NIMPORTE.SetText(totaligv);                 
+                    NIMPORTE.SetText(totaligv);
                     /*
                     lblValDecl = Format(Val(txtTotalVta) - Val(txtMontoIGV), "###0.00")
                     'If mnGasto1 = 0 Then
@@ -500,18 +500,18 @@
                 }
             }
             else {
-                
+
                 NIGV.SetText(0);
                 NIMPORTE.SetText(0);
                 MontoPagar.SetText(0);
             }
 
-           
+
         }
 
         function cambioIgvTotalhonorarios() {
             let codDes = gridLookupDestino.GetValue()[0];
-            let totalhonorarios = 0;  
+            let totalhonorarios = 0;
             if (NTOTRH.GetText() != "") {
                 totalhonorarios = parseFloat(NTOTRH.GetText());
             }
@@ -525,20 +525,20 @@
                             NIES.SetText(0.00);
                             break;
                         case '006':
-                             n4 = totalhonorarios * v.mnGasto1 / 100;
-                             nies = totalhonorarios * v.mnGasto2 / 100;
+                            n4 = totalhonorarios * v.mnGasto1 / 100;
+                            nies = totalhonorarios * v.mnGasto2 / 100;
                             NIR4.SetText(n4);
                             NIES.SetText(nies);
                             break;
                         case '007':
-                             n4 = totalhonorarios * v.mnGasto1 / 100;
-                             nies = 0;
+                            n4 = totalhonorarios * v.mnGasto1 / 100;
+                            nies = 0;
                             NIR4.SetText(n4);
                             NIES.SetText(nies);
                             break;
                         case '008':
-                             n4 = 0;
-                             nies = totalhonorarios * v.mnGasto2 / 100;
+                            n4 = 0;
+                            nies = totalhonorarios * v.mnGasto2 / 100;
                             NIR4.SetText(n4);
                             NIES.SetText(nies);
                             break;
@@ -550,27 +550,27 @@
             });
 
 
-       }
-
-
-    function OnClick(s, e) {
-        if ($("#myForm").valid()) {
-            if (GridView.batchEditApi.HasChanges())
-                GridView.UpdateEdit();
-            else
-                GridView.PerformCallback();
-        }
-    }
-    
-    function OnBeginCallback(s, e) {
-    	if (e.command == "UPDATEEDIT" || e.command == "CUSTOMCALLBACK")
-    		e.customArgs = $.extend(e.customArgs, GetEditorValues());
-    }
-    function GetEditorValues() {
-    	return MVCxClientUtils.GetSerializedEditorValuesInContainer("myForm");
         }
 
-    function restartButtonClicked() {
+
+        function OnClick(s, e) {
+            if ($("#myForm").valid()) {
+                if (GridView.batchEditApi.HasChanges())
+                    GridView.UpdateEdit();
+                else
+                    GridView.PerformCallback();
+            }
+        }
+
+        function OnBeginCallback(s, e) {
+            if (e.command == "UPDATEEDIT" || e.command == "CUSTOMCALLBACK")
+                e.customArgs = $.extend(e.customArgs, GetEditorValues());
+        }
+        function GetEditorValues() {
+            return MVCxClientUtils.GetSerializedEditorValuesInContainer("myForm");
+        }
+
+        function restartButtonClicked() {
             gridView.FocusedRowIndex = -1;
 
             gridView.UnselectRows();
@@ -708,8 +708,9 @@
 {
     @Html.AntiForgeryToken()
 
-    @Html.Partial("GridViewPartial")
+    @Html.Partial("GridViewPartial") 
     @Html.Partial("partialPopup")
+
 
 }
 

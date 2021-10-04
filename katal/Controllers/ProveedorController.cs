@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using katal.conexion.model.neg;
 using System.Web.Mvc;
-using katal.conexion.model.entity;
-using katal.conexion.model.neg;
-using katal.Model;
 namespace katal.Controllers
 {
-    public class ProveedorController :BaseController
+    public class ProveedorController : BaseController
     {
         // GET: Proveedor
 

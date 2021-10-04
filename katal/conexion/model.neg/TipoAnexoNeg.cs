@@ -1,9 +1,6 @@
 ﻿using katal.conexion.model.dao;
 using katal.conexion.model.entity;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.neg
 {
@@ -18,7 +15,7 @@ namespace katal.conexion.model.neg
         {
             return objAreaDao.findAll();
         }
-        public List<Anexo> findAllAnexo(string codigo="")
+        public List<Anexo> findAllAnexo(string codigo = "")
         {
             return objAreaDao.findAllAnexo(codigo);
         }

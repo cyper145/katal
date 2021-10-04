@@ -2,8 +2,6 @@
 using katal.conexion.model.entity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.neg
 {
@@ -15,7 +13,7 @@ namespace katal.conexion.model.neg
         TipoOperacionDao TipoOperacion;
         public ComprobanteNeg(string codEmpresa)
         {
-           
+
             objComprobanteDao = new ComprobanteDao(codEmpresa);
             anexoDao = new TipoAnexoDao(codEmpresa);
             monedaDao = new MonedaDao(codEmpresa);
@@ -56,7 +54,8 @@ namespace katal.conexion.model.neg
             return objComprobanteDao.findAllMaquinas();
         }
 
-        public List<Gasto> findAllGastos() {
+        public List<Gasto> findAllGastos()
+        {
             return objComprobanteDao.findAllGastos();
         }
         public gastoTipoAnexo cargarChangeTipoGasto(string codigo)
@@ -68,11 +67,11 @@ namespace katal.conexion.model.neg
             gastoTipoAnexo.codigoTipoAnexo = codigoAnexo;
             return gastoTipoAnexo;
         }
-        public  string cargarAnexoChangeTipoGasto(string codigo)
+        public string cargarAnexoChangeTipoGasto(string codigo)
         {
             gastoTipoAnexo gastoTipoAnexo = new gastoTipoAnexo();
             Gasto gasto = objComprobanteDao.findAllGastosDetail(codigo);
-            string codigoAnexo = anexoDao.findAllDetail(gasto.Gastos_CuentaCon);         
+            string codigoAnexo = anexoDao.findAllDetail(gasto.Gastos_CuentaCon);
             return codigoAnexo;
         }
         public List<Moneda> findAllMonedas()
@@ -93,9 +92,9 @@ namespace katal.conexion.model.neg
             return TipoOperacion.findAllTipoOperacion();
         }
 
-        public decimal  tasa()
-        {           
-            return  Conversion.ParseDecimal(objComprobanteDao.ConceptosGenerales("TASAIGV"));
+        public decimal tasa()
+        {
+            return Conversion.ParseDecimal(objComprobanteDao.ConceptosGenerales("TASAIGV"));
         }
         public bool habilitarRetencion()
         {
@@ -124,7 +123,7 @@ namespace katal.conexion.model.neg
 
         public List<ContableDet> findallContableDet()
         {
-           return  objComprobanteDao.findallContableDet();
+            return objComprobanteDao.findallContableDet();
         }
         public PlanCuentaNacional findCuentasNacionales(string xccodcuenta, int NivelContable = 4)
         {
@@ -143,7 +142,7 @@ namespace katal.conexion.model.neg
         public bool verdataCGORDEN()
         {
             string data = objComprobanteDao.verdata("CONCGRAL_CODIGO='CGORDEN'", "CONCEPTOS_GENERALES", 1, "CONCGRAL_CONTEL");
-            return data =="1"?true:false;
+            return data == "1" ? true : false;
         }
     }
 }

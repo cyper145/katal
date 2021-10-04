@@ -1,30 +1,27 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.Model;
-using katal.conexion.model.entity;
 
 namespace katal.conexion.model.dao
 {
     public class AreaDao : Obligatorio
     {
-       
 
 
-        public AreaDao(string  codEmpresa):base(codEmpresa)
-        {                     
-           objConexion = Conexion.saberEstado();
+
+        public AreaDao(string codEmpresa) : base(codEmpresa)
+        {
+            objConexion = Conexion.saberEstado();
             ///014BDCOMUN
         }
         public void create(Area obj)
         {
-            
+
             string create = "insert into AREA (AREA_CODIGO,AREA_DESCRIPCION)values('" + obj.AREA_CODIGO + "','" + obj.AREA_DESCRIPCION + "')";
             try
             {
-                comando = new SqlCommand(conexionComun( create), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(create), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -82,7 +79,7 @@ namespace katal.conexion.model.dao
 
         public bool find(Area obj)
         {
-            bool hayRegistros=false;
+            bool hayRegistros = false;
             string find = "select*from AREA where AREA_CODIGO='" + obj.AREA_CODIGO + "' ";
             try
             {
@@ -92,11 +89,11 @@ namespace katal.conexion.model.dao
                 hayRegistros = read.Read();
                 if (hayRegistros)
                 {
-                   
+
                     obj.AREA_CODIGO = read[0].ToString();
                     obj.AREA_DESCRIPCION = read[1].ToString();
                 }
-                
+
             }
             catch (Exception)
             {
@@ -130,7 +127,7 @@ namespace katal.conexion.model.dao
                 }
                 else
                 {
-                    
+
                     return null;
                 }
             }
@@ -143,7 +140,7 @@ namespace katal.conexion.model.dao
             {
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
-            }        
+            }
         }
         public List<Area> findAll()
         {
@@ -197,7 +194,7 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
-    
-    
+
+
     }
 }

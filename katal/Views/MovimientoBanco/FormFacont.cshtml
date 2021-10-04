@@ -1,0 +1,90 @@
+﻿
+
+@Html.DevExpress().PopupControl(
+    settings =>
+    {
+        settings.Name = "FormFaCont";
+        settings.Width = 550;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.CloseOnEscape = true;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "Listado de Plantilla de Cobranza 2";
+        settings.Modal = true;
+        settings.AutoUpdatePosition = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SetContent(() =>
+        {
+
+            @Html.DevExpress().FormLayout(s =>
+            {
+                s.Name = "ModalModeFormLayout1";
+                s.RequiredMarkDisplayMode = RequiredMarkMode.None;
+                s.Width = Unit.Percentage(100);
+                s.Height = Unit.Percentage(100);
+                s.ColumnCount = 6;
+                s.NestedExtensionWidth = Unit.Percentage(100);
+                
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DTasa1";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Tasa(%)";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DDocumento1";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Documento";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DFecha1";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Fecha";
+                    i.NestedExtension().DateEdit(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.ValueChanged = "OnChangeDfecha";
+                    });
+                });
+
+
+
+                s.Items.Add(i =>
+                {
+                    i.ColumnSpan = 6;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.SetNestedContent(() =>
+                    {
+
+                        Html.DevExpress().Button(
+                            buttonSettings =>
+                            {
+                                buttonSettings.Name = "btnTraccion1";
+                                buttonSettings.ControlStyle.CssClass = "button";
+                                buttonSettings.Width = 80;
+                                buttonSettings.Text = "Aceptar";
+                                buttonSettings.ClientSideEvents.Click = "function(s, e){ FormFaCont.Hide(); }";
+                            }
+                        ).Render();
+                    });
+                });
+            }).Render();
+
+        });
+
+    }).GetHtml()
+

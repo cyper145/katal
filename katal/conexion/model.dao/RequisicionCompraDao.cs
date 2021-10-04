@@ -1,39 +1,36 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
-using katal.Model;
 
 namespace katal.conexion.model.dao
 {
     public class RequisicionCompraDao : Obligatorio
     {
-       
+
         List<RequisicionCompra> OrdenCompras;
-        public RequisicionCompraDao(string codEmpresa) :base(codEmpresa)
+        public RequisicionCompraDao(string codEmpresa) : base(codEmpresa)
         {
             if (OrdenCompras == null)
             {
                 OrdenCompras = new List<RequisicionCompra>();
             }
 
-          
-             objConexion = Conexion.saberEstado();
-          
+
+            objConexion = Conexion.saberEstado();
+
         }
         public void create(RequisicionCompra obj)
         {
 
-            string FECREQUI = dateFormat( obj.FECREQUI);
+            string FECREQUI = dateFormat(obj.FECREQUI);
             string SQLC = "INSERT INTO requisc (nrorequi,tiporequi,codsolic,fecrequi,";
             SQLC += "glosa,area, estrequi,prioridad,FecEntrega) VALUES ('" + obj.NROREQUI + "','RQ','" + obj.CODSOLIC + "',";
             SQLC += FECREQUI + ",'";
-            SQLC += obj.GLOSA + "','" + obj.AREA + "','P'," + obj.prioridad+"," +  dateFormat(obj.FecEntrega) + ")";
+            SQLC += obj.GLOSA + "','" + obj.AREA + "','P'," + obj.prioridad + "," + dateFormat(obj.FecEntrega) + ")";
             try
             {
-                comando = new SqlCommand(conexionComun( SQLC), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(SQLC), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -60,7 +57,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand( conexionComun(SQLC), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(SQLC), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -79,18 +76,19 @@ namespace katal.conexion.model.dao
             int nextDocumet = 0;
             string item = "";
             string FECREQUI = obj.FECREQUI.ToString("yyyy/dd/MM");
-            obj.detalles.ForEach(element => {
+            obj.detalles.ForEach(element =>
+            {
                 ++nextDocumet;
-                
+
                 item += "INSERT INTO REQUISD (nrorequi,tiporequi,codpro,cantid,";
                 item += "estrequi,fecreque,descpro,unipro,reqitem, cencost, remaq, saldo,ESPTECNICA) VALUES";
                 item += "('" + obj.NROREQUI + "',";
                 item += " 'RQ','" + element.codpro + "'," + element.CANTID + ",'P',";
                 item += "'" + FECREQUI + "','" + element.DESCPRO + "'";
                 item += ",'" + element.UNIPRO + "'," + nextDocumet + ",'" + element.CENCOST + "', '" + element.REMAQ + "',";
-                item +=  "" + element.SALDO + ",'" +element.ESPTECNICA+ "')\n";             
+                item += "" + element.SALDO + ",'" + element.ESPTECNICA + "')\n";
             });
-           
+
             try
             {
                 comando = new SqlCommand(conexionComun(item), objConexion.getCon());
@@ -135,7 +133,7 @@ namespace katal.conexion.model.dao
             string datec = "null";
             if (date != DateTime.MinValue)
             {
-                datec= "'"+date.ToShortDateString()+"'";
+                datec = "'" + date.ToShortDateString() + "'";
             }
             return datec;
         }
@@ -184,7 +182,7 @@ namespace katal.conexion.model.dao
         }
         public RequisicionCompra find(string codigo)
         {
-            string findAll = "SELECT * FROM requisc where tiporequi = 'RQ' and NROREQUI='"+ codigo+"'";
+            string findAll = "SELECT * FROM requisc where tiporequi = 'RQ' and NROREQUI='" + codigo + "'";
             RequisicionCompra user = null;
             try
             {
@@ -236,20 +234,20 @@ namespace katal.conexion.model.dao
                 {
                     RequisicionCompra user = new RequisicionCompra();
                     user.NROREQUI = read[0].ToString();
-                    user.CODSOLIC = read[1].ToString();                   
-                    user.FECREQUI = DateTime.Parse(read[2].ToString());                   
+                    user.CODSOLIC = read[1].ToString();
+                    user.FECREQUI = DateTime.Parse(read[2].ToString());
                     user.GLOSA = read[3].ToString();
                     user.AREA = read[4].ToString();
                     user.ESTREQUI = read[5].ToString();
                     user.TIPOREQUI = read[6].ToString();
-                    user.prioridad =int.Parse( read[7].ToString());
+                    user.prioridad = int.Parse(read[7].ToString());
                     user.FecEntrega = ParseDateTime(read[8].ToString());
                     user.flgCerrado = int.Parse(read[9].ToString());
-                    user.IndAutorizado = int.Parse(read[10].ToString());        
+                    user.IndAutorizado = int.Parse(read[10].ToString());
                     user.UsrAutoriza = read[11].ToString();
-                    user.comrechazo = read[12].ToString();                  
+                    user.comrechazo = read[12].ToString();
                     OrdenCompras.Add(user);
-   
+
                 }
             }
             catch (Exception)
@@ -353,7 +351,7 @@ namespace katal.conexion.model.dao
         {
             List<DetalleRequisicion> listUsers = new List<DetalleRequisicion>();
 
-           // OrdenCompra ordenCompra = OrdenCompras.Find(X => X.OC_CNUMORD == oc_cnumord);// ver si exite
+            // OrdenCompra ordenCompra = OrdenCompras.Find(X => X.OC_CNUMORD == oc_cnumord);// ver si exite
             string findAll = "SELECT * FROM REQUISD WHERE tiporequi='RQ' AND REQUISD.NROREQUI = '" + NROREQUI + "'";
             try
             {
@@ -370,15 +368,15 @@ namespace katal.conexion.model.dao
                     user.CANTID = ParseDecimal(read[4].ToString());
                     user.ESTREQUI = read[5].ToString();
                     user.FECREQUE = DateTime.Parse(read[6].ToString());
-                    user.REQITEM = int.Parse( read[7].ToString());
+                    user.REQITEM = int.Parse(read[7].ToString());
                     user.SALDO = ParseDecimal(read[8].ToString());
                     user.CENCOST = read[9].ToString();
                     user.GLOSA = read[10].ToString();
                     user.REMAQ = read[11].ToString();
-                    user.TIPOREQUI =read[12].ToString();
+                    user.TIPOREQUI = read[12].ToString();
                     user.ESPTECNICA = read[13].ToString();
                     listUsers.Add(user);
-                }             
+                }
             }
             catch (Exception)
             {
@@ -408,7 +406,7 @@ namespace katal.conexion.model.dao
                 {
                     CentroCosto data = new CentroCosto();
                     data.CENCOST_CODIGO = read[0].ToString();
-                    data.CENCOST_DESCRIPCION = read[1].ToString();                
+                    data.CENCOST_DESCRIPCION = read[1].ToString();
                     list.Add(data);
                 }
             }

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using katal.conexion.model.entity;
 using katal.conexion.model.neg;
-using katal.conexion.model.entity;
 using katal.Model;
 using Newtonsoft.Json;
-using DevExpress.DataAccess.Native.Json;
-using System.Text.RegularExpressions;
-using System.Globalization;
+using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.Mvc;
 
 namespace katal.Controllers
 {
@@ -53,7 +49,8 @@ namespace katal.Controllers
         {
             decimal haber = 0;
             decimal debe = 0;
-            GridViewHelper.contableDets.ForEach(elem => {
+            GridViewHelper.contableDets.ForEach(elem =>
+            {
                 haber += decimal.Parse(elem.campo2);
                 debe += decimal.Parse(elem.campo1);
             });
@@ -150,7 +147,7 @@ namespace katal.Controllers
         private void PerformRegistar()
         {
             Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
-           // comprobanteNeg.Tranferir(comp, GridViewHelper.NivelCOntable);
+            // comprobanteNeg.Tranferir(comp, GridViewHelper.NivelCOntable);
             //userNeg.delete(codigo);
         }
         private void PerformDelete(string codigo)

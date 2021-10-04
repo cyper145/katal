@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace katal.conexion.model.entity
+﻿namespace katal.conexion.model.entity
 {
     public class OrdenFabricacion
     {
@@ -16,6 +11,6 @@ namespace katal.conexion.model.entity
         public string OF_FECHFIN { get; set; }
         public string OF_OBSERV { get; set; }
         public string OF_ESTADO { get; set; }
-       
+
     }
 }

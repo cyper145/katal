@@ -1,14 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using katal.Code.Helpers;
+﻿using katal.Code.Helpers;
 using katal.conexion.model.entity;
 using katal.conexion.model.neg;
 using katal.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace katal.Controllers
 {
@@ -36,10 +34,10 @@ namespace katal.Controllers
         public ActionResult Index()
         {
 
-          
+
             return View(requisicionNeg.findAll(GridViewHelper.dateRange));
         }
-        public ActionResult DataRequisicionPartial( )
+        public ActionResult DataRequisicionPartial()
         {
             GridViewHelper.ClearDetallesRequision();
             return PartialView("DataRequisicionPartial", requisicionNeg.findAll(GridViewHelper.dateRange));
@@ -51,8 +49,8 @@ namespace katal.Controllers
             // obtener  codarticulo             
             var codArticulodata = dataForm["DXMVCEditorsValues"];
 
-            string [] word = codArticulodata.Split(',');
-            string dataRequisicion = codArticulodata[0]+word[11]+","+ word[14] + codArticulodata[codArticulodata.Length-1];
+            string[] word = codArticulodata.Split(',');
+            string dataRequisicion = codArticulodata[0] + word[11] + "," + word[14] + codArticulodata[codArticulodata.Length - 1];
             Dictionary<string, JArray> nodes = JsonConvert.DeserializeObject<Dictionary<string, JArray>>(dataRequisicion);
             JArray solicitante = nodes["gridLookupSolicitante"];
             JArray area = nodes["gridLookupArea"];
@@ -68,20 +66,20 @@ namespace katal.Controllers
                 SafeExecute(() => InsertProduct(product));
             else
             {
-                if(!ModelState.IsValidField("FecEntrega") && ModelState.Count == 1)
-                 {
-                  
+                if (!ModelState.IsValidField("FecEntrega") && ModelState.Count == 1)
+                {
+
                     SafeExecute(() => InsertProduct(product));
-                 }
+                }
                 else
                 {
                     ViewData["EditError"] = "Please, correct all errors.";
                 }
-             
+
             }
             return DataRequisicionPartial();
         }
-        
+
         public void InsertProduct(RequisicionCompra product)
         {
             requisicionNeg.create(product);
@@ -113,7 +111,7 @@ namespace katal.Controllers
         public void UpdateProduct(RequisicionCompra product)
         {
             requisicionNeg.update(product);
-            
+
         }
 
         [ValidateAntiForgeryToken]
@@ -148,7 +146,7 @@ namespace katal.Controllers
         }
 
         // para eñ solicitante
-    
+
         public ActionResult MultiSelectSolicitante(string TCLAVE = "-1")
         {
 
@@ -170,13 +168,13 @@ namespace katal.Controllers
 
         // detalle 
         public ActionResult Detail(string NROREQUI = "-1")
-        {        
+        {
             if (NROREQUI == null)
             {
                 NROREQUI = "-1";
             }
             ViewData["codigoOrden"] = NROREQUI;
-            requisicionCompra = requisicionNeg.find(NROREQUI);         
+            requisicionCompra = requisicionNeg.find(NROREQUI);
             if (requisicionCompra == null)
             {
                 ViewData["codigoOrden"] = NROREQUI;
@@ -214,13 +212,13 @@ namespace katal.Controllers
             //var codCosto = nodes["gridLookupCostos"];
 
             JArray array = (JArray)codArticulo;
-           // JArray arraycosto = (JArray)codCosto;
+            // JArray arraycosto = (JArray)codCosto;
 
             var description = dataForm["gridLookup"];
             product.codpro = array.First.ToString();
             product.DESCPRO = description.ToString();
             product.FECREQUE = DateTime.Now;
-            
+
             // product.CENCOST = arraycosto.First.ToString();
             if (ModelState.IsValid)
                 SafeExecute(() => InsertProduct(product));
@@ -268,7 +266,7 @@ namespace katal.Controllers
 
             DetalleRequisicion detalleOrdenCompra = GridViewHelper.detalleRequisicions.Find(element => element.codpro == product.codpro);
             detalleOrdenCompra.GLOSA = product.GLOSA;
-            detalleOrdenCompra.CANTID = product.CANTID;          
+            detalleOrdenCompra.CANTID = product.CANTID;
             // crear la logica para agregar un producto
         }
         [ValidateInput(false)]
@@ -300,7 +298,7 @@ namespace katal.Controllers
             return PartialView("MultiSelectCentroCostos", new CentroCosto() { CENCOST_CODIGO = CENCOST_CODIGO });
 
         }
-        public ActionResult MultiSelectPartial(string CurrentCategory="")
+        public ActionResult MultiSelectPartial(string CurrentCategory = "")
         {
             if (CurrentCategory == null)
                 CurrentCategory = "";

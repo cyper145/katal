@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.dao;
+﻿using katal.conexion.model.dao;
 using katal.conexion.model.entity;
+using System.Collections.Generic;
 
 namespace katal.conexion.model.neg
 {
@@ -20,11 +17,11 @@ namespace katal.conexion.model.neg
         }
         public void create(Area objUser)
         {
-           
+
             //validar Nombre Alumno estado=2
             string nombre = objUser.AREA_CODIGO;
             if (nombre == null)
-            {          
+            {
                 return;
             }
             objAreaDao.create(objUser);
@@ -45,7 +42,7 @@ namespace katal.conexion.model.neg
             if (nombre == null)
             {
                 return;
-            }        
+            }
             objAreaDao.update(objUser);
 
         }
@@ -66,7 +63,7 @@ namespace katal.conexion.model.neg
         {
             bool verificacion;
             Area objUserAux = new Area();
-            objUserAux.AREA_CODIGO =AREA_CODIGO;
+            objUserAux.AREA_CODIGO = AREA_CODIGO;
             verificacion = objAreaDao.find(objUserAux);
             if (!verificacion)
             {

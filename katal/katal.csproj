@@ -426,6 +426,11 @@
     <Content Include="Views\MovimientoBanco\MultiSelectTipoMoneda.cshtml" />
     <Content Include="Views\MovimientoBanco\MultiSelectCuenta.cshtml" />
     <Content Include="Views\MovimientoBanco\MultiSelectCuentaDestino.cshtml" />
+    <Content Include="Views\MovimientoBanco\partialPopup.cshtml" />
+    <Content Include="Views\MovimientoBanco\FormPlaniCobranza.cshtml" />
+    <Content Include="Views\MovimientoBanco\FormFacont.cshtml" />
+    <Content Include="Views\MovimientoBanco\FormCtasxPagar1.cshtml" />
+    <Content Include="Views\MovimientoBanco\FormCtasxPagar2.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,19 +1,16 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
-using katal.Model;
 
 namespace katal.conexion.model.dao
 {
     public class PaisDao : Obligatorio
     {
 
-        public PaisDao(string codEmpresa) :base( codEmpresa)
+        public PaisDao(string codEmpresa) : base(codEmpresa)
         {
-            
+
 
             objConexion = Conexion.saberEstado();
         }
@@ -39,7 +36,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand(conexionComun( str_sql), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(str_sql), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())

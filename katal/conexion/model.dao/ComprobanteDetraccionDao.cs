@@ -1,12 +1,11 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
-using katal.conexion.model.entity;
-
 namespace katal.conexion.model.dao
 {
-    public class ComprobanteDetraccionDao:Obligatorio
+    public class ComprobanteDetraccionDao : Obligatorio
     {
 
         public ComprobanteDetraccionDao(string codEmpresa) : base(codEmpresa)
@@ -43,7 +42,7 @@ namespace katal.conexion.model.dao
                     area.tipodocu_codigo = read[3].ToString();
                     area.cserie = read[4].ToString();
                     area.cnumero = read[5].ToString();
-                    area.demision = Conversion.ParseDateTime( read[6].ToString());
+                    area.demision = Conversion.ParseDateTime(read[6].ToString());
                     area.tipomon_codigo = read[7].ToString();
                     area.nimporte = Conversion.ParseDecimal(read[8].ToString());
                     area.ntasadetraccion = Conversion.ParseDecimal(read[9].ToString());
@@ -52,8 +51,8 @@ namespace katal.conexion.model.dao
                     area.saldo = Conversion.ParseDecimal(read[12].ToString());
                     area.cod_servdetracc = read[13].ToString();
                     area.cod_tipooperacion = read[14].ToString();
-                    area.estado = read[15].ToString()==""? "Pendiente" : read[15].ToString();
-                    area.restante =Conversion.ParseDecimal( read[16].ToString());
+                    area.estado = read[15].ToString() == "" ? "Pendiente" : read[15].ToString();
+                    area.restante = Conversion.ParseDecimal(read[16].ToString());
                     area.codigo = i;
                     listAreas.Add(area);
                 }
@@ -74,9 +73,10 @@ namespace katal.conexion.model.dao
 
         public void updateDetail(List<ComprobanteDetraccion> obj)
         {
-        
-            string item = "";           
-            obj.ForEach(element => {
+
+            string item = "";
+            obj.ForEach(element =>
+            {
 
                 // anex_codigo
                 //cnumero

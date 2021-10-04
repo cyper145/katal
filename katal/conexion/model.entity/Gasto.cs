@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace katal.conexion.model.entity
+﻿namespace katal.conexion.model.entity
 {
     public class Gasto
     {
@@ -19,9 +14,10 @@ namespace katal.conexion.model.entity
         public string Gastos_Cta2 { get; set; }
 
     }
-    public class GastosIngresos {
+    public class GastosIngresos
+    {
         public string GASING_CODIGO { get; set; }
         public string GASING_DESCRIPCION { get; set; }
-        public string GASING_TIPO { get; set; }     
-    } 
+        public string GASING_TIPO { get; set; }
+    }
 }

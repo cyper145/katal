@@ -1,14 +1,14 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using katal.conexion.model.entity;
 namespace katal.conexion.model.dao
 {
     class RoleDao : Obligatorio
     {
 
         public RoleDao()
-        {           
+        {
             // solo en este caso
             objConexion = Conexion.saberEstado();
         }
@@ -18,7 +18,7 @@ namespace katal.conexion.model.dao
             string create = "insert into dk_roles(id,name,description)values('" + obj.id + "','" + obj.name + "','" + obj.description + "')";
             try
             {
-                comando = new SqlCommand(conexionWenco( create), objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(create), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -57,7 +57,7 @@ namespace katal.conexion.model.dao
             string find = "select*from dk_roles where id='" + obj.id + "' ";
             try
             {
-                comando = new SqlCommand(conexionWenco( find), objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -91,7 +91,7 @@ namespace katal.conexion.model.dao
             Role role = new Role();
             try
             {
-                comando = new SqlCommand(conexionWenco( find), objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -118,7 +118,7 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-            
+
         }
         public List<Role> findAll()
         {

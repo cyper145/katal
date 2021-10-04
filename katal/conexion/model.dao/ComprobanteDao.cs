@@ -1,22 +1,19 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using katal.Model;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
-using katal.Model;
-using Microsoft.VisualBasic;
 
 namespace katal.conexion.model.dao
 {
     public class ComprobanteDao : Obligatorio
     {
 
-       
-        public ComprobanteDao(string codEmpresa):base(codEmpresa)
-        {                   
-          objConexion = Conexion.saberEstado();             
+
+        public ComprobanteDao(string codEmpresa) : base(codEmpresa)
+        {
+            objConexion = Conexion.saberEstado();
         }
 
         //public ComprobanteDao reporte()
@@ -41,7 +38,7 @@ namespace katal.conexion.model.dao
             string verificacion = verificaDoc_cxc(obj.ANEX_CODIGO, obj.TIPODOCU_CODIGO, obj.CSERIE, obj.CNUMERO);
 
             string cCorre = "";
-           
+
             try
             {
                 if (verificacion != "" && verificacion != "El Documento Esta en Cuentas x Pagar")
@@ -105,13 +102,13 @@ namespace katal.conexion.model.dao
                 }
                 else
                     if (obj.CDESTCOMP.Trim() == "006")
-                        {
-                            CadenaD += "" + IIfData(obj.LHONOR, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIMPORTE, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
-                        }
-                        else
-                        {
-                            CadenaD += "" + IIfData(obj.LHONOR, Math.Round(obj.NTOTRH, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
-                        }
+                {
+                    CadenaD += "" + IIfData(obj.LHONOR, Math.Round(obj.NTOTRH, 2) - Math.Round(obj.NIR4, 2) + Math.Round(obj.NIMPORTE, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
+                }
+                else
+                {
+                    CadenaD += "" + IIfData(obj.LHONOR, Math.Round(obj.NTOTRH, 2), Math.Round(obj.NIMPORTE, 2)) + ", ";
+                }
 
                 //   CadenaD += "" + obj.CONVERSION_CODIGO == "ESP" ? obj.TIPOCAMBIO_VALOR  : 0    + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
                 CadenaD += "" + obj.TIPOCAMBIO_VALOR.ToString("F3", CultureInfo.InvariantCulture) + ", '" + obj.CDESCRIPC + "', '" + obj.RESPONSABLE_CODIGO + "', '" + sEstado + "', ";
@@ -143,7 +140,8 @@ namespace katal.conexion.model.dao
                 CadenaD += ",'" + funcBlanco(obj.CNUMORDCO).Trim() + "','" + obj.CO_L_RETE + "',";
 
 
-                if (obj.NTASAIGV == 0) {
+                if (obj.NTASAIGV == 0)
+                {
                     CadenaD += "0,0,0,'','',0,";
                 }
                 else
@@ -160,10 +158,10 @@ namespace katal.conexion.model.dao
                 return true;
             }
             catch (Exception)
-            { 
+            {
                 return false;
                 throw;
-               
+
             }
             finally
             {
@@ -192,7 +190,7 @@ namespace katal.conexion.model.dao
                 xco_c_cenco = planCuenta.PLANCTA_CENTCOST;
                 xco_c_conco = planCuenta.PLANCTA_CON_COSTO;
 
-                if (xco_c_conco!=null)
+                if (xco_c_conco != null)
                 {
                     GastosIngresos gastoIngresos = findGastoIngreso(xco_c_conco);
                     if (gastoIngresos == null)
@@ -320,7 +318,7 @@ namespace katal.conexion.model.dao
             }
             insertDetalle(comprobante, xccodsubdi, mNumerodata);
             updateCom(comprobante, xccodsubdi);
-            transfer(comprobante, anio, mes, xccodsubdi,wco_l_resta,xco_a_glosa, mNumerodata);
+            transfer(comprobante, anio, mes, xccodsubdi, wco_l_resta, xco_a_glosa, mNumerodata);
         }
 
         private void insertCabecera(Comprobante comprobante, TipoCambio tipoCambio, string codigosub, string codigo)
@@ -329,7 +327,7 @@ namespace katal.conexion.model.dao
             {
                 tipoCambio = new TipoCambio();
             }
-            
+
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "CABECERA");
             string csql = $"Insert Into {conexion}(CO_C_SUBDI,CO_C_COMPR,CO_D_FECHA,CO_A_GLOSA,CO_C_MONED,";
             csql += "CO_C_CONVE,CO_D_FECCA,CO_N_DEBE,co_n_haber,co_n_debus,co_n_habus,";
@@ -489,7 +487,8 @@ namespace katal.conexion.model.dao
             string item = "";
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "DETALLE");
 
-            detalles.ForEach(element => {
+            detalles.ForEach(element =>
+            {
                 // validacion de codigo de serie
 
                 string Documento = fValNull(element.CTIPDOC) + element.CSERDOC + fValNull(element.CNUMDOC);
@@ -623,7 +622,7 @@ namespace katal.conexion.model.dao
             csql += " where  camesproc='" + comprobante.CAMESPROC + "' and corden='" + comprobante.CORDEN + "'";
             try
             {
-                comando = new SqlCommand(conexionComun( csql), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(csql), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -639,7 +638,7 @@ namespace katal.conexion.model.dao
         }
 
 
-        private void transfer(Comprobante comprobante, int anio, int mes, string xccodsubdi, bool wco_l_resta, string glosa,string xco_c_numer)
+        private void transfer(Comprobante comprobante, int anio, int mes, string xccodsubdi, bool wco_l_resta, string glosa, string xco_c_numer)
         {
             string BDMovCab = "CABMOV" + mes.ToString("00.##");
             string BDMovCab2 = "DETMOV" + mes.ToString("00.##");
@@ -660,13 +659,13 @@ namespace katal.conexion.model.dao
                 numero = cabecera.CO_C_COMPR;
             }
             INSERTBDMovCab(comprobante, anio, BDMovCab, cabecera, numero);
-            INSERTBDMovDet(comprobante, conexion1, anio,mes, xccodsubdi, numero);
+            INSERTBDMovDet(comprobante, conexion1, anio, mes, xccodsubdi, numero);
             //Si este movimiento va a compras hacer : ....
             updateComCompCon(comprobante, numero);
             if (comprobante.ESTCOMPRA)
             {
                 string mess = mes.ToString("00.##");
-                guardarCompra(comprobante, xccodsubdi, anio , mess, numero, wco_l_resta, glosa, xco_c_numer);
+                guardarCompra(comprobante, xccodsubdi, anio, mess, numero, wco_l_resta, glosa, xco_c_numer);
             }
 
             //
@@ -678,7 +677,7 @@ namespace katal.conexion.model.dao
             updateComEstado(comprobante);
 
 
-          
+
             /* guardado para cuentas por pagar
             Set rsEmp = New ADODB.Recordset 'Verifica de que exista BDContabilidad antes de hacer el enlace
         Set rsEmp = cConeWenco.Execute("exec sp_existebasededatos '" & VGEMP_CODIGO & "BDCTAPAG'")
@@ -707,14 +706,15 @@ namespace katal.conexion.model.dao
         {
             List<ContableDet> detalles = findContableDet();
             string csql = "";
-            
-            
-            detalles.ForEach(element => {
+
+
+            detalles.ForEach(element =>
+            {
                 // validacion de codigo de serie
 
                 csql = "Insert Into ComprobanteDet (EMP_CODIGO,CORDEN,CNROITEM,TIPODOCU_CODIGO,";
-                csql +=  "CCODPROVE,CSERIE,CNUMERO,CTIPPROV,NVALOR,CCONCEPT,Subdiario_Codigo,";
-                csql +=  "Cencost_Codigo,CCODCONTA,CCTADEST,CTIPO,CGLOSA,CAMESPROC,COMPCON,Anex_Codigo,CANEXO,ORDENFAB, codmaquina, cantidad) Values(";
+                csql += "CCODPROVE,CSERIE,CNUMERO,CTIPPROV,NVALOR,CCONCEPT,Subdiario_Codigo,";
+                csql += "Cencost_Codigo,CCODCONTA,CCTADEST,CTIPO,CGLOSA,CAMESPROC,COMPCON,Anex_Codigo,CANEXO,ORDENFAB, codmaquina, cantidad) Values(";
                 csql += "'" + fValNull(comprobante.EMP_CODIGO) + "',";
                 csql += "'" + fValNull(comprobante.CORDEN) + "',";
                 csql += "'" + fValNull(element.CNROITEM) + "',";
@@ -726,8 +726,8 @@ namespace katal.conexion.model.dao
                 csql += "" + numericFormat(element.NVALOR) + ",";
                 csql += "'" + fValNull(comprobante.CCONCEPT) + "',";
 
-                csql +=  "'" + fValNull(element.CCODSUBDI) + "',";
-                csql +=  "'" + fValNull(element.CCOSTO) + "',";
+                csql += "'" + fValNull(element.CCODSUBDI) + "',";
+                csql += "'" + fValNull(element.CCOSTO) + "',";
                 csql += "'" + fValNull(element.CCODCONTA) + "',";
                 csql += "'" + fValNull(element.CCTADEST) + "',";
                 csql += "'" + fValNull(element.CTIPO) + "',";
@@ -743,7 +743,7 @@ namespace katal.conexion.model.dao
             });
             try
             {
-                comando = new SqlCommand(conexionComun( csql), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(csql), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -788,7 +788,7 @@ namespace katal.conexion.model.dao
 
             string csql = $"Update COMPROBANTECAB set ";
             csql += " CESTADO='" + 3 + "' ";
-            csql += " where  camesproc='" + comprobante.CAMESPROC + "' and corden='" + comprobante.CORDEN +  "' AND CESTADO<>'4' AND CESTADO<>'2'";
+            csql += " where  camesproc='" + comprobante.CAMESPROC + "' and corden='" + comprobante.CORDEN + "' AND CESTADO<>'4' AND CESTADO<>'2'";
             try
             {
                 comando = new SqlCommand(conexionComun(csql), objConexion.getCon());
@@ -806,7 +806,7 @@ namespace katal.conexion.model.dao
             }
         }
 
-        private void guardarCompra(Comprobante comprobante, string xccodsubdi,int  anio , string mesFormat,string numero, bool wco_l_resta, string glosa, string xco_c_numer)
+        private void guardarCompra(Comprobante comprobante, string xccodsubdi, int anio, string mesFormat, string numero, bool wco_l_resta, string glosa, string xco_c_numer)
         {
             string CDOCUM;
             string CDOCUM1;
@@ -821,7 +821,7 @@ namespace katal.conexion.model.dao
             {
                 Cadena = comprobante.CSERIE.Trim();
                 lcadena = Cadena.Length;
-                CSERIE = rellenar(Cadena, 4,lcadena," ",true);
+                CSERIE = rellenar(Cadena, 4, lcadena, " ", true);
                 CDOCUM = CSERIE + comprobante.CNUMERO;
                 CDOCUM1 = comprobante.CSERREFER + comprobante.CNUMREFER;
             }
@@ -838,21 +838,22 @@ namespace katal.conexion.model.dao
             csql += "CO_N_TASA, CO_C_CONVE, CO_N_TIPCA, CO_N_CAMES, CO_D_FECCA, CO_A_GLOSA, CO_A_MOVIM, CO_C_RUC, ";
             csql += "CO_A_RAZON, CO_C_DESTI, CO_N_PORCE, CO_L_APLIC, CO_N_VALCI, NPERCEPCION";
 
-            if(existeColumna(anio, "COMPRAS", "CO_D_FECHAVTO")){
+            if (existeColumna(anio, "COMPRAS", "CO_D_FECHAVTO"))
+            {
                 csql += ",CO_D_FECHAVTO";
             }
-            if(existeColumna(anio, "COMPRAS", "CO_L_RETE"))
+            if (existeColumna(anio, "COMPRAS", "CO_L_RETE"))
             {
                 csql += ",CO_L_RETE";
             }
 
             csql += ",CO_NUM_RETRAC, CO_FEC_RETRAC,CO_L_DETRACCION,CO_N_TASADETRACC,CO_N_IMPORTEREF,RCO_TIPO,RCO_SERIE,RCO_NUMERO,";
             csql += "RCO_FECHA,";
-            csql +=  "flg_RNTNODOMICILIADO,CO_L_ANULA) VALUES(";
+            csql += "flg_RNTNODOMICILIADO,CO_L_ANULA) VALUES(";
             csql += "'" + fValNull(comprobante.CCODCONTA) + "', ";
             csql += "'" + fValNull(mesFormat) + "', ";
             csql += "'" + fValNull(xccodsubdi) + "', ";
-            csql +=  "'" +numero + "', ";
+            csql += "'" + numero + "', ";
             csql += "" + dateFormat(comprobante.DRECEPCIO) + ", ";
 
             if (comprobante.CCODRUC.Trim() != "")
@@ -861,13 +862,13 @@ namespace katal.conexion.model.dao
                 csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',"; //'  TO FIELD  CO_C_TPDOC,
 
                 if (fValNull(CDOCUM) != " ")
-                    csql +=  "'" + fValNull(CDOCUM) + "', "; // TO FIELD  CO_C_DOCUM,
+                    csql += "'" + fValNull(CDOCUM) + "', "; // TO FIELD  CO_C_DOCUM,
                 else
-                    csql +=  "' ', ";// TO FIELD CO_C_DOCUM,
-                csql +=  "1, "; // TO FIELD CO_L_REFER,
-                csql +=  "'" + fValNull(comprobante.CTDREFER) + "', ";
+                    csql += "' ', ";// TO FIELD CO_C_DOCUM,
+                csql += "1, "; // TO FIELD CO_L_REFER,
+                csql += "'" + fValNull(comprobante.CTDREFER) + "', ";
                 csql += "'" + fValNull(comprobante.CSERREFER + comprobante.CNUMREFER) + "', ";
-                csql +=  "" + dateFormat(comprobante.DEMISION) + ", ";
+                csql += "" + dateFormat(comprobante.DEMISION) + ", ";
             }
             else
             {
@@ -888,11 +889,11 @@ namespace katal.conexion.model.dao
                     {
                         case "006": // Honorarios con 4ta Categ. e IES:
                             {
-                                csql += "" +numericFormat(comprobante.NTOTRH  - comprobante.NIR4  - comprobante.NIES* -1) + ", ";
-                                csql += "" +numericFormat(comprobante.NIGV  * -1) + ", ";
-                                if (comprobante.TIPOCAMBIO_VALOR!= 0)
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
+                                if (comprobante.TIPOCAMBIO_VALOR != 0)
                                 {
-                                    csql += "" + numericFormat((comprobante.NTOTRH  - comprobante.NIR4  - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR)* -1) + ", ";
+                                    csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
                                     csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
                                 }
                                 else
@@ -907,11 +908,11 @@ namespace katal.conexion.model.dao
                         case "007": // Honorario afec. sólo por 4ta categ.
 
                             {
-                                csql += "" + numericFormat(comprobante.NTOTRH  - comprobante.NIR4 * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIR4 * -1) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
                                 if (comprobante.TIPOCAMBIO_VALOR != 0)
                                 {
-                                    csql += "" + numericFormat((comprobante.NTOTRH  - comprobante.NIR4 ) / (comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
+                                    csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) / (comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
                                     csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) * -1) + ", ";
                                 }
                                 else
@@ -924,7 +925,7 @@ namespace katal.conexion.model.dao
                             }
 
                         case "008": // Honorario afec. sólo por IES
-                 
+
                             {
                                 csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIES * -1) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
@@ -953,8 +954,8 @@ namespace katal.conexion.model.dao
                                 }
                                 else
                                 {
-                                    csql +=  "" + numericFormat(0) + ", ";
-                                    csql +=  "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
+                                    csql += "" + numericFormat(0) + ", ";
                                 }
 
                                 break;
@@ -966,12 +967,12 @@ namespace katal.conexion.model.dao
                     switch (comprobante.CDESTCOMP)
                     {
                         case "006":// Honorarios con 4ta Categ. e IES
-                       
+
                             {
-                                csql +=  "" + numericFormat((comprobante.NTOTRH  - comprobante.NIR4 - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
-                                csql +=  "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
-                                csql +=  "" + numericFormat((comprobante.NTOTRH  - comprobante.NIR4 - comprobante.NIES) * -1) + ", ";
-                                csql +=  "" + numericFormat(comprobante.NIGV * -1) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) * -1) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
                                 break;
                             }
 
@@ -983,18 +984,18 @@ namespace katal.conexion.model.dao
                                 csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) * -1) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
 
-                              
+
                                 break;
                             }
 
                         case "008": // Honorario afec. sólo por IES
                             {
-                                csql += "" + numericFormat((comprobante.NTOTRH  - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
-                                csql += "" + numericFormat((comprobante.NTOTRH  - comprobante.NIES) * -1) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) * -1) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
 
-                                
+
                                 break;
                             }
 
@@ -1004,7 +1005,7 @@ namespace katal.conexion.model.dao
                                 csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR * -1) + ", ";
                                 csql += "" + numericFormat((comprobante.NIMPORTE) * -1) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
-                                
+
                                 break;
                             }
                     }
@@ -1021,12 +1022,12 @@ namespace katal.conexion.model.dao
                     {
                         case "006": // Honorarios con 4ta Categ. e IES:
                             {
-                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES ) + ", ";
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV) + ", ";
                                 if (comprobante.TIPOCAMBIO_VALOR != 0)
                                 {
-                                    csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR) ) + ", ";
-                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                    csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR)) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR)) + ", ";
                                 }
                                 else
                                 {
@@ -1040,12 +1041,12 @@ namespace katal.conexion.model.dao
                         case "007": // Honorario afec. sólo por 4ta categ.
 
                             {
-                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIR4 ) + ", ";
-                                csql += "" + numericFormat(comprobante.NIGV ) + ", ";
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIR4) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV) + ", ";
                                 if (comprobante.TIPOCAMBIO_VALOR != 0)
                                 {
                                     csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) / (comprobante.TIPOCAMBIO_VALOR)) + ", ";
-                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR)) + ", ";
                                 }
                                 else
                                 {
@@ -1059,12 +1060,12 @@ namespace katal.conexion.model.dao
                         case "008": // Honorario afec. sólo por IES
 
                             {
-                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIES ) + ", ";
-                                csql += "" + numericFormat(comprobante.NIGV ) + ", ";
+                                csql += "" + numericFormat(comprobante.NTOTRH - comprobante.NIES) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV) + ", ";
                                 if (comprobante.TIPOCAMBIO_VALOR != 0)
                                 {
                                     csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) / (comprobante.TIPOCAMBIO_VALOR)) + ", ";
-                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                    csql += "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR)) + ", ";
                                 }
                                 else
                                 {
@@ -1077,12 +1078,12 @@ namespace katal.conexion.model.dao
 
                         default:
                             {
-                                csql = csql + "" + numericFormat(comprobante.NIMPORTE ) + ", ";
-                                csql = csql + "" + numericFormat(comprobante.NIGV ) + ", ";
+                                csql = csql + "" + numericFormat(comprobante.NIMPORTE) + ", ";
+                                csql = csql + "" + numericFormat(comprobante.NIGV) + ", ";
                                 if (comprobante.TIPOCAMBIO_VALOR != 0)
                                 {
                                     csql = csql + "" + numericFormat((comprobante.NIMPORTE / comprobante.TIPOCAMBIO_VALOR)) + ", ";
-                                    csql = csql + "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR) ) + ", ";
+                                    csql = csql + "" + numericFormat((comprobante.NIGV / comprobante.TIPOCAMBIO_VALOR)) + ", ";
                                 }
                                 else
                                 {
@@ -1101,19 +1102,19 @@ namespace katal.conexion.model.dao
                         case "006":// Honorarios con 4ta Categ. e IES
 
                             {
-                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR) + ", ";
-                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES) ) + ", ";
-                                csql += "" + numericFormat(comprobante.NIGV ) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES)) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV) + ", ";
                                 break;
                             }
 
                         case "007": // Honorario afec. sólo por 4ta categ.
-                 
+
                             {
-                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) * comprobante.TIPOCAMBIO_VALOR ) + ", ";
-                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR ) + ", ";
-                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) ) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4) * comprobante.TIPOCAMBIO_VALOR) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIR4)) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
 
 
@@ -1122,9 +1123,9 @@ namespace katal.conexion.model.dao
 
                         case "008": // Honorario afec. sólo por IES
                             {
-                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR ) + ", ";
-                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR ) + ", ";
-                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) ) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES) * comprobante.TIPOCAMBIO_VALOR) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR) + ", ";
+                                csql += "" + numericFormat((comprobante.NTOTRH - comprobante.NIES)) + ", ";
                                 csql += "" + numericFormat(comprobante.NIGV * -1) + ", ";
 
 
@@ -1133,10 +1134,10 @@ namespace katal.conexion.model.dao
 
                         default:
                             {
-                                csql += "" + numericFormat((comprobante.NIMPORTE) * comprobante.TIPOCAMBIO_VALOR ) + ", ";
-                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR ) + ", ";
-                                csql += "" + numericFormat((comprobante.NIMPORTE) ) + ", ";
-                                csql += "" + numericFormat(comprobante.NIGV ) + ", ";
+                                csql += "" + numericFormat((comprobante.NIMPORTE) * comprobante.TIPOCAMBIO_VALOR) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV * comprobante.TIPOCAMBIO_VALOR) + ", ";
+                                csql += "" + numericFormat((comprobante.NIMPORTE)) + ", ";
+                                csql += "" + numericFormat(comprobante.NIGV) + ", ";
 
                                 break;
                             }
@@ -1150,11 +1151,11 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.CONVERSION_CODIGO) + "', ";
 
             if (comprobante.TIPOMON_CODIGO == "MN")
-                csql += "" + numericFormat(1 / comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                csql += "" + numericFormat(1 / comprobante.TIPOCAMBIO_VALOR) + ", ";
             else
-                csql += "" + numericFormat( comprobante.TIPOCAMBIO_VALOR) + ", ";
+                csql += "" + numericFormat(comprobante.TIPOCAMBIO_VALOR) + ", ";
             if (comprobante.CONVERSION_CODIGO == "ESP")
-                csql +=  "" + numericFormat(comprobante.TIPOCAMBIO_VALOR ) + ", ";
+                csql += "" + numericFormat(comprobante.TIPOCAMBIO_VALOR) + ", ";
             else
                 csql += "" + 0 + ", ";
             csql += ternario(comprobante.CONVERSION_CODIGO == "FEC", "" + dateFormat(comprobante.DCONTAB) + ", ", "NULL, ");
@@ -1178,10 +1179,10 @@ namespace katal.conexion.model.dao
             else
                 csql += "" + numericFormat(0) + ", ";
             if (comprobante.CIGVAPLIC)
-                csql +=  "1, ";
+                csql += "1, ";
             else
                 csql += "0, ";
-            csql +=  "" + numericFormat(comprobante.NVALCIF) + "," + numericFormat(comprobante.NPERCEPCION);
+            csql += "" + numericFormat(comprobante.NVALCIF) + "," + numericFormat(comprobante.NPERCEPCION);
             if (existeColumna(anio, "CO_D_FECHAVTO", "COMPRAS"))
                 csql += "," + dateFormat(comprobante.DVENCE) + "";
             if (existeColumna(anio, "CO_L_RETE", "COMPRAS"))
@@ -1192,7 +1193,7 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.RCO_TIPO) + "', ";
             csql += "'" + fValNull(comprobante.RCO_SERIE) + "', ";
             csql += "'" + fValNull(comprobante.RCO_NUMERO) + "', ";
-            csql +=  "" + dateFormat(comprobante.RCO_FECHA) + ", ";
+            csql += "" + dateFormat(comprobante.RCO_FECHA) + ", ";
             csql += "" + comprobante.flg_RNTNODOMICILIADO + ",0) ";
             try
             {
@@ -1281,15 +1282,15 @@ namespace katal.conexion.model.dao
             }
         }
 
-        public void INSERTBDMovCab(Comprobante comprobante, int anio, string mes,Cabecera cabecera ,string  numero)
+        public void INSERTBDMovCab(Comprobante comprobante, int anio, string mes, Cabecera cabecera, string numero)
         {
-            
+
             if (cabecera != null)
             {
                 string csql = $"Insert Into {mes} (SUBDIAR_CODIGO,CMOV_FECHA,CMOV_FECCA,CMOV_C_COMPR,CMOV_MONED,CMOV_CONVE,CMOV_CAMES,";
                 csql += "CMOV_TIPCA,CMOV_GLOSA,CMOV_DEBE,CMOV_HABER,CMOV_DEBUS,CMOV_HABUS,CMOV_L_COMPR,FECH_VCTO) Values(";
                 csql += "'" + fValNull(cabecera.CO_C_SUBDI) + "',";
-                csql += "" + dateFormat(cabecera.CO_D_FECHA) + ","; 
+                csql += "" + dateFormat(cabecera.CO_D_FECHA) + ",";
                 csql += "" + dateFormat(cabecera.CO_D_FECCA) + ",";
                 csql += "'" + numero + "',";
                 csql += "'" + fValNull(cabecera.CO_C_MONED) + "',";
@@ -1312,7 +1313,7 @@ namespace katal.conexion.model.dao
                 }
                 try
                 {
-                    comando = new SqlCommand(conexionBDCONT( csql, anio), objConexion.getCon());
+                    comando = new SqlCommand(conexionBDCONT(csql, anio), objConexion.getCon());
                     objConexion.getCon().Open();
                     comando.ExecuteNonQuery();
                 }
@@ -1327,32 +1328,33 @@ namespace katal.conexion.model.dao
                 }
             }
         }
-        public void INSERTBDMovDet(Comprobante comprobante, string conexion, int anio, int mes, string codSub,string  MNUMERO)
+        public void INSERTBDMovDet(Comprobante comprobante, string conexion, int anio, int mes, string codSub, string MNUMERO)
         {
             string mess = mes.ToString("00.##");
-            string tabla = "DETMOV"+ mess;
+            string tabla = "DETMOV" + mess;
             // traer la cabecera
             List<Detalle> detalles = findDetalle();
             Cabecera cabecera = findCabecera();
             string item = "";
             if (detalles != null)
             {
-                detalles.ForEach(element => {
+                detalles.ForEach(element =>
+                {
                     // validacion de codigo de serie
                     string ANEXO = verdata($"PLANCTA_CODIGO=' {element.CO_C_CUENT} '", "plan_cuenta_nacional", 1, "TIPOANEX_CODIGO");
 
                     item += $"Insert Into {tabla} (SUBDIAR_CODIGO,DMOV_C_COMPR,DMOV_SECUE,DMOV_FECDC,DMOV_FECHA,DMOV_FECVEN,";
                     item += "DMOV_GLOSA,DMOV_DEBE,DMOV_DEBUS,DMOV_HABER,DMOV_HABUS,DMOV_CUENT,DMOV_DOCUM,DMOV_CENCO,DMOV_ANEXO,DMOV_C_DESTI,DMOV_L_COMPR,DMOV_C_ORDEN) Values(";
-                    item += "'"+ fValNull(element.CO_C_SUBDI) + "',";
-                    item +=  "'" + MNUMERO + "',";
-                    item +=  "'" + fValNull(element.CO_C_SECUE) + "',";
-                    item +=  " " + dateFormat(element.CO_D_FECDC) + " ,";
+                    item += "'" + fValNull(element.CO_C_SUBDI) + "',";
+                    item += "'" + MNUMERO + "',";
+                    item += "'" + fValNull(element.CO_C_SECUE) + "',";
+                    item += " " + dateFormat(element.CO_D_FECDC) + " ,";
                     item += "" + dateFormat(element.CO_D_FECHA) + "," + dateFormat(element.FECHAVENC) + ",";
                     item += "'" + fValNull(element.CO_A_GLOSA) + "',";
                     item += "" + numericFormat(element.CO_N_DEBE) + ",";
-                    item += "" + numericFormat(element.co_n_debus ) + ",";
-                    item += "" + numericFormat(element.co_n_haber ) + ",";
-                    item += "" + numericFormat(element.co_n_habus ) + ",";
+                    item += "" + numericFormat(element.co_n_debus) + ",";
+                    item += "" + numericFormat(element.co_n_haber) + ",";
+                    item += "" + numericFormat(element.co_n_habus) + ",";
                     item += "'" + fValNull(element.CO_C_CUENT) + "',";
                     item += "'" + fValNull(element.CO_C_DOCUM) + "',";
                     item += "'" + fValNull(element.CO_C_CENCO) + "',";
@@ -1396,7 +1398,7 @@ namespace katal.conexion.model.dao
 
         private Cabecera findCabecera()
         {
-           
+
 
             Cabecera plan = null;
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "CABECERA");
@@ -1411,7 +1413,7 @@ namespace katal.conexion.model.dao
                     plan = new Cabecera();
                     plan.CO_C_SUBDI = read[0].ToString();
                     plan.CO_C_COMPR = read[1].ToString();
-                    plan.CO_D_FECHA =Conversion.ParseDateTime( read[2].ToString());
+                    plan.CO_D_FECHA = Conversion.ParseDateTime(read[2].ToString());
                     plan.CO_A_GLOSA = read[3].ToString();
                     plan.CO_C_MONED = read[4].ToString();
                     plan.CO_C_CONVE = read[5].ToString();
@@ -1424,7 +1426,7 @@ namespace katal.conexion.model.dao
                     plan.CO_N_CAMES = read[12].ToString();
                     plan.CO_L_COMPR = Conversion.ParseBool(read[13].ToString());
                     plan.FECH_VEN = Conversion.ParseDateTime(read[14].ToString());
-                
+
 
                 }
             }
@@ -1440,19 +1442,19 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-          
+
 
         }
 
 
-        private List<Detalle>  findDetalle()
+        private List<Detalle> findDetalle()
         {
 
-            List<Detalle> detalles = new List<Detalle>();          
+            List<Detalle> detalles = new List<Detalle>();
             string csql = $"SELECT * from detalle  ";
             try
             {
-                comando = new SqlCommand(conexionWenco( csql), objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(csql), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -1537,7 +1539,7 @@ namespace katal.conexion.model.dao
             }
         }
 
-       
+
 
         private EjercicioContable findEContable(int anio)
         {
@@ -1556,7 +1558,7 @@ namespace katal.conexion.model.dao
                     plan.EJERCICIO_CONTABLE = read[0].ToString();
                     plan.EJECONT_ANO = read[1].ToString();
                     plan.EJECONT_CIERRE = read[2].ToString();
-                    plan.EJECONT_INICIO =Conversion.ParseDateTime( read[3].ToString());
+                    plan.EJECONT_INICIO = Conversion.ParseDateTime(read[3].ToString());
                     plan.EJECONT_FINAL = Conversion.ParseDateTime(read[4].ToString());
 
                 }
@@ -1573,19 +1575,19 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-           
+
         }
 
-        private string mNumero(int anio, int mes , string codSub)
+        private string mNumero(int anio, int mes, string codSub)
         {
-            
+
             string MNUMERO = "0001";
             int numer = 0;
             string mess = mes.ToString("00.##");
-            string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV"+ mess);
+            string conexion = Conexion.CadenaGeneral("014", "BDCONT" + anio, "CABMOV" + mess);
 
             string csql = $"Select MAX(CMOV_C_COMPR) AS MAXCOMPR from {conexion} where SUBDIAR_CODIGO='{codSub}'";
-            
+
             try
             {
                 comando = new SqlCommand(csql, objConexion.getCon());
@@ -1597,7 +1599,7 @@ namespace katal.conexion.model.dao
                     numer = int.Parse(read[0].ToString()) + 1;
                     MNUMERO = numer.ToString("0000.##");
                 }
-                
+
             }
             catch (Exception)
             {
@@ -1614,7 +1616,7 @@ namespace katal.conexion.model.dao
         }
         private string mNumeroBDMovCab(int anio, int mes, string codSub)
         {
-           
+
             int numero = 0;
             string MNUMERO = "0001";
             string mess = mes.ToString("00.##");
@@ -1630,8 +1632,8 @@ namespace katal.conexion.model.dao
                 if (read.Read())
                 {
 
-                    numero = int.Parse( read[0].ToString()) + 1;
-                    MNUMERO= numero.ToString("0000.##");
+                    numero = int.Parse(read[0].ToString()) + 1;
+                    MNUMERO = numero.ToString("0000.##");
                 }
 
             }
@@ -1648,7 +1650,7 @@ namespace katal.conexion.model.dao
             return MNUMERO;
         }
 
-        private CabMov findCabMov(int anio,int  mes ,string codsu,  string codigo)
+        private CabMov findCabMov(int anio, int mes, string codsu, string codigo)
         {
 
             CabMov plan = null;
@@ -1665,7 +1667,7 @@ namespace katal.conexion.model.dao
                     plan = new CabMov();
                     plan.SUBDIAR_CODIGO = read[0].ToString();
                     plan.CMOV_C_COMPR = read[1].ToString();
-                    plan.CMOV_FECHA =Conversion.ParseDateTime( read[2].ToString());
+                    plan.CMOV_FECHA = Conversion.ParseDateTime(read[2].ToString());
                     plan.CMOV_GLOSA = read[3].ToString();
                     plan.CMOV_MONED = read[4].ToString();
                     plan.CMOV_CONVE = read[5].ToString();
@@ -1676,13 +1678,13 @@ namespace katal.conexion.model.dao
                     plan.CMOV_HABER = read[10].ToString();
                     plan.CMOV_DEBUS = read[11].ToString();
                     plan.CMOV_HABUS = read[12].ToString();
-                    plan.CMOV_AUTOM =Conversion.ParseBool(  read[13].ToString());
-                    plan.CMOV_COSTO = Conversion.ParseBool(  read[14].ToString());
-                    plan.CMOV_CHEQU = Conversion.ParseBool(  read[15].ToString());
-                    plan.CMOV_L_COMPR = Conversion.ParseBool(  read[16].ToString());
-                    plan.CMOV_VENTA = Conversion.ParseBool(  read[17].ToString());
-                    plan.FECH_VCTO = Conversion.ParseBool(  read[18].ToString());
-                    plan.CMOV_CAJAB = Conversion.ParseBool(  read[19].ToString());
+                    plan.CMOV_AUTOM = Conversion.ParseBool(read[13].ToString());
+                    plan.CMOV_COSTO = Conversion.ParseBool(read[14].ToString());
+                    plan.CMOV_CHEQU = Conversion.ParseBool(read[15].ToString());
+                    plan.CMOV_L_COMPR = Conversion.ParseBool(read[16].ToString());
+                    plan.CMOV_VENTA = Conversion.ParseBool(read[17].ToString());
+                    plan.FECH_VCTO = Conversion.ParseBool(read[18].ToString());
+                    plan.CMOV_CAJAB = Conversion.ParseBool(read[19].ToString());
                     plan.CMOV_MEDIO = read[20].ToString();
                     plan.CMOV_DMEDIO = read[21].ToString();
 
@@ -1702,7 +1704,7 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-           
+
         }
 
         private TipoCambio findTcamabio(DateTime Demision)
@@ -1710,7 +1712,7 @@ namespace katal.conexion.model.dao
 
             TipoCambio plan = null;
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "TIPO_CAMBIO");
-            string csql = $"SELECT * from {conexion}  WHERE  TIPOMON_CODIGO = 'ME' AND TIPOCAMB_FECHA ={dateFormat( Demision)} ";
+            string csql = $"SELECT * from {conexion}  WHERE  TIPOMON_CODIGO = 'ME' AND TIPOCAMB_FECHA ={dateFormat(Demision)} ";
             try
             {
                 comando = new SqlCommand(csql, objConexion.getCon());
@@ -1725,7 +1727,7 @@ namespace katal.conexion.model.dao
                     plan.TIPOCAMB_EQCOMPRA = Conversion.ParseDecimal(read[3].ToString());
                     plan.TIPOCAMB_VENTA = Conversion.ParseDecimal(read[4].ToString());
                     plan.TIPOCAMB_EQVENTA = Conversion.ParseDecimal(read[5].ToString());
-                 
+
 
                 }
             }
@@ -1741,16 +1743,16 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-           
+
         }
-        public  GastosIngresos findGastoIngreso( string codigo)
+        public GastosIngresos findGastoIngreso(string codigo)
         {
 
             GastosIngresos plan = null;
             string csql = $"SELECT * from GASTOS_INGRESOS  WHERE  GASING_CODIGO = '{codigo }' ";
             try
             {
-                comando = new SqlCommand(conexionContabilidad( csql), objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad(csql), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -1759,7 +1761,7 @@ namespace katal.conexion.model.dao
                     plan.GASING_CODIGO = read[0].ToString();
                     plan.GASING_DESCRIPCION = read[1].ToString();
                     plan.GASING_TIPO = read[2].ToString();
-                  
+
                 }
             }
             catch (Exception)
@@ -1774,9 +1776,9 @@ namespace katal.conexion.model.dao
             }
             return plan;
 
-           
+
         }
-       
+
         public int boolToInt(bool val)
         {
             return val ? 1 : 0;
@@ -1787,7 +1789,7 @@ namespace katal.conexion.model.dao
             try
             {
                 string CadenaD = "SELECT EDOC_OBLIGA FROM ESTADODOC WHERE EDOC_CLAVE = '1'";
-                comando = new SqlCommand(conexionComun( CadenaD), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(CadenaD), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader readinterno = comando.ExecuteReader();
                 if (readinterno.Read())
@@ -1909,7 +1911,7 @@ namespace katal.conexion.model.dao
             }
 
         }
-        public  void Trasferencia_CxP (string cCorre,string  txtTpoDcto,  string txtSerie, string txtNumero, string txNumDetraccion,bool detraacion , decimal TxtTasaDet, decimal TxTImporteRef, DateTime datedetraccion)
+        public void Trasferencia_CxP(string cCorre, string txtTpoDcto, string txtSerie, string txtNumero, string txNumDetraccion, bool detraacion, decimal TxtTasaDet, decimal TxTImporteRef, DateTime datedetraccion)
         {
 
         }
@@ -1919,7 +1921,7 @@ namespace katal.conexion.model.dao
             string cadena = "SELECT Concepto_Logico FROM CONCEPTOGRAL WHERE Concepto_Codigo='NUMEAUTO'";
             try
             {
-                comando = new SqlCommand(conexionComun( cadena), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(cadena), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 bool hayRegistros = read.Read();
@@ -2045,7 +2047,7 @@ namespace katal.conexion.model.dao
                     comp.CSALDINI = Conversion.ParseBool(read[36].ToString());
                     comp.CODCAJCH = read[37].ToString();
                     comp.DIASPAGO = Conversion.ParseDecimal(read[38].ToString());
-                    comp.CIGVAPLIC = converionBool(  read[39].ToString());
+                    comp.CIGVAPLIC = converionBool(read[39].ToString());
                     comp.CAMESPROC = read[40].ToString();
                     comp.CCONCEPT = read[41].ToString();
                     comp.DFECREF = Conversion.ParseDateTime(read[42].ToString());
@@ -2124,9 +2126,9 @@ namespace katal.conexion.model.dao
                 return true;
             }
         }
-        private string  converionBoolReci(bool dale)
+        private string converionBoolReci(bool dale)
         {
-            if (dale )
+            if (dale)
             {
                 return "S";
             }
@@ -2146,13 +2148,13 @@ namespace katal.conexion.model.dao
                 return 0;
             }
         }
-        public Comprobante findAllConta(string sCorrelativo , string TIPODOCU_CODIGO, string CSERIE,string CNUMERO)
+        public Comprobante findAllConta(string sCorrelativo, string TIPODOCU_CODIGO, string CSERIE, string CNUMERO)
         {
             DateTime date = DateTime.Now;
             Comprobante comp = new Comprobante();
 
             string anios = date.Year.ToString("0000.##");
-           // anios = "2015";
+            // anios = "2015";
             string mes = date.Month.ToString("00.##");
             string msAnoMesProc = anios + mes;
             //string findAll = $"SELECT * FROM {table} WHERE CAMESPROC='" + msAnoMesProc +"' AND CSALDINI=0";
@@ -2160,8 +2162,8 @@ namespace katal.conexion.model.dao
             string conexion1 = Conexion.CadenaGeneral("014", "BDCOMUN", "COMPROBANTECAB");
             string conexion2 = Conexion.CadenaGeneral("014", "BDCOMUN", "EstadoDoc");
 
-            string sql = $"Select A.*,EDoc_Descripcion from {conexion1}  A LEFT JOIN {conexion2} B ON ((A.CESTADO=B.EDoc_Clave  ) OR (A.CESTADO='') )  where   (CESTADO='0' OR CESTADO='1' OR CESTADO='3' OR CESTADO='4') and "; 
-            sql += "CAMESPROC='" + msAnoMesProc + "' AND A.CORDEN='" + sCorrelativo + "' AND TIPODOCU_CODIGO='" + TIPODOCU_CODIGO + "' AND CSERIE='" + CSERIE + "' AND   CNUMERO='" + CNUMERO+ "'  order by COrden";
+            string sql = $"Select A.*,EDoc_Descripcion from {conexion1}  A LEFT JOIN {conexion2} B ON ((A.CESTADO=B.EDoc_Clave  ) OR (A.CESTADO='') )  where   (CESTADO='0' OR CESTADO='1' OR CESTADO='3' OR CESTADO='4') and ";
+            sql += "CAMESPROC='" + msAnoMesProc + "' AND A.CORDEN='" + sCorrelativo + "' AND TIPODOCU_CODIGO='" + TIPODOCU_CODIGO + "' AND CSERIE='" + CSERIE + "' AND   CNUMERO='" + CNUMERO + "'  order by COrden";
             try
             {
                 comando = new SqlCommand(sql, objConexion.getCon());
@@ -2169,7 +2171,7 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                   
+
                     comp.EMP_CODIGO = read[0].ToString();
                     comp.CORDEN = read[1].ToString();
                     comp.ANEX_CODIGO = read[2].ToString();
@@ -2186,9 +2188,9 @@ namespace katal.conexion.model.dao
                     comp.CNUMORDCO = read[13].ToString();
                     comp.CDESCRIPC = read[14].ToString();
                     comp.RESPONSABLE_CODIGO = read[15].ToString();
-                    comp.CESTADO = conversionCampo( Conversion.Parseint( read[16].ToString()), "CONTABILIZADO","SIN CONTABILIZAR" +
+                    comp.CESTADO = conversionCampo(Conversion.Parseint(read[16].ToString()), "CONTABILIZADO", "SIN CONTABILIZAR" +
                         "");
-                    
+
                     comp.NSALDO = Conversion.ParseDecimal(read[17].ToString());
                     comp.NMONTPROG = Conversion.ParseDecimal(read[18].ToString());
                     comp.LCANJEADO = Conversion.ParseBool(read[19].ToString());
@@ -2211,7 +2213,7 @@ namespace katal.conexion.model.dao
                     comp.CSALDINI = Conversion.ParseBool(read[36].ToString());
                     comp.CODCAJCH = read[37].ToString();
                     comp.DIASPAGO = Conversion.ParseDecimal(read[38].ToString());
-                    comp.CIGVAPLIC = converionBool( read[39].ToString());
+                    comp.CIGVAPLIC = converionBool(read[39].ToString());
                     comp.CAMESPROC = read[40].ToString();
                     comp.CCONCEPT = read[41].ToString();
                     comp.DFECREF = Conversion.ParseDateTime(read[42].ToString());
@@ -2264,7 +2266,7 @@ namespace katal.conexion.model.dao
                     comp.codigo = comp.CORDEN + comp.CAMESPROC;
                     comp.documento = comp.TIPODOCU_CODIGO + ' ' + comp.CSERIE + " - " + comp.CNUMERO;
 
-                    
+
                 }
             }
             catch (Exception)
@@ -2279,7 +2281,7 @@ namespace katal.conexion.model.dao
             }
             return comp;
 
-        } 
+        }
 
         public List<Gasto> findAllGastos()
         {
@@ -2312,7 +2314,7 @@ namespace katal.conexion.model.dao
             }
             return listGastos;
         }
-        public List<PlanCuentaNacional> findAllCuentasNacionales(int NivelContable=4)
+        public List<PlanCuentaNacional> findAllCuentasNacionales(int NivelContable = 4)
         {
             List<PlanCuentaNacional> listGastos = new List<PlanCuentaNacional>();
 
@@ -2344,7 +2346,7 @@ namespace katal.conexion.model.dao
             return listGastos;
         }
 
-        public PlanCuentaNacional findCuentasNacionales(string xccodcuenta,int NivelContable = 4 )
+        public PlanCuentaNacional findCuentasNacionales(string xccodcuenta, int NivelContable = 4)
         {
 
             PlanCuentaNacional plan = null;
@@ -2362,7 +2364,7 @@ namespace katal.conexion.model.dao
                     plan.PLANCTA_DESCRIPCION = read[1].ToString();
                     plan.PLANCTA_NIVEL = read[2].ToString();
                     plan.TIPOANEX_CODIGO = read[3].ToString();
-                    plan.PLANCTA_CENTCOST =Conversion.ParseBool( read[4].ToString());
+                    plan.PLANCTA_CENTCOST = Conversion.ParseBool(read[4].ToString());
                     plan.TIPOCTA_CODIGO = read[5].ToString();
                     plan.PLANCTA_AUTO = read[6].ToString();
                     plan.PLANCTA_CARGO1 = read[7].ToString();
@@ -2385,7 +2387,7 @@ namespace katal.conexion.model.dao
                     plan.PLANCTA_CON_COSTO = read[21].ToString();
                     plan.PLANCTA_PLAN_EXTERIOR = read[22].ToString();
                     plan.PLANCTA_ESTADO = read[23].ToString();
-                    
+
                 }
             }
             catch (Exception)
@@ -2398,7 +2400,7 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-            return plan ;
+            return plan;
         }
 
         public List<OrdenFabricacion> findAllOrdenFabricacion()
@@ -2449,7 +2451,7 @@ namespace katal.conexion.model.dao
                 {
                     Maquinas plan = new Maquinas();
                     plan.idmaquina = read[0].ToString();
-                    plan.maq_codigo = read[1].ToString();               
+                    plan.maq_codigo = read[1].ToString();
                     listGastos.Add(plan);
                 }
             }
@@ -2467,10 +2469,10 @@ namespace katal.conexion.model.dao
         }
         public Gasto findAllGastosDetail(string codigo)
         {
-           
+
 
             string conexion = Conexion.CadenaGeneral("014", "BDCTAPAG", "Gastos");
-            string findAll = $"select GASTOS_CODIGO, GASTOS_DESCRIPCION, GASTOS_MONEDA, GASTOS_HONORARIO, GASTOS_CUENTACON,GASTOS_DSCTO1, GASTOS_DSCTO2,Gastos_Cta1,Gastos_Cta2 FROM {conexion} WHERE GASTOS_CODIGO = '" + codigo + "'" ;
+            string findAll = $"select GASTOS_CODIGO, GASTOS_DESCRIPCION, GASTOS_MONEDA, GASTOS_HONORARIO, GASTOS_CUENTACON,GASTOS_DSCTO1, GASTOS_DSCTO2,Gastos_Cta1,Gastos_Cta2 FROM {conexion} WHERE GASTOS_CODIGO = '" + codigo + "'";
             Gasto gasto = null;
             try
             {
@@ -2482,14 +2484,14 @@ namespace katal.conexion.model.dao
                     gasto = new Gasto();
                     gasto.Gastos_Codigo = read[0].ToString();
                     gasto.Gastos_Descripcion = read[1].ToString();
-                    gasto.Gastos_Moneda= read[2].ToString();
-                    gasto.Gastos_Honorario=Conversion.ParseBool (read[3].ToString());
-                    gasto.Gastos_CuentaCon= read[4].ToString();
-                    gasto.Gastos_Dscto1=Conversion.ParseDecimal( read[5].ToString());
-                    gasto.Gastos_Dscto2= Conversion.ParseDecimal(read[6].ToString());
-                    gasto.Gastos_Cta1= read[7].ToString();
-                    gasto.Gastos_Cta2= read[8].ToString();
-                   
+                    gasto.Gastos_Moneda = read[2].ToString();
+                    gasto.Gastos_Honorario = Conversion.ParseBool(read[3].ToString());
+                    gasto.Gastos_CuentaCon = read[4].ToString();
+                    gasto.Gastos_Dscto1 = Conversion.ParseDecimal(read[5].ToString());
+                    gasto.Gastos_Dscto2 = Conversion.ParseDecimal(read[6].ToString());
+                    gasto.Gastos_Cta1 = read[7].ToString();
+                    gasto.Gastos_Cta2 = read[8].ToString();
+
                 }
                 return gasto;
             }
@@ -2503,9 +2505,9 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-            
+
         }
-       
+
         public bool ExiteConceptos()
         {
             bool hayRegistros = false;
@@ -2517,12 +2519,12 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
-              
+
 
             }
-            catch (Exception )
+            catch (Exception)
             {
-               // e.GetType
+                // e.GetType
                 throw;
             }
             finally
@@ -2534,7 +2536,7 @@ namespace katal.conexion.model.dao
         }
 
 
-        
+
 
         public bool ExitedataConceptos()
         {
@@ -2551,8 +2553,8 @@ namespace katal.conexion.model.dao
                 hayRegistros = read.Read();
                 if (hayRegistros)
                 {
-                     data = Conversion.ParseBool( read[6].ToString());
-                }              
+                    data = Conversion.ParseBool(read[6].ToString());
+                }
             }
             catch (Exception)
             {
@@ -2575,7 +2577,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand (conexionContabilidad( find), objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -2595,20 +2597,20 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-            
+
         }
 
         // VER LA FORMA COMO USAR DE FORMA GENERAL
-        public string ConceptosGenerales(string concepto )
+        public string ConceptosGenerales(string concepto)
         {
-            
+
             bool hayRegistros = false;
             string data = "";
-            ConceptosGenerales conceptos = new ConceptosGenerales();        
+            ConceptosGenerales conceptos = new ConceptosGenerales();
             string find = $"SELECT * FROM CONCEPTOS_GENERALES WHERE CONCGRAL_CODIGO = '{concepto}'";
             try
             {
-                comando = new SqlCommand(conexionContabilidad( find), objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();
@@ -2620,7 +2622,7 @@ namespace katal.conexion.model.dao
                     conceptos.CONCGRAL_CONTEC = read[3].ToString();
                     conceptos.CONCGRAL_CONTEN = read[4].ToString();
                     conceptos.CONCGRAL_CONTED = read[5].ToString();
-                    conceptos.CONCGRAL_CONTEL =  read[6].ToString();
+                    conceptos.CONCGRAL_CONTEL = read[6].ToString();
                     switch (conceptos.CONCGRAL_TIPO)
                     {
                         case "C":
@@ -2632,7 +2634,7 @@ namespace katal.conexion.model.dao
                         case "L":
                             data = conceptos.CONCGRAL_CONTEL;
                             break;
-                        default :
+                        default:
                             data = conceptos.CONCGRAL_CONTED;
                             break;
 
@@ -2655,13 +2657,13 @@ namespace katal.conexion.model.dao
         // insertar data temporal  
         public void insertdetalleTemporal(Comprobante comprobante)
         {
-            bool  wlresta = false;
-         
+            bool wlresta = false;
+
             string CCta = "";
             string CCta2 = "";
             string CCta1 = "";
             string CCtaPercep = "";
-         
+
             string CCtaImportacion = "";
             string CCtaImpPerc_Igv = "";
             ConceptosGenerales conceptosGenerales = new ConceptosGenerales();
@@ -2673,7 +2675,7 @@ namespace katal.conexion.model.dao
                 wlresta = tipoDocumento.TIPDOC_RESTA;
             }
             string destino = comprobante.CDESTCOMP;
-            if (destino=="001" || destino == "002" || destino == "006" || destino == "007" || destino == "008")
+            if (destino == "001" || destino == "002" || destino == "006" || destino == "007" || destino == "008")
             {
                 Gasto gasto = findAllGastosDetail(comprobante.CCONCEPT);
                 if (gasto != null)
@@ -2691,7 +2693,7 @@ namespace katal.conexion.model.dao
                     conceptoGral = conceptoGralData("IGVSCF");
                     if (conceptoGral != null)
                     {
-                        CCta1 = conceptoGral.Concepto_Caracter; 
+                        CCta1 = conceptoGral.Concepto_Caracter;
                     }
                 }
             }
@@ -2703,27 +2705,27 @@ namespace katal.conexion.model.dao
                     CCta = conceptoGral.Concepto_Caracter;
                 }
                 Gasto gasto = findAllGastosDetail(comprobante.CCONCEPT);
-                if (gasto!=null)
+                if (gasto != null)
                 {
                     CCta1 = gasto.Gastos_Cta1;
                     CCta2 = gasto.Gastos_Cta1;
                 }
             }
 
-            if (Conversion.Parseint( comprobante.RESPONSABLE_CODIGO) == 10)
+            if (Conversion.Parseint(comprobante.RESPONSABLE_CODIGO) == 10)
             {
-                
-                CCtaImportacion = verdata("CONCGRAL_CODIGO='IMPCARGO'", "CONCEPTOS_GENERALES", 1, "CONCGRAL_CONTEC");
-               
-            }
-            
 
-            if(!exiteCampo("CONTABLEDET", "ORDFAB"))
+                CCtaImportacion = verdata("CONCGRAL_CODIGO='IMPCARGO'", "CONCEPTOS_GENERALES", 1, "CONCGRAL_CONTEC");
+
+            }
+
+
+            if (!exiteCampo("CONTABLEDET", "ORDFAB"))
             {
                 ALTERContableDet();
             }
 
-            switch(comprobante.CDESTCOMP)
+            switch (comprobante.CDESTCOMP)
             {
                 case "003":
                 case "001":
@@ -2731,7 +2733,7 @@ namespace katal.conexion.model.dao
                     {
                         insert(comprobante, wlresta, CCtaPercep, CCta);
                         insertNro2(comprobante, wlresta, CCtaPercep);
-                       
+
                     }
                     break;
                 case "002":
@@ -2740,39 +2742,39 @@ namespace katal.conexion.model.dao
                     insertNroD3(comprobante, Conversion.ParseBool(wlresta));
                     break;
                 case "004":
-                    if(comprobante.NIR4==0 && comprobante.NIES == 0)
+                    if (comprobante.NIR4 == 0 && comprobante.NIES == 0)
                     {
                         insertD004(comprobante, Conversion.ParseBool(wlresta));
                     }
                     break;
                 case "006":
-                    if(comprobante.NIR4 > 0 && comprobante.NIES > 0)
+                    if (comprobante.NIR4 > 0 && comprobante.NIES > 0)
                     {
                         insertD006(comprobante);
                         insertD0062(comprobante, CCta);
                         insertD0063(comprobante, CCta2);
                     }
-                       
+
                     break;
                 case "007":
-                    if(comprobante.NIR4>0)
+                    if (comprobante.NIR4 > 0)
                     {
                         insertD007(comprobante);
                         insertD0072(comprobante);
                     }
-                        
+
                     break;
                 case "008":
                     if (comprobante.NIES > 0)
                     {
                         insertD008(comprobante);
-                        insertD0082(comprobante,CCta2);
+                        insertD0082(comprobante, CCta2);
                     }
                     break;
                 case "005":
                     if (comprobante.NIGV != 0)
                     {
-                        insertD005(comprobante, Conversion.ParseBool(wlresta),CCta1);
+                        insertD005(comprobante, Conversion.ParseBool(wlresta), CCta1);
                         insertD0052(comprobante, Conversion.ParseBool(wlresta));
                     }
 
@@ -2784,14 +2786,14 @@ namespace katal.conexion.model.dao
                 insertGeneral(comprobante, Conversion.ParseBool(wlresta), CCtaPercep);
                 insertGeneral2(comprobante, Conversion.ParseBool(wlresta), CCta2);
             }
-           
-            if(CCtaImportacion!=null && CCtaImportacion.Trim() != "")
+
+            if (CCtaImportacion != null && CCtaImportacion.Trim() != "")
             {
                 if (comprobante.TIPODOCU_CODIGO == "CI")
                 {
-                    if(int.Parse(comprobante.RESPONSABLE_CODIGO) == 10)
+                    if (int.Parse(comprobante.RESPONSABLE_CODIGO) == 10)
                     {
-                        
+
                         CCtaImpPerc_Igv = verdata("CONCGRAL_CODIGO='IGVPERC'", "CONCEPTOS_GENERALES", 1, "CONCGRAL_CONTEC");
                     }
                     insertImpor(comprobante, CCtaImpPerc_Igv);
@@ -2803,16 +2805,16 @@ namespace katal.conexion.model.dao
 
             }
             //commienza cuenta 60
-           /* int item = 0;
-            string cta = "";
-            string Fam = "";
-            string resp = "";
-            string frms = "SD";
-            string csql = "";
-                if (frms == "SD")
-            {
-                //csql += "select * from comcab where CCTD='" & FrmFacSinGuiaRapido.Text1(6).Text & "' and CCNUMSER='" & FrmFacSinGuiaRap;
-            }*/
+            /* int item = 0;
+             string cta = "";
+             string Fam = "";
+             string resp = "";
+             string frms = "SD";
+             string csql = "";
+                 if (frms == "SD")
+             {
+                 //csql += "select * from comcab where CCTD='" & FrmFacSinGuiaRapido.Text1(6).Text & "' and CCNUMSER='" & FrmFacSinGuiaRap;
+             }*/
         }
 
         public List<ContableDet> findallContableDet()
@@ -2834,7 +2836,7 @@ namespace katal.conexion.model.dao
                 {
                     ContableDet area = new ContableDet();
                     area.CNROITEM = read[0].ToString();
-                    area.NVALOR =Conversion.ParseDecimal( read[1].ToString());
+                    area.NVALOR = Conversion.ParseDecimal(read[1].ToString());
                     area.CCODCONTA = read[2].ToString();
                     area.CTIPO = read[3].ToString();
                     area.CCOSTO = read[4].ToString();
@@ -2847,10 +2849,10 @@ namespace katal.conexion.model.dao
                     area.CANEXO = read[11].ToString();
                     area.CCODANEXO = read[12].ToString();
                     area.NUMRETRAC = read[13].ToString();
-                    area.FECRETRAC =Conversion.ParseDateTime( read[14].ToString());
-                    area.ORDFAB= read[15].ToString();
-                    area.codmaquina= read[16].ToString();
-                    area.cantidad=Conversion.ParseDecimal( read[17].ToString());
+                    area.FECRETRAC = Conversion.ParseDateTime(read[14].ToString());
+                    area.ORDFAB = read[15].ToString();
+                    area.codmaquina = read[16].ToString();
+                    area.cantidad = Conversion.ParseDecimal(read[17].ToString());
                     area.campo1 = read[18].ToString();
                     area.campo2 = read[19].ToString();
 
@@ -2873,7 +2875,7 @@ namespace katal.conexion.model.dao
         public List<ContableDet> findContableDet()
         {
             List<ContableDet> listAreas = new List<ContableDet>();
-           
+
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
 
 
@@ -2900,7 +2902,7 @@ namespace katal.conexion.model.dao
                     area.CANEXO = read[11].ToString();
                     area.CCODANEXO = read[12].ToString();
                     area.NUMRETRAC = read[13].ToString();
-                    area.FECRETRAC =Conversion.ParseDateTime( read[14].ToString());
+                    area.FECRETRAC = Conversion.ParseDateTime(read[14].ToString());
                     area.ORDFAB = read[15].ToString();
 
                     listAreas.Add(area);
@@ -2968,7 +2970,7 @@ namespace katal.conexion.model.dao
             //txtTpoAnexo
             TipoDocumento gasto = null;
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "TIPOS_DE_DOCUMENTOS");
-           
+
             string findAll = $"SELECT * FROM {conexion}  where TIPDOC_CODIGO='{codigo}' ";
             try
             {
@@ -2981,16 +2983,16 @@ namespace katal.conexion.model.dao
                     gasto.TIPDOC_CODIGO = read[0].ToString();
                     gasto.TIPDOC_DESCRIPCION = read[1].ToString();
                     gasto.TIPDOC_SUNAT = read[2].ToString();
-                    gasto.TIPDOC_RESTA =Conversion.ParseBool( read[3].ToString());
+                    gasto.TIPDOC_RESTA = Conversion.ParseBool(read[3].ToString());
                     gasto.TIPDOC_REFERENCIA = Conversion.ParseBool(read[4].ToString());
-                    gasto.TIPDOC_FILE = read[5].ToString();                
+                    gasto.TIPDOC_FILE = read[5].ToString();
                     gasto.TIPDOC_FECHAVTO = read[6].ToString();
                     gasto.TIPDOC_REGCOMP = read[7].ToString();
 
-        
+
                 }
-     
-     
+
+
             }
             catch (Exception)
             {
@@ -3003,12 +3005,12 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
             return gasto;
-        }     
-        public ConceptosGenerales ConceptosGeneralesData(string  concepto)
+        }
+        public ConceptosGenerales ConceptosGeneralesData(string concepto)
         {
 
             bool hayRegistros = false;
-            
+
 
             ConceptosGenerales conceptos = new ConceptosGenerales();
             string conexion = Conexion.CadenaGeneral("014", "BDCONTABILIDAD", "CONCEPTOS_GENERALES");
@@ -3028,7 +3030,7 @@ namespace katal.conexion.model.dao
                     conceptos.CONCGRAL_CONTEN = read[4].ToString();
                     conceptos.CONCGRAL_CONTED = read[5].ToString();
                     conceptos.CONCGRAL_CONTEL = read[6].ToString();
-                    
+
                 }
             }
             catch (Exception)
@@ -3047,7 +3049,7 @@ namespace katal.conexion.model.dao
         {
 
             bool hayRegistros = false;
-            
+
             ConceptoGral conceptos = null;
             string conexion = Conexion.CadenaGeneral("014", "BDCOMUN", "CONCEPTOGRAL");
             string find = $"SELECT * FROM {conexion} WHERE Concepto_Codigo = '{concepto}'";
@@ -3064,7 +3066,7 @@ namespace katal.conexion.model.dao
                     conceptos.Concepto_Descripcion = read[1].ToString();
                     conceptos.Concepto_Tipo = read[2].ToString();
                     conceptos.Concepto_Caracter = read[3].ToString();
-                    conceptos.Concepto_Numerico =Conversion.ParseDecimal( read[4].ToString());
+                    conceptos.Concepto_Numerico = Conversion.ParseDecimal(read[4].ToString());
                     conceptos.Concepto_Fecha = Conversion.ParseDateTime(read[5].ToString());
                     conceptos.Concepto_Logico = Conversion.ParseBool(read[6].ToString());
 
@@ -3094,7 +3096,7 @@ namespace katal.conexion.model.dao
 
             string sCmd = "use BDWENCO  ";
             sCmd += $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = '{nombreColumn}' AND TABLE_NAME = '{nombreTabla}'";
-           
+
 
             try
             {
@@ -3121,33 +3123,33 @@ namespace katal.conexion.model.dao
             return false;
         }
 
-        private void insert(Comprobante comprobante, bool wlresta , string CCtaPercep, string CCta)
-        {        
-           string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
+        private void insert(Comprobante comprobante, bool wlresta, string CCtaPercep, string CCta)
+        {
+            string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
             csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
             csql += "'00001',";
-            csql +=  "" + comprobante.NIGV.ToString("F3", CultureInfo.InvariantCulture) + ",";
+            csql += "" + comprobante.NIGV.ToString("F3", CultureInfo.InvariantCulture) + ",";
             csql += "'" + fValNull(CCta) + "',";
             if (wlresta)
             {
-                csql +=  "'H',";
+                csql += "'H',";
             }
             else
             {
                 csql += "'D',";
             }
             csql += "'" + fValNull(comprobante.CCOSTO) + "',";
-            csql +=   "'" + fValNull(comprobante.CCTADEST ) + "',";
-            csql +=   "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
+            csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
             csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
-            csql +=   "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
-            csql +=   "'" + fValNull(comprobante.CSERIE ) + "',";
-            csql +=   "'" + fValNull(comprobante.CNUMERO ) + "',";
+            csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
+            csql += "'" + fValNull(comprobante.CSERIE) + "',";
+            csql += "'" + fValNull(comprobante.CNUMERO) + "',";
 
-            if (CCtaPercep!="")
+            if (CCtaPercep != "")
             {
-                if(obtenerValer(3, CCtaPercep, "[BDWENCO].[dbo].[PLAN_CUENTA_NACIONAL]", "PLANCTA_CODIGO", false, "ISNULL(TIPOANEX_CODIGO,' ')") == null)
+                if (obtenerValer(3, CCtaPercep, "[BDWENCO].[dbo].[PLAN_CUENTA_NACIONAL]", "PLANCTA_CODIGO", false, "ISNULL(TIPOANEX_CODIGO,' ')") == null)
                 {
                     csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
                     csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
@@ -3166,7 +3168,7 @@ namespace katal.conexion.model.dao
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
 
 
-          
+
             try
             {
                 comando = new SqlCommand(csql, objConexion.getCon());
@@ -3256,7 +3258,7 @@ namespace katal.conexion.model.dao
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
             csql += "CGLOSA,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
             csql += "'00001',";
-            csql += "" + (comprobante.NIGV*comprobante.NPORCE/100).ToString("F3", CultureInfo.InvariantCulture) + ",";
+            csql += "" + (comprobante.NIGV * comprobante.NPORCE / 100).ToString("F3", CultureInfo.InvariantCulture) + ",";
             csql += "'" + fValNull(CCta) + "',";
             if (wlresta)
             {
@@ -3299,7 +3301,7 @@ namespace katal.conexion.model.dao
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
             csql += "CGLOSA,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
             csql += "'00002',";
-            csql += "" + (comprobante.NIGV-comprobante.NIGV * comprobante.NPORCE / 100).ToString("F3", CultureInfo.InvariantCulture) + ",";
+            csql += "" + (comprobante.NIGV - comprobante.NIGV * comprobante.NPORCE / 100).ToString("F3", CultureInfo.InvariantCulture) + ",";
             csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
             if (wlresta)
             {
@@ -3314,7 +3316,7 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
             csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
             csql += "'" + "',";
-            csql += "'" + "',";                 
+            csql += "'" + "',";
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
             try
             {
@@ -3357,7 +3359,7 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.CSERIE) + "',";
             csql += "'" + fValNull(comprobante.CNUMERO) + "',";
             csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
-            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";        
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
             try
             {
@@ -3401,7 +3403,7 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.CSERIE) + "',";
             csql += "'" + fValNull(comprobante.CNUMERO) + "',";
             csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
-            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";            
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
             try
             {
@@ -3427,18 +3429,18 @@ namespace katal.conexion.model.dao
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO";
             csql += ",CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,CCOSTO,CCTADEST,NUMRETRAC,FECRETRAC) Values(";
             csql += "'00001',";
-            csql += "" + (comprobante.NTOTRH- comprobante.NIR4- comprobante.NIES).ToString("F3", CultureInfo.InvariantCulture) + ",";
+            csql += "" + (comprobante.NTOTRH - comprobante.NIR4 - comprobante.NIES).ToString("F3", CultureInfo.InvariantCulture) + ",";
             csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
-            
-            csql += "'H',";          
-          
+
+            csql += "'H',";
+
             csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
             csql += "'" + fValNull(comprobante.CSERIE) + "',";
             csql += "'" + fValNull(comprobante.CNUMERO) + "',";
             csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
-            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',"; 
-            csql += "'"  + "',";
-            csql += "'"  + "',";          
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+            csql += "'" + "',";
+            csql += "'" + "',";
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
             try
             {
@@ -3466,7 +3468,7 @@ namespace katal.conexion.model.dao
             csql += "" + (comprobante.NIR4).ToString("F3", CultureInfo.InvariantCulture) + ",";
             csql += "'" + fValNull(CCta) + "',";
 
-            csql += "'H',";         
+            csql += "'H',";
             csql += "'" + "',";
             csql += "'" + "',";
             csql += "'" + "',";
@@ -3527,9 +3529,9 @@ namespace katal.conexion.model.dao
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO";
             csql += ",CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,CCOSTO,CCTADEST,NUMRETRAC,FECRETRAC) Values(";
             csql += "'00001',";
-            csql += "" + (comprobante.NTOTRH- comprobante.NIR4).ToString("F3", CultureInfo.InvariantCulture) + ",";
-            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";         
-            csql += "'H',";                     
+            csql += "" + (comprobante.NTOTRH - comprobante.NIR4).ToString("F3", CultureInfo.InvariantCulture) + ",";
+            csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
+            csql += "'H',";
             csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
             csql += "'" + fValNull(comprobante.CSERIE) + "',";
             csql += "'" + fValNull(comprobante.CNUMERO) + "',";
@@ -3537,7 +3539,7 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
             csql += "'" + fValNull(comprobante.CCOSTO) + "',";
             csql += "'" + fValNull(comprobante.CCTADEST) + "',";
-          
+
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
 
 
@@ -3569,7 +3571,7 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
             csql += "'H',";
             csql += "'" + fValNull(comprobante.CCOSTO) + "',";
-            csql += "'" + fValNull(comprobante.CCTADEST) + "',";       
+            csql += "'" + fValNull(comprobante.CCTADEST) + "',";
             csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
             csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
@@ -3596,16 +3598,16 @@ namespace katal.conexion.model.dao
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,";
             csql += "CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,CCOSTO,CCTADEST,NUMRETRAC,FECRETRAC) Values(";
             csql += "'00001',";
-            csql += "" + (comprobante.NTOTRH- comprobante.NIES).ToString("F3", CultureInfo.InvariantCulture) + ",";
+            csql += "" + (comprobante.NTOTRH - comprobante.NIES).ToString("F3", CultureInfo.InvariantCulture) + ",";
             csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
-           
-            csql += "'H',";                    
+
+            csql += "'H',";
 
             csql += "'" + fValNull(comprobante.TIPODOCU_CODIGO) + "',";
             csql += "'" + fValNull(comprobante.CSERIE) + "',";
             csql += "'" + fValNull(comprobante.CNUMERO) + "',";
             csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
-            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";          
+            csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
             csql += "'" + "',";
             csql += "'" + "',";
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
@@ -3625,7 +3627,7 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
-        private void insertD0082(Comprobante comprobante,string CCta2)
+        private void insertD0082(Comprobante comprobante, string CCta2)
         {
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST";
@@ -3634,10 +3636,10 @@ namespace katal.conexion.model.dao
             csql += "" + (comprobante.NIES).ToString("F3", CultureInfo.InvariantCulture) + ",";
             csql += "'" + fValNull(CCta2) + "',";
             csql += "'H',";
-            csql += "'"  + "',";
-            csql += "'"  + "',";
-            csql += "'"  + "',";
-            csql += "'" + "',";          
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + "',";
+            csql += "'" + "',";
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
             try
             {
@@ -3678,7 +3680,7 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
             csql += "'" + fValNull(comprobante.CDESCRIPC) + "',";
             csql += "'',";
-            csql += "'',";            
+            csql += "'',";
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
             try
             {
@@ -3710,16 +3712,16 @@ namespace katal.conexion.model.dao
             {
                 csql += "'00001',";
             }
-            if (comprobante.CCODRUC!=null)
+            if (comprobante.CCODRUC != null)
             {
-                csql += "" + (comprobante.NIMPORTE+comprobante.NVALCIF ).ToString("F3", CultureInfo.InvariantCulture) + ",";
+                csql += "" + (comprobante.NIMPORTE + comprobante.NVALCIF).ToString("F3", CultureInfo.InvariantCulture) + ",";
             }
             else
             {
                 csql += "" + comprobante.NIMPORTE.ToString("F3", CultureInfo.InvariantCulture) + ",";
             }
-            
-          
+
+
             csql += "'" + fValNull(comprobante.CCODCONTA) + "',";
             if (wlresta)
             {
@@ -3761,10 +3763,10 @@ namespace katal.conexion.model.dao
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
             csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
-            csql += "'00003',";                 
-            csql += "" + comprobante.NPERCEPCION.ToString("F3", CultureInfo.InvariantCulture) + ",";           
-            csql += "'" + fValNull(CCtaPercep) + "',";          
-            csql += "'D',";         
+            csql += "'00003',";
+            csql += "" + comprobante.NPERCEPCION.ToString("F3", CultureInfo.InvariantCulture) + ",";
+            csql += "'" + fValNull(CCtaPercep) + "',";
+            csql += "'D',";
             csql += "'" + fValNull(comprobante.CCOSTO) + "',";
             csql += "'" + fValNull(comprobante.CCTADEST) + "',";
             csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
@@ -3773,17 +3775,17 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.CSERIE) + "',";
             csql += "'" + fValNull(comprobante.CNUMERO) + "',";
 
-            if (obtenerValer(3, CCtaPercep, "[BDWENCO].[dbo].[PLAN_CUENTA_NACIONAL]", "PLANCTA_CODIGO", false, "TIPOANEX_CODIGO")!=null)
+            if (obtenerValer(3, CCtaPercep, "[BDWENCO].[dbo].[PLAN_CUENTA_NACIONAL]", "PLANCTA_CODIGO", false, "TIPOANEX_CODIGO") != null)
             {
-                    csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
-                    csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
+                csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
+                csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
             }
             else
             {
-                csql += "'"  + "',";
-                csql += "'"  + "',";
+                csql += "'" + "',";
+                csql += "'" + "',";
             }
-           
+
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
             try
             {
@@ -3817,7 +3819,7 @@ namespace katal.conexion.model.dao
             {
                 csql += "'H',";
             }
-          
+
             csql += "'" + fValNull(comprobante.CCOSTO) + "',";
             csql += "'" + fValNull(comprobante.CCTADEST) + "',";
             csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
@@ -3843,7 +3845,7 @@ namespace katal.conexion.model.dao
                 csql += "'" + "',";
                 csql += "'" + "',";
             }
-            
+
 
             csql += "'" + Esnulo(comprobante.NUMRETRAC, " ") + "'," + Esnulo(dateFormat(comprobante.FECRETRAC), 0) + ")";
             try
@@ -3871,8 +3873,8 @@ namespace katal.conexion.model.dao
             csql += "CGLOSA,CTIPDOC,CSERDOC,CNUMDOC,CANEXO,CCODANEXO,NUMRETRAC,FECRETRAC) Values(";
             csql += "'00001',";
             csql += "" + comprobante.NPERCEPCION.ToString("F3", CultureInfo.InvariantCulture) + ",";
-            csql += "'" + fValNull(CCtaImpPerc_Igv);                      
-            csql += "'D',";       
+            csql += "'" + fValNull(CCtaImpPerc_Igv);
+            csql += "'D',";
             csql += "'" + fValNull(comprobante.CCOSTO) + "',";
             csql += "'" + fValNull(comprobante.CCTADEST) + "',";
             csql += "'" + fValNull(comprobante.SUBDIARIO_CODIGO) + "',";
@@ -3882,8 +3884,8 @@ namespace katal.conexion.model.dao
             csql += "'" + fValNull(comprobante.CNUMERO) + "',";
             csql += "'" + fValNull(comprobante.CTIPPROV) + "',";
             csql += "'" + fValNull(comprobante.ANEX_CODIGO) + "',";
-           
-            csql += "'" +  "'," + 0 + ")";
+
+            csql += "'" + "'," + 0 + ")";
 
 
 
@@ -3944,7 +3946,7 @@ namespace katal.conexion.model.dao
             }
         }
 
-        private void insertImpor3(Comprobante comprobante,string CCtaImportacion)
+        private void insertImpor3(Comprobante comprobante, string CCtaImportacion)
         {
             string conexion = Conexion.CadenaGeneral("", "BDWENCO", "ContableDet");
             string csql = $"Insert Into {conexion}(CNROITEM,NVALOR,CCODCONTA,CTIPO,CCOSTO,CCTADEST,CCODSUBDI,";
@@ -3985,7 +3987,7 @@ namespace katal.conexion.model.dao
         }
         private dynamic Esnulo(string expresion, dynamic valor)
         {
-            if(expresion==null || expresion.Trim() == "")
+            if (expresion == null || expresion.Trim() == "")
             {
                 return valor;
             }
@@ -4016,25 +4018,25 @@ namespace katal.conexion.model.dao
         }
 
         private string obtenerValer(int TipoAnexo, string cod, string tabla, string campo, bool fecha, string CampDev)
-        { 
+        {
             string cf = "";
             string data = "";
-            if(campo .Trim() != "")
+            if (campo.Trim() != "")
             {
                 cf += "SELECT " + CampDev + " FROM " + tabla + " WHERE " + campo + "='" + cod + "'";
-                
+
             }
-          
-       
+
+
             try
             {
-                comando = new SqlCommand(conexionComun( cf), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(cf), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
                 {
 
-                   data = read[0].ToString();                 
+                    data = read[0].ToString();
                 }
                 return data;
 
@@ -4050,7 +4052,7 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-            
+
 
         }
 
@@ -4090,14 +4092,14 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
-        public  string verdata(string condicion, string tabla, int param, string camdev)
+        public string verdata(string condicion, string tabla, int param, string camdev)
         {
             string verdata = "";
             string CAD = $"SELECT* FROM  {tabla} WHERE   {condicion}";
             try
             {
                 //TODO ES PARTE SE PUED GENERALIZAR
-                comando = new SqlCommand(conexionContabilidad( CAD), objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad(CAD), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())

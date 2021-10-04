@@ -1,9 +1,7 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
 
 namespace katal.conexion.model.dao
 {
@@ -677,15 +675,15 @@ namespace katal.conexion.model.dao
         #region insertarCabecera 
 
         //LN_TipCam = CONV_MONEDA(Label6(2), Text2(10), val(Text2(11)), MaskEdBox1, MaskEdBox1)
-        public decimal tipoCambio(string cambio, string CC1, decimal CE, DateTime FE, DateTime FR , DateTime dateTime)
+        public decimal tipoCambio(string cambio, string CC1, decimal CE, DateTime FE, DateTime FR, DateTime dateTime)
         {
             int anio = dateTime.Year;
             bool ok = true;
-            string findAll =$" SELECT * FROM TIPO_CAMBIO WHERE TIPOMON_CODIGO = 'ME' AND YEAR(TIPOCAMB_FECHA)= {anio}  ORDER BY TIPOCAMB_FECHA";
+            string findAll = $" SELECT * FROM TIPO_CAMBIO WHERE TIPOMON_CODIGO = 'ME' AND YEAR(TIPOCAMB_FECHA)= {anio}  ORDER BY TIPOCAMB_FECHA";
             decimal valor = 0;
             try
             {
-                
+
                 comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
@@ -695,10 +693,10 @@ namespace katal.conexion.model.dao
                     {
                         case "ESP":
                             if (cambio == "MN")
-                                if(CE!=0)
+                                if (CE != 0)
                                     valor = Math.Round(1 / CE, 8);
                                 else
-                                     valor = 999999;
+                                    valor = 999999;
                             else
                             {
                                 valor = CE;
@@ -713,7 +711,7 @@ namespace katal.conexion.model.dao
                             {
                                 if (cambio == "ME")
                                 {
-                                    valor= Conversion.ParseDecimal(read[2].ToString());
+                                    valor = Conversion.ParseDecimal(read[2].ToString());
                                 }
                                 else
                                 {
@@ -741,15 +739,15 @@ namespace katal.conexion.model.dao
                                 }
                                 else
                                 {
-                                    compra= Math.Round(1 / compra, 8);
-                                    venta= Math.Round(1 / venta, 8);
+                                    compra = Math.Round(1 / compra, 8);
+                                    venta = Math.Round(1 / venta, 8);
                                     valor = ternarioG(CC1 == "COM", compra, venta);
                                 }
                             }
                             else
                                 ok = false;
                             break;
-                            
+
                     }
                 }
 
@@ -770,7 +768,7 @@ namespace katal.conexion.model.dao
             }
             return valor;
         }
-        public  void create(CMovimientoBanco obj,string codigoBanco, DateTime dateTime)
+        public void create(CMovimientoBanco obj, string codigoBanco, DateTime dateTime)
         {
 
             string mes = dateTime.Month.ToString("00.##");
@@ -778,10 +776,10 @@ namespace katal.conexion.model.dao
             create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_C_ANEXO]  ,[CB_C_CONVE] ,[CB_N_CAMES] ,[CB_N_TIPCA],[CB_N_MTOMN]  ,[CB_N_MTOME] ,[CB_C_CONTA]";
             create += ",[CB_A_REFER]  ,[CB_C_ESTAD] ,[CB_D_FECCOB],[CB_TIPMOV] ,[CB_MEDIO] ,[CB_DMEDIO] ,[CB_USUARIO])";
             create += $" VALUES('{codigoBanco}', '{mes}','{obj.CB_C_SECUE}','{obj.CB_C_MODO}'";
-            create += $",'{obj.CB_C_OPERA}',{this.dateFormat( obj.CB_D_FECHA)},'{obj.CB_C_TPDOC}','{obj.CB_C_DOCUM}'";
+            create += $",'{obj.CB_C_OPERA}',{this.dateFormat(obj.CB_D_FECHA)},'{obj.CB_C_TPDOC}','{obj.CB_C_DOCUM}'";
             create += $",'{obj.CB_C_ANEXO}','{obj.CB_C_CONVE}',{obj.CB_N_CAMES},{obj.CB_N_TIPCA}";
             create += $",{obj.CB_N_MTOMN},{obj.CB_N_MTOME},'{obj.CB_C_CONTA}' , '{obj.CB_A_REFER}','{obj.CB_C_ESTAD}'";
-            create += $",{dateFormat( obj.CB_D_FECCOB)},'{obj.CB_TIPMOV}','{obj.CB_MEDIO}','{obj.CB_DMEDIO}'";
+            create += $",{dateFormat(obj.CB_D_FECCOB)},'{obj.CB_TIPMOV}','{obj.CB_MEDIO}','{obj.CB_DMEDIO}'";
             create += $",'{obj.CB_USUARIO}')";
             try
             {
@@ -820,5 +818,41 @@ namespace katal.conexion.model.dao
             }
         }
         #endregion
+        public List<Cobranzas> AllConbranzas(DateTime dateTime)
+        {
+            string ValFiltro = "Month(COCFECPLA)=" + dateTime.Month + " and year(COCFECPLA)=" + dateTime.Year + "";
+            List<Cobranzas> tipoMonedas = new List<Cobranzas>();
+            string findAll = "";
+            findAll += "Select distinct COCNROPLA, COCFECPLA, COCTCOBMN, COCTCOBUS ";
+            findAll += "From (Plan_Cob_Cab INNER JOIN Plan_Cob_Det ON COCNROPLA=DEPNROPLA AND COCFECPLA=DEPFECCOB)";
+            findAll += "INNER JOIN Tipo_Cobranza ON Plan_Cob_Det.DEPCONCEP=Tipo_Cobranza.COD_COBRANZA ";
+            findAll += "Where " + ValFiltro + " AND Tipo_Cobranza.TIP in (1,3) ORDER BY COCNROPLA, COCFECPLA";
+            try
+            {
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Cobranzas cajaBanco = new Cobranzas();
+                    cajaBanco.COCNROPLA = read[0].ToString();
+                    cajaBanco.COCFECPLA = Conversion.ParseDateTime(read[1].ToString());
+                    cajaBanco.COCTCOBMN = Conversion.ParseDecimal(read[2].ToString());
+                    cajaBanco.COCTCOBUS = read[3].ToString();
+                    tipoMonedas.Add(cajaBanco);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return tipoMonedas;
+        }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace katal.conexion.model.entity
 {
@@ -15,8 +12,8 @@ namespace katal.conexion.model.entity
     {
         public decimal data { get; set; }
         public string dataEspecial { get; set; }
-        public bool opcion  { get; set; }
-        public bool especial  { get; set; }
+        public bool opcion { get; set; }
+        public bool especial { get; set; }
 
     }
     public class RespuestaDestino
@@ -24,7 +21,7 @@ namespace katal.conexion.model.entity
         public decimal tasaIGV { get; set; }
         public decimal montoIGV { get; set; }
         public bool opcion { get; set; }
-        public bool especial { get; set; }       
+        public bool especial { get; set; }
     }
     public class RespuestaGastos
     {
@@ -33,17 +30,17 @@ namespace katal.conexion.model.entity
     }
     public class RespuestaCDataComprobante
     {
-        public string NROITEM  { get; set; }
-        public string GLOSA  { get; set; }
-      
+        public string NROITEM { get; set; }
+        public string GLOSA { get; set; }
+
     }
     public class RespuestaPlan
     {
-       public  string xcanexo { get; set; }
+        public string xcanexo { get; set; }
         public bool activeCenco { get; set; }
         public bool activeOrb { get; set; }
         public bool activeCtaDest { get; set; }
         public bool activeAnexo { get; set; }
-        public  decimal xnvalor { get; set; }
+        public decimal xnvalor { get; set; }
     }
 }

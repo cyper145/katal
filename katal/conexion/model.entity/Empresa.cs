@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace katal.conexion.model.entity
+﻿namespace katal.conexion.model.entity
 {
     public class Empresa
     {
@@ -11,5 +6,5 @@ namespace katal.conexion.model.entity
         public string RazonSocial { get; set; }
         public string EMP_NIVEL { get; set; }
     }
-   
+
 }

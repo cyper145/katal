@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Web.Helpers;
-using System.Web.Mvc;
-using katal.conexion.model.dao;
 using katal.conexion.model.entity;
 using katal.conexion.model.neg;
 using katal.Model;
+using System;
+using System.Web.Mvc;
 namespace katal.Controllers
 {
     public class AccountController : BaseController
@@ -41,14 +38,14 @@ namespace katal.Controllers
             // DXCOMMENT: You Authentication logic
 
             User user = userNeg.login(model.UserName, model.Password, model.Empresa);
-            if (user!=null)
+            if (user != null)
             {
-                AuthHelper.SignIn(model.UserName, model.Password,user.rol_id, user.empresa, user.rol, model.Empresa);
+                AuthHelper.SignIn(model.UserName, model.Password, user.rol_id, user.empresa, user.rol, model.Empresa);
 
                 GridViewHelper.NivelCOntable = int.Parse(empresaNeg.findContable(GridViewHelper.user.codEmpresa).EMP_NIVEL);
                 return RedirectToAction("Index", "Home");
             }
-               
+
             else
             {
                 SetErrorText("Invalid login attempt.");
@@ -79,7 +76,7 @@ namespace katal.Controllers
                 user.password = model.Password;
                 user.photo = "ddd";// falta           
                 user.id = int.Parse(AuthHelper.generateID());
-                
+
                 try
                 {
                     userNeg.create(user);

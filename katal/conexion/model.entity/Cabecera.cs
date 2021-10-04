@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.entity
 {
@@ -22,7 +19,7 @@ namespace katal.conexion.model.entity
         public string CO_N_CAMES { get; set; }
         public bool CO_L_COMPR { get; set; }
         public DateTime FECH_VEN { get; set; }
-        
+
     }
 
     public class Detalle

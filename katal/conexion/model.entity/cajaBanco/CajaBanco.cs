@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.entity
 {
@@ -30,7 +28,7 @@ namespace katal.conexion.model.entity
         public string CB_C_FORMATO { get; set; }
         public string CB_C_SUB { get; set; }
         public string CB_C_ESTADO { get; set; }
-      
+
 
     }
     public class MovimientoBanco
@@ -49,7 +47,7 @@ namespace katal.conexion.model.entity
     }
 
 
-    public class TipoOpcionCajaBanco 
+    public class TipoOpcionCajaBanco
     {
         public string CB_C_TIPO { get; set; }
         public string CB_C_MODO { get; set; }
@@ -58,7 +56,7 @@ namespace katal.conexion.model.entity
         public string CB_C_TPDOC { get; set; }
         public string CB_C_AUTOM { get; set; }
         public string CB_C_FPAGO { get; set; }
-      
+
     }
 
     public class TipoEstadoOperacion
@@ -66,7 +64,7 @@ namespace katal.conexion.model.entity
         public string CB_C_TIPO { get; set; }
         public string CB_C_CODIG { get; set; }
         public string CB_A_DESCR { get; set; }
-    
+
     }
     public class TipoMovimientos
     {
@@ -79,7 +77,7 @@ namespace katal.conexion.model.entity
     {
         public string CODIGO { get; set; }
         public string DESCRIPCION { get; set; }
-      
+
     }
 
 
@@ -171,9 +169,10 @@ namespace katal.conexion.model.entity
         public string tc { get; set; }
         public string tipmon { get; set; }
         public string importe { get; set; }
-        
+
     }
-    public class ConceptoCajaBanco{
+    public class ConceptoCajaBanco
+    {
 
         public string CB_C_TIPO { get; set; }
         public string CB_C_MODO { get; set; }
@@ -185,7 +184,7 @@ namespace katal.conexion.model.entity
         public string CB_C_OPERA { get; set; }
         public string CB_C_LINEA { get; set; }
         public string codigo { get; set; }
-       
+
     }
 
     public class TipoMoneda
@@ -193,8 +192,38 @@ namespace katal.conexion.model.entity
         public string TIPOMON_CODIGO { get; set; }
         public string TIPOMON_DESCRIPCION { get; set; }
         public string TIPOMON_NACIONALIDAD { get; set; }
-        public string TIPOMON_SIMBOLO { get; set; }    
+        public string TIPOMON_SIMBOLO { get; set; }
     }
-    
 
+
+    public class FlagForForm
+    {
+
+        public bool frmLisPlaniCobranza { get; set; }
+        public bool frmselecfacont { get; set; }
+        public bool frmCtasxPagarPrueba1 { get; set; }
+        public bool frmCtasxPagarPrueba2 { get; set; }
+
+        public FlagForForm()
+        {
+            frmLisPlaniCobranza = false;
+            frmselecfacont = false;
+            frmCtasxPagarPrueba1 = false;
+            frmCtasxPagarPrueba2 = false;
+        }
+    }
+
+
+    public class Cobranzas
+    {
+        public string COCNROPLA { get; set; }
+        public DateTime COCFECPLA { get; set; }
+        public decimal COCTCOBMN { get; set; }
+        public string COCTCOBUS { get; set; }
+    }
+    public class DataGeneralBanco
+    {
+        public List<CMovimientoBanco> cMovimientoBancos;
+        public List<Cobranzas> cobranzas;
+    }
 }

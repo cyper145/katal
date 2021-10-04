@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Helpers;
-using katal.conexion.model.dao;
+﻿using katal.conexion.model.dao;
 using katal.conexion.model.entity;
 using katal.Model;
+using System;
+using System.Collections.Generic;
+using System.Web.Helpers;
 
 namespace katal.conexion.model.neg
 {

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.entity
 {
@@ -56,6 +53,6 @@ namespace katal.conexion.model.entity
         public string RCO_NUMERO { get; set; }
         public string RCO_FECHA { get; set; }
         public string flg_RNTNODOMICILIADO { get; set; }
-       
-	}
+
+    }
 }

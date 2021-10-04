@@ -1,9 +1,6 @@
-﻿using katal.conexion.model.entity;
-using katal.conexion.model.dao;
-using System;
+﻿using katal.conexion.model.dao;
+using katal.conexion.model.entity;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.neg
 {
@@ -18,7 +15,7 @@ namespace katal.conexion.model.neg
 
         public List<EstadoDoc> findAll()
         {
-           return objAreaDao.findAll();
+            return objAreaDao.findAll();
         }
     }
 }

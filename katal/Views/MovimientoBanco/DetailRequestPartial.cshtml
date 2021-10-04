@@ -13,21 +13,29 @@
     settings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
     settings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
     settings.Toolbars.Add(tb => {
+
         tb.Enabled = true;
         tb.Position = GridToolbarPosition.Top;
         tb.SettingsAdaptivity.Enabled = true;
         tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
 
-        tb.Items.Add(GridViewToolbarCommand.New);
+        var dr= tb.Items.Add(GridViewToolbarCommand.New);
+
+
+
         tb.Items.Add(GridViewToolbarCommand.Edit);
         tb.Items.Add(GridViewToolbarCommand.Delete);
         tb.Items.Add(i => {
             i.Command = GridViewToolbarCommand.Refresh;
             i.BeginGroup = true;
             i.AdaptivePriority = 2;
+          
         });
 
     });
+
+    settings.ClientSideEvents.ToolbarItemClick = "OnToolbarDetailClick";
+
     settings.EnablePagingGestures = AutoBoolean.False;
 
     settings.ControlStyle.CssClass = "grid-view";
@@ -95,7 +103,7 @@
     {
         settings.Columns.Add(column =>
         {
-            column.FieldName = "CB_N_MTOMN";
+            column.FieldName = "CB_N_MTOMND";
             column.Caption = "Monto";
             column.Width = Unit.Percentage(10);
 
@@ -106,7 +114,7 @@
     {
         settings.Columns.Add(column =>
         {
-            column.FieldName = "CB_N_MTOME";
+            column.FieldName = "CB_N_MTOMED";
             column.Caption = "Monto";
             column.Width = Unit.Percentage(10);
             column.ColumnType = MVCxGridViewColumnType.TextBox;
@@ -117,7 +125,7 @@
 
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_A_REFER";
+        column.FieldName = "CB_A_REFERD";
         column.Caption = "Referencia";
 
 

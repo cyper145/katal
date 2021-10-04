@@ -1,21 +1,18 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
-using katal.Model;
 
 namespace katal.conexion.model.dao
 {
     public class ProveedorDao : Obligatorio
     {
 
-        public ProveedorDao(string codEmpresa):base(codEmpresa)
+        public ProveedorDao(string codEmpresa) : base(codEmpresa)
         {
-          
-             objConexion = Conexion.saberEstado();
-           
+
+            objConexion = Conexion.saberEstado();
+
         }
         public void create(Proveedor obj)
         {
@@ -38,7 +35,7 @@ namespace katal.conexion.model.dao
             string findAll = "SELECT prvccodigo,prvcnombre,prvcdirecc,prvctelef1,PRVCRUC FROM maeprov ";
             try
             {
-                comando = new SqlCommand(conexionComun( findAll), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -47,8 +44,8 @@ namespace katal.conexion.model.dao
                     proveedor.PRVCCODIGO = read[0].ToString();
                     proveedor.PRVCNOMBRE = read[1].ToString();
                     proveedor.PRVCDIRECC = read[2].ToString();
-                    proveedor.PRVCTELEF1 = read[3].ToString(); 
-                    proveedor.PRVCRUC= read[4].ToString();
+                    proveedor.PRVCTELEF1 = read[3].ToString();
+                    proveedor.PRVCRUC = read[4].ToString();
                     listArticulos.Add(proveedor);
                 }
             }

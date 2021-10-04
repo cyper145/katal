@@ -1,15 +1,13 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
 
 namespace katal.conexion.model.dao
 {
     public class EmpresaDao : Obligatorio
     {
-       
+
 
 
         public EmpresaDao()
@@ -24,12 +22,12 @@ namespace katal.conexion.model.dao
             string findAll = "select*from EMPRESA";
             try
             {
-                comando = new SqlCommand( conexionWenco(findAll), objConexion.getCon());
+                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    Empresa user = new Empresa();              
+                    Empresa user = new Empresa();
                     user.codigoEmpresa = read[0].ToString();
                     user.RazonSocial = read[2].ToString();
 
@@ -51,8 +49,8 @@ namespace katal.conexion.model.dao
         public Empresa findContable(string codigoEmpresa)
         {
 
-           
-            string findAll = $"select EMP_NIVEL from EMPRESA where  EMP_CODIGO ='{codigoEmpresa} '"  ;
+
+            string findAll = $"select EMP_NIVEL from EMPRESA where  EMP_CODIGO ='{codigoEmpresa} '";
             Empresa user = new Empresa();
             try
             {
@@ -61,9 +59,9 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    
+
                     user.EMP_NIVEL = read[0].ToString();
-                    
+
                 }
             }
             catch (Exception)

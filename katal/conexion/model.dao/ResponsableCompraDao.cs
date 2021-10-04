@@ -1,21 +1,18 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
-using katal.Model;
 
 namespace katal.conexion.model.dao
 {
-    public class ResponsableCompraDao:Obligatorio
+    public class ResponsableCompraDao : Obligatorio
     {
-       
-        public ResponsableCompraDao(string codEmpresa) :base(codEmpresa)
+
+        public ResponsableCompraDao(string codEmpresa) : base(codEmpresa)
         {
-            
+
             objConexion = Conexion.saberEstado();
-            
+
         }
         public void create(ResponsableCompra obj)
         {
@@ -23,7 +20,7 @@ namespace katal.conexion.model.dao
             string create = "insert into Responsablecmp (RESPONSABLE_CODIGO,RESPONSABLE_NOMBRE)values('" + obj.RESPONSABLE_CODIGO + "','" + obj.RESPONSABLE_NOMBRE + "')";
             try
             {
-                comando = new SqlCommand(conexionComun( create), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(create), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -43,7 +40,7 @@ namespace katal.conexion.model.dao
             string delete = "delete from Responsablecmp where RESPONSABLE_CODIGO='" + obj.RESPONSABLE_CODIGO + "'";
             try
             {
-                comando = new SqlCommand(conexionComun( delete), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(delete), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -63,7 +60,7 @@ namespace katal.conexion.model.dao
             string delete = "delete from Responsablecmp where RESPONSABLE_CODIGO='" + RESPONSABLE_CODIGO + "'";
             try
             {
-                comando = new SqlCommand(conexionComun (delete), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(delete), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -85,7 +82,7 @@ namespace katal.conexion.model.dao
             string find = "select*from Responsablecmp where RESPONSABLE_CODIGO='" + obj.RESPONSABLE_CODIGO + "' ";
             try
             {
-                comando = new SqlCommand(conexionComun( find), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(find), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 hayRegistros = read.Read();

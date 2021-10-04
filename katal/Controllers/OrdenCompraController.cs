@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using katal.conexion.model.entity;
 using katal.conexion.model.neg;
-using katal.conexion.model.entity;
-using DevExpress.Web.Mvc;
-using katal.Models;
 using katal.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.Mvc;
 
 namespace katal.Controllers
 {
@@ -36,7 +33,7 @@ namespace katal.Controllers
         }
         public ActionResult Index()
         {
-         
+
             ViewData["FormasPago"] = userNeg.findAllFormasPago();
             ViewData["Solicitud"] = userNeg.findAllSolicitud();
             ViewData["DocRef"] = userNeg.findAllDocRef();
@@ -51,10 +48,10 @@ namespace katal.Controllers
             return PartialView("GridViewPartial", GridViewHelper.OrdenCompras);
         }
         public ActionResult MultiSelectPartial(string CurrentCategory)
-        {       
+        {
             if (CurrentCategory == null)
                 CurrentCategory = "";
-            return PartialView(new Articulo() { codigo = CurrentCategory });           
+            return PartialView(new Articulo() { codigo = CurrentCategory });
         }
         public ActionResult MultiSelectProveedor(string CurrentCategory)
         {
@@ -69,11 +66,11 @@ namespace katal.Controllers
         {
             if (customAction == "delete")
                 SafeExecute(() => PerformDelete(codigo));
-            if(customAction  == "export")
+            if (customAction == "export")
             {
-                return RedirectToAction( "index","Report", new {codigo=codigo });
+                return RedirectToAction("index", "Report", new { codigo = codigo });
             }
-                
+
             return GridViewPartial();
         }
         [ValidateAntiForgeryToken]
@@ -82,7 +79,7 @@ namespace katal.Controllers
 
             var codArticulodata = data["DXMVCEditorsValues"];
             string[] word = codArticulodata.Split(',');
-            string dataRequisicion = codArticulodata[0] + word[2] + "," + word[14] + ","+ word[15]+ "," + codArticulodata[codArticulodata.Length - 1];
+            string dataRequisicion = codArticulodata[0] + word[2] + "," + word[14] + "," + word[15] + "," + codArticulodata[codArticulodata.Length - 1];
             Dictionary<string, JArray> nodes = JsonConvert.DeserializeObject<Dictionary<string, JArray>>(dataRequisicion);
             JArray proveedor = nodes["gridLookupProveedor"];
             JArray docref = nodes["gridLookupDocRef"];
@@ -90,7 +87,7 @@ namespace katal.Controllers
 
             issue.oc_ccodpro = proveedor.First.ToString();
             issue.OC_CDOCREF = docref.First.ToString();
-            issue.OC_CNRODOCREF= nroRef.First.ToString();
+            issue.OC_CNRODOCREF = nroRef.First.ToString();
             var codArticulo = data["gridLookupProveedor"];
             issue.OC_CRAZSOC = codArticulo.ToString();
 
@@ -126,17 +123,17 @@ namespace katal.Controllers
                 importe += elem.OC_NTOTVEN;
             }
             );
-            issue.OC_NVENTA= importe;
+            issue.OC_NVENTA = importe;
             issue.OC_NIMPORT = importe;
             return UpdateModelWithDataValidation(issue, AddNewRecord);
         }
 
         private void AddNewRecord(OrdenCompra issue)
         {
-           // GridViewHelper.OrdenCompras.Add(issue);
+            // GridViewHelper.OrdenCompras.Add(issue);
             userNeg.create(issue);
             GridViewHelper.ClearDetalles();
-         }
+        }
         [ValidateAntiForgeryToken]
         public ActionResult GridViewUpdatePartial(OrdenCompra issue, HttpRequest request)
         {
@@ -144,7 +141,7 @@ namespace katal.Controllers
         }
         private void UpdateRecord(OrdenCompra issue)
         {
-           
+
         }
         private ActionResult UpdateModelWithDataValidation(OrdenCompra issue, Action<OrdenCompra> updateMethod)
         {
@@ -154,17 +151,17 @@ namespace katal.Controllers
                 ViewBag.GeneralError = "Please, correct all errors.";
             return GridViewPartial();
         }
-        private void PerformDelete(string  codigo)
+        private void PerformDelete(string codigo)
         {
             userNeg.delete(codigo);
         }
-       
+
 
         //para el nuevo forma de agregar
 
         public ActionResult Toolbar(string CurrentCategory = "-1")
         {
-           //string codigo = "0000000000001";
+            //string codigo = "0000000000001";
             if (CurrentCategory == null)
             {
                 CurrentCategory = "-1";
@@ -173,8 +170,8 @@ namespace katal.Controllers
             ViewData["codigoOrden"] = CurrentCategory;
             OrdeCurrent = userNeg.find(CurrentCategory);
             // probando solo 
-            if(OrdeCurrent==null)
-                OrdeCurrent=GridViewHelper.OrdenCompras.Find(element => element.OC_CNUMORD == CurrentCategory);
+            if (OrdeCurrent == null)
+                OrdeCurrent = GridViewHelper.OrdenCompras.Find(element => element.OC_CNUMORD == CurrentCategory);
             GridViewHelper.ClearDetalles();
             if (OrdeCurrent == null)
             {
@@ -191,13 +188,13 @@ namespace katal.Controllers
             //string codigo = "0000000000001";
             ViewData["codigoOrden"] = codigoOrden;
             OrdeCurrent = userNeg.find(codigoOrden);
-           
+
             if (OrdeCurrent == null)
             {
                 GridViewHelper.GetDetalles();
                 if (GridViewHelper.NROREQUI != "")
                 {
-                    
+
                     GridViewHelper.ClearDetalles();
                     cargar(requisionNeg.findAllDetail(GridViewHelper.NROREQUI));
                     GridViewHelper.NROREQUI = "";
@@ -206,7 +203,7 @@ namespace katal.Controllers
                 return PartialView("ToolbarPartial", GridViewHelper.detalles);
             }
 
-           GridViewHelper.detalles = userNeg.findAllDetail(OrdeCurrent.OC_CNUMORD);
+            GridViewHelper.detalles = userNeg.findAllDetail(OrdeCurrent.OC_CNUMORD);
             return PartialView("ToolbarPartial", GridViewHelper.detalles);
         }
 
@@ -233,8 +230,8 @@ namespace katal.Controllers
             Dictionary<string, object> nodes = JsonConvert.DeserializeObject<Dictionary<string, object>>(codArticulodata);
             var codArticulo = nodes["gridLookup"];
 
-            JArray array =(JArray) codArticulo ;
-            
+            JArray array = (JArray)codArticulo;
+
             var description = dataForm["gridLookup"];
             product.oc_ccodigo = array.First.ToString();
             product.OC_CDESREF = description.ToString();
@@ -242,7 +239,7 @@ namespace katal.Controllers
                 SafeExecute(() => InsertProduct(product));
             else
                 ViewData["EditError"] = "Please, correct all errors.";
-            var data=ViewData["codigoOrden"];
+            var data = ViewData["codigoOrden"];
             if (data == null)
             {
                 return ToolbarPartial("-1");
@@ -286,12 +283,12 @@ namespace katal.Controllers
         public void UpdateProduct(DetalleOrdenCompra product)
         {
 
-            DetalleOrdenCompra detalleOrdenCompra= GridViewHelper.detalles.Find(element=> element.oc_ccodigo== product.oc_ccodigo);
+            DetalleOrdenCompra detalleOrdenCompra = GridViewHelper.detalles.Find(element => element.oc_ccodigo == product.oc_ccodigo);
             detalleOrdenCompra.OC_GLOSA = product.OC_GLOSA;
             detalleOrdenCompra.OC_NCANTID = product.OC_NCANTID;
-            detalleOrdenCompra.OC_NPREUNI= product.OC_NPREUNI;
-            detalleOrdenCompra.OC_NDSCPOR= product.OC_NDSCPOR;
-            detalleOrdenCompra.OC_NTOTVEN= product.OC_NTOTVEN;
+            detalleOrdenCompra.OC_NPREUNI = product.OC_NPREUNI;
+            detalleOrdenCompra.OC_NDSCPOR = product.OC_NDSCPOR;
+            detalleOrdenCompra.OC_NTOTVEN = product.OC_NTOTVEN;
 
         }
 
@@ -310,41 +307,42 @@ namespace katal.Controllers
 
         public void DeleteProduct(string product)
         {
-            GridViewHelper.detalles.Remove( GridViewHelper.detalles.Find(element => element.oc_ccodigo == product));
+            GridViewHelper.detalles.Remove(GridViewHelper.detalles.Find(element => element.oc_ccodigo == product));
             // crear la logica para agregar un producto
         }
 
 
         // parte 
-        public ActionResult MultiSelectDocRef(string OC_CDOCREF = "-1", FormCollection dataR=null)
+        public ActionResult MultiSelectDocRef(string OC_CDOCREF = "-1", FormCollection dataR = null)
         {
             if (dataR != null)
             {
                 string v = dataR["gridLookupDocRef"];
                 GridViewHelper.OC_CDOCREF = v;
             }
-          
+
             ViewData["DocRef"] = userNeg.findAllDocRef();
             if (OC_CDOCREF != "-1")
                 OC_CDOCREF = "";
-            return PartialView("MultiSelectDocRef", new  NumDocCompras () { CTNCODIGO = OC_CDOCREF });
-            
-   
+            return PartialView("MultiSelectDocRef", new NumDocCompras() { CTNCODIGO = OC_CDOCREF });
+
+
         }
-        public ActionResult MultiSelectNroRef(string  NROREQUI  = "-1", FormCollection dataR = null)
+        public ActionResult MultiSelectNroRef(string NROREQUI = "-1", FormCollection dataR = null)
         {
             if (dataR != null)
             {
                 string v = dataR["gridLookupNroRef"];
-                if (v != null && v!="")
+                if (v != null && v != "")
                 {
-                    GridViewHelper.NROREQUI = v;                    
+                    GridViewHelper.NROREQUI = v;
                 }
-               
+
             }
 
             // VER QUE EENTO PUEDE VER ESTE DETALLE POR EL MOMENTO SOLO SE NECESITA RQ
-            if (GridViewHelper.OC_CDOCREF== "RQ") {
+            if (GridViewHelper.OC_CDOCREF == "RQ")
+            {
                 ViewData["NroRef"] = requisionNeg.findAllPendientes();
             }
             ViewData["NroRef"] = requisionNeg.findAllPendientes();
@@ -354,13 +352,13 @@ namespace katal.Controllers
 
         }
 
-     
+
         public ActionResult MultiSelectResponsable(string oc_csolict = "-1", FormCollection dataR = null)
         {
             if (dataR != null)
             {
                 string v = dataR["gridLookupDocRef"];
-               // GridViewHelper.OC_SOLICITA = v;
+                // GridViewHelper.OC_SOLICITA = v;
             }
 
             ViewData["responsable"] = responsable.findAll();
@@ -369,7 +367,7 @@ namespace katal.Controllers
             return PartialView("MultiSelectResponsable", new ResponsableCompra() { RESPONSABLE_CODIGO = oc_csolict });
 
         }
-        
+
         public JsonResult nroDera()
         {
 
@@ -388,13 +386,13 @@ namespace katal.Controllers
                 ModelState.Clear();
             else
             {
-                GridViewHelper.dateRange.End =DateTime.Parse(  Request.Params["End"]);
-                GridViewHelper.dateRange.Start= DateTime.Parse(Request.Params["Start"]);
+                GridViewHelper.dateRange.End = DateTime.Parse(Request.Params["End"]);
+                GridViewHelper.dateRange.Start = DateTime.Parse(Request.Params["Start"]);
             }
-               
+
             return RedirectToAction("index");
         }
-       
-      
+
+
     }
 }

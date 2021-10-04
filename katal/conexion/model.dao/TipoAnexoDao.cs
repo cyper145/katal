@@ -1,31 +1,29 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
 namespace katal.conexion.model.dao
 {
-    public class TipoAnexoDao:Obligatorio
+    public class TipoAnexoDao : Obligatorio
     {
 
-       
 
-       
-        public TipoAnexoDao(string codEmpresa) :base(codEmpresa)
+
+
+        public TipoAnexoDao(string codEmpresa) : base(codEmpresa)
         {
-           
+
             objConexion = Conexion.saberEstado();
-          
+
         }
         public List<TipoAnexo> findAll()
         {
             List<TipoAnexo> listTipos = new List<TipoAnexo>();
-       
+
             string findAll = $"SELECT TIPOANEX_CODIGO, TIPOANEX_DESCRIPCION FROM TIPO_ANEXO ";
             try
             {
-                comando = new SqlCommand(conexionContabilidad( findAll), objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -50,8 +48,8 @@ namespace katal.conexion.model.dao
         }
         public string findAllDetail(string cuentas)
         {
-                
-            string codigoAnexo="";
+
+            string codigoAnexo = "";
             string findAll = $"SELECT TIPOANEX_CODIGO FROM PLAN_CUENTA_NACIONAL WHERE PLANCTA_CODIGO='" + cuentas + "'";
             try
             {
@@ -60,7 +58,7 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
                 {
-                    codigoAnexo = read[0].ToString();                                      
+                    codigoAnexo = read[0].ToString();
                 }
                 return codigoAnexo;
             }
@@ -74,16 +72,16 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-          
+
         }
-     
-        public List<Anexo> findAllAnexo( string codigo="")
+
+        public List<Anexo> findAllAnexo(string codigo = "")
         {
-            List<Anexo> listAnexo = new List<Anexo>();          
+            List<Anexo> listAnexo = new List<Anexo>();
             string findAll = $"SELECT ANEX_CODIGO, ANEX_DESCRIPCION, ANEX_RUC FROM ANEXO  WHERE TIPOANEX_CODIGO ='{codigo}' ";
             if (codigo == "")
             {
-                 findAll = "SELECT ANEX_CODIGO, ANEX_DESCRIPCION, ANEX_RUC FROM ANEXO   ";
+                findAll = "SELECT ANEX_CODIGO, ANEX_DESCRIPCION, ANEX_RUC FROM ANEXO   ";
             }
 
             try
@@ -115,7 +113,7 @@ namespace katal.conexion.model.dao
 
         public List<TipoDocumento> findAllTipoDocumento()
         {
-            List<TipoDocumento> listAnexo = new List<TipoDocumento>();   
+            List<TipoDocumento> listAnexo = new List<TipoDocumento>();
             string findAll = $"SELECT TIPDOC_CODIGO, TIPDOC_DESCRIPCION, tipdoc_referencia FROM TIPOS_DE_DOCUMENTOS ";
             try
             {
@@ -127,7 +125,7 @@ namespace katal.conexion.model.dao
                     TipoDocumento gasto = new TipoDocumento();
                     gasto.TIPDOC_CODIGO = read[0].ToString();
                     gasto.TIPDOC_DESCRIPCION = read[1].ToString();
-                    gasto.TIPDOC_REFERENCIA =Conversion.ParseBool( read[2].ToString());
+                    gasto.TIPDOC_REFERENCIA = Conversion.ParseBool(read[2].ToString());
                     listAnexo.Add(gasto);
                 }
             }
@@ -149,7 +147,7 @@ namespace katal.conexion.model.dao
             // TIPOANEX_CODIGO = '" & _
             //txtTpoAnexo
             TipoDocumento gasto = new TipoDocumento();
-           
+
             string findAll = $"SELECT TIPDOC_CODIGO, TIPDOC_DESCRIPCION, tipdoc_referencia FROM TIPOS_DE_DOCUMENTOS where TIPDOC_CODIGO='{codigo}' ";
             try
             {
@@ -158,10 +156,10 @@ namespace katal.conexion.model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    
+
                     gasto.TIPDOC_CODIGO = read[0].ToString();
                     gasto.TIPDOC_DESCRIPCION = read[1].ToString();
-                    gasto.TIPDOC_REFERENCIA =Conversion.ParseBool( read[2].ToString());
+                    gasto.TIPDOC_REFERENCIA = Conversion.ParseBool(read[2].ToString());
                 }
             }
             catch (Exception)

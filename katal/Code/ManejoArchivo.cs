@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.IO;
 
 namespace katal.Code
 {
     public class ManejoArchivo
     {
-        
+
 
         // para crear el archivo
         public void GenerarTXT(string texto)
         {
             string rutaCompleta = @" C:\Users\cyper\Desktop\miarchivo.txt";
-           // string texto = "HOLA MUNDO ";
+            // string texto = "HOLA MUNDO ";
 
             using (StreamWriter mylogs = File.AppendText(rutaCompleta))         //se crea el archivo
             {
@@ -34,7 +31,7 @@ namespace katal.Code
             }
         }
 
-            // para escribir en el archivo
+        // para escribir en el archivo
         public void AdicionarInfoAlTxt(string texto)
         {
             string rutaCompleta = @" C:\miarchivo.txt";
@@ -48,7 +45,7 @@ namespace katal.Code
             }
         }
 
-            // para leer la información el archivo
+        // para leer la información el archivo
         public void LeerInfoTxt()
         {
             string rutaCompleta = @"C:\miarchivo.txt";

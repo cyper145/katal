@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using katal.conexion.model.entity;
+﻿using katal.conexion.model.entity;
 using katal.conexion.model.neg;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace katal.Code
 {

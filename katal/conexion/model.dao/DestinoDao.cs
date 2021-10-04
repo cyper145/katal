@@ -2,20 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.dao
 {
-    public class DestinoDao: Obligatorio
+    public class DestinoDao : Obligatorio
     {
-       
+
 
         public DestinoDao()
         {
-           
-           objConexion = Conexion.saberEstado();
-          
+
+            objConexion = Conexion.saberEstado();
+
         }
         public List<Destino> findAll()
         {
@@ -60,10 +58,10 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())
-                {                    
+                {
                     user.CO_C_CODIG = read[0].ToString();
                     user.CO_A_DESCR = read[1].ToString();
-                    user.CON_IMPSTO = read[2].ToString();                  
+                    user.CON_IMPSTO = read[2].ToString();
                 }
             }
             catch (Exception)
@@ -78,6 +76,6 @@ namespace katal.conexion.model.dao
             }
             return user;
         }
-       
+
     }
 }

@@ -2,8 +2,6 @@
 using katal.conexion.model.neg;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -15,11 +13,11 @@ namespace katal.Controllers
         private ProveedorNeg proveedorNeg;
         private EstadoDocNeg estadoDocNeg;
 
-       
+
         public ReporteOrdenCompraController()
         {
             proveedorNeg = new ProveedorNeg(codEmpresa);
-            estadoDocNeg = new EstadoDocNeg(codEmpresa);        
+            estadoDocNeg = new EstadoDocNeg(codEmpresa);
         }
         // GET: ReporteOrdenCompra
         public ActionResult Index()
@@ -51,7 +49,7 @@ namespace katal.Controllers
             string prov2 = ValidarRecuperar(data["gridLookupProveedor2$State"]);
             string esta1 = ValidarRecuperar(data["gridLookupEstadoDoc$State"]);
             string esta2 = ValidarRecuperar(data["gridLookupEstadoDoc2$State"]);
-           
+
 
             //GridViewHelper.dateRange.End =DateTime.Parse(  Request.Params["End"]);
             //GridViewHelper.dateRange.Start = DateTime.Parse(Request.Params["Start"]);
@@ -61,15 +59,15 @@ namespace katal.Controllers
                 ModelState.Clear();
             else
             {
-               // GridViewHelper.dateRange.End = DateTime.Parse(Request.Params["End"]);
+                // GridViewHelper.dateRange.End = DateTime.Parse(Request.Params["End"]);
                 //GridViewHelper.dateRange.Start = DateTime.Parse(Request.Params["Start"]);
             }
 
-            
-            return RedirectToAction("OrdenesCompraProveedor", "Report", new { codigo = "014",  star= DateTime.Parse(Request.Params["Start"]), end = DateTime.Parse(Request.Params["End"]), estado1 = esta1, estado2 = esta2, PROV1 = prov1, PROV2 = prov2, });
+
+            return RedirectToAction("OrdenesCompraProveedor", "Report", new { codigo = "014", star = DateTime.Parse(Request.Params["Start"]), end = DateTime.Parse(Request.Params["End"]), estado1 = esta1, estado2 = esta2, PROV1 = prov1, PROV2 = prov2, });
         }
 
-        
+
         public ActionResult MultiSelectProveedor(string CurrentCategory)
         {
             ViewData["Proveedores"] = proveedorNeg.findAll();

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using katal.conexion.model.entity;
 using katal.conexion.model.neg;
-using katal.conexion.model.entity;
 using katal.Model;
 using Newtonsoft.Json;
-using DevExpress.DataAccess.Native.Json;
-using System.Text.RegularExpressions;
-using System.Globalization;
+using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.Mvc;
 
 namespace katal.Controllers
 {
@@ -44,7 +40,7 @@ namespace katal.Controllers
         }
         public ActionResult Contabilizar()
         {
-            GridViewHelper.NivelCOntable = int.Parse(empresaNeg.findContable(GridViewHelper.user.codEmpresa).EMP_NIVEL);       
+            GridViewHelper.NivelCOntable = int.Parse(empresaNeg.findContable(GridViewHelper.user.codEmpresa).EMP_NIVEL);
             GridViewHelper.contableDets = comprobanteNeg.findallContableDet();
             calcularDebeHaber();
             return View(GridViewHelper.contableDets);
@@ -53,9 +49,10 @@ namespace katal.Controllers
         {
             decimal haber = 0;
             decimal debe = 0;
-            GridViewHelper.contableDets.ForEach(elem => {
-                haber += decimal.Parse( elem.campo2);
-                debe += decimal.Parse( elem.campo1);
+            GridViewHelper.contableDets.ForEach(elem =>
+            {
+                haber += decimal.Parse(elem.campo2);
+                debe += decimal.Parse(elem.campo1);
             });
             GridViewHelper.TDebe = debe;
             GridViewHelper.THaber = haber;
@@ -284,12 +281,12 @@ namespace katal.Controllers
             return UpdateModelWithDataValidation(issue, AddNewRecord);
         }
 
-        private void   AddNewRecord(Comprobante issue)
+        private void AddNewRecord(Comprobante issue)
         {
             //GridViewHelper.Comprobantes.Add(issue);
 
-            GridViewHelper.respuesta=  comprobanteNeg.create(issue);
-           
+            GridViewHelper.respuesta = comprobanteNeg.create(issue);
+
         }
         [ValidateAntiForgeryToken]
         public ActionResult GridViewUpdatePartial(Comprobante issue, FormCollection data)
@@ -341,7 +338,7 @@ namespace katal.Controllers
                     if (!GridViewHelper.respuesta)
                     {
                         ViewBag.GeneralError = "error al guardar Documento ";
-                        return  PartialView("GridViewPartial");
+                        return PartialView("GridViewPartial");
                     }
                     Comprobante comp = comprobanteNeg.findAllConta(GridViewHelper.COMP_CORDEN, GridViewHelper.COMP_TIPODOCU_CODIGO, GridViewHelper.COMP_CSERIE, GridViewHelper.COMP_CNUMERO);
                     comprobanteNeg.inserdataTemporal(comp);
@@ -409,7 +406,7 @@ namespace katal.Controllers
                 {
                     Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
                     // Array codigo = nodes["selectedKeyValues"] ;
-                    if (nodes.selectedKeyValues != null && nodes.selectedKeyValues[0]!=null)
+                    if (nodes.selectedKeyValues != null && nodes.selectedKeyValues[0] != null)
                     {
                         string codigoanexo = nodes.selectedKeyValues[0];
                         Anexo anexo = data.Find(X => X.ANEX_CODIGO == codigoanexo);
@@ -782,7 +779,7 @@ namespace katal.Controllers
         }
         public JsonResult ChangePlanCuenta()
         {
-           
+
             string xco_c_conco = "";
             string xco_c_tipo = "N";
             bool xco_c_cenco = false;
@@ -794,15 +791,15 @@ namespace katal.Controllers
             bool activeAnexo = false;
             decimal xnvalor = 0;
 
-            RespuestaPlan respuesta = new RespuestaPlan(); 
+            RespuestaPlan respuesta = new RespuestaPlan();
             PlanCuentaNacional planCuenta = comprobanteNeg.findCuentasNacionales(GridViewHelper.PLANCTA_CODIGO, GridViewHelper.NivelCOntable);
             if (planCuenta != null)
             {
                 xcanexo = planCuenta.TIPOANEX_CODIGO;
 
                 xco_c_conco = planCuenta.PLANCTA_CON_COSTO;
-                xco_c_cenco =  planCuenta.PLANCTA_CENTCOST;
-                if (xco_c_conco != null && xco_c_conco.Trim()!="")
+                xco_c_cenco = planCuenta.PLANCTA_CENTCOST;
+                if (xco_c_conco != null && xco_c_conco.Trim() != "")
                 {
                     GastosIngresos gastosIngresos = comprobanteNeg.findGastoIngreso(xco_c_conco);
                     if (gastosIngresos != null)
@@ -822,11 +819,11 @@ namespace katal.Controllers
                         }
                     }
                 }
-                if (xco_c_cenco && xco_c_tipo== "S")
+                if (xco_c_cenco && xco_c_tipo == "S")
                 {
                     activeCtaDest = true;
                 }
-                if (xcanexo.Trim()!="")
+                if (xcanexo.Trim() != "")
                 {
                     activeAnexo = true;
                 }
@@ -847,7 +844,7 @@ namespace katal.Controllers
         {
             List<Comprobante> gastosIngresos = comprobanteNeg.findAll();
 
-            return Json(new {  gastosIngresos }, JsonRequestBehavior.AllowGet);
+            return Json(new { gastosIngresos }, JsonRequestBehavior.AllowGet);
         }
 
 

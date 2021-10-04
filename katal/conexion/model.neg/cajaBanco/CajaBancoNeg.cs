@@ -3,7 +3,6 @@ using katal.conexion.model.entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.neg
 {
@@ -27,7 +26,7 @@ namespace katal.conexion.model.neg
 
         public List<CMovimientoBanco> findAllMovimientos(string banco, string moneda, DateTime dateTime)
         {
-            return cajaBancoDao.findAllMovimientos(banco, moneda,dateTime);
+            return cajaBancoDao.findAllMovimientos(banco, moneda, dateTime);
         }
 
         public List<TipoOpcionCajaBanco> findAllTipoOpciones(int tipo)
@@ -118,13 +117,76 @@ namespace katal.conexion.model.neg
 
         public void create(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
         {
-            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECCA, obj.CB_D_FECCA,dateTime);
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECCA, obj.CB_D_FECCA, dateTime);
             obj.CB_N_TIPCA = valortipoCambio;
             decimal cambio = Math.Round(obj.CB_N_MTOMN * valortipoCambio, 2);
-            obj.CB_N_MTOME = cajaBancoDao.ternarioG(cambioMoneda=="ME", obj.CB_N_MTOME, cambio);
-            obj.CB_N_MTOMN = cajaBancoDao.ternarioG(cambioMoneda=="MN", obj.CB_N_MTOME, cambio);
+            obj.CB_N_MTOME = cajaBancoDao.ternarioG(cambioMoneda == "ME", obj.CB_N_MTOME, cambio);
+            obj.CB_N_MTOMN = cajaBancoDao.ternarioG(cambioMoneda == "MN", obj.CB_N_MTOME, cambio);
             cajaBancoDao.create(obj, codigoBanco, dateTime);
         }
+
+        public bool exiteFactura(DateTime dateTime)
+        {
+
+            string criterio = deteminarCriterio();
+            string consulta = deteminarconsulta(criterio, dateTime);
+            bool consul = cajaBancoDao.hacerConsuta(consulta);
+            return consul;
+        }
+        protected string deteminarCriterio()
+        {
+            string cadena = Busca_Gen("TIPOPAGO");
+            string criterio = "";
+            List<string> subs;
+            if (cadena != "")
+            {
+                subs = cadena.Split(';').ToList();
+
+                subs.ForEach(X =>
+                {
+                    criterio += "CFFORVEN='" + X + "' OR ";
+                });
+                criterio = criterio.Substring(0, criterio.Length - 3);
+            }
+            else
+            {
+                criterio = "N";
+            }
+            return criterio;
+        }
+        protected string deteminarconsulta(string criterio, DateTime dateTime)
+        {
+            string cadena = Busca_Gen("IMPEXPCAJA");
+            string consulta = "";
+            if (cadena != "")
+            {
+                consulta = "";
+            }
+            else
+            {
+                /*
+                If VGINTFAC = "CAJA" Then
+                  CADSQL = "SELECT * FROM FACCAB WHERE CFFECDOC='" & Format(VGFecTrb, "DD/mm/YYYY") & "' AND (" & cCriterio & ") AND F_CJABCO=0 AND CFTD<>'NC' AND CFESTADO<>'A' ORDER BY CFTD, CFNUMSER, CFNUMDOC;"
+                Else
+                   CADSQL = "SELECT * FROM FACCAB WHERE CFFECDOC<='" & Format(VGFecTrb, "DD/mm/YYYY") & "' AND (" & cCriterio & ") AND F_CJABCO=0 AND CFTD<>'NC' AND CFESTADO<>'A' ORDER BY CFTD, CFNUMSER, CFNUMDOC;"
+                End If
+                */
+                consulta = $"SELECT * FROM FACCAB WHERE CFFECDOC<={cajaBancoDao.dateFormat(dateTime)} AND ({criterio}) AND F_CJABCO=0 AND CFTD<>'NC' AND CFESTADO<>'A' ORDER BY CFTD, CFNUMSER, CFNUMDOC";
+
+            }
+            return consulta;
+        }
+
+        public string verDataProgramacion(DateTime dateTime)
+        {
+            string valor = cajaBancoDao.verdata("Concepto_Codigo='PROGRAMACION'", "ConceptoGral", 4, 1, "Concepto_Logico", dateTime);
+            return valor;
+        }
+        public List<Cobranzas> AllConbranzas(DateTime dateTime)
+        {
+            return cajaBancoDao.AllConbranzas(dateTime);
+        }
+
 
     }
 }

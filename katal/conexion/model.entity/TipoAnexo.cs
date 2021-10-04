@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace katal.conexion.model.entity
+﻿namespace katal.conexion.model.entity
 {
     public class TipoAnexo
     {
@@ -42,6 +37,6 @@ namespace katal.conexion.model.entity
         public string TIPDOC_FILE { get; set; }
         public string TIPDOC_FECHAVTO { get; set; }
         public string TIPDOC_REGCOMP { get; set; }
-       
+
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using DevExpress.Web.Mvc;
+﻿using DevExpress.Web.Mvc;
 using katal.Model;
 
 namespace katal.Code.Helpers
@@ -37,11 +33,13 @@ namespace katal.Code.Helpers
         {
             var columns = new MVCxGridViewColumnCollection();
             columns.Add("ProductName");
-            columns.Add(c => {
+            columns.Add(c =>
+            {
                 c.FieldName = "CategoryID";
                 c.Caption = "Category";
 
-                c.EditorProperties().ComboBox(p => {
+                c.EditorProperties().ComboBox(p =>
+                {
                     p.TextField = "CategoryName";
                     p.ValueField = "CategoryID";
                     p.ValueType = typeof(int);
@@ -49,9 +47,11 @@ namespace katal.Code.Helpers
                 });
             });
             columns.Add("QuantityPerUnit");
-            columns.Add(c => {
+            columns.Add(c =>
+            {
                 c.FieldName = "UnitPrice";
-                c.EditorProperties().SpinEdit(p => {
+                c.EditorProperties().SpinEdit(p =>
+                {
                     p.DisplayFormatString = "c";
                     p.DisplayFormatInEditMode = true;
                 });

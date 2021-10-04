@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.entity
 {
@@ -119,7 +116,7 @@ namespace katal.conexion.model.entity
         public decimal gasto1 { get; set; }
         public decimal gasto2 { get; set; }
 
-        public  ContableDet ContableDet { get; set; }
+        public ContableDet ContableDet { get; set; }
 
         //public 
     }
@@ -151,7 +148,7 @@ namespace katal.conexion.model.entity
         public string ANEX_CODIGO { get; set; }
         public string CANEXO { get; set; }
         public string ORDENFAB { get; set; }
-      
+
     }
 
     public class Detraccion
@@ -186,9 +183,9 @@ namespace katal.conexion.model.entity
 
         public string campo1 { get; set; }
         public string campo2 { get; set; }
-        
+
         // CAMPOS PARA EL TABLA REAL
-        
+
         public string CDESTCOMP { get; set; }
         public string codmaquina { get; set; }
         public decimal cantidad { get; set; }

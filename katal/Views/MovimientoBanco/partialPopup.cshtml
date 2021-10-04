@@ -1,0 +1,109 @@
+﻿
+
+
+@Html.DevExpress().PopupControl(
+    settings =>
+    {
+        settings.Name = "pcModalMode";
+        settings.Width = 550;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.CloseOnEscape = true;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "Documento de Detracción";
+        settings.Modal = true;
+        settings.AutoUpdatePosition = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SetContent(() =>
+        {
+
+
+            @Html.DevExpress().FormLayout(s =>
+            {
+                s.Name = "ModalModeFormLayout";
+                s.RequiredMarkDisplayMode = RequiredMarkMode.None;
+                s.Width = Unit.Percentage(100);
+                s.Height = Unit.Percentage(100);
+                s.ColumnCount = 6;
+                s.NestedExtensionWidth = Unit.Percentage(100);
+                s.Items.Add(i =>
+                {
+                    i.Name = "DDetraccion";
+                    i.Caption = "Afecto";
+                    i.ColumnSpan = 3;
+                    i.NestedExtension().ComboBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.SelectedIndex = 0;
+                        t.Properties.ValueType = typeof(string);
+                        t.Properties.Items.Add("SI", "1");
+                        t.Properties.Items.Add("NO ", "0");
+
+
+                    });
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DTasa";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Tasa(%)";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DDocumento";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Documento";
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                    });
+                });
+                s.Items.Add(i =>
+                {
+                    i.FieldName = "DFecha";
+                    i.ColumnSpan = 3;
+                    i.Caption = "Fecha";
+                    i.NestedExtension().DateEdit(t =>
+                    {
+                        t.Properties.ValidationSettings.Display = Display.Dynamic;
+                        t.ShowModelErrors = true;
+                        t.Properties.ClientSideEvents.ValueChanged= "OnChangeDfecha";
+                    });
+                });
+
+               
+                
+                s.Items.Add(i =>
+                {
+                    i.ColumnSpan = 6;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.SetNestedContent(() =>
+                    {
+
+                        Html.DevExpress().Button(
+                            buttonSettings =>
+                            {
+                                buttonSettings.Name = "btnTraccion";
+                                buttonSettings.ControlStyle.CssClass = "button";
+                                buttonSettings.Width = 80;
+                                buttonSettings.Text = "Aceptar";
+                                buttonSettings.ClientSideEvents.Click = "function(s, e){ pcModalMode.Hide(); }";
+                            }
+                        ).Render();
+                    });
+                });
+            }).Render();
+
+        });
+
+        // settings.ClientSideEvents.CloseUp = "function(s, e){ ASPxClientEdit.ClearEditorsInContainer(null, '', true); }";
+    }).GetHtml()
+

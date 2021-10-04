@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.dao;
+﻿using katal.conexion.model.dao;
 using katal.conexion.model.entity;
+using System.Collections.Generic;
 
 namespace katal.conexion.model.neg
 {
@@ -18,6 +15,6 @@ namespace katal.conexion.model.neg
         {
             return objUserDao.findAll();
         }
-        
+
     }
 }

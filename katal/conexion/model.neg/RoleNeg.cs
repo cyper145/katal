@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using katal.conexion.model.dao;
+﻿using katal.conexion.model.dao;
 using katal.conexion.model.entity;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace katal.conexion.model.neg
 {

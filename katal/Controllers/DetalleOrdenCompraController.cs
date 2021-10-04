@@ -1,12 +1,8 @@
 ﻿using DevExpress.Web.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using katal.conexion.model.entity;
 using katal.conexion.model.neg;
 using katal.Models;
+using System.Web.Mvc;
 
 namespace katal.Controllers
 {

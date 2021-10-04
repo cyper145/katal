@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.entity
 {
-    public class DataOrdenCompra{
+    public class DataOrdenCompra
+    {
         public List<OrdenCompra> ordens { get; set; }
 
         public DateRangePickerModel dateRange { get; set; }
@@ -54,7 +53,7 @@ namespace katal.conexion.model.entity
         public string OC_TIPO { get; set; }
         public string EST_CODIGO { get; set; }
         public string EST_NOMBRE { get; set; }
-       
+
         public string COVMON_CODIGO { get; set; }
         public string nameArticulo { get; set; }
         public decimal precio { get; set; }
@@ -62,7 +61,7 @@ namespace katal.conexion.model.entity
 
         public decimal cantidad { get; set; }
         public decimal total { get; set; }
-        
+
         public string RUC { get; set; }
         public string RESPONSABLE_CODIGO { get; set; }
         public string DIRECCION { get; set; }
@@ -87,11 +86,13 @@ namespace katal.conexion.model.entity
 
         public string OC_CNUMORD { get; set; }
         public string oc_ccodpro { get; set; }
-       
+
 
         public DateTime OC_DFECDOC   // property
         {
-            get {  if(oC_DFECDOC!=null) return oC_DFECDOC;
+            get
+            {
+                if (oC_DFECDOC != null) return oC_DFECDOC;
                 else
                 {
                     return DateTime.Now;
@@ -134,8 +135,8 @@ namespace katal.conexion.model.entity
         //private string detalle; // field
         public string Codigo   // property
         {
-            get { return OC_CNUMORD+"-"+ OC_CITEM; }
-            
+            get { return OC_CNUMORD + "-" + OC_CITEM; }
+
         }
     }
 
@@ -151,8 +152,8 @@ namespace katal.conexion.model.entity
 
         public DateRangePickerModel()
         {
-            DateTime end = DateTime.Now;       
-            DateTime start = end.AddDays(-30); 
+            DateTime end = DateTime.Now;
+            DateTime start = end.AddDays(-30);
             Start = start;
             End = end;
         }

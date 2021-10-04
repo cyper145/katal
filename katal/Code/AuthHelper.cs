@@ -19,7 +19,7 @@ namespace katal.Model
     {
 
 
-        public static bool SignIn(string userName, string password , int rol_id ,string empresa, string rol,string codEmpresa)
+        public static bool SignIn(string userName, string password, int rol_id, string empresa, string rol, string codEmpresa)
         {
 
             ApplicationUser user = CreateDefualtUser(userName, empresa, rol, codEmpresa);
@@ -42,7 +42,7 @@ namespace katal.Model
         {
             return HttpContext.Current.Session["User"] as ApplicationUser;
         }
-        private static ApplicationUser CreateDefualtUser(string username,string empresa, string rol ,string codEmpresa)
+        private static ApplicationUser CreateDefualtUser(string username, string empresa, string rol, string codEmpresa)
         {
             return new ApplicationUser
             {
@@ -52,8 +52,8 @@ namespace katal.Model
                 Email = username,
                 AvatarUrl = "~/Content/Photo/Alberto_Alonso.jpg",
                 Empresa = empresa,
-                Rol=rol,
-                codEmpresa= codEmpresa,
+                Rol = rol,
+                codEmpresa = codEmpresa,
             };
         }
         public static string Encriptar(this string _cadenaAencriptar)

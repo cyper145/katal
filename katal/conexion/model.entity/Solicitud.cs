@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace katal.conexion.model.entity
+﻿namespace katal.conexion.model.entity
 {
     public class Solicitud
     {
@@ -17,6 +12,6 @@ namespace katal.conexion.model.entity
         public string TRESTA { get; set; }
         public string TADVALOR { get; set; }
         public string TNOFOB { get; set; }
-       
+
     }
 }

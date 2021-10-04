@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using katal.conexion.model.neg;
 using System.Web.Mvc;
-using katal.conexion.model.entity;
-using katal.conexion.model.neg;
-using katal.Model;
 namespace katal.Controllers
 {
     public class AreaController : BaseController
@@ -14,7 +8,7 @@ namespace katal.Controllers
         private AreaNeg areaNeg;
         public AreaController()
         {
-           
+
             areaNeg = new AreaNeg(codEmpresa);
         }
         // GET: Area

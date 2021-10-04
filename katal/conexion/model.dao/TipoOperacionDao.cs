@@ -2,24 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace katal.conexion.model.dao
 {
-    public class TipoOperacionDao:Obligatorio
+    public class TipoOperacionDao : Obligatorio
     {
 
-        public TipoOperacionDao() 
-        {       
+        public TipoOperacionDao()
+        {
             objConexion = Conexion.saberEstado();
         }
-        public List<ServSujDetraccion> findAllDetraccion( string  dateEmision)
+        public List<ServSujDetraccion> findAllDetraccion(string dateEmision)
         {
             List<ServSujDetraccion> listTipos = new List<ServSujDetraccion>();
 
-           
-            string findAll = $"SELECT codigo, servicio  from Tab_ServSujDetracc  Where vigencia is null or vigencia >={dateFormat( dateEmision)}";
+
+            string findAll = $"SELECT codigo, servicio  from Tab_ServSujDetracc  Where vigencia is null or vigencia >={dateFormat(dateEmision)}";
             try
             {
                 comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
@@ -49,7 +47,7 @@ namespace katal.conexion.model.dao
         {
             List<TipoOperacion> listTipos = new List<TipoOperacion>();
 
-           
+
             string findAll = "SELECT codigo, tipo_operacion FROM  Tab_TipoOperacion";
             try
             {

@@ -1,22 +1,19 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
-using katal.Model;
 
 namespace katal.conexion.model.dao
 {
     public class ArticuloDao : Obligatorio
     {
 
-       
+
 
 
         public ArticuloDao(string codEmpresa) : base(codEmpresa)
-        {        
-            objConexion = Conexion.saberEstado();          
+        {
+            objConexion = Conexion.saberEstado();
         }
 
         public void create(Articulo obj)
@@ -25,12 +22,12 @@ namespace katal.conexion.model.dao
 
             //   string create = "insert into dk_users(ACODIGO,ACODIGO2,ADESCRI,ADESCRI2, UMREFERENCIA,AFAMILIA,AMODELO,AGRUPO,APESO,ATIPO,AUSER, AESTADO,AFECHA,AFSERIE,AFLOTE,ACODMON,AIGVPOR,AFLAGIGV,AMARCA,ACOLOR,ATALLA,AFOTO,ACOMENTA,AFSTOCK,ACLASIFICACION )values('" + obj.id + "','" + obj.username + "','" + obj.password + "','" + obj.email + "','" + obj.photo + "','" + creat + "','" + updte + "','" + obj.isactive + "','" + last + "','" + obj.rol_id + "')";
 
-            string create="";
-             
-            
+            string create = "";
+
+
             try
             {
-                comando = new SqlCommand( conexionComun(create), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(create), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -84,7 +81,7 @@ namespace katal.conexion.model.dao
                     articulo.grupo = read[8].ToString();
                     articulo.tipo = read[9].ToString();
                     articulo.cuenta = read[10].ToString();
-                    articulo.marca = read[11].ToString();                                 
+                    articulo.marca = read[11].ToString();
                     listArticulos.Add(articulo);
                 }
             }

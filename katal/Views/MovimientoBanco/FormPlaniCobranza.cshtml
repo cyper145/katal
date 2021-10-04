@@ -1,0 +1,112 @@
+﻿
+@using  katal.Model
+@Html.DevExpress().PopupControl(
+    settings =>
+    {
+        settings.Name = "FormPlanillaCobranza";
+        settings.Width = 550;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.CloseOnEscape = true;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "Listado de Plantilla de Cobranza";
+        settings.Modal = true;
+        settings.AutoUpdatePosition = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            @Html.DevExpress().GridView(t =>
+            {
+                t.Name = "gvDataBindingToLinq";
+                t.CallbackRouteValues = new { Controller = "DataBinding", Action = "DataBindingToLargeDatabasePartial" };
+
+                t.KeyFieldName = "COCNROPLA";
+                t.Width = Unit.Percentage(100);
+                t.Height = Unit.Percentage(20);
+                t.EnableRowsCache = true;
+
+                t.Columns.Add(column =>
+                {
+                    column.FieldName = "COCNROPLA";
+                    column.ColumnType = MVCxGridViewColumnType.TextBox;
+
+                });
+                t.Columns.Add(column =>
+                {
+                    column.FieldName = "COCFECPLA";
+                    column.ColumnType = MVCxGridViewColumnType.DateEdit;
+                    column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+                    column.Width = Unit.Pixel(100);
+                });
+                t.Columns.Add(column =>
+                {
+                    column.FieldName = "COCTCOBMN";
+                    column.ColumnType = MVCxGridViewColumnType.TextBox;
+                    column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+                    column.Width = Unit.Pixel(100);
+                });
+                t.Columns.Add(column =>
+                {
+                    column.FieldName = "COCTCOBUS";
+                    column.ColumnType = MVCxGridViewColumnType.TextBox;
+                });
+
+
+
+            }).Bind(GridViewHelper.GetCobranza()).GetHtml();
+
+            @Html.DevExpress().FormLayout(s =>
+            {
+                s.Name = "ModalModeFormLayout";
+                s.RequiredMarkDisplayMode = RequiredMarkMode.None;
+                s.Width = Unit.Percentage(100);
+                s.Height = Unit.Percentage(100);
+                s.ColumnCount = 6;
+                s.NestedExtensionWidth = Unit.Percentage(100);
+
+                s.Items.Add(i =>
+                {
+                    i.ColumnSpan = 6;
+                    i.ShowCaption = DefaultBoolean.False;
+                    i.SetNestedContent(() =>
+                    {
+
+                        Html.DevExpress().Button(
+                            buttonSettings =>
+                            {
+                                buttonSettings.Name = "btnAceptar";
+                                buttonSettings.ControlStyle.CssClass = "button";
+                                buttonSettings.Width = 80;
+                                buttonSettings.Text = "Aceptar";
+                                buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranza.Hide(); }";// hacer algo mas
+                            }
+                        ).Render();
+                        Html.DevExpress().Label(
+                           buttonSettings =>
+                           {
+                               buttonSettings.Width = Unit.Pixel(10);
+                           }
+                       ).Render();
+
+                        Html.DevExpress().Button(
+                           buttonSettings =>
+                           {
+                               buttonSettings.Name = "btnCancelar";
+                               buttonSettings.ControlStyle.CssClass = "button";
+                               buttonSettings.Width = 80;
+                               buttonSettings.Text = "Cancelar";
+                               buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranza.Hide(); }";
+                           }
+                       ).Render();
+
+                    });
+                });
+            }).Render();
+
+        });
+
+        //GetCobranza()
+    }).GetHtml()
+

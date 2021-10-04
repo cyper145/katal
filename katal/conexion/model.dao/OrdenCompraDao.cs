@@ -1,20 +1,18 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using katal.Model;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using katal.conexion.model.entity;
-using katal.Model;
 
 namespace katal.conexion.model.dao
 {
     public class OrdenCompraDao : Obligatorio
-    {      
-        public OrdenCompraDao(string codEmpresa):base(codEmpresa)
+    {
+        public OrdenCompraDao(string codEmpresa) : base(codEmpresa)
         {
-           
-          objConexion = Conexion.saberEstado();
-           
+
+            objConexion = Conexion.saberEstado();
+
         }
         public void create(OrdenCompra orden)
         {
@@ -35,7 +33,7 @@ namespace katal.conexion.model.dao
 
             try
             {
-                comando = new SqlCommand(conexionComun( insert), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(insert), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -56,14 +54,15 @@ namespace katal.conexion.model.dao
             int nextDocumet = 0;
             string next = nextDocumet.ToString(fmt);
             // INSERTAR ELEMENTO 
-            orden.detalles.ForEach(element => {
+            orden.detalles.ForEach(element =>
+            {
                 ++nextDocumet;
                 next = nextDocumet.ToString(fmt);
                 item += "INSERT INTO comovd (oc_cnumord,oc_ccodpro,oc_dfecdoc,oc_citem,";
                 item += "oc_ccodigo,oc_ccodref,oc_cdesref,oc_cunidad,oc_cuniref,oc_nfactor,";
                 item += "oc_saldo,oc_ncantid,oc_npreuni,oc_ndscpor,oc_ndescto,oc_nigv,oc_nigvpor,";
                 item += "oc_nprenet,oc_ntotven,oc_ntotnet,oc_cestado,centcost,oc_ccomen1,oc_ccomen2, oc_glosa, oc_precioven) ";
-                item += "VALUES ('" + orden.OC_CNUMORD + "','" + orden.oc_ccodpro + "','" + parseDate( orden.OC_DFECDOC);
+                item += "VALUES ('" + orden.OC_CNUMORD + "','" + orden.oc_ccodpro + "','" + parseDate(orden.OC_DFECDOC);
                 item += "','" + next + "','";
                 item += element.oc_ccodigo + "','" + element.OC_CCODREF + "','";
                 item += element.OC_CDESREF + "','" + element.OC_CUNIDAD + "','";
@@ -75,7 +74,7 @@ namespace katal.conexion.model.dao
             });
             try
             {
-                comando = new SqlCommand( conexionComun(item), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(item), objConexion.getCon());
                 objConexion.getCon().Open();
                 comando.ExecuteNonQuery();
             }
@@ -194,7 +193,7 @@ namespace katal.conexion.model.dao
                     user.EST_NOMBRE = read[39].ToString();
 
 
-                   
+
                 }
             }
             catch (Exception)
@@ -284,7 +283,7 @@ namespace katal.conexion.model.dao
         {
 
             List<OrdenCompra> OrdenCompras = new List<OrdenCompra>();
-            string findAll = "SELECT * FROM comovc, estado_oc WHERE comovc.oc_csitord = estado_oc.est_codigo and OC_DFECDOC Between " + dateFormat( dateRange.Start) + " and " + dateFormat(dateRange.End) + "";
+            string findAll = "SELECT * FROM comovc, estado_oc WHERE comovc.oc_csitord = estado_oc.est_codigo and OC_DFECDOC Between " + dateFormat(dateRange.Start) + " and " + dateFormat(dateRange.End) + "";
             try
             {
                 comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
@@ -353,7 +352,7 @@ namespace katal.conexion.model.dao
         {
             List<DetalleOrdenCompra> listUsers = new List<DetalleOrdenCompra>();
 
-          
+
             string findAll = "SELECT * FROM comovd WHERE comovd.oc_cnumord = '" + oc_cnumord + "'";
             try
             {
@@ -402,7 +401,7 @@ namespace katal.conexion.model.dao
 
                     listUsers.Add(user);
                 }
-               
+
             }
             catch (Exception)
             {
