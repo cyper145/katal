@@ -45,8 +45,6 @@ namespace katal.conexion.model.entity
         public string CB_A_REFER { get; set; }
         public string CB_C_NROLI { get; set; }
     }
-
-
     public class TipoOpcionCajaBanco
     {
         public string CB_C_TIPO { get; set; }
@@ -79,10 +77,20 @@ namespace katal.conexion.model.entity
         public string DESCRIPCION { get; set; }
 
     }
-
-
     public class CMovimientoBanco
     {
+
+        public string CB_C_Secue { get; set; }
+        public string Opera { get; set; }
+        public string docu { get; set; }
+        public decimal MONTO { get; set; }
+        public string Conta { get; set; }
+        public string Anula { get; set; }
+        public DateTime CB_D_Fecha { get; set; }
+        public string CB_C_Anexo { get; set; }
+        public string CB_C_CONTAV { get; set; }
+        public string CB_A_REFERV { get; set; }
+        public string CB_C_NROLIV { get; set; }
         public string CB_C_BANCO { get; set; }
         public string CB_C_MES { get; set; }
         public string CB_C_SECUE { get; set; }
@@ -130,17 +138,23 @@ namespace katal.conexion.model.entity
 
     }
 
-
     public class DMovimientoBanco
     {
+
+
+        public string secd { get; set; }
+        public string CB_C_Concep { get; set; }
+        public string CB_C_docum { get; set; }
+        public decimal montomn { get; set; }
+        public decimal montome { get; set; }
         public string CB_C_BANCO { get; set; }
         public string CB_C_MES { get; set; }
         public string CB_C_SECUE { get; set; }
         public string CB_C_SECDE { get; set; }
         public string CB_C_MODO { get; set; }
         public string CB_C_CONCE { get; set; }
-        public string CB_C_ANEXO { get; set; }
-        public string CB_C_TPDOC { get; set; }
+        public string CB_C_ANEXOD { get; set; }
+        public string CB_C_TPDOCD { get; set; }
         public string CB_C_DOCUMD { get; set; }
         public DateTime CB_D_FECDC { get; set; }
         public string CB_A_REFERD { get; set; }
@@ -150,11 +164,16 @@ namespace katal.conexion.model.entity
         public decimal CB_N_MTOMND { get; set; }
         public decimal CB_N_MTOMED { get; set; }
         public bool CB_L_ANULA { get; set; }
-        public decimal CB_L_PROGR { get; set; }
+        public bool CB_L_PROGR { get; set; }
         public string CODDETPLA { get; set; }
+        public bool CB_L_INT { get; set; }
+        
         public string CB_ACUENTA { get; set; }
-        public string CB_L_ESTADO { get; set; }
-        public decimal CB_N_RESTANTE { get; set; }
+        public string monedaD { get; set; }
+        public string serieD { get; set; }
+        public int IS { get; set; }
+        
+        
     }
 
     public class TemporalGC

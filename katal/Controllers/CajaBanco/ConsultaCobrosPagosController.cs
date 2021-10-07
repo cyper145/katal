@@ -441,7 +441,7 @@ namespace katal.Controllers
 
         }
         // determinar si es un ingreso o egreso
-        public JsonResult changeTipo(int tipo)
+        public JsonResult changeTipo(string tipo)
         {
             GridViewHelper.TipoOpcion = tipo;
 
@@ -460,7 +460,8 @@ namespace katal.Controllers
         public ActionResult MultiSelectTipoAnexo(FormCollection data, string TIPOANEX_CODIGO = "-1")
         {
 
-            ViewData["TipoAnexo"] = anexoNeg.findAll();
+            List<TipoAnexo> tipoAnexos=anexoNeg.findAll();
+            ViewData["TipoAnexo"] = tipoAnexos;
             if (data != null)
             {
                 string dar = data["gridLookupTipoAnexo$State"];
@@ -486,6 +487,11 @@ namespace katal.Controllers
             }
             if (TIPOANEX_CODIGO == "-1")
                 TIPOANEX_CODIGO = "-1";
+            else
+            {
+                Anexo ANEXO = anexoNeg.findAnexo(TIPOANEX_CODIGO);
+                TIPOANEX_CODIGO = ANEXO.TIPOANEX_CODIGO;
+            }
             return PartialView("MultiSelectTipoAnexo", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
 
         }
@@ -548,7 +554,7 @@ namespace katal.Controllers
             TipoOpcionCajaBanco operacion = cajaBancoNeg.findTipoOpciones(GridViewHelper.TipoOpcion, codigoOperacion);
             string cadena = cajaBancoNeg.Busca_Gen("OPLABCOCOB");
             bool activar = true;
-            if (GridViewHelper.TipoOpcion == 0 && cadena == codigoOperacion)
+            if (GridViewHelper.TipoOpcion == "S" && cadena == codigoOperacion)
             {
                 activar = false;
             }

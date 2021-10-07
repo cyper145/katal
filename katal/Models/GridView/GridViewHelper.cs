@@ -56,8 +56,13 @@ namespace katal.Model
         public static bool activeBancoTipoAnexo = true;
         public static string codigobanco = "";
         public static string codigoContabilidad = "";
+        public static string CB_C_BANCO = "";
         public static string monedabanco = "";
-        public static int TipoOpcion = 0;
+        public static string tipoCambioBanco = "";
+        public static string operacionbanco = "";
+        public static string TipoOpcion = "I";
+        public static bool   salidaentrada = false;
+        
         public static string TipoAnexoBanco = "";
         public static string TipoAnexoBancoDetalle = "";
 
@@ -70,7 +75,8 @@ namespace katal.Model
         public static List<DMovimientoBanco> movimientoBancosdetalles = new List<DMovimientoBanco>();
         //detallemovbaco
 
-        public static string conceptoCajaBanco = "";//codigo
+        public static string  conceptoCajaBanco = "";//codigo
+        public static decimal valorTipoCambio = 0;//codigo
 
 
 

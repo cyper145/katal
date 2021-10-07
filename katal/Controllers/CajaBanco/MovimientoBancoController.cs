@@ -18,8 +18,7 @@ namespace katal.Controllers
         private ProveedorNeg proveedorNeg;
         private ArticuloNeg articuloNeg;
         private AreaNeg areaNeg;
-        private ResponsableCmpNeg responsable;
-        private RequisicionCompra requisicionCompra;
+        private ResponsableCmpNeg responsable;      
         // nuevos
         private CajaBancoNeg cajaBancoNeg;
         private TipoAnexoNeg anexoNeg;
@@ -232,46 +231,85 @@ namespace katal.Controllers
         }
 
         // detalle 
-        public ActionResult Detail(string NROREQUI = "-1")
+        public ActionResult Detail(string CB_C_SECUE = "-1")
         {
-            
-            // return PartialView("Detail", GridViewHelper.detalleRequisicions);
+            ViewData["codigoOrden"] = CB_C_SECUE;
+           
+           
+            if (CB_C_SECUE != "-1")
+            {
+                GridViewHelper.movimientoBancosdetalles = cajaBancoNeg.findDetailMovimientos(CB_C_SECUE, GridViewHelper.codigobanco, GridViewHelper.monedabanco, GridViewHelper.dateTime, GridViewHelper.TipoOpcion);
+                
+            }
+           
+
             return PartialView("Detail", GridViewHelper.movimientoBancosdetalles);
         }
-        public ActionResult DetailRequestPartial(string NROREQUI = "-1")
+        public ActionResult DetailRequestPartial(string CB_C_SECUE = "-1")
         {
-            if (NROREQUI == null)
+            if (CB_C_SECUE != "-1")
             {
-                NROREQUI = "-1";
-
+                GridViewHelper.movimientoBancosdetalles = cajaBancoNeg.findDetailMovimientos(CB_C_SECUE, GridViewHelper.codigobanco, GridViewHelper.monedabanco, GridViewHelper.dateTime,GridViewHelper.TipoOpcion);
             }
-            ViewData["codigoOrden"] = NROREQUI;
-            requisicionCompra = requisicionNeg.find(NROREQUI);
-
-            if (requisicionCompra == null)
-            {
-                ViewData["codigoOrden"] = NROREQUI;
-                GridViewHelper.GetDetalles();
-                return PartialView("DetailRequestPartial", GridViewHelper.movimientoBancosdetalles);
-            }
-            GridViewHelper.detalleRequisicions = requisicionNeg.findAllDetail(requisicionCompra.NROREQUI);
+         
             return PartialView("DetailRequestPartial", GridViewHelper.movimientoBancosdetalles);
         }
         public ActionResult DetailRequestAddNewPartial(DMovimientoBanco product, FormCollection dataForm)
         {
             // product.CENCOST = arraycosto.First.ToString();
+            /*
+            If Label2(1) = "S" Then
+
+                   If chingsal.Value = 0 Then
+                      SINGSAL = "S" 'Label2(1)
+                    Else
+                       SINGSAL = "I" 'IIf(Trim(Label2(1)) = "S", "I", "S")
+                    End If
+                Else
+                    If chingsal.Value = 1 Then
+                       SINGSAL = "S" 'Label2(1)
+                    Else
+                       SINGSAL = "I" 'IIf(Trim(Label2(1)) = "S", "I", "S")
+                    End If
+
+
+            End If
+            */
+            string SINGSAL = "";
+            if (GridViewHelper.TipoOpcion == "S")
+            {
+                if (product.IS == 0)
+                {
+                    SINGSAL = "S";
+                }
+                else
+                {
+                    SINGSAL = "I";
+                }
+            }
+            else
+            {
+                if (product.IS == 1)
+                {
+                    SINGSAL = "S";
+                }
+                else
+                {
+                    SINGSAL = "I";
+                }
+            }
 
             product.CB_C_BANCO = GridViewHelper.codigobanco;
             product.CB_C_MES = GridViewHelper.dateTime.Month.ToString("00.##");
             product.CB_C_SECUE = GridViewHelper.dateTime.Month.ToString("00.##");
             product.CB_C_CONCE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupConceptoCajaBanco$State"]);
 
-            product.CB_C_ANEXO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
-            product.CB_C_TPDOC = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDocD$State"]);
+            product.CB_C_ANEXOD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
+            product.CB_C_TPDOCD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDocD$State"]);
             product.CB_C_CENCO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCostos$State"]);
             product.CB_C_CUENT = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCuenta$State"]);
             product.CB_C_DESTI = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCuentaDestino$State"]);
-            
+            product.CB_C_MODO = SINGSAL;
             string moneda = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoMoneda$State"]);
             if (moneda == "MN")
             {
@@ -283,6 +321,8 @@ namespace katal.Controllers
                 product.CB_N_MTOMED = product.CB_N_MTOMND;
 
             }
+
+            ModelState.Remove("IS");
             if (ModelState.IsValid)
                 SafeExecute(() => InsertProduct(product));
             else
@@ -296,7 +336,9 @@ namespace katal.Controllers
         }
         public void InsertProduct(DMovimientoBanco product)
         {
-            GridViewHelper.movimientoBancosdetalles.Add(product);
+            // GridViewHelper.movimientoBancosdetalles.Add(product); 
+
+            cajaBancoNeg.crearteDetail(new CMovimientoBanco(), product, GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco, GridViewHelper.tipoCambioBanco);
         }
 
         [ValidateInput(false)]
@@ -307,8 +349,8 @@ namespace katal.Controllers
             product.CB_C_SECUE = GridViewHelper.dateTime.Month.ToString("00.##");
             product.CB_C_CONCE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupConceptoCajaBanco$State"]);
 
-            product.CB_C_ANEXO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
-            product.CB_C_TPDOC = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDocD$State"]);
+            product.CB_C_ANEXOD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
+            product.CB_C_TPDOCD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDocD$State"]);
             product.CB_C_CENCO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCostos$State"]);
             product.CB_C_CUENT = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCuenta$State"]);
             product.CB_C_DESTI = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCuentaDestino$State"]);
@@ -417,6 +459,8 @@ namespace katal.Controllers
                             GridViewHelper.monedabanco = cajaBanco.CB_C_MONED;
                             GridViewHelper.activeData = true;
                             GridViewHelper.codigoContabilidad = cajaBanco.CB_C_CUENT;
+                            GridViewHelper.CB_C_BANCO = cajaBanco.CB_C_BANCO;
+                           
                             GridViewHelper.dateTime = DateTime.Parse(Request.Params["Proceso"]);
 
                             DateTime date = GridViewHelper.dateTime;
@@ -439,6 +483,8 @@ namespace katal.Controllers
         public ActionResult MultiSelectOpciones(FormCollection data, string CB_C_CODIG = "-1")
         {
             ViewData["tipoOpciones"] = cajaBancoNeg.findAllTipoOpciones(GridViewHelper.TipoOpcion);
+
+
             if (data != null)
             {
                 string dar = data["gridLookupOpciones$State"];
@@ -451,24 +497,20 @@ namespace katal.Controllers
                     {
                         string codigoOperacion = nodes.selectedKeyValues[0];
                         CajaBanco cajaBanco = cajaBancoNeg.findBanco(GridViewHelper.codigobanco);
-                        GridViewHelper.monedabanco = cajaBanco.CB_C_MONED;
-                        GridViewHelper.activeData = true;
-                        DateTime date = DateTime.Now;
-                        int nrodias = DateTime.DaysInMonth(date.Year, date.Month);
-                        GridViewHelper.dateRangeBanco.Start = new DateTime(date.Year, date.Month, 1);
-                        GridViewHelper.dateRangeBanco.End = new DateTime(date.Year, date.Month, nrodias);
-
+                        GridViewHelper.operacionbanco = codigoOperacion;               
                     }
                 }
 
             }
             if (CB_C_CODIG == "-1")
                 CB_C_CODIG = "";
+            else
+                GridViewHelper.operacionbanco = CB_C_CODIG;
             return PartialView("MultiSelectOpciones", new TipoOpcionCajaBanco() { CB_C_CODIG = CB_C_CODIG });
 
         }
         // determinar si es un ingreso o egreso
-        public JsonResult changeTipo(int tipo)
+        public JsonResult changeTipo(string tipo)
         {
             GridViewHelper.TipoOpcion = tipo;
 
@@ -513,13 +555,19 @@ namespace katal.Controllers
             }
             if (TIPOANEX_CODIGO == "-1")
                 TIPOANEX_CODIGO = "-1";
+            else
+            {
+                Anexo ANEXO = anexoNeg.findAnexo(TIPOANEX_CODIGO);
+                TIPOANEX_CODIGO = ANEXO.TIPOANEX_CODIGO;
+                GridViewHelper.TipoAnexoBanco = TIPOANEX_CODIGO;
+            }
             return PartialView("MultiSelectTipoAnexo", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
 
         }
 
         public ActionResult MultiSelectAnexo(string ANEX_CODIGO = "-1")
         {
-            if (GridViewHelper.TipoAnexoBanco == "")
+            if (GridViewHelper.TipoAnexoBanco == "" && ANEX_CODIGO =="-1")
             {
                 ViewData["Anexo"] = new List<Anexo>();
             }
@@ -537,11 +585,33 @@ namespace katal.Controllers
 
 
 
-        public ActionResult MultiSelectMoneda(string COVMON_CODIGO = "-1")
+        public ActionResult MultiSelectMoneda(FormCollection data, string COVMON_CODIGO = "-1")
         {
-            ViewData["moneda"] = comprobanteNeg.findAllMonedas();
+            
+            List<Moneda> monedas= comprobanteNeg.findAllMonedas();
+            ViewData["moneda"] = monedas;
+            if (data != null)
+            {
+                string dar = data["gridLookupMoneda$State"];
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);                  
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        string codigo= nodes.selectedKeyValues[0];
+                        GridViewHelper.tipoCambioBanco = codigo;               
+                    }
+                }
+
+            }
+
             if (COVMON_CODIGO == "-1")
                 COVMON_CODIGO = "-1";
+            else
+            {
+                GridViewHelper.tipoCambioBanco = COVMON_CODIGO;
+            }
             return PartialView("MultiSelectMoneda", new Moneda() { COVMON_CODIGO = COVMON_CODIGO });
 
         }
@@ -577,7 +647,7 @@ namespace katal.Controllers
             TipoOpcionCajaBanco operacion = cajaBancoNeg.findTipoOpciones(GridViewHelper.TipoOpcion, codigoOperacion);
             string cadena = cajaBancoNeg.Busca_Gen("OPLABCOCOB");
             bool activar = true;
-            if (GridViewHelper.TipoOpcion == 0 && cadena == codigoOperacion)
+            if (GridViewHelper.TipoOpcion == "I" && cadena == codigoOperacion)
             {
                 activar = false;
             }
@@ -601,9 +671,10 @@ namespace katal.Controllers
 
         public ActionResult MultiSelectConceptoCajaBanco(FormCollection data, string CB_C_CODIG = "-1")
         {
-            string opcion = GridViewHelper.TipoOpcion == 0 ? "I" : "S";
+            string opcion = GridViewHelper.TipoOpcion;
 
-            ViewData["conceptos"] = cajaBancoNeg.findAllConceptoCajaBanco("B", opcion);
+            List<ConceptoCajaBanco>  list= cajaBancoNeg.findAllConceptoCajaBanco("B", opcion,GridViewHelper.operacionbanco, GridViewHelper.salidaentrada);
+            ViewData["conceptos"] = list;
 
             if (data != null)
             {
@@ -655,6 +726,12 @@ namespace katal.Controllers
             }
             if (TIPOANEX_CODIGO == "-1")
                 TIPOANEX_CODIGO = "-1";
+            else
+            {
+                Anexo ANEXO = anexoNeg.findAnexo(TIPOANEX_CODIGO);
+                TIPOANEX_CODIGO = ANEXO.TIPOANEX_CODIGO;
+                GridViewHelper.TipoAnexoBanco = TIPOANEX_CODIGO;
+            }
             return PartialView("MultiSelectTipoAnexoD", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
 
         }
@@ -725,10 +802,14 @@ namespace katal.Controllers
         public JsonResult OnChangeConcepto()
         {
             string codigo = GridViewHelper.conceptoCajaBanco;
-            string opcion = GridViewHelper.TipoOpcion == 0 ? "I" : "S";
-            List<ConceptoCajaBanco>  conceptoCajaBancos= cajaBancoNeg.findAllConceptoCajaBanco("B", opcion);
+            string opcion = GridViewHelper.TipoOpcion;
+            List<ConceptoCajaBanco>  conceptoCajaBancos= cajaBancoNeg.findAllConceptoCajaBanco("B", opcion, GridViewHelper.operacionbanco, GridViewHelper.salidaentrada);
             ConceptoCajaBanco d = conceptoCajaBancos.Find(X => X.CB_C_CODIG == codigo);
-            string  cuenta = d.CB_C_CUENT;
+            string cuenta = "";
+            if (d != null)
+            {
+                cuenta = d.CB_C_CUENT;
+            }        
             return Json(new { respuesta = cuenta }, JsonRequestBehavior.AllowGet);
         }
 
@@ -741,11 +822,11 @@ namespace katal.Controllers
             string cadena3 = cajaBancoNeg.Busca_Gen("OPLABCOPAG");
             List<string> Opagar;
 
-            if (GridViewHelper.TipoOpcion == 0 && cadena == codigoOperacion)
+            if (GridViewHelper.TipoOpcion == "I" && cadena == codigoOperacion)
             {
                 flagForForm.frmLisPlaniCobranza = true;
             }
-            if (GridViewHelper.TipoOpcion == 0 && cadena2 == codigoOperacion)
+            if (GridViewHelper.TipoOpcion == "I" && cadena2 == codigoOperacion)
             {
                 if (cajaBancoNeg.exiteFactura(GridViewHelper.dateTime))
                 {
@@ -755,7 +836,7 @@ namespace katal.Controllers
 #pragma warning disable CS0219 // La variable 'SW' está asignada pero su valor nunca se usa
             bool SW = false;
 #pragma warning restore CS0219 // La variable 'SW' está asignada pero su valor nunca se usa
-            if (GridViewHelper.TipoOpcion == 1)
+            if (GridViewHelper.TipoOpcion == "S")
             {
                 Opagar = cadena3.Split(';').ToList();
                 Opagar.ForEach(X =>
@@ -780,7 +861,13 @@ namespace katal.Controllers
 
             return Json(new { respuesta = flagForForm }, JsonRequestBehavior.AllowGet);
         }
-
+        public JsonResult cambiarES()
+        {
+            bool salidaentrada = GridViewHelper.salidaentrada= !GridViewHelper.salidaentrada;
+           
+            return Json(new { respuesta = salidaentrada }, JsonRequestBehavior.AllowGet);
+        }
+        
 
         #endregion
 

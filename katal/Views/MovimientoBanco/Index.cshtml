@@ -47,9 +47,10 @@
             });
         }
         function initTipo(s, e) {
+           
             if (CB_C_MODO.GetValue() == null) {
-                CB_C_MODO.SetValue(0);
-            }
+                CB_C_MODO.SetValue("I");
+            }           
             $.getJSON('/MovimientoBanco/changeTipo?tipo=' + CB_C_MODO.GetValue(), function (resp) {
                 $.each(resp, function (k, v) {
 
@@ -110,6 +111,9 @@
         }
 
         function initSecuencia(s, e) {
+            if (CB_C_SECUE.GetText() != "") {
+                return;
+            }
             $.getJSON('/MovimientoBanco/Initsecuencia', function (resp) {
                 $.each(resp, function (k, v) {
                     CB_C_SECUE.SetText(v);
@@ -118,6 +122,11 @@
             });
         }
         function initSecuenciaDetalle(s, e) {
+
+            if (CB_C_SECDE.GetText() != "") {
+                return;
+            }
+
             $.getJSON('/MovimientoBanco/initSecuenciaDetalle?secuencia=' + CB_C_SECUE.GetText(), function (resp) {
                 $.each(resp, function (k, v) {
                     CB_C_SECDE.SetText(v);
@@ -382,6 +391,13 @@
             }
                 
 
+        }
+        function cambiarES(s, e) {
+            $.getJSON('/MovimientoBanco/cambiarES', function (resp) {
+                $.each(resp, function (k, v) {
+                    IS.SetChecked(v)
+                });
+            });
         }
 
 

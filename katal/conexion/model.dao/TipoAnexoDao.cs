@@ -111,6 +111,39 @@ namespace katal.conexion.model.dao
             return listAnexo;
         }
 
+        public Anexo findAnexo(string codigo )
+        {
+            Anexo gasto = new Anexo();
+            string findAll = $"SELECT ANEX_CODIGO, ANEX_DESCRIPCION, ANEX_RUC,TIPOANEX_CODIGO  FROM ANEXO  WHERE ANEX_CODIGO ='{codigo}' ";
+          
+            try
+            {
+                comando = new SqlCommand(conexionContabilidad(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    
+                    gasto.ANEX_CODIGO = read[0].ToString();
+                    gasto.ANEX_DESCRIPCION = read[1].ToString();
+                    gasto.ANEX_RUC = read[2].ToString();
+                    gasto.TIPOANEX_CODIGO = read[3].ToString();
+                    
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return gasto;
+        }
+
         public List<TipoDocumento> findAllTipoDocumento()
         {
             List<TipoDocumento> listAnexo = new List<TipoDocumento>();

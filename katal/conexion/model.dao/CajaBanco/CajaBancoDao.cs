@@ -89,7 +89,7 @@ namespace katal.conexion.model.dao
 
             string anios = date.Year.ToString("0000.##");
             string mes = date.Month.ToString("00.##");
-            string findAll = "SP_CBMOVCALCULAMTO";
+            string findAll = "SP_CBMOVCALCULAMTOCOMPLETO";
             try
             {
                 SqlParameter[] parametros = new SqlParameter[]{
@@ -109,17 +109,51 @@ namespace katal.conexion.model.dao
                 while (read.Read())
                 {
                     CMovimientoBanco cajaBanco = new CMovimientoBanco();
-                    cajaBanco.CB_C_SECUE = read[0].ToString();
-                    cajaBanco.CB_C_OPERA = read[1].ToString();
-                    cajaBanco.CB_C_DOCUM = read[2].ToString();
-                    cajaBanco.CB_N_MTOMN = Conversion.ParseDecimal(read[3].ToString());
-                    cajaBanco.CB_L_CONTA = read[4].ToString();
-                    cajaBanco.CB_L_ANULA = read[5].ToString();
-                    cajaBanco.CB_D_FECHA = Conversion.ParseDateTime(read[6].ToString());
-                    cajaBanco.CB_C_ANEXO = read[7].ToString();
-                    cajaBanco.CB_C_CONTA = read[8].ToString();
-                    cajaBanco.CB_A_REFER = read[9].ToString();
-                    cajaBanco.CB_C_NROLI = read[10].ToString();
+
+                    string darse = read[0].ToString();
+                    cajaBanco.CB_C_Secue = read[nameof(cajaBanco.CB_C_Secue)].ToString();                  
+                    cajaBanco.Opera = read[nameof(cajaBanco.Opera)].ToString();
+                    cajaBanco.docu = read[nameof(cajaBanco.docu)].ToString();
+                    cajaBanco.MONTO = Conversion.ParseDecimal(read[nameof(cajaBanco.MONTO)].ToString());
+                    cajaBanco.Conta = read[nameof(cajaBanco.Conta)].ToString();
+                    cajaBanco.Anula = read[nameof(cajaBanco.Anula)].ToString();
+                    cajaBanco.CB_D_Fecha = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_Fecha)].ToString());
+                    cajaBanco.CB_C_Anexo = read[nameof(cajaBanco.CB_C_Anexo)].ToString();
+                    cajaBanco.CB_C_CONTAV = read[10].ToString();
+                    cajaBanco.CB_A_REFERV = read[11].ToString();
+                    cajaBanco.CB_C_NROLIV = read[12].ToString();
+
+                    cajaBanco.CB_C_BANCO = read[nameof(cajaBanco.CB_C_BANCO)].ToString();
+                    cajaBanco.CB_C_MES = read[nameof(cajaBanco.CB_C_MES)].ToString();
+                    cajaBanco.CB_C_SECUE = read[nameof(cajaBanco.CB_C_SECUE)].ToString();
+                    cajaBanco.CB_C_MODO = read[nameof(cajaBanco.CB_C_MODO)].ToString();
+                    cajaBanco.CB_C_OPERA = read[nameof(cajaBanco.CB_C_OPERA)].ToString();
+                    cajaBanco.CB_D_FECHA = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_FECHA)].ToString());
+                    cajaBanco.CB_C_TPDOC = read[nameof(cajaBanco.CB_C_TPDOC)].ToString();
+                    cajaBanco.CB_C_DOCUM = read[nameof(cajaBanco.CB_C_DOCUM)].ToString().Trim();
+                    cajaBanco.CB_C_ANEXO = read[nameof(cajaBanco.CB_C_ANEXO)].ToString();
+                    cajaBanco.CB_C_CONVE = read[nameof(cajaBanco.CB_C_CONVE)].ToString();
+                    cajaBanco.CB_N_CAMES = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_CAMES)].ToString());
+                    cajaBanco.CB_D_FECCA = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_FECCA)].ToString());
+                    cajaBanco.CB_N_TIPCA = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_TIPCA)].ToString());
+                    cajaBanco.CB_N_MTOMN = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_MTOMN)].ToString());
+                    cajaBanco.CB_N_MTOME = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_MTOME)].ToString());
+                    cajaBanco.CB_C_CONTA = read[nameof(cajaBanco.CB_C_CONTA)].ToString();
+                    cajaBanco.CB_C_NROLI = read[nameof(cajaBanco.CB_C_NROLI)].ToString();
+                    cajaBanco.CB_C_FACTU = read[nameof(cajaBanco.CB_C_FACTU)].ToString();
+                    cajaBanco.CB_L_CONTA = read[nameof(cajaBanco.CB_L_CONTA)].ToString();
+                    cajaBanco.CB_L_ANULA = read[nameof(cajaBanco.CB_L_ANULA)].ToString();
+                    cajaBanco.CB_A_REFER = read[nameof(cajaBanco.CB_A_REFER)].ToString();
+                    cajaBanco.CB_C_ESTAD = read[nameof(cajaBanco.CB_C_ESTAD)].ToString();
+                    cajaBanco.CB_C_ESTRET = read[nameof(cajaBanco.CB_C_ESTRET)].ToString();
+                    cajaBanco.CB_RETLET = read[nameof(cajaBanco.CB_RETLET)].ToString();
+                    cajaBanco.CB_D_FECCOB = Conversion.ParseDateTime( read[nameof(cajaBanco.CB_D_FECCOB)].ToString());
+                    cajaBanco.CB_TRANSBCO = read[nameof(cajaBanco.CB_TRANSBCO)].ToString();
+                    cajaBanco.CB_TIPMOV = read[nameof(cajaBanco.CB_TIPMOV)].ToString();
+                    cajaBanco.CB_MEDIO = read[nameof(cajaBanco.CB_MEDIO)].ToString();
+                    cajaBanco.CB_DMEDIO = read[nameof(cajaBanco.CB_DMEDIO)].ToString();
+                    cajaBanco.CB_USUARIO = read[nameof(cajaBanco.CB_USUARIO)].ToString();
+                 
                     cajaBancos.Add(cajaBanco);
                 }
 
@@ -138,7 +172,67 @@ namespace katal.conexion.model.dao
             return cajaBancos;
         }
 
-        public List<DMovimientoBanco> findDetailMovimientos(string secuencia, string banco, string moneda, DateTime dateTime)
+
+        public CMovimientoBanco findMovimiento( string secuencia, string banco, string moneda, DateTime date)
+        {
+            CMovimientoBanco cajaBanco = new CMovimientoBanco();
+            string mes = date.Month.ToString("00.##");
+            string findAll = $"SELECT * FROM CMOV_BANCO where CB_C_BANCO='{banco}' and CB_C_MES='{mes}' and  CB_C_SECUE ='{secuencia}'";
+            try
+            {
+                comando = new SqlCommand(conexionCajaBanco(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+
+                    cajaBanco.CB_C_BANCO = read[nameof(cajaBanco.CB_C_BANCO)].ToString();
+                    cajaBanco.CB_C_MES = read[nameof(cajaBanco.CB_C_MES)].ToString();
+                    cajaBanco.CB_C_SECUE = read[nameof(cajaBanco.CB_C_SECUE)].ToString();
+                    cajaBanco.CB_C_MODO = read[nameof(cajaBanco.CB_C_MODO)].ToString();
+                    cajaBanco.CB_C_OPERA = read[nameof(cajaBanco.CB_C_OPERA)].ToString();
+                    cajaBanco.CB_D_FECHA = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_FECHA)].ToString());
+                    cajaBanco.CB_C_TPDOC = read[nameof(cajaBanco.CB_C_TPDOC)].ToString();
+                    cajaBanco.CB_C_DOCUM = read[nameof(cajaBanco.CB_C_DOCUM)].ToString().Trim();
+                    cajaBanco.CB_C_ANEXO = read[nameof(cajaBanco.CB_C_ANEXO)].ToString();
+                    cajaBanco.CB_C_CONVE = read[nameof(cajaBanco.CB_C_CONVE)].ToString();
+                    cajaBanco.CB_N_CAMES = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_CAMES)].ToString());
+                    cajaBanco.CB_D_FECCA = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_FECCA)].ToString());
+                    cajaBanco.CB_N_TIPCA = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_TIPCA)].ToString());
+                    cajaBanco.CB_N_MTOMN = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_MTOMN)].ToString());
+                    cajaBanco.CB_N_MTOME = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_MTOME)].ToString());
+                    cajaBanco.CB_C_CONTA = read[nameof(cajaBanco.CB_C_CONTA)].ToString();
+                    cajaBanco.CB_C_NROLI = read[nameof(cajaBanco.CB_C_NROLI)].ToString();
+                    cajaBanco.CB_C_FACTU = read[nameof(cajaBanco.CB_C_FACTU)].ToString();
+                    cajaBanco.CB_L_CONTA = read[nameof(cajaBanco.CB_L_CONTA)].ToString();
+                    cajaBanco.CB_L_ANULA = read[nameof(cajaBanco.CB_L_ANULA)].ToString();
+                    cajaBanco.CB_A_REFER = read[nameof(cajaBanco.CB_A_REFER)].ToString();
+                    cajaBanco.CB_C_ESTAD = read[nameof(cajaBanco.CB_C_ESTAD)].ToString();
+                    cajaBanco.CB_C_ESTRET = read[nameof(cajaBanco.CB_C_ESTRET)].ToString();
+                    cajaBanco.CB_RETLET = read[nameof(cajaBanco.CB_RETLET)].ToString();
+                    cajaBanco.CB_D_FECCOB = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_FECCOB)].ToString());
+                    cajaBanco.CB_TRANSBCO = read[nameof(cajaBanco.CB_TRANSBCO)].ToString();
+                    cajaBanco.CB_TIPMOV = read[nameof(cajaBanco.CB_TIPMOV)].ToString();
+                    cajaBanco.CB_MEDIO = read[nameof(cajaBanco.CB_MEDIO)].ToString();
+                    cajaBanco.CB_DMEDIO = read[nameof(cajaBanco.CB_DMEDIO)].ToString();
+                    cajaBanco.CB_USUARIO = read[nameof(cajaBanco.CB_USUARIO)].ToString();
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return cajaBanco;
+        }
+
+        public List<DMovimientoBanco> findDetailMovimientos(string secuencia, string banco, string moneda, DateTime dateTime, string  tipo)
         {
 
             List<DMovimientoBanco> DetailMovimientos = new List<DMovimientoBanco>();
@@ -146,9 +240,9 @@ namespace katal.conexion.model.dao
             int anios = dateTime.Year;
             string mes = dateTime.Month.ToString("00.##");
 
-            string texto = ternario(moneda == "MN", "CB_N_MTOMN", "CB_N_MTOME");
+            string texto = ternario(moneda == "MN", "CB_N_MTOMN  as monto", "CB_N_MTOME  as monto");
 
-            string findAll = $"SELECT CB_C_SecDE,CB_C_Conce+' ',Cb_C_TpDoc+LEFT(CB_C_Docum,21),{texto},CB_A_Refer  from DMOV_BANCO WHERE CB_C_Banco = '{banco}'";
+            string findAll = $"SELECT CB_C_SecDE  as secd,CB_C_Conce+' ',Cb_C_TpDoc+LEFT(CB_C_Docum,21),{texto},CB_A_Refer as refer,*  from DMOV_BANCO WHERE CB_C_Banco = '{banco}'";
             findAll += $" AND  CB_C_Mes='{mes}' AND CB_C_Secue ='{secuencia}' ORDER BY CB_C_SECDE";
             try
             {
@@ -158,19 +252,53 @@ namespace katal.conexion.model.dao
                 while (read.Read())
                 {
                     DMovimientoBanco cajaBanco = new DMovimientoBanco();
-                    cajaBanco.CB_C_SECDE = read[0].ToString();
-                    cajaBanco.CB_C_CONCE = read[1].ToString();
-                    cajaBanco.CB_C_TPDOC = read[2].ToString();
+                    cajaBanco.secd = read[0].ToString();
+                    cajaBanco.CB_C_Concep = read[1].ToString();
+                    cajaBanco.CB_C_docum = read[2].ToString();
+
+
+
                     if (moneda == "MN")
                     {
-                        cajaBanco.CB_N_MTOMND = Conversion.ParseDecimal(read[3].ToString());
+                        cajaBanco.montomn = Conversion.ParseDecimal(read[3].ToString());
                     }
                     else
                     {
-                        cajaBanco.CB_N_MTOMED = Conversion.ParseDecimal(read[3].ToString());
+                        cajaBanco.montome = Conversion.ParseDecimal(read[3].ToString());
                     }
                     cajaBanco.CB_A_REFERD = read[4].ToString();
 
+                    cajaBanco.CB_C_BANCO = read[5].ToString();
+                    cajaBanco.CB_C_MES = read[6].ToString();
+                    cajaBanco.CB_C_SECUE = read[7].ToString();
+                    cajaBanco.CB_C_SECDE = read[8].ToString();
+                    cajaBanco.CB_C_MODO = read[9].ToString();
+                    cajaBanco.CB_C_CONCE = read[10].ToString();
+                    cajaBanco.CB_C_ANEXOD = read[11].ToString();
+                    cajaBanco.CB_C_TPDOCD = read[12].ToString();
+                    cajaBanco.CB_C_DOCUMD = read[13].ToString();
+                    cajaBanco.CB_D_FECDC = Conversion.ParseDateTime( read[14].ToString());
+                    cajaBanco.CB_A_REFERD = read[15].ToString();
+                    cajaBanco.CB_C_CUENT = read[16].ToString();
+                    cajaBanco.CB_C_CENCO = read[17].ToString();
+                    cajaBanco.CB_C_DESTI = read[18].ToString();
+                    cajaBanco.CB_N_MTOMND =Conversion.ParseDecimal( read[19].ToString());
+                    cajaBanco.CB_N_MTOMED = Conversion.ParseDecimal(read[20].ToString());
+                    cajaBanco.CB_L_ANULA =  Conversion.ParseBool(  read[21].ToString());
+                    cajaBanco.CB_L_PROGR = Conversion.ParseBool(read[22].ToString());
+                    cajaBanco.CODDETPLA = read[23].ToString();
+                    cajaBanco.CB_L_INT = Conversion.ParseBool(read[24].ToString());
+                    cajaBanco.CB_ACUENTA = read[25].ToString();                  
+                    cajaBanco.monedaD = moneda;
+                    if (tipo=="I")
+                    {
+                        cajaBanco.IS = ternarioG(cajaBanco.CB_C_MODO=="I", 0,1);
+                    }
+                    else
+                    {
+                        cajaBanco.IS = ternarioG(cajaBanco.CB_C_MODO == "I", 1, 0);
+                    }
+                        
                     DetailMovimientos.Add(cajaBanco);
                 }
             }
@@ -582,9 +710,9 @@ namespace katal.conexion.model.dao
                 while (read.Read())
                 {
                     ConceptoCajaBanco cajaBanco = new ConceptoCajaBanco();
-                    cajaBanco.CB_C_CODIG = read[0].ToString();
+                    cajaBanco.CB_C_CODIG = read[0].ToString().Trim();
                     cajaBanco.CB_A_DESCR = read[1].ToString();
-                    cajaBanco.CB_C_CUENT = read[2].ToString();
+                    cajaBanco.CB_C_CUENT = read[2].ToString().Trim();
                     cajaBanco.codigo = tipo + ingresoSalida + cajaBanco.CB_C_CODIG;
                     cajaBancos.Add(cajaBanco);
                 }
@@ -674,7 +802,6 @@ namespace katal.conexion.model.dao
         }
         #region insertarCabecera 
 
-        //LN_TipCam = CONV_MONEDA(Label6(2), Text2(10), val(Text2(11)), MaskEdBox1, MaskEdBox1)
         public decimal tipoCambio(string cambio, string CC1, decimal CE, DateTime FE, DateTime FR, DateTime dateTime)
         {
             int anio = dateTime.Year;
@@ -798,6 +925,107 @@ namespace katal.conexion.model.dao
             }
         }
 
+
+        public void createCartera(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime,string tipoCambio, string CB_C_BANCO)
+        {
+            string nroDocumento = obj.serieD + " " + obj.CB_C_DOCUMD;
+
+            decimal valorCambio = ternarioG(tipoCambio == "ESP", objC.CB_N_CAMES, objC.CB_N_TIPCA);
+            decimal monto= ternarioG(obj.monedaD == "MN", obj.CB_N_MTOMND, obj.CB_N_MTOMED);
+            nroDocumento = nroDocumento.Substring(0, 10);
+            string SQL = "Insert Into Cartera (CDOCODCLI,CDOTIPDOC,CDONRODOC,CDOFECDOC,";
+            SQL += "CDOFECVEN,CDOCODVEN,CDOIMPORTE,CDOSALDO,CDOTIPMON,";
+            SQL += "CDOTIPCAM,CDODEBHAB,CDOESTADO,CDOFECCRE,CDOFECACT,CDOUSUARI,";
+            SQL += "CDOTIPFAC,CDOSALINI,CDOCUENTA,CDFORVEN,COD_BANCO,DES_BANCO) Values ";
+            SQL += "('" + obj.CB_C_ANEXOD + "','" + obj.CB_C_TPDOCD + "','" + nroDocumento + "',";
+            SQL += "" + dateFormat(obj.CB_D_FECDC) + "," + dateFormat(obj.CB_D_FECDC) + ",";
+            SQL += "'01'," + -1 * monto + "," + -1 * monto + ",";
+            SQL += "'" + obj.monedaD + "'," + valorCambio + ",'H','V'," + dateFormat(dateTime) + ",";
+
+            SQL += "" + dateFormat(dateTime) + ",'','" + obj.CB_C_TPDOCD + "'," + -1 * monto +  ",";
+            SQL +=  "'" + obj.CB_C_CUENT + "','','"+ CB_C_BANCO + "','" + codigoBanco +"')";
+
+            try
+            {
+                comando = new SqlCommand(conexionComun(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+        }
+
+        public void crearteDetail(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda, decimal valortipoCambio)
+        {
+            string mes = dateTime.Month.ToString("00.##");
+            decimal monto = 0;
+            if (obj.monedaD=="MN")
+            {
+                monto = obj.CB_N_MTOMND;
+            }
+            else
+            {
+                monto = obj.CB_N_MTOMED;
+            }
+            if (moneda==obj.monedaD)
+            {
+                if (obj.monedaD=="MN")
+                {
+                    obj.CB_N_MTOMND = monto;
+                    obj.CB_N_MTOMED = monto*valortipoCambio;
+
+                }
+                else
+                {
+                    obj.CB_N_MTOMND = monto * valortipoCambio;
+                    obj.CB_N_MTOMED = monto ;
+                }
+            }
+            else
+            {
+                if (obj.monedaD == "MN")
+                {
+                    obj.CB_N_MTOMND = monto * valortipoCambio;
+                    obj.CB_N_MTOMED = monto ;
+
+                }
+                else
+                {
+                    obj.CB_N_MTOMND = monto;
+                    obj.CB_N_MTOMED = monto * valortipoCambio;
+                }
+            }
+
+            string create = "INSERT INTO DMOV_BANCO  ([CB_C_BANCO],[CB_C_MES],[CB_C_SECDE],[CB_C_SECUE],[CB_C_MODO],[CB_C_CONCE],[CB_C_ANEXO]";
+            create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_D_FECDC]  ,[CB_A_REFER] ,[CB_C_CUENT] ,[CB_C_DESTI],[CB_N_MTOMN]  ,[CB_N_MTOME] )";
+            create += $" VALUES('{codigoBanco}', '{mes}','{obj.CB_C_SECDE}','{obj.CB_C_SECUE}','{obj.CB_C_MODO}'";
+            create += $",'{obj.CB_C_CONCE}','{obj.CB_C_ANEXOD}','{obj.CB_C_TPDOCD}','{obj.serieD} {obj.CB_C_DOCUMD}'";
+            create += $",{dateFormat( obj.CB_D_FECDC)},'{obj.CB_A_REFERD}','{obj.CB_C_CUENT}','{obj.CB_C_DESTI}'";
+            create += $",{obj.CB_N_MTOMND},{obj.CB_N_MTOMED})";
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(create, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
         public void updateNroAutomaticoOperacion(CMovimientoBanco obj, string codigo)
         {
             string updateNumCompras = $"UPDATE NUM_AUT_DOC SET ctnnumero='{obj.CB_C_DOCUM}' WHERE CB_C_Tipo='B' and CB_C_BANCO='{codigo}' and CB_C_TPDOC='{obj.CB_C_TPDOC}' ";

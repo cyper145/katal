@@ -3,7 +3,7 @@
 @using katal.Model;
 @(Html.DevExpress().GridView(settings => {
     settings.Name = "grid";
-    settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestPartial", NROREQUI = ViewData["codigoOrden"] };
+    settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestPartial", CB_C_SECUE = ViewData["codigoOrden"] };
     settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestAddNewPartial" };
     settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestUpdatePartial" };
     settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "MovimientoBanco", Action = "DetailRequestDeletePartial" };
@@ -29,7 +29,7 @@
             i.Command = GridViewToolbarCommand.Refresh;
             i.BeginGroup = true;
             i.AdaptivePriority = 2;
-          
+
         });
 
     });
@@ -84,7 +84,7 @@
     });
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_CONCE";
+        column.FieldName = "CB_C_Concep";
         column.Caption = "Concepto";
         column.Width = Unit.Percentage(35);
 
@@ -92,7 +92,7 @@
 
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_TPDOC";
+        column.FieldName = "CB_C_docum";
         column.Caption = "Documento";
         column.CellRowSpan = 1;
 
@@ -103,7 +103,7 @@
     {
         settings.Columns.Add(column =>
         {
-            column.FieldName = "CB_N_MTOMND";
+            column.FieldName = "montomn";
             column.Caption = "Monto";
             column.Width = Unit.Percentage(10);
 
@@ -114,7 +114,7 @@
     {
         settings.Columns.Add(column =>
         {
-            column.FieldName = "CB_N_MTOMED";
+            column.FieldName = "montome";
             column.Caption = "Monto";
             column.Width = Unit.Percentage(10);
             column.ColumnType = MVCxGridViewColumnType.TextBox;
@@ -172,12 +172,12 @@
             });
             groupItem.Items.Add(i =>
             {
-                i.FieldName = "CB_C_MODO";
+                i.FieldName = "IS";// se tiene analizar
                 i.Caption = "Concepto I/S";
                 i.ColumnSpan = 3;
                 i.NestedExtension().CheckBox(t =>
                 {
-
+                    t.Properties.ClientSideEvents.CheckedChanged = "cambiarES";
 
                 });
             });
@@ -191,19 +191,19 @@
                 i.ColumnSpan = 5;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectTipoAnexoD" );
+                    Html.RenderAction("MultiSelectTipoAnexoD" ,new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXOD") });
                 });
             });
             groupItem.Items.Add(i =>
 
             {
-                i.FieldName = "CB_C_ANEXO";
+                i.FieldName = "CB_C_ANEXOD";
                 i.ShowCaption = DefaultBoolean.False;
                 i.ColumnSpan = 7;
                 i.SetNestedContent(() =>
                 {
 
-                    Html.RenderAction("MultiSelectAnexoD", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXO") });
+                    Html.RenderAction("MultiSelectAnexoD", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXOD") });
 
                 });
             });
@@ -211,12 +211,12 @@
             groupItem.Items.Add(i =>
 
             {
-                i.FieldName = "CB_C_TPDOC";
+                i.FieldName = "CB_C_TPDOCD";
                 i.Caption = "Dcmtos.";
                 i.ColumnSpan = 5;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectTipoDocD", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_TPDOC") });
+                    Html.RenderAction("MultiSelectTipoDocD", new { TIPDOC_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_TPDOCD") });
                 });
             });
             groupItem.Items.Add(i =>
@@ -265,7 +265,7 @@
                 i.ColumnSpan =5;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectTipoMoneda");
+                    Html.RenderAction("MultiSelectTipoMoneda", new { TIPOMON_CODIGO = DataBinder.Eval(c.DataItem, "monedaD") });
                 });
             });
 

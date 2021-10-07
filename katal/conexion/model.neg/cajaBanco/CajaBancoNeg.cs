@@ -28,24 +28,19 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.findAllMovimientos(banco, moneda, dateTime);
         }
-
-        public List<TipoOpcionCajaBanco> findAllTipoOpciones(int tipo)
+        public List<DMovimientoBanco> findDetailMovimientos(string secuencia, string banco, string moneda, DateTime dateTime, string tipo)
         {
-            string tipoingresosalida = "I";
-            if (tipo == 1)
-            {
-                tipoingresosalida = "S";
-            }
-            return cajaBancoDao.findAllTipoOpciones(tipoingresosalida);
+            return cajaBancoDao.findDetailMovimientos(secuencia, banco, moneda, dateTime, tipo);
         }
-        public TipoOpcionCajaBanco findTipoOpciones(int tipo, string codigoOperacion)
+        public List<TipoOpcionCajaBanco> findAllTipoOpciones(string tipo)
         {
-            string tipoingresosalida = "I";
-            if (tipo == 1)
-            {
-                tipoingresosalida = "S";
-            }
-            return cajaBancoDao.findTipoOpciones(tipoingresosalida, codigoOperacion);
+           
+            return cajaBancoDao.findAllTipoOpciones(tipo);
+        }
+        public TipoOpcionCajaBanco findTipoOpciones(string tipo, string codigoOperacion)
+        {
+            
+            return cajaBancoDao.findTipoOpciones(tipo, codigoOperacion);
         }
 
 
@@ -54,14 +49,10 @@ namespace katal.conexion.model.neg
 
             return cajaBancoDao.findAllTipoEstadosOperaciones(tipo);
         }
-        public List<TipoMovimientos> findAllTipoMovimientos(int tipo)
+        public List<TipoMovimientos> findAllTipoMovimientos(string tipo)
         {
-            string tipoIngresosalida = "I";
-            if (tipo == 1)
-            {
-                tipoIngresosalida = "S";
-            }
-            return cajaBancoDao.findAllTipoMovimientos(tipoIngresosalida);
+           
+            return cajaBancoDao.findAllTipoMovimientos(tipo);
         }
         public List<MedioPago> findAllMedioPago()
         {
@@ -101,9 +92,16 @@ namespace katal.conexion.model.neg
             return cajaBancoDao.allTemporal();
         }
 
-        public List<ConceptoCajaBanco> findAllConceptoCajaBanco(string tipo, string ingresoSalida)
+        public List<ConceptoCajaBanco> findAllConceptoCajaBanco(string tipo, string ingresoSalida,string operacion,  bool IS)
         {
-            return cajaBancoDao.findAllConceptoCajaBanco(tipo, ingresoSalida);
+            if(IS)
+            {
+                return cajaBancoDao.findAllConceptoCajaBanco(tipo, ingresoSalida);
+            }
+            else
+            {
+                return findAllConceptoCajaBanco(tipo, ingresoSalida, operacion);
+            } 
         }
         public List<ConceptoCajaBanco> findAllConceptoCajaBanco(string tipo, string ingresoSalida, string operacion)
         {
@@ -123,6 +121,16 @@ namespace katal.conexion.model.neg
             obj.CB_N_MTOME = cajaBancoDao.ternarioG(cambioMoneda == "ME", obj.CB_N_MTOME, cambio);
             obj.CB_N_MTOMN = cajaBancoDao.ternarioG(cambioMoneda == "MN", obj.CB_N_MTOME, cambio);
             cajaBancoDao.create(obj, codigoBanco, dateTime);
+        }
+
+        public void crearteDetail(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda,string cambioMoneda)
+        {
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objC.CB_C_CONVE, objC.CB_N_CAMES, objC.CB_D_FECCA, objC.CB_D_FECCA, dateTime);
+
+            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(obj.CB_C_SECUE, codigoBanco, moneda, dateTime);
+
+           
+            cajaBancoDao.crearteDetail(objnuevo,  obj,  codigoBanco,  dateTime,  moneda, valortipoCambio);
         }
 
         public bool exiteFactura(DateTime dateTime)
