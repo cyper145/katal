@@ -131,8 +131,6 @@ namespace katal.Controllers
         [ValidateInput(false)]
         public ActionResult RequisicionUpdatePartial(CMovimientoBanco product, FormCollection dataForm)
         {
-
-
             string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);
             string CB_C_TPDOC = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDoc$State"]);
             string CB_C_ANEXO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupAnexo$State"]);
@@ -240,7 +238,11 @@ namespace katal.Controllers
             {
                 GridViewHelper.secuenciacab = CB_C_SECUE;
                 GridViewHelper.movimientoBancosdetalles = cajaBancoNeg.findDetailMovimientos(CB_C_SECUE, GridViewHelper.codigobanco, GridViewHelper.monedabanco, GridViewHelper.dateTime, GridViewHelper.TipoOpcion);
-                
+                GridViewHelper.habilitarDetalles = true;
+            }
+            else
+            {
+                GridViewHelper.habilitarDetalles = false;
             }
            
 
