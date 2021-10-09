@@ -196,10 +196,20 @@
                 gridLookupMoneda.Focus();
             }
         }
-        function KeyDownMoneda(s, e) {
+        function KeyDownEspecial(s, e) {
+
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
                 CB_D_FECHA.Focus();
+            }
+        }
+        function KeyDownMoneda(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                if (CB_N_CAMES.GetInputElement().readOnly) {
+                    CB_D_FECHA.Focus();
+                }
+                
             }
         }
         function KeyDownFechaGiro(s, e) {
@@ -211,7 +221,7 @@
         function KeyDownFechaCobro(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                CB_N_MTOMN.Focus();
+                CB_A_REFER.Focus();
             }
         }
         function KeyDownMonto(s, e) {
@@ -235,7 +245,7 @@
         function KeyDownTipoMovimiento(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                TC.Focus();
+                btShowModal.Focus();
             }
         }
         function KeyDownTc(s, e) {
@@ -285,28 +295,37 @@
         function KeyDownFecha(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                gridLookupTipoMoneda.Focus();
+                gridLookupCostos.Focus();
             }
         }
-        function KeyDownTipoMoneda(s, e) {
+        function KeyDownCentroCto(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                CB_N_MTOMND.Focus();
+                //gridLookupCuenta.Focus();
+                if (gridLookupTipoMoneda.GetValue()[0] == "MN") {
+                    CB_N_MTOMND.Focus();
+                }
+                else {
+                    CB_N_MTOMED.Focus();
+                }
+
             }
         }
         function KeyDownMontoD(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                gridLookupCostos.Focus();
+                gridLookupCuenta.Focus();
             }
         }
-
-        function KeyDownCentroCto(s, e) {
+        function KeyDownTipoMoneda(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
                 gridLookupCuenta.Focus();
             }
         }
+       
+
+        
         function KeyDownCuenta(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
@@ -319,13 +338,46 @@
                 CB_A_REFERD.Focus();
             }
         }
+        function KeyDownREFERD(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                btnUpdateDetalle.Focus();
+            }
+        }
+
         function probando() {
 
+
+            //CB_A_REFER.GetInputElement().readOnly = true;
+           
             let objeto = recolectarInfo();
             objeto = JSON.stringify(objeto);
             $.getJSON('/MovimientoBanco/grabar?data=' + objeto, function (resp) {
                 $.each(resp, function (k, v) {
-
+                    if (v) {
+                        alert("cabecera guardada Correctamente");
+                      
+                        CB_A_REFER.SetEnabled(false);
+                        CB_C_MODO.SetEnabled(false);
+                        gridLookupOpciones.SetEnabled(false);
+                        gridLookupTipoDoc.SetEnabled(false);
+                        serie.SetEnabled(false);
+                        CB_C_DOCUM.SetEnabled(false);
+                        gridLookupTipoAnexo.SetEnabled(false);
+                        gridLookupAnexo.SetEnabled(false);
+                        gridLookupMoneda.SetEnabled(false);
+                        CB_D_FECHA.SetEnabled(false);
+                        CB_D_FECCOB.SetEnabled(false);
+                      //  CB_N_MTOMN.SetEnabled(false);
+                        CB_A_REFER.SetEnabled(false);
+                        gridLookupEstados.SetEnabled(false);
+                        gridLookupTiposMovimientos.SetEnabled(false);
+                        //TC.SetEnabled(false);
+                        gridLookupMedioPago.SetEnabled(false);
+                        btShowModal.SetEnabled(false);
+                        grid.SetEnabled(true);
+                    }
+                      
                 });
             }); 
         }
@@ -339,7 +391,37 @@
                 });
             });
         }
+        function OnChangeMoneda() {
+            $.getJSON('/MovimientoBanco/OnChangeMoneda', function (resp) {
+                $.each(resp, function (k, v) {
+                    CB_N_CAMES.GetInputElement().readOnly = v;
+                    if (v) {
+                        CB_N_CAMES.SetText("0.00");
+                    }
+                    else {
+                        CB_N_CAMES.SetText("0");
+                        CB_N_CAMES.Focus();
+                    }
+                  
+                });
+            });
+        }
+        function initTipoMoneda() {
+            console.log(gridLookupTipoMoneda.GetValue());
+            if (gridLookupTipoMoneda.GetValue() != null) {
+                return;
+            }
+          
+            $.getJSON('/MovimientoBanco/initTipoMoneda', function (resp) {
+                $.each(resp, function (k, v) {
+                    gridLookupTipoMoneda.SetValue(v);
+                   
 
+                });
+            });
+        }
+
+        
         function recolectarInfo() {
 
 
@@ -450,7 +532,7 @@
     });
     menuSettings.Items.Add(item =>
     {
-        item.Name = "Delete";
+        item.Name = "DeleteMovimiento";
         item.Text = "Eliminar";
         item.Alignment = MenuItemAlignment.Left;
         item.AdaptivePriority = 2;

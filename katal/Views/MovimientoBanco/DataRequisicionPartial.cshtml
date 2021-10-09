@@ -94,7 +94,7 @@
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_C_SECUE";
-                i.Caption = "Sec.";
+                i.Caption = "Sec";
                 i.ColumnSpan = 2;
                 i.NestedExtension().TextBox(t =>
                 {
@@ -133,7 +133,7 @@
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_C_TPDOC";
-                i.Caption = "Dcmtos.";
+                i.Caption = "Dcmtos";
                 i.ColumnSpan = 4;
                 i.SetNestedContent(() =>
                 {
@@ -206,13 +206,14 @@
                 i.NestedExtension().TextBox(t =>
                 {
                     t.ReadOnly = true;
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownEspecial";
                 });
             });
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_D_FECHA";
                 i.ColumnSpan = 3;
-                i.Caption = "Fecha Giro";
+                i.Caption = "F. Giro";
                 i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
                 i.NestedExtension().DateEdit(t =>
                 {
@@ -228,7 +229,7 @@
             {
                 i.FieldName = "CB_D_FECCOB";
                 i.ColumnSpan = 3;
-                i.Caption = "Fecha Cobro";
+                i.Caption = "F. Cobro";
                 i.RequiredMarkDisplayMode = FieldRequiredMarkMode.Hidden;
                 i.NestedExtension().DateEdit(t =>
                 {
@@ -242,6 +243,7 @@
                 i.FieldName = "CB_N_MTOMN";
                 i.ColumnSpan = 12;
                 i.Caption = "Monto";
+                i.Visible = false;
 
                 i.NestedExtension().TextBox(t =>
                 {
@@ -266,7 +268,7 @@
             groupItem.Items.Add(i =>
             {
                 i.Name = "CB_C_ESTAD";
-                i.ColumnSpan = 2;
+                i.ColumnSpan = 3;
                 i.Caption = "Estado";
                 i.SetNestedContent(() =>
                 {
@@ -287,6 +289,7 @@
             {
                 i.Name = "TC";
                 i.ColumnSpan = 1;
+                i.Visible = false;
                 i.Caption = "T/C";
                 i.NestedExtension().TextBox(t =>
                 {

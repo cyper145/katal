@@ -57,6 +57,7 @@ namespace katal.Model
         public static string codigobanco = "";
         public static string codigoContabilidad = "";
         public static string CB_C_BANCO = "";
+        public static string secuenciacab = "";
         public static string monedabanco = "";
         public static string tipoCambioBanco = "";
         public static string operacionbanco = "";

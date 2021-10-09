@@ -39,7 +39,7 @@
     settings.EnablePagingGestures = AutoBoolean.False;
 
     settings.ControlStyle.CssClass = "grid-view";
-
+    settings.Enabled = false;
 
     settings.Styles.Cell.Wrap = DefaultBoolean.False;
     settings.Styles.PagerBottomPanel.CssClass = "pager";
@@ -259,44 +259,74 @@
 
             groupItem.Items.Add(i =>
             {
+                i.FieldName = "CB_C_CENCO";
+                i.Caption = "Centro Ctos";
+                //  i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 5;
+                i.SetNestedContent(() =>
+                {
+                    Html.RenderAction("MultiSelectCentroCostos", new { CENCOST_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_CENCO") });
+                });
+            });
+
+
+            groupItem.Items.Add(i =>
+            {
+                i.Name = "label";
+                i.ShowCaption = DefaultBoolean.False;
+                i.ColumnSpan = 1;
+                i.NestedExtension().Label(t =>
+                {
+                    //t.Properties.ClientSideEvents.KeyDown = "KeyDownMontoD";
+                });
+            });
+            if (GridViewHelper.monedabanco == "MN")
+            {
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CB_N_MTOMND";
+                    i.Caption = "Monto";
+                    i.ColumnSpan = 2;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownMontoD";
+                    });
+                });
+            }
+            else
+            {
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "CB_N_MTOMED";
+                    i.Caption = "Monto";
+                    i.ColumnSpan = 2;
+                    i.NestedExtension().TextBox(t =>
+                    {
+                        t.Properties.ClientSideEvents.KeyDown = "KeyDownMontoD";
+                    });
+                });
+            }
+
+
+            groupItem.Items.Add(i =>
+            {
                 i.Name = "monedaD";
                 i.Caption = "Moneda";
                 //  i.ShowCaption = DefaultBoolean.False;
-                i.ColumnSpan =5;
+                i.ColumnSpan = 4;
                 i.SetNestedContent(() =>
                 {
                     Html.RenderAction("MultiSelectTipoMoneda", new { TIPOMON_CODIGO = DataBinder.Eval(c.DataItem, "monedaD") });
                 });
             });
 
-            groupItem.Items.Add(i =>
-            {
-                i.FieldName = "CB_N_MTOMND";
-                i.Caption = "Monto.";
-                i.ColumnSpan =3;
-                i.NestedExtension().TextBox(t =>
-                {
-                    t.Properties.ClientSideEvents.KeyDown = "KeyDownMontoD";
-                });
-            });
-
-            groupItem.Items.Add(i =>
-            {
-                i.FieldName = "CB_C_CENCO";
-                i.Caption = "Centro Ctos";
-                //  i.ShowCaption = DefaultBoolean.False;
-                i.ColumnSpan = 4;
-                i.SetNestedContent(() =>
-                {
-                    Html.RenderAction("MultiSelectCentroCostos", new { CENCOST_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_CENCO") });
-                });
-            });
             //MultiSelectCuenta
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_C_CUENT";
                 i.Caption = "Cuenta";
                 //  i.ShowCaption = DefaultBoolean.False;
+                i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                 i.ColumnSpan = 6;
                 i.SetNestedContent(() =>
                 {
@@ -310,6 +340,7 @@
                 i.FieldName = "CB_C_DESTI";
                 i.Caption = "Cta. Destino";
                 //  i.ShowCaption = DefaultBoolean.False;
+                i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                 i.ColumnSpan = 6;
                 i.SetNestedContent(() =>
                 {
@@ -327,7 +358,7 @@
                 i.ColumnSpan =12;
                 i.NestedExtension().TextBox(t =>
                 {
-
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownREFERD";
                 });
             });
 

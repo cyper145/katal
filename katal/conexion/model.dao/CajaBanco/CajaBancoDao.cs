@@ -180,7 +180,7 @@ namespace katal.conexion.model.dao
             string findAll = $"SELECT * FROM CMOV_BANCO where CB_C_BANCO='{banco}' and CB_C_MES='{mes}' and  CB_C_SECUE ='{secuencia}'";
             try
             {
-                comando = new SqlCommand(conexionCajaBanco(findAll), objConexion.getCon());
+                comando = new SqlCommand(conexionBDCBT(findAll,date.Year), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -734,7 +734,7 @@ namespace katal.conexion.model.dao
         public string Genera_Secuencia_detalle(string codigoBanco, DateTime fechaoperacion, string secuenciaCab)
         {
 
-            string mes = fechaoperacion.ToString("00.##");
+            string mes = fechaoperacion.Month.ToString("00.##");
             int anio = fechaoperacion.Year;
             string findAll = "SELECT MAX(CB_C_SECDE) FROM DMOV_BANCO C ";
             findAll += $" WHERE C.CB_C_Banco='{codigoBanco}' AND C.CB_C_Mes='{mes}' AND CB_C_Secue='{secuenciaCab}'";
@@ -1005,11 +1005,11 @@ namespace katal.conexion.model.dao
             }
 
             string create = "INSERT INTO DMOV_BANCO  ([CB_C_BANCO],[CB_C_MES],[CB_C_SECDE],[CB_C_SECUE],[CB_C_MODO],[CB_C_CONCE],[CB_C_ANEXO]";
-            create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_D_FECDC]  ,[CB_A_REFER] ,[CB_C_CUENT] ,[CB_C_DESTI],[CB_N_MTOMN]  ,[CB_N_MTOME] )";
-            create += $" VALUES('{codigoBanco}', '{mes}','{obj.CB_C_SECDE}','{obj.CB_C_SECUE}','{obj.CB_C_MODO}'";
+            create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_D_FECDC]  ,[CB_A_REFER] ,[CB_C_CUENT] ,[CB_C_DESTI],[CB_N_MTOMN]  ,[CB_N_MTOME],CB_C_CENCO  )";
+            create += $" VALUES('{codigoBanco}', '{mes}','{obj.CB_C_SECDE}','{objC.CB_C_SECUE}','{obj.CB_C_MODO}'";
             create += $",'{obj.CB_C_CONCE}','{obj.CB_C_ANEXOD}','{obj.CB_C_TPDOCD}','{obj.serieD} {obj.CB_C_DOCUMD}'";
             create += $",{dateFormat( obj.CB_D_FECDC)},'{obj.CB_A_REFERD}','{obj.CB_C_CUENT}','{obj.CB_C_DESTI}'";
-            create += $",{obj.CB_N_MTOMND},{obj.CB_N_MTOMED})";
+            create += $",{obj.CB_N_MTOMND},{obj.CB_N_MTOMED},'{obj.CB_C_CENCO}')";
             try
             {
                 comando = new SqlCommand(conexionBDCBT(create, dateTime.Year), objConexion.getCon());
@@ -1082,5 +1082,70 @@ namespace katal.conexion.model.dao
             }
             return tipoMonedas;
         }
+
+
+
+        public void delete(Area obj)
+        {
+            string delete = "delete from AREA where AREA_CODIGO='" + obj.AREA_CODIGO + "'";
+            try
+            {
+                comando = new SqlCommand(conexionComun(delete), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        public void deleteMovimientoBancoDetalle(string codigobanco , DateTime dateTime, string secuencia )
+        {
+            string mes = dateTime.Month.ToString("00.##");
+
+            string delete = "DELETE FROM DMOV_BANCO WHERE CB_C_BANCO = '" + codigobanco + "' AND  CB_C_MES='" + mes + "' AND CB_C_SECUE ='" + secuencia + "'";
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(delete, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        public void deleteMovimientoBanco(string codigobanco, DateTime dateTime, string secuencia)
+        {
+            string mes = dateTime.Month.ToString("00.##");
+
+            string delete = "DELETE FROM CMOV_BANCO WHERE CB_C_BANCO = '" + codigobanco + "' AND  CB_C_MES='" + mes + "' AND CB_C_SECUE ='" + secuencia + "'";
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(delete, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+         
     }
 }

@@ -23,13 +23,14 @@
         }
         pageToolbar.GetItemByName("Edit").SetEnabled(gridView.GetFocusedRowIndex() !== -1);
     }
-    function onPageToolbarItemClick(s, e) { 
+    function onPageToolbarItemClick(s, e) {
+        console.log("locos");
         switch(e.item.name) {
             case "ToggleFilterPanel":
                 toggleFilterPanel();
                 break;
             case "New":
-                console.log("dar");
+                console.log("dadddr");
                 gridView.AddNewRow();
                
                 break;
@@ -39,6 +40,7 @@
 
                 break;
             case "Delete":
+               
                 ExportSelectedRecords();
                 break;
             case "Export":
@@ -66,6 +68,11 @@
             case "imprimirCaja":
                 console.log("dar");
                 imprimirCaja();
+                break;
+
+            case "DeleteMovimiento":
+                
+                deleteSelectedRecordsMovimiento();
                 break;
         }
     }
@@ -101,7 +108,17 @@
         gridView.PerformCallback({ customAction: 'imprimir', codigo: selectdId });
     }
 
-
+    function deleteSelectedRecordsMovimiento() {
+        console.log("percy");
+        if (confirm('confirma E?')) {
+            gridView.GetSelectedFieldValues("CB_C_SECUE", getSelectedFieldValuesCallbackMovimiento);
+        }
+    }
+    function getSelectedFieldValuesCallbackMovimiento(values) {
+        selectedIds = values.join(',');
+      
+        gridView.PerformCallback({ customAction: 'delete', codigo: selectdId  });
+    }
     /**
     * end para movimiento cajabanco
     *
@@ -207,6 +224,7 @@
                 gridViewd.StartEditRow(gridViewd.GetFocusedRowIndex());
                 break;
             case "DeleteDetalles":
+                console.log("q esta pasando");
                 deleteSelectedRecordsDetalles();
                 break;
         }
