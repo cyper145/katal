@@ -39,7 +39,7 @@
     settings.EnablePagingGestures = AutoBoolean.False;
 
     settings.ControlStyle.CssClass = "grid-view";
-    settings.Enabled = GridViewHelper.habilitarDetalles;
+    //settings.Enabled = false;
 
     settings.Styles.Cell.Wrap = DefaultBoolean.False;
     settings.Styles.PagerBottomPanel.CssClass = "pager";
@@ -70,7 +70,7 @@
 
     settings.EditFormLayoutProperties.Styles.LayoutItem.Paddings.PaddingBottom = Unit.Pixel(8);
 
-
+    settings.ClientSideEvents.Init = "initgridDetalle";
 
 
     settings.KeyFieldName = "CB_C_SECDE";
@@ -203,7 +203,7 @@
                 i.SetNestedContent(() =>
                 {
 
-                    Html.RenderAction("MultiSelectAnexoD", new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXOD") });
+                    Html.RenderAction("MultiSelectAnexoD", new { ANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXOD") });
 
                 });
             });
@@ -347,10 +347,7 @@
                     Html.RenderAction("MultiSelectCuentaDestino", new { PLANCTA_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_DESTI") });
                 });
             });
-
-
             // ultima fila
-
             groupItem.Items.Add(i =>
             {
                 i.FieldName = "CB_A_REFERD";

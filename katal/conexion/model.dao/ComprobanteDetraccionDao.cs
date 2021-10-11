@@ -24,8 +24,6 @@ namespace katal.conexion.model.dao
             findAll += $" From[{this.CodEmpresa}BDCOMUN].dbo.comprobanteCab a left join(Select cb_c_anexo, cb_c_tpdoc, REPLACE(cb_c_docum, ' ', '') ";
             findAll += $"as cb_c_docum,CB_L_ESTADO,CB_N_RESTANTE,  sum(cb_n_mtomn) as pagos From [{this.CodEmpresa}BDCBT{DATE.Year}].dbo.dmov_banco Where cb_c_conce = '015' Group by cb_c_anexo, cb_c_tpdoc, cb_c_docum,CB_L_ESTADO,CB_N_RESTANTE)b On '03' + a.anex_codigo = b.cb_c_anexo and a.tipodocu_codigo = b.cb_c_tpdoc and a.cserie + a.cnumero = b.cb_c_docum Where ldetraccion = 1 and len(a.NUMRETRAC) = 0 and case tipomon_codigo When 'MN' then nimporte else nimporte* tipocambio_valor end > 700) as Det Where saldo> 0";
             findAll += $" and demision Between  {dateFormat(dateRange.Start)} and {dateFormat(dateRange.End)}";
-
-
             try
             {
                 comando = new SqlCommand(findAll, objConexion.getCon());

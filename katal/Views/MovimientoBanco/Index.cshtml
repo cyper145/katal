@@ -344,7 +344,17 @@
                 btnUpdateDetalle.Focus();
             }
         }
-
+        function initgridDetalle() {
+            
+            $.getJSON('/MovimientoBanco/initgridDetalle', function (resp) {
+                $.each(resp, function (k, v) {
+                    
+                    
+                 grid.SetEnabled(v);
+                    
+                });
+            });
+        }
         function probando() {
 
 
@@ -375,6 +385,7 @@
                         //TC.SetEnabled(false);
                         gridLookupMedioPago.SetEnabled(false);
                         btShowModal.SetEnabled(false);
+                        console.log(grid);
                         grid.SetEnabled(true);
                     }
                       

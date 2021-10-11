@@ -243,6 +243,7 @@ namespace katal.Controllers
             else
             {
                 GridViewHelper.habilitarDetalles = false;
+
             }
            
 
@@ -645,6 +646,7 @@ namespace katal.Controllers
         {
 
             string secuencia = cajaBancoNeg.Genera_Secuencia(GridViewHelper.codigobanco, GridViewHelper.dateTime);
+            GridViewHelper.secuenciacab = secuencia;
             return Json(new { respuesta = secuencia }, JsonRequestBehavior.AllowGet);
         }
         // detalles de Dmov
@@ -654,7 +656,13 @@ namespace katal.Controllers
             string secuenciaDetalle = cajaBancoNeg.Genera_Secuencia_detalle(GridViewHelper.codigobanco, GridViewHelper.dateTime, secuencia);
             return Json(new { respuesta = secuenciaDetalle }, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult initgridDetalle()
+        {
 
+            //string secuenciaDetalle = cajaBancoNeg.Genera_Secuencia_detalle(GridViewHelper.codigobanco, GridViewHelper.dateTime, secuencia);
+            return Json(new { respuesta = GridViewHelper.habilitarDetalles }, JsonRequestBehavior.AllowGet);
+        }
+        
         public ActionResult MultiSelectConceptoCajaBanco(FormCollection data, string CB_C_CODIG = "-1")
         {
             string opcion = GridViewHelper.TipoOpcion;
@@ -716,7 +724,7 @@ namespace katal.Controllers
             {
                 Anexo ANEXO = anexoNeg.findAnexo(TIPOANEX_CODIGO);
                 TIPOANEX_CODIGO = ANEXO.TIPOANEX_CODIGO;
-                GridViewHelper.TipoAnexoBanco = TIPOANEX_CODIGO;
+                GridViewHelper.TipoAnexoBancoDetalle = TIPOANEX_CODIGO;
             }
             return PartialView("MultiSelectTipoAnexoD", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
 
