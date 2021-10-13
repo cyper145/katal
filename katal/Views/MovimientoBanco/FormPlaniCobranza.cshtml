@@ -1,5 +1,8 @@
 ﻿
-@using  katal.Model
+
+@using katal.conexion.model.entity;
+@model DataGeneralBanco
+
 @Html.DevExpress().PopupControl(
     settings =>
     {
@@ -20,8 +23,8 @@
             @Html.DevExpress().GridView(t =>
             {
                 t.Name = "gvDataBindingToLinq";
-                t.CallbackRouteValues = new { Controller = "DataBinding", Action = "DataBindingToLargeDatabasePartial" };
-
+                settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "Planificacion" };
+                //settings.CustomActionRouteValues = new { Controller = "MovimientoBanco", Action = "GridViewPlanificacion" };
                 t.KeyFieldName = "COCNROPLA";
                 t.Width = Unit.Percentage(100);
                 t.Height = Unit.Percentage(20);
@@ -59,7 +62,7 @@
 
 
 
-            }).Bind(GridViewHelper.GetCobranza()).GetHtml();
+            }).Bind(Model.cobranzas).GetHtml();
 
             @Html.DevExpress().FormLayout(s =>
             {

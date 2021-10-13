@@ -42,6 +42,7 @@ namespace katal.Controllers
             List<CMovimientoBanco> movimientoBancos = new List<CMovimientoBanco>();
             DataGeneralBanco dataGeneral = new DataGeneralBanco();
             GridViewHelper.movimientoBancosdetalles.Clear();
+            List<Cobranzas> cobranzas = new List<Cobranzas>();
             if (GridViewHelper.activeData)
             {
                 // movimientoBancos = cajaBancoNeg.findAllMovimientos(GridViewHelper.codigobanco, "MN");
@@ -50,8 +51,10 @@ namespace katal.Controllers
 
                 movimientoBancos = GridViewHelper.movimientoBancos;
                 movimientoBancos = movimientoBancos.Where(X => X.CB_D_FECHA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECHA <= GridViewHelper.dateRangeBanco.End).ToList();
+                cobranzas = cajaBancoNeg.AllConbranzas(GridViewHelper.dateTime);
             }
             dataGeneral.cMovimientoBancos = movimientoBancos;
+            dataGeneral.cobranzas = cobranzas;
             return View(dataGeneral);
         }
         public ActionResult DataRequisicionPartial()
@@ -59,18 +62,21 @@ namespace katal.Controllers
             DataGeneralBanco dataGeneral = new DataGeneralBanco();
             //Sec-Fetch-Mode
             GridViewHelper.movimientoBancosdetalles.Clear();
-            List<CMovimientoBanco> movimientoBancos = new List<CMovimientoBanco>(); ;
+            List<CMovimientoBanco> movimientoBancos = new List<CMovimientoBanco>(); 
+            List<Cobranzas> cobranzas = new List<Cobranzas>(); 
             if (GridViewHelper.activeData)
             {
                 GridViewHelper.movimientoBancos = cajaBancoNeg.findAllMovimientos(GridViewHelper.codigobanco, GridViewHelper.monedabanco, GridViewHelper.dateTime);
                 movimientoBancos = GridViewHelper.movimientoBancos;
                 movimientoBancos = movimientoBancos.Where(X => X.CB_D_FECHA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECHA <= GridViewHelper.dateRangeBanco.End).ToList();
-            }
+                cobranzas=cajaBancoNeg.AllConbranzas(GridViewHelper.dateTime);
+            }      
             dataGeneral.cMovimientoBancos = movimientoBancos;
+            dataGeneral.cobranzas = cobranzas;
             return PartialView("DataRequisicionPartial", dataGeneral);
         }
 
-        [ValidateInput(false)]
+       
         public ActionResult RequisicionAddNewPartial(CMovimientoBanco product, FormCollection dataForm)
         {
             string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);
@@ -789,7 +795,7 @@ namespace katal.Controllers
             }
             else
             {
-                ViewData["AnexoD"] = anexoNeg.findAllAnexo(GridViewHelper.TipoAnexoBanco);
+                ViewData["AnexoD"] = anexoNeg.findAllAnexo(GridViewHelper.TipoAnexoBancoDetalle);
             }
 
 

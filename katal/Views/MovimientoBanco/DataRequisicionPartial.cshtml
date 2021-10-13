@@ -1,7 +1,7 @@
 ﻿
 @using katal.conexion.model.entity;
 @using katal.Model;
-  @(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
+@(Html.DevExpress().GridView<CMovimientoBanco>(settings => {
     settings.Name = "gridView";
     settings.Enabled = GridViewHelper.activeData;
     settings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "DataRequisicionPartial" };
@@ -370,7 +370,8 @@
                     {
                         btnSettings.Name = "btnUpdate";
                         btnSettings.Text = "Grabar";
-                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.UpdateEdit(); }";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";// algo mas ara pero ahorita no
+
                     }).Render();
                 Html.DevExpress().Button(
                     btnSettings =>

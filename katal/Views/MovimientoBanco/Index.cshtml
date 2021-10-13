@@ -144,6 +144,8 @@
                 });
             });
         }
+
+
         //teclas acceso
         function KeyDownModo(s, e) {
 
@@ -179,7 +181,13 @@
 
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                gridLookupTipoAnexo.Focus();
+                if (gridLookupTipoAnexo.GetVisible()) {
+                    gridLookupTipoAnexo.Focus();
+                }
+                else {
+                    gridLookupMoneda.Focus();
+                }
+                
             }
         }
         function KeyDownTipoAnexo(s, e) {
@@ -329,7 +337,7 @@
         function KeyDownCuenta(s, e) {
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
-                gridLookupCuentaDestino.Focus();
+                CB_A_REFERD.Focus();
             }
         }
         function KeyDownCuentaDestino(s, e) {

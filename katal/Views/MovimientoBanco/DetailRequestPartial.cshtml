@@ -342,6 +342,7 @@
                 //  i.ShowCaption = DefaultBoolean.False;
                 i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                 i.ColumnSpan = 6;
+                i.Visible = false;
                 i.SetNestedContent(() =>
                 {
                     Html.RenderAction("MultiSelectCuentaDestino", new { PLANCTA_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_DESTI") });

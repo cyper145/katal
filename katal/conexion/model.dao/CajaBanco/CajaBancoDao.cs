@@ -1071,8 +1071,7 @@ namespace katal.conexion.model.dao
 
             string create = "UPDATE  DMOV_BANCO SET";
             create += $"[CB_C_BANCO]= '{codigoBanco}',";
-            create += $"[CB_C_MES]= '{mes}',";
-            create += $"[CB_C_SECDE]= '{obj.CB_C_SECDE}',";
+            create += $"[CB_C_MES]= '{mes}',";    
             create += $"[CB_C_SECUE]= '{objC.CB_C_SECUE}',";
             create += $"[CB_C_MODO]= '{obj.CB_C_MODO}',";
             create += $"[CB_C_CONCE]= '{obj.CB_C_CONCE}',";
@@ -1086,7 +1085,7 @@ namespace katal.conexion.model.dao
             create += $"[CB_N_MTOMN]= {obj.CB_N_MTOMND},";
             create += $"[CB_N_MTOME]= {obj.CB_N_MTOMED},";
             create += $"[CB_C_CENCO]= '{obj.CB_C_CENCO}'";
-           
+            create += $"where   [CB_C_SECDE]= '{obj.CB_C_SECDE}' and  [CB_C_SECUE]='{objC.CB_C_SECUE}' and [CB_C_BANCO]= '{codigoBanco}' and [CB_C_MES]= '{mes}'  ";
             try
             {
                 comando = new SqlCommand(conexionBDCBT(create, dateTime.Year), objConexion.getCon());

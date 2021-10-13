@@ -137,7 +137,7 @@ namespace katal.conexion.model.neg
 
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, moneda, dateTime);
             decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECCA, objnuevo.CB_D_FECCA, dateTime);
-            cajaBancoDao.UpdateDetail(objnuevo, obj, codigoBanco, dateTime, moneda, valortipoCambio);
+            cajaBancoDao.UpdateDetail (objnuevo, obj, codigoBanco, dateTime, moneda, valortipoCambio);
         }
 
 
