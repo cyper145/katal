@@ -241,8 +241,13 @@ namespace katal.conexion.model.dao
             string mes = dateTime.Month.ToString("00.##");
 
             string texto = ternario(moneda == "MN", "CB_N_MTOMN  as monto", "CB_N_MTOME  as monto");
+            
 
-            string findAll = $"SELECT CB_C_SecDE  as secd,CB_C_Conce+' ',Cb_C_TpDoc+LEFT(CB_C_Docum,21),{texto},CB_A_Refer as refer,*  from DMOV_BANCO WHERE CB_C_Banco = '{banco}'";
+
+
+
+            string findAll = $"SELECT CB_C_SecDE  as secd,CB_C_Conce+' '+D.CB_A_DESCR,Cb_C_TpDoc+LEFT(CB_C_Docum,21),{texto},CB_A_Refer as refer,*  ";
+              findAll += $"from DMOV_BANCO inner join (select CB_C_CODIG, CB_A_DESCR from [014BDCAJABANCO].[dbo].[CONCEPTO_CAJA_BANCO]  where CB_C_TIPO = 'B' and CB_C_MODO = '{tipo}') as D on DMOV_BANCO.CB_C_CONCE = D.CB_C_CODIG WHERE CB_C_Banco = '{banco}'";
             findAll += $" AND  CB_C_Mes='{mes}' AND CB_C_Secue ='{secuencia}' ORDER BY CB_C_SECDE";
             try
             {
