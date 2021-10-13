@@ -132,6 +132,14 @@ namespace katal.conexion.model.neg
                  
             cajaBancoDao.crearteDetail(objnuevo,  obj,  codigoBanco,  dateTime,  moneda, valortipoCambio);
         }
+        public void updateDetail(string CB_C_SECUE, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda, string cambioMoneda)
+        {
+
+            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, moneda, dateTime);
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECCA, objnuevo.CB_D_FECCA, dateTime);
+            cajaBancoDao.UpdateDetail(objnuevo, obj, codigoBanco, dateTime, moneda, valortipoCambio);
+        }
+
 
         public bool exiteFactura(DateTime dateTime)
         {
@@ -200,6 +208,11 @@ namespace katal.conexion.model.neg
             cajaBancoDao.deleteMovimientoBancoDetalle(codigobanco,dateTime, secuencia);
             cajaBancoDao.deleteMovimientoBanco(codigobanco,dateTime, secuencia);
         }
+        public void deleteDetailMovimientoBanco(string codigobanco, DateTime dateTime, string secuencia,string secuenciaD)
+        {
 
+            cajaBancoDao.deleteMovimientoBancoDetalleEspecifico(codigobanco, dateTime, secuencia, secuenciaD);
+            
+        }
     }
 }

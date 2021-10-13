@@ -1026,6 +1026,87 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
+
+
+        public void UpdateDetail(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda, decimal valortipoCambio)
+        {
+            string mes = dateTime.Month.ToString("00.##");
+            decimal monto = 0;
+            if (obj.monedaD == "MN")
+            {
+                monto = obj.CB_N_MTOMND;
+            }
+            else
+            {
+                monto = obj.CB_N_MTOMED;
+            }
+            if (moneda == obj.monedaD)
+            {
+                if (obj.monedaD == "MN")
+                {
+                    obj.CB_N_MTOMND = monto;
+                    obj.CB_N_MTOMED = monto * valortipoCambio;
+
+                }
+                else
+                {
+                    obj.CB_N_MTOMND = monto * valortipoCambio;
+                    obj.CB_N_MTOMED = monto;
+                }
+            }
+            else
+            {
+                if (obj.monedaD == "MN")
+                {
+                    obj.CB_N_MTOMND = monto * valortipoCambio;
+                    obj.CB_N_MTOMED = monto;
+
+                }
+                else
+                {
+                    obj.CB_N_MTOMND = monto;
+                    obj.CB_N_MTOMED = monto * valortipoCambio;
+                }
+            }
+
+            string create = "UPDATE  DMOV_BANCO SET";
+            create += $"[CB_C_BANCO]= '{codigoBanco}',";
+            create += $"[CB_C_MES]= '{mes}',";
+            create += $"[CB_C_SECDE]= '{obj.CB_C_SECDE}',";
+            create += $"[CB_C_SECUE]= '{objC.CB_C_SECUE}',";
+            create += $"[CB_C_MODO]= '{obj.CB_C_MODO}',";
+            create += $"[CB_C_CONCE]= '{obj.CB_C_CONCE}',";
+            create += $"[CB_C_ANEXO]= '{obj.CB_C_ANEXOD}',";
+            create += $"[CB_C_TPDOC]= '{obj.CB_C_TPDOCD}',";
+            create += $"[CB_C_DOCUM]= '{obj.serieD} {obj.CB_C_DOCUMD}',";
+            create += $"[CB_D_FECDC]= {dateFormat(obj.CB_D_FECDC)},";
+            create += $"[CB_A_REFER]= '{obj.CB_A_REFERD}',";
+            create += $"[CB_C_CUENT]= '{obj.CB_C_CUENT}',";
+            create += $"[CB_C_DESTI]= '{obj.CB_C_DESTI}',";
+            create += $"[CB_N_MTOMN]= {obj.CB_N_MTOMND},";
+            create += $"[CB_N_MTOME]= {obj.CB_N_MTOMED},";
+            create += $"[CB_C_CENCO]= '{obj.CB_C_CENCO}'";
+           
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(create, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+
+
         public void updateNroAutomaticoOperacion(CMovimientoBanco obj, string codigo)
         {
             string updateNumCompras = $"UPDATE NUM_AUT_DOC SET ctnnumero='{obj.CB_C_DOCUM}' WHERE CB_C_Tipo='B' and CB_C_BANCO='{codigo}' and CB_C_TPDOC='{obj.CB_C_TPDOC}' ";
@@ -1125,6 +1206,28 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
+        public void deleteMovimientoBancoDetalleEspecifico(string codigobanco, DateTime dateTime, string secuencia, string  secuenciaD)
+        {
+            string mes = dateTime.Month.ToString("00.##");
+
+            string delete = "DELETE FROM DMOV_BANCO WHERE CB_C_BANCO = '" + codigobanco + "' AND  CB_C_MES='" + mes + "' AND CB_C_SECUE ='" + secuencia + "'"  + " AND CB_C_SECDE='" + secuenciaD + "'"
+;
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(delete, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
         public void deleteMovimientoBanco(string codigobanco, DateTime dateTime, string secuencia)
         {
             string mes = dateTime.Month.ToString("00.##");
@@ -1146,6 +1249,86 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
-         
+
+
+        #region
+        public List<Planillas> AllPlantilas(string nroPlantilla)
+        {
+            
+            List<Planillas> tipoMonedas = new List<Planillas>();
+            string findAll = "";
+            findAll += "SELECT * FROM Plan_Cob_Det INNER JOIN Tipo_Cobranza ON Plan_Cob_Det.DEPCONCEP=Tipo_Cobranza.COD_COBRANZA ";
+            findAll += "Where DEPNROPLA = '" + nroPlantilla + "' ";
+        
+            try
+            {
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Planillas planilla  = new Planillas();
+                    planilla.DEPNROPLA  = read["DEPNROPLA"].ToString();
+                    planilla.DEPSECUENC = read["DEPSECUENC"].ToString();
+                    planilla.DEPTIPDOC  = read["DEPTIPDOC"].ToString();
+                    planilla.DEPNRODOC  = read["DEPNRODOC"].ToString();
+                    planilla.DEPTIPOPER = read["DEPTIPOPER"].ToString();
+                    planilla.DEPCONCEP  = read["DEPCONCEP"].ToString();
+                    planilla.DEPFECCOB  = Conversion.ParseDateTime( read["DEPFECCOB"].ToString());
+                    planilla.DEPIMPORTE = Conversion.ParseDecimal(read["DEPTIPOPER"].ToString());
+                    planilla.DEPTIPMON = read["DEPTIPMON"].ToString();
+                    planilla.DEPTIPCAM = Conversion.ParseDecimal(read["DEPTIPCAM"].ToString());
+                    planilla.DEPFECCRE = Conversion.ParseDateTime(read["DEPFECCRE"].ToString());
+                    planilla.DEPUSUARI = read["DEPUSUARI"].ToString();
+                    planilla.DEPGLOSA = read["DEPGLOSA"].ToString();
+                    planilla.DEPCOBRA = read["DEPCOBRA"].ToString();
+                    planilla.DEPCODBAN = read["DEPCODBAN"].ToString();
+                    planilla.DEPRFTIPDOC = read["DEPRFTIPDOC"].ToString();
+                    planilla.DEPRFNUMDOC = read["DEPRFNUMDOC"].ToString();
+                    planilla.CODDETPLA = Conversion.Parseint(read["CODDETPLA"].ToString());
+                    planilla.F_CJABCO = read["F_CJABCO"].ToString();
+                    planilla.DEPIMPORTEPERC = Conversion.ParseDecimal( read["DEPIMPORTEPERC"].ToString());
+                    planilla.DEPBCOGIR = read["DEPBCOGIR"].ToString();
+                    planilla.DEPCTABANCH = read["DEPCTABANCH"].ToString();
+                    planilla.DEPPERAUTO = read["DEPPERAUTO"].ToString();
+                    planilla.FlgPercepcion = read["FlgPercepcion"].ToString();
+                    planilla.FECPAGDOC = Conversion.ParseDateTime(read["FECPAGDOC"].ToString());
+                    planilla.ImpDeposito = Conversion.ParseDecimal(read["ImpDeposito"].ToString());
+
+                    planilla.TIPO = read["TIPO"].ToString();
+                    planilla.COD_COBRANZA = read["COD_COBRANZA"].ToString();
+                    planilla.DESCRIPCION = read["DESCRIPCION"].ToString();
+                    planilla.MONEDA = read["MONEDA"].ToString();
+                    planilla.CUENTA = read["CUENTA"].ToString();
+                    planilla.ANEX_PROV = Conversion.ParseBool( read["ANEX_PROV"].ToString());
+                    planilla.BANCOS = read["BANCOS"].ToString();
+                    planilla.USUARIO = read["USUARIO"].ToString();
+                    planilla.FECHA = Conversion.ParseDateTime( read["FECHA"].ToString());
+                    planilla.FECACT = Conversion.ParseDateTime( read["FECACT"].ToString());
+                    planilla.CHEQ_DIFER = Conversion.ParseBool(read["CHEQ_DIFER"].ToString());
+                    planilla.APLIC_DOC = Conversion.ParseBool(read["APLIC_DOC"].ToString());
+                    planilla.TIP = Conversion.Parseint(read["TIP"].ToString());
+                    planilla.TARJCREDITO = read["TARJCREDITO"].ToString();
+
+
+
+
+                    tipoMonedas.Add(planilla);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return tipoMonedas;
+        }
+        #endregion
+
     }
 }

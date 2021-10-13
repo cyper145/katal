@@ -30,12 +30,14 @@
                 t.Columns.Add(column =>
                 {
                     column.FieldName = "COCNROPLA";
+                    column.Caption = "Nro Plantilla";
                     column.ColumnType = MVCxGridViewColumnType.TextBox;
 
                 });
                 t.Columns.Add(column =>
                 {
                     column.FieldName = "COCFECPLA";
+                    column.Caption = "Fecha";
                     column.ColumnType = MVCxGridViewColumnType.DateEdit;
                     column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
                     column.Width = Unit.Pixel(100);
@@ -43,6 +45,7 @@
                 t.Columns.Add(column =>
                 {
                     column.FieldName = "COCTCOBMN";
+                    column.Caption = "Moneda MN";
                     column.ColumnType = MVCxGridViewColumnType.TextBox;
                     column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
                     column.Width = Unit.Pixel(100);
@@ -50,6 +53,7 @@
                 t.Columns.Add(column =>
                 {
                     column.FieldName = "COCTCOBUS";
+                    column.Caption = "Moneda ME";
                     column.ColumnType = MVCxGridViewColumnType.TextBox;
                 });
 

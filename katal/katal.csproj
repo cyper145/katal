@@ -475,6 +475,7 @@
     <Compile Include="conexion\model.entity\Cabecera.cs" />
     <Compile Include="conexion\model.entity\CabMov.cs" />
     <Compile Include="conexion\model.entity\cajaBanco\CajaBanco.cs" />
+    <Compile Include="conexion\model.entity\cajaBanco\Planillas.cs" />
     <Compile Include="conexion\model.entity\CentroCosto.cs" />
     <Compile Include="conexion\model.entity\Compra.cs" />
     <Compile Include="conexion\model.entity\Comprobante.cs" />
