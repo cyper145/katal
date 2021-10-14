@@ -368,7 +368,8 @@
 
     // para seleccionar elemento
     function OnGridFocusedRowChangedRequision(s, e) {
-      
+
+        console.log(s.keyName);
         if (s.keyName != "CB_C_SECUE") {
             s.GetRowValues(s.GetFocusedRowIndex(), 'NROREQUI', OnGetRowValuesRequision);
         } else {

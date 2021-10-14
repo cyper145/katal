@@ -76,7 +76,49 @@ namespace katal.Controllers
             return PartialView("DataRequisicionPartial", dataGeneral);
         }
 
+        
+       public ActionResult PlaniCobranza()
+        {
+            List<Cobranzas> cobranzas = new List<Cobranzas>();
+            cobranzas = cajaBancoNeg.AllConbranzas(GridViewHelper.dateTime);
+
+
+            return PartialView("PlaniCobranza", cobranzas);
+        }
+
+        public ActionResult FormPlaniCobranzaGridView()
+        {
+            List<Cobranzas> cobranzas = new List<Cobranzas>();
+            cobranzas = cajaBancoNeg.AllConbranzas(GridViewHelper.dateTime);
+            return PartialView("FormPlaniCobranzaGridView", cobranzas);
+        }
+        //SelectPlanilla
+        public JsonResult SelectPlanilla(string nroPlanilla)
+        {
+            GridViewHelper.nroPlantilla = nroPlanilla;
+
+           
+            return Json(new { respuesta = "" }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult PlaniCobranzaDetalle()
+        {
+            List<PlantillaDetalle> cobranzas = new List<PlantillaDetalle>();
+            cobranzas = cajaBancoNeg.AllPlanillasDetalle(GridViewHelper.nroPlantilla);
+            return PartialView("PlaniCobranzaDetalle", cobranzas);
+        }
+
+        public ActionResult FormPlaniDetalleGridView()
+        {
+            List<PlantillaDetalle> cobranzas = new List<PlantillaDetalle>();
+            cobranzas = cajaBancoNeg.AllPlanillasDetalle(GridViewHelper.nroPlantilla);
+            return PartialView("FormPlaniDetalleGridView", cobranzas);
+        }
+
        
+
+
         public ActionResult RequisicionAddNewPartial(CMovimientoBanco product, FormCollection dataForm)
         {
             string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);

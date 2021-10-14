@@ -214,5 +214,10 @@ namespace katal.conexion.model.neg
             cajaBancoDao.deleteMovimientoBancoDetalleEspecifico(codigobanco, dateTime, secuencia, secuenciaD);
             
         }
+
+        public List<PlantillaDetalle> AllPlanillasDetalle(string nroPlantilla)
+        {
+            return cajaBancoDao.AllPlanillasDetalle(nroPlantilla);
+        }
     }
 }

@@ -500,13 +500,25 @@
                 });
             });
         }
+        function clickRow(s, e) {
+           
+            s.GetRowValues(e.visibleIndex, 'COCNROPLA', OnGetRowValuesRequision);
+        }
+        function OnGetRowValuesRequision(values) {
 
+            console.log(values)
+            $.getJSON('/MovimientoBanco/SelectPlanilla?nroPlanilla=' + values, function (resp) {
+                $.each(resp, function (k, v) {
+                    
+                });
+            });
 
+        }
     </script>
 }
 @section PageToolbar {
     @Html.DevExpress().Menu(menuSettings =>
-{
+    {
     menuSettings.Name = "pageToolbar";
 
     menuSettings.ItemAutoWidth = false;
@@ -641,6 +653,7 @@
 
     @Html.Partial("DataRequisicionPartial", Model)
     @Html.Partial("FormPlaniCobranza")
+    @Html.Partial("FormPlatilladetalle")
     @Html.Partial("FormFacont")
     @Html.Partial("FormCtasxPagar1")
     @Html.Partial("FormCtasxPagar2")

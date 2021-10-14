@@ -64,6 +64,7 @@ namespace katal.Model
         public static string TipoOpcion = "I";
         public static bool  salidaentrada = false;
         public static bool  habilitarDetalles = true;
+        public static string  nroPlantilla = "";
 
         
         public static string TipoAnexoBanco = "";

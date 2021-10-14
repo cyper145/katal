@@ -171,8 +171,6 @@ namespace katal.conexion.model.dao
             }
             return cajaBancos;
         }
-
-
         public CMovimientoBanco findMovimiento( string secuencia, string banco, string moneda, DateTime date)
         {
             CMovimientoBanco cajaBanco = new CMovimientoBanco();
@@ -488,7 +486,6 @@ namespace katal.conexion.model.dao
             return tiposcajaBancos;
         }
 
-
         public string numSec(string tipoDoc, string codigoBanco, DateTime fechaoperacion)
         {
             List<MedioPago> tiposcajaBancos = new List<MedioPago>();
@@ -520,8 +517,6 @@ namespace katal.conexion.model.dao
             }
             return "";
         }
-
-
 
         public string Genera_Secuencia(string codigoBanco, DateTime fechaoperacion)
         {
@@ -558,10 +553,6 @@ namespace katal.conexion.model.dao
             }
             return secuencia;
         }
-
-
-
-
         public string ConceptosGenerales(string concepto)
         {
             bool hayRegistros = false;
@@ -613,9 +604,6 @@ namespace katal.conexion.model.dao
             }
             return data;
         }
-
-
-
         public List<TemporalGC> allTemporal()
         {
             List<TemporalGC> tiposcajaBancos = new List<TemporalGC>();
@@ -658,7 +646,6 @@ namespace katal.conexion.model.dao
             return tiposcajaBancos;
         }
         //public 
-
         public List<ConceptoCajaBanco> findAllConceptoCajaBanco(string tipo, string ingresoSalida)
         {
 
@@ -771,8 +758,6 @@ namespace katal.conexion.model.dao
             }
             return secuencia;
         }
-
-
         public List<TipoMoneda> tipoMonedas()
         {
             List<TipoMoneda> tipoMonedas = new List<TipoMoneda>();
@@ -1169,6 +1154,8 @@ namespace katal.conexion.model.dao
         }
 
 
+      
+       
 
         public void delete(Area obj)
         {
@@ -1256,16 +1243,17 @@ namespace katal.conexion.model.dao
 
 
         #region
-        public List<Planillas> AllPlantilas(string nroPlantilla)
+        protected List<Planillas> AllPlantilas(string nroPlantilla)
         {
             
             List<Planillas> tipoMonedas = new List<Planillas>();
             string findAll = "";
             findAll += "SELECT * FROM Plan_Cob_Det INNER JOIN Tipo_Cobranza ON Plan_Cob_Det.DEPCONCEP=Tipo_Cobranza.COD_COBRANZA ";
-            findAll += "Where DEPNROPLA = '" + nroPlantilla + "' ";
-        
-            try
+            findAll += "Where DEPNROPLA = '" + nroPlantilla + "' "+ " And F_CJABCO=0 And Tipo_Cobranza.TIP in (1,3) ORDER BY DEPRFNUMDOC;";
+            if (nroPlantilla != "")
             {
+                try
+                {
                 comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
@@ -1279,7 +1267,7 @@ namespace katal.conexion.model.dao
                     planilla.DEPTIPOPER = read["DEPTIPOPER"].ToString();
                     planilla.DEPCONCEP  = read["DEPCONCEP"].ToString();
                     planilla.DEPFECCOB  = Conversion.ParseDateTime( read["DEPFECCOB"].ToString());
-                    planilla.DEPIMPORTE = Conversion.ParseDecimal(read["DEPTIPOPER"].ToString());
+                    planilla.DEPIMPORTE = Conversion.ParseDecimal(read["DEPIMPORTE"].ToString());
                     planilla.DEPTIPMON = read["DEPTIPMON"].ToString();
                     planilla.DEPTIPCAM = Conversion.ParseDecimal(read["DEPTIPCAM"].ToString());
                     planilla.DEPFECCRE = Conversion.ParseDateTime(read["DEPFECCRE"].ToString());
@@ -1319,6 +1307,37 @@ namespace katal.conexion.model.dao
 
                     tipoMonedas.Add(planilla);
                 }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                finally
+                {
+                    objConexion.getCon().Close();
+                    objConexion.cerrarConexion();
+                }
+            }
+            
+            return tipoMonedas;
+        }
+        protected string codigoCliente(string DEPTIPDOC, string CDONRODOC)
+        {
+
+            string codCliente = "";
+            string findAll = "";
+            findAll += "Select CDOCODCLI From Cartera Where CDOTIPDOC= '" + DEPTIPDOC + "' And CDONRODOC='" + CDONRODOC + "'";
+
+            try
+            {
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    codCliente = read["CDOCODCLI"].ToString();
+                }
             }
             catch (Exception)
             {
@@ -1330,8 +1349,57 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
-            return tipoMonedas;
+            return codCliente;
         }
+
+        public List<PlantillaDetalle> AllPlanillasDetalle(string nroPlantilla)
+        {
+            List<PlantillaDetalle> plantillaDetalles = new List<PlantillaDetalle>();
+
+            List<Planillas> planillas = AllPlantilas(nroPlantilla);
+            int sec = 0;
+            planillas.ForEach(X =>
+            {
+                sec++;
+                PlantillaDetalle plantillaDetalle = new PlantillaDetalle();
+                plantillaDetalle.Sec = sec.ToString("000.##");
+                string codigo = codigoCliente(X.DEPTIPDOC, X.DEPNRODOC);
+                plantillaDetalle.Cliente = codigo;
+                plantillaDetalle.TpoDoc = X.DEPTIPDOC;
+                int    LONGCAMPO = X.DEPNRODOC.Length;
+                string nroDoc = "";
+                string texto = X.DEPNRODOC;
+                if (X.DEPNRODOC.Substring(0, 1) == "F")
+                {
+                    nroDoc = texto.Substring(0, 4) + " " + texto.Substring(4);
+                }
+                else
+                {
+                    nroDoc = texto.Substring(0, 3) + " " + texto.Substring(4);
+                }
+
+                plantillaDetalle.Documento = nroDoc;
+                plantillaDetalle.NroOP = X.DEPRFNUMDOC;
+                plantillaDetalle.Banco = X.DEPDESBAN;
+                plantillaDetalle.Moneda = X.DEPTIPMON;
+                if (plantillaDetalle.Moneda == "MN")
+                {
+
+                }
+                else
+                {
+
+                }
+                plantillaDetalle.Importe = X.DEPIMPORTE;
+                plantillaDetalle.DetKey = X.CODDETPLA;
+                plantillaDetalles.Add(plantillaDetalle);
+
+
+            });
+
+            return plantillaDetalles;
+        }
+
         #endregion
 
     }

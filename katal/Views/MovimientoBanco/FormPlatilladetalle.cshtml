@@ -1,8 +1,7 @@
-﻿@Html.DevExpress().PopupControl(
-    settings =>
+﻿@Html.DevExpress().PopupControl(settings =>
     {
-        settings.Name = "FormPlanillaCobranza";
-        settings.Width = 550;
+        settings.Name = "FormPlanillaCobranzaDetalle";
+        settings.Width = 900;
 
         settings.AllowDragging = true;
         settings.CloseAction = CloseAction.CloseButton;
@@ -19,7 +18,7 @@
 
             @Html.DevExpress().FormLayout(s =>
             {
-                s.Name = "ModalModeFormLayout";
+                s.Name = "ModalModeFormLayoutDetalle";
                 s.RequiredMarkDisplayMode = RequiredMarkMode.None;
                 s.Width = Unit.Percentage(100);
                 s.Height = Unit.Percentage(100);
@@ -31,7 +30,7 @@
                     itemSettings.ShowCaption = DefaultBoolean.False;
                     itemSettings.SetNestedContent(() =>
                     {
-                        Html.RenderAction("PlaniCobranza");
+                        Html.RenderAction("PlaniCobranzaDetalle");
                     });
                 });
                 s.Items.Add(i =>
@@ -44,11 +43,11 @@
                         Html.DevExpress().Button(
                             buttonSettings =>
                             {
-                                buttonSettings.Name = "btnAceptar";
+                                buttonSettings.Name = "btnAceptarDetalle";
                                 buttonSettings.ControlStyle.CssClass = "button";
                                 buttonSettings.Width = 80;
                                 buttonSettings.Text = "Aceptar";
-                                buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranzaDetalle.Show(); }";// hacer algo mas
+                                buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranzaDetalle.Hide(); }";// hacer algo mas
                             }
                         ).Render();
                         Html.DevExpress().Label(
@@ -61,11 +60,11 @@
                         Html.DevExpress().Button(
                            buttonSettings =>
                            {
-                               buttonSettings.Name = "btnCancelar";
+                               buttonSettings.Name = "btnCancelarDetalle";
                                buttonSettings.ControlStyle.CssClass = "button";
                                buttonSettings.Width = 80;
                                buttonSettings.Text = "Cancelar";
-                               buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranza.Hide(); }";
+                               buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranzaDetalle.Hide(); }";
                            }
                        ).Render();
 

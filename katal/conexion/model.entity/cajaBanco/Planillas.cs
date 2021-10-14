@@ -53,4 +53,17 @@ namespace katal.conexion.model.entity
 
   
     }
+
+    public class PlantillaDetalle
+    {
+        public string Sec { get; set; }
+        public string Cliente { get; set; }
+        public string TpoDoc { get; set; }
+        public string Documento { get; set; }
+        public string NroOP { get; set; }
+        public string Banco { get; set; }
+        public string Moneda { get; set; }
+        public decimal Importe { get; set; }
+        public int DetKey { get; set; }
+    }
 }

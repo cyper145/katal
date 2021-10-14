@@ -1,0 +1,100 @@
+﻿
+@Html.DevExpress().GridView(t =>
+{
+    t.Name = "gvPlanillaDetalle";
+    t.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "FormPlaniDetalleGridView" };
+    t.CustomActionRouteValues = new { Controller = "MovimientoBanco", Action = "GridViewCustomActionPartial" };
+    t.SettingsEditing.AddNewRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionAddNewPartial" };
+    t.SettingsEditing.UpdateRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionUpdatePartial" };
+    //settings.CustomActionRouteValues = new { Controller = "MovimientoBanco", Action = "GridViewPlanificacion" };
+    t.KeyFieldName = "DetKey";
+    t.Width = Unit.Percentage(100);
+    t.Height = Unit.Percentage(20);
+    t.EnableRowsCache = true;
+
+
+    t.EnablePagingGestures = AutoBoolean.False;
+
+    t.ControlStyle.CssClass = "grid-view";
+    //settings.Enabled = false;
+
+    t.Styles.Cell.Wrap = DefaultBoolean.False;
+    t.Styles.PagerBottomPanel.CssClass = "pager";
+    t.Styles.FocusedRow.CssClass = "focused";
+
+    t.SettingsBehavior.AllowFocusedRow = true;
+    //    gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+    t.SettingsBehavior.AllowEllipsisInText = true;
+    t.SettingsBehavior.AllowDragDrop = false;
+
+
+    t.Settings.ShowHeaderFilterButton = false;
+
+
+    t.SettingsPager.EnableAdaptivity = true;
+
+
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "DetKey";
+        column.Visible = false;
+
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "Sec";
+        column.Caption = "Sec.";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "Cliente";
+        column.Caption = "Cliente";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "TpoDoc";
+        column.Caption = "TpoDoc.";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "Documento";
+        column.Caption = "Documento";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        column.Width = Unit.Pixel(120);
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "NroOP";
+        column.Caption = "Nro. OP";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "Banco";
+        column.Caption = "Banco";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "Moneda";
+        column.Caption = "Moneda";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "Importe";
+        column.Caption = "Importe";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        var comboBoxProperties = column.PropertiesEdit as TextBoxProperties;
+        comboBoxProperties.DisplayFormatString = "F2";
+
+    });
+
+
+}).Bind(Model).GetHtml();
+

@@ -431,6 +431,11 @@
     <Content Include="Views\MovimientoBanco\FormFacont.cshtml" />
     <Content Include="Views\MovimientoBanco\FormCtasxPagar1.cshtml" />
     <Content Include="Views\MovimientoBanco\FormCtasxPagar2.cshtml" />
+    <Content Include="Views\MovimientoBanco\FormPlatilladetalle.cshtml" />
+    <Content Include="Views\MovimientoBanco\FormPlaniCobranzaGridView.cshtml" />
+    <Content Include="Views\MovimientoBanco\PlaniCobranza.cshtml" />
+    <Content Include="Views\MovimientoBanco\PlaniCobranzaDetalle.cshtml" />
+    <Content Include="Views\MovimientoBanco\FormPlaniDetalleGridView.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

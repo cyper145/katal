@@ -1,0 +1,73 @@
+﻿
+@Html.DevExpress().GridView(t =>
+{
+    t.Name = "gvDataBindingToLinq";
+    t.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "FormPlaniCobranzaGridView" };
+    t.CustomActionRouteValues = new { Controller = "MovimientoBanco", Action = "GridViewCustomActionPartial" };
+    t.SettingsEditing.AddNewRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionAddNewPartial" };
+    t.SettingsEditing.UpdateRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionUpdatePartial" };
+    //settings.CustomActionRouteValues = new { Controller = "MovimientoBanco", Action = "GridViewPlanificacion" };
+    t.KeyFieldName = "COCNROPLA";
+    t.Width = Unit.Percentage(100);
+    t.Height = Unit.Percentage(20);
+    t.EnableRowsCache = true;
+
+
+    t.EnablePagingGestures = AutoBoolean.False;
+
+    t.ControlStyle.CssClass = "grid-view";
+    //settings.Enabled = false;
+
+    t.Styles.Cell.Wrap = DefaultBoolean.False;
+    t.Styles.PagerBottomPanel.CssClass = "pager";
+    t.Styles.FocusedRow.CssClass = "focused";
+
+    t.SettingsBehavior.AllowFocusedRow = true;
+    //    gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+    t.SettingsBehavior.AllowEllipsisInText = true;
+    t.SettingsBehavior.AllowDragDrop = false;
+
+
+    t.Settings.ShowHeaderFilterButton = false;
+
+
+    t.SettingsPager.EnableAdaptivity = true;
+
+
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "COCNROPLA";
+        column.Caption = "Nro Plantilla";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "COCFECPLA";
+        column.Caption = "Fecha";
+        column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        column.Width = Unit.Pixel(100);
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "COCTCOBMN";
+        column.Caption = "Moneda MN";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        column.Width = Unit.Pixel(100);
+        var comboBoxProperties = column.PropertiesEdit as TextBoxProperties;
+        comboBoxProperties.DisplayFormatString = "F2";
+    });
+    t.Columns.Add(column =>
+    {
+        column.FieldName = "COCTCOBUS";
+        column.Caption = "Moneda ME";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        var comboBoxProperties = column.PropertiesEdit as TextBoxProperties;
+        comboBoxProperties.DisplayFormatString = "F2";
+    });
+    t.ClientSideEvents.RowClick = "clickRow";
+    // t.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
+}).Bind(Model).GetHtml();
+            

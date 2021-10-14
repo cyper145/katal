@@ -391,6 +391,7 @@
     settings.SettingsExport.EnableClientSideExportAPI = true;
     settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
     settings.ClientSideEvents.FocusedRowChanged = "OnGridFocusedRowChangedRequision";
+    settings.ClientSideEvents.SelectionChanged = "OnGridFocusedRowChangedRequision";
     settings.Width = Unit.Percentage(100);
     katal.Code.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
 }).Bind(Model.cMovimientoBancos).SetEditErrorText(ViewBag.EditError).GetHtml())
