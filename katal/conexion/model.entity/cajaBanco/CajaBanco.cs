@@ -87,7 +87,7 @@ namespace katal.conexion.model.entity
         public string Conta { get; set; }
         public string Anula { get; set; }
         public DateTime CB_D_Fecha { get; set; }
-        public string CB_C_Anexo { get; set; }
+        public string CB_C_AnexoV { get; set; }
         public string CB_C_CONTAV { get; set; }
         public string CB_A_REFERV { get; set; }
         public string CB_C_NROLIV { get; set; }
@@ -123,6 +123,7 @@ namespace katal.conexion.model.entity
         public string CB_DMEDIO { get; set; }
         public string CB_USUARIO { get; set; }
         public decimal montoVisual { get; set; }
+        public string TipoAnexoD { get; set; }
 
 
         /*public string CB_C_Secue   CB_C_SECUE { get; set; }
@@ -175,7 +176,7 @@ namespace katal.conexion.model.entity
         public string serieD { get; set; }
         public int IS { get; set; }
         
-        
+        public  string TipoAnexo { get; set; }
     }
 
     public class TemporalGC
@@ -295,6 +296,11 @@ namespace katal.conexion.model.entity
         public string fechacontrol { get; set; }
        
 
+    }
+    public class Montos
+    {
+        public decimal SUMTOTALMN { get; set; }
+        public decimal SUMTOTALME { get; set; }
     }
 
 }

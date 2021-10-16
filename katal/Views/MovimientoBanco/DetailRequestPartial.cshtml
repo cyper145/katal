@@ -157,6 +157,7 @@
                 i.NestedExtension().TextBox(t =>
                 {
                     t.Properties.ClientSideEvents.Init = "initSecuenciaDetalle";
+                    t.Properties.ClientSideEvents.KeyDown = "KeyDownSecueD";
                     t.ReadOnly = true;
                 });
             });
@@ -191,7 +192,7 @@
                 i.ColumnSpan = 5;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectTipoAnexoD" ,new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXOD") });
+                    Html.RenderAction("MultiSelectTipoAnexoD" ,new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "TipoAnexo") });
                 });
             });
             groupItem.Items.Add(i =>
@@ -229,6 +230,8 @@
                 i.NestedExtension().TextBox(t =>
                 {
                     t.Properties.ClientSideEvents.KeyDown = "KeyDownSerieD";
+                    t.Properties.MaxLength = 4;
+                  
                 });
             });
             groupItem.Items.Add(i =>
@@ -353,7 +356,8 @@
             {
                 i.FieldName = "CB_A_REFERD";
                 i.Caption = "Referencia";
-                i.ColumnSpan =12;
+                i.ColumnSpan =6;
+                i.CaptionSettings.Location = LayoutItemCaptionLocation.Top;
                 i.NestedExtension().TextBox(t =>
                 {
                     t.Properties.ClientSideEvents.KeyDown = "KeyDownREFERD";

@@ -40,9 +40,9 @@
             console.log(CB_C_MODO.GetValue());
             $.getJSON('/MovimientoBanco/changeTipo?tipo=' + CB_C_MODO.GetValue(), function (resp) {
                 $.each(resp, function (k, v) {
-
+                    gridLookupOpciones.GetGridView().Refresh();
                     console.log("holas2");
-                    //ver que se muestre
+                    
                 });
             });
         }
@@ -53,8 +53,8 @@
             }           
             $.getJSON('/MovimientoBanco/changeTipo?tipo=' + CB_C_MODO.GetValue(), function (resp) {
                 $.each(resp, function (k, v) {
-
-                    console.log("holas");
+                    gridLookupOpciones.GetGridView().Refresh();
+                    CB_C_MODO.Focus()
 
                     //ver que se muestre
                 });
@@ -130,11 +130,14 @@
             $.getJSON('/MovimientoBanco/initSecuenciaDetalle?secuencia=' + CB_C_SECUE.GetText(), function (resp) {
                 $.each(resp, function (k, v) {
                     CB_C_SECDE.SetText(v);
-
-                    console.log(CB_C_SECDE.GetText(v));
+                    CB_C_SECDE.Focus()
+                    
                 });
             });
         }
+
+
+
         function OnChangeConcepto(s, e) {
             $.getJSON('/MovimientoBanco/OnChangeConcepto', function (resp) {
                 $.each(resp, function (k, v) {
@@ -263,6 +266,15 @@
             }
         }
 
+        function KeyDownSecueD(s, e) {
+
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gridLookupConceptoCajaBanco.Focus();
+            }
+
+        }
+
         //para detalle
         function KeyDownConceptoCajaBanco(s, e) {
             let keyCode = e.htmlEvent.keyCode
@@ -310,12 +322,13 @@
             let keyCode = e.htmlEvent.keyCode
             if (keyCode == 13) {
                 //gridLookupCuenta.Focus();
-                if (gridLookupTipoMoneda.GetValue()[0] == "MN") {
+                if (typeof CB_N_MTOMND != "undefined") {
                     CB_N_MTOMND.Focus();
                 }
                 else {
                     CB_N_MTOMED.Focus();
                 }
+               
 
             }
         }
@@ -454,6 +467,7 @@
                 "CB_C_DOCUM": CB_C_DOCUM.GetValue(),
                 "CB_C_TPDOC": gridLookupTipoDoc.GetValue() ? gridLookupTipoDoc.GetValue()[0] : null,
                 "CB_C_ANEXO": gridLookupAnexo.GetValue() ? gridLookupAnexo.GetValue()[0] : null,
+                "TipoAnexoD": gridLookupTipoAnexo.GetValue() ? gridLookupTipoAnexo.GetValue()[0] : null,
                 "CB_C_CONVE": gridLookupMoneda.GetValue() ? gridLookupMoneda.GetValue()[0] : null,
 
                 "CB_A_REFER": CB_A_REFER.GetValue(),
@@ -533,7 +547,21 @@
             gvPlanillaDetalle.PerformCallback({ customAction: 'CargarDMov', codigo: selectedIds });
             FormPlanillaCobranzaDetalle.Hide();
             FormPlanillaCobranza.Hide();
+            grid.CancelEdit();
         }
+        function GuardarTotal(s, e) {
+            $.getJSON('/MovimientoBanco/GuardarTotal', function (resp) {
+                $.each(resp, function (k, v) {
+                    gridView.CancelEdit();
+                });
+            });
+
+        }
+        function initAnexo(s, e) {
+            console.log("ogro");
+            OnGridChangeOperacion(s, e);
+        }
+        
 
     </script>
 }

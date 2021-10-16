@@ -118,7 +118,9 @@ namespace katal.conexion.model.dao
                     cajaBanco.Conta = read[nameof(cajaBanco.Conta)].ToString();
                     cajaBanco.Anula = read[nameof(cajaBanco.Anula)].ToString();
                     cajaBanco.CB_D_Fecha = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_Fecha)].ToString());
-                    cajaBanco.CB_C_Anexo = read[nameof(cajaBanco.CB_C_Anexo)].ToString();
+
+                    string CB_C_Anexo = "";
+                    cajaBanco.CB_C_AnexoV = read[nameof(CB_C_Anexo)].ToString();
                     cajaBanco.CB_C_CONTAV = read[10].ToString();
                     cajaBanco.CB_A_REFERV = read[11].ToString();
                     cajaBanco.CB_C_NROLIV = read[12].ToString();
@@ -143,8 +145,19 @@ namespace katal.conexion.model.dao
                         cajaBanco.serie = "";
                         cajaBanco.CB_C_DOCUM = documento;
                     }
-                    
-                    cajaBanco.CB_C_ANEXO = read[nameof(cajaBanco.CB_C_ANEXO)].ToString();
+                    if (cajaBanco.CB_C_AnexoV.Trim() != "")
+                    {  
+                        cajaBanco.TipoAnexoD = cajaBanco.CB_C_AnexoV.Substring(0, 2);
+                        cajaBanco.CB_C_ANEXO = cajaBanco.CB_C_AnexoV.Substring(2);
+                    }
+                    else
+                    {
+                        cajaBanco.TipoAnexoD = "";
+                        cajaBanco.CB_C_ANEXO ="";
+
+                    }
+
+
                     cajaBanco.CB_C_CONVE = read[nameof(cajaBanco.CB_C_CONVE)].ToString();
                     cajaBanco.CB_N_CAMES = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_CAMES)].ToString());
                     cajaBanco.CB_D_FECCA = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_FECCA)].ToString());
@@ -174,7 +187,7 @@ namespace katal.conexion.model.dao
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 cajaBancos = new List<CMovimientoBanco>();
@@ -274,7 +287,18 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_C_Concep = read[1].ToString();
                     cajaBanco.CB_C_docum = read[2].ToString();
 
+                    string documento = read[13].ToString();
+                    if (documento.Length > 4)
+                    {
+                        cajaBanco.serieD = documento.Substring(0, 4);
+                        cajaBanco.CB_C_DOCUMD = documento.Substring(4);
 
+                    }
+                    else
+                    {
+                        cajaBanco.serieD = "";
+                        cajaBanco.CB_C_DOCUMD = documento;
+                    }
 
                     if (moneda == "MN")
                     {
@@ -292,9 +316,23 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_C_SECDE = read[8].ToString();
                     cajaBanco.CB_C_MODO = read[9].ToString();
                     cajaBanco.CB_C_CONCE = read[10].ToString();
-                    cajaBanco.CB_C_ANEXOD = read[11].ToString();
+
+
+                    string CB_C_ANEXOD= read[11].ToString();
+                    if (CB_C_ANEXOD.Trim() != "")
+                    {
+                        cajaBanco.TipoAnexo = CB_C_ANEXOD.Substring(0, 2);
+                        cajaBanco.CB_C_ANEXOD = CB_C_ANEXOD.Substring(2);
+                    }
+                    else
+                    {
+                        cajaBanco.TipoAnexo = "";
+                        cajaBanco.CB_C_ANEXOD = "";
+
+                    }
+                   
                     cajaBanco.CB_C_TPDOCD = read[12].ToString();
-                    cajaBanco.CB_C_DOCUMD = read[13].ToString();
+                   
                     cajaBanco.CB_D_FECDC = Conversion.ParseDateTime( read[14].ToString());
                     cajaBanco.CB_A_REFERD = read[15].ToString();
                     cajaBanco.CB_C_CUENT = read[16].ToString();
@@ -936,7 +974,7 @@ namespace katal.conexion.model.dao
              update += $"[CB_D_FECHA] = {dateFormat( obj.CB_D_FECHA)}, ";
              update += $"[CB_C_TPDOC] = '{obj.CB_C_TPDOC}', ";
              update += $"[CB_C_DOCUM] = '{obj.serie}{obj.CB_C_DOCUM}', ";
-             update += $"[CB_C_ANEXO] = '{obj.CB_C_ANEXO}', ";
+             update += $"[CB_C_ANEXO] = '{obj.TipoAnexoD}{obj.CB_C_ANEXO}', ";
              update += $"[CB_C_CONVE] = '{obj.CB_C_CONVE}', ";
              update += $"[CB_N_CAMES] = {obj.CB_N_CAMES}, ";
              update += $"[CB_N_TIPCA] = {obj.CB_N_TIPCA}, ";
@@ -1051,11 +1089,15 @@ namespace katal.conexion.model.dao
                     obj.CB_N_MTOMED = monto * valortipoCambio;
                 }
             }
+            if (obj.serieD.Length < 4)
+            {
 
+                obj.serieD = rellenar(obj.serieD, 4, obj.serieD.Length, " ", false);
+            }
             string create = "INSERT INTO DMOV_BANCO  ([CB_C_BANCO],[CB_C_MES],[CB_C_SECDE],[CB_C_SECUE],[CB_C_MODO],[CB_C_CONCE],[CB_C_ANEXO]";
             create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_D_FECDC]  ,[CB_A_REFER] ,[CB_C_CUENT] ,[CB_C_DESTI],[CB_N_MTOMN]  ,[CB_N_MTOME],CB_C_CENCO  )";
             create += $" VALUES('{codigoBanco}', '{mes}','{obj.CB_C_SECDE}','{objC.CB_C_SECUE}','{obj.CB_C_MODO}'";
-            create += $",'{obj.CB_C_CONCE}','{obj.CB_C_ANEXOD}','{obj.CB_C_TPDOCD}','{obj.serieD} {obj.CB_C_DOCUMD}'";
+            create += $",'{obj.CB_C_CONCE}','{obj.TipoAnexo}{obj.CB_C_ANEXOD}','{obj.CB_C_TPDOCD}','{obj.serieD} {obj.CB_C_DOCUMD}'";
             create += $",{dateFormat( obj.CB_D_FECDC)},'{obj.CB_A_REFERD}','{obj.CB_C_CUENT}','{obj.CB_C_DESTI}'";
             create += $",{obj.CB_N_MTOMND},{obj.CB_N_MTOMED},'{obj.CB_C_CENCO}')";
             try
@@ -1116,14 +1158,18 @@ namespace katal.conexion.model.dao
                     obj.CB_N_MTOMED = monto * valortipoCambio;
                 }
             }
+            if (obj.serieD.Length < 4)
+            {
 
+                obj.serieD = rellenar(obj.serieD, 4, obj.serieD.Length, " ",false);
+            }
             string create = "UPDATE  DMOV_BANCO SET";
             create += $"[CB_C_BANCO]= '{codigoBanco}',";
             create += $"[CB_C_MES]= '{mes}',";    
             create += $"[CB_C_SECUE]= '{objC.CB_C_SECUE}',";
             create += $"[CB_C_MODO]= '{obj.CB_C_MODO}',";
             create += $"[CB_C_CONCE]= '{obj.CB_C_CONCE}',";
-            create += $"[CB_C_ANEXO]= '{obj.CB_C_ANEXOD}',";
+            create += $"[CB_C_ANEXO]= '{obj.TipoAnexo}{obj.CB_C_ANEXOD}',";
             create += $"[CB_C_TPDOC]= '{obj.CB_C_TPDOCD}',";
             create += $"[CB_C_DOCUM]= '{obj.serieD} {obj.CB_C_DOCUMD}',";
             create += $"[CB_D_FECDC]= {dateFormat(obj.CB_D_FECDC)},";
@@ -1587,7 +1633,64 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
+        public void UpdateMontosMbanco(DateTime dateTime, string codigobanco, string sec)
+        {
+            Montos montos = calcularMonto(sec, codigobanco, dateTime);
+            updateMontos(montos, dateTime, codigobanco, sec);
+        }
+        public void updateMontos(Montos montos, DateTime dateTime, string  codigobanco, string sec )
+        {
 
+            string mes = dateTime.Month.ToString("00.##");
+            string create = "UPDATE CMOV_BANCO SET CB_N_MtoMN = " + montos.SUMTOTALMN + ",CB_N_MtoME = " + montos.SUMTOTALME + " WHERE CB_C_Banco = '" + codigobanco + "' AND  CB_C_Mes='" + mes + "' AND CB_C_SECUE='" + sec + "'";
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(create, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public Montos calcularMonto(string  sec, string codigoBanco, DateTime dateTime)
+        {
+            string mes = dateTime.Month.ToString("00.##");
+            Montos parametros = new Montos();
+            string findAll = "";
+            findAll += "SELECT SUM(CB_N_MTOMN),SUM(CB_N_MTOME) FROM DMOV_BANCO WHERE CB_C_Banco = '" + codigoBanco + "' AND  CB_C_Mes='" + mes + "' AND CB_C_Secue ='" + sec+ "'";
+
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(findAll, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    parametros.SUMTOTALMN = Conversion.ParseDecimal(  read[0].ToString());
+                    parametros.SUMTOTALME = Conversion.ParseDecimal(read[1].ToString());
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+
+            return parametros;
+        }
         #endregion
 
     }

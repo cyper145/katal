@@ -208,7 +208,10 @@ namespace katal.conexion.model.neg
             
 
         }
-
+        public void UpdateMontosMbanco(DateTime dateTime, string codigobanco, string sec)
+        {
+            cajaBancoDao.UpdateMontosMbanco(dateTime, codigobanco, sec);
+        }
 
         public void updateDetail(string CB_C_SECUE, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda, string cambioMoneda)
         {

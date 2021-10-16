@@ -67,7 +67,7 @@
     });
     settings.Columns.Add(column =>
     {
-        column.FieldName = "CB_C_Anexo";
+        column.FieldName = "CB_C_AnexoV";
         column.Caption = "Anexo";
     });
     settings.Columns.Add(column =>
@@ -169,12 +169,12 @@
             groupItem.Items.Add(i =>
 
             {
-                i.Name = "TipoAnexo";
+                i.Name = "TipoAnexoD";
                 i.Caption = "Anexo";
                 i.ColumnSpan = 3;
                 i.SetNestedContent(() =>
                 {
-                    Html.RenderAction("MultiSelectTipoAnexo" , new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "CB_C_ANEXO") });
+                    Html.RenderAction("MultiSelectTipoAnexo" , new { TIPOANEX_CODIGO = DataBinder.Eval(c.DataItem, "TipoAnexoD") });
                 });
             });
             groupItem.Items.Add(i =>
@@ -395,7 +395,7 @@
                     {
                         btnSettings.Name = "btnUpdate";
                         btnSettings.Text = "Grabar";
-                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";// algo mas ara pero ahorita no
+                        btnSettings.ClientSideEvents.Click = "GuardarTotal";// algo mas ara pero ahorita no
 
                     }).Render();
                 Html.DevExpress().Button(
@@ -404,7 +404,7 @@
                         btnSettings.Name = "btnCancel";
                         btnSettings.Text = "Cancel";
                         btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
-                        btnSettings.ClientSideEvents.Click = "function(s, e){ gridView.CancelEdit(); }";
+                        btnSettings.ClientSideEvents.Click = "GuardarTotal";
                     }).Render();
                 ViewContext.Writer.Write("</div>");
             });

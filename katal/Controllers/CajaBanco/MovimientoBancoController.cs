@@ -125,12 +125,14 @@ namespace katal.Controllers
             string CB_C_OPERA = GridViewHelper.ValidarRecuperar(dataForm["gridLookupOpciones$State"]);
             string CB_C_TPDOC = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDoc$State"]);
             string CB_C_ANEXO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupAnexo$State"]);
+            string tipoanexo = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
             string CB_C_CONVE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupMoneda$State"]);
             string CB_C_ESTAD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupEstados$State"]);
             string CB_TIPMOV = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTiposMovimientos$State"]);
             product.CB_C_OPERA = CB_C_OPERA;
             product.CB_C_TPDOC = CB_C_TPDOC;
             product.CB_C_ANEXO = CB_C_ANEXO;
+            product.TipoAnexoD = CB_C_ANEXO;
             product.CB_C_CONVE = CB_C_CONVE;
             product.CB_C_ESTAD = CB_C_ESTAD;
             product.CB_TIPMOV = CB_TIPMOV;
@@ -349,6 +351,8 @@ namespace katal.Controllers
             product.CB_C_CONCE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupConceptoCajaBanco$State"]);
 
             product.CB_C_ANEXOD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupAnexoD$State"]);
+            product.TipoAnexo = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
+
             product.CB_C_TPDOCD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDocD$State"]);
             product.CB_C_CENCO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCostos$State"]);
             product.CB_C_CUENT = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCuenta$State"]);
@@ -396,7 +400,7 @@ namespace katal.Controllers
             product.CB_C_MES = GridViewHelper.dateTime.Month.ToString("00.##");
            
             product.CB_C_CONCE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupConceptoCajaBanco$State"]);
-
+            product.TipoAnexo = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
             product.CB_C_ANEXOD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
             product.CB_C_TPDOCD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDocD$State"]);
             product.CB_C_CENCO = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCostos$State"]);
@@ -613,6 +617,12 @@ namespace katal.Controllers
             ViewData["tipoOpciones"] = cajaBancoNeg.findAllTipoOpciones(GridViewHelper.TipoOpcion);
             return Json(new { respuesta = "" }, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult GuardarTotal()
+        {
+          
+             cajaBancoNeg.UpdateMontosMbanco(GridViewHelper.dateTime, GridViewHelper.codigobanco, GridViewHelper.secuenciacab);
+            return Json(new { respuesta = "" }, JsonRequestBehavior.AllowGet);
+        }
 
         public ActionResult MultiSelectTipoDoc(string TIPDOC_CODIGO = "-1")
         {
@@ -653,8 +663,7 @@ namespace katal.Controllers
                 TIPOANEX_CODIGO = "-1";
             else
             {
-                Anexo ANEXO = anexoNeg.findAnexo(TIPOANEX_CODIGO);
-                TIPOANEX_CODIGO = ANEXO.TIPOANEX_CODIGO;
+               
                 GridViewHelper.TipoAnexoBanco = TIPOANEX_CODIGO;
             }
             return PartialView("MultiSelectTipoAnexo", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
@@ -831,8 +840,7 @@ namespace katal.Controllers
                 TIPOANEX_CODIGO = "-1";
             else
             {
-                Anexo ANEXO = anexoNeg.findAnexo(TIPOANEX_CODIGO);
-                TIPOANEX_CODIGO = ANEXO.TIPOANEX_CODIGO;
+               
                 GridViewHelper.TipoAnexoBancoDetalle = TIPOANEX_CODIGO;
             }
             return PartialView("MultiSelectTipoAnexoD", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
@@ -868,7 +876,7 @@ namespace katal.Controllers
         {
             ViewData["tipoMoneda"] = cajaBancoNeg.tipoMonedas();
             if (TIPOMON_CODIGO == "-1")
-                TIPOMON_CODIGO = "";
+                TIPOMON_CODIGO = GridViewHelper.monedabanco;
             return PartialView("MultiSelectTipoMoneda", new TipoMoneda() { TIPOMON_CODIGO = TIPOMON_CODIGO });
 
         }
