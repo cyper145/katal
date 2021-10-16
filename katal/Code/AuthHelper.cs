@@ -26,12 +26,14 @@ namespace katal.Model
             HttpContext.Current.Session["User"] = user;
             GridViewHelper.user = user;
             HttpContext.Current.Session["Rol"] = rol_id; // Mock user data
+            GridViewHelper.codEmpresa = codEmpresa;
             return true;
         }
         public static void SignOut()
         {
             HttpContext.Current.Session["User"] = null;
             HttpContext.Current.Session["Rol"] = null;
+            GridViewHelper.codEmpresa = "";
         }
         public static bool IsAuthenticated()
         {

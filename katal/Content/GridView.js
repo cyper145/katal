@@ -6,7 +6,12 @@
         updateToolbarButtonsState();
     }
     function onGridViewSelectionChanged(s, e) {
+      
         updateToolbarButtonsState();
+    }
+    function onGridViewSelectionChangedCmov(s, e) {
+        console.log("hay mi pendejo");
+
     }
     function adjustGridView() {
         gridView.AdjustControl();
@@ -176,8 +181,9 @@
     }
 
     function onGridViewBeginCallback(s, e) {
-        e.customArgs['SelectedRows'] = selectedIds;
         
+        e.customArgs['SelectedRows'] = selectedIds;
+        console.log(selectedIds);
     }
 
 
@@ -392,6 +398,7 @@
     window.onGridViewBeginCallbackDetalles = onGridViewBeginCallbackDetalles;
     window.onGridViewInit = onGridViewInit;
     window.onGridViewSelectionChanged = onGridViewSelectionChanged;
+    window.onGridViewSelectionChangedCmov = onGridViewSelectionChangedCmov;
     window.onPageToolbarItemClick = onPageToolbarItemClick;
     window.onFilterPanelExpanded = onFilterPanelExpanded;
     window.onFiltersNavBarItemClick = onFiltersNavBarItemClick;

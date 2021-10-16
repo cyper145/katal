@@ -130,7 +130,20 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_C_OPERA = read[nameof(cajaBanco.CB_C_OPERA)].ToString();
                     cajaBanco.CB_D_FECHA = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_FECHA)].ToString());
                     cajaBanco.CB_C_TPDOC = read[nameof(cajaBanco.CB_C_TPDOC)].ToString();
-                    cajaBanco.CB_C_DOCUM = read[nameof(cajaBanco.CB_C_DOCUM)].ToString().Trim();
+
+                    string documento = read[nameof(cajaBanco.CB_C_DOCUM)].ToString();
+                    if (documento.Length > 4)
+                    {
+                        cajaBanco.serie = documento.Substring(0, 4);
+                        cajaBanco.CB_C_DOCUM = documento.Substring(4);
+
+                    }
+                    else
+                    {
+                        cajaBanco.serie = "";
+                        cajaBanco.CB_C_DOCUM = documento;
+                    }
+                    
                     cajaBanco.CB_C_ANEXO = read[nameof(cajaBanco.CB_C_ANEXO)].ToString();
                     cajaBanco.CB_C_CONVE = read[nameof(cajaBanco.CB_C_CONVE)].ToString();
                     cajaBanco.CB_N_CAMES = Conversion.ParseDecimal(read[nameof(cajaBanco.CB_N_CAMES)].ToString());
@@ -153,6 +166,8 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_MEDIO = read[nameof(cajaBanco.CB_MEDIO)].ToString();
                     cajaBanco.CB_DMEDIO = read[nameof(cajaBanco.CB_DMEDIO)].ToString();
                     cajaBanco.CB_USUARIO = read[nameof(cajaBanco.CB_USUARIO)].ToString();
+                    cajaBanco.montoVisual = ternarioG(moneda == "MN", cajaBanco.CB_N_MTOMN, cajaBanco.CB_N_MTOME);
+
                  
                     cajaBancos.Add(cajaBanco);
                 }
@@ -171,7 +186,7 @@ namespace katal.conexion.model.dao
             }
             return cajaBancos;
         }
-        public CMovimientoBanco findMovimiento( string secuencia, string banco, string moneda, DateTime date)
+        public CMovimientoBanco findMovimiento( string secuencia, string banco, DateTime date)
         {
             CMovimientoBanco cajaBanco = new CMovimientoBanco();
             string mes = date.Month.ToString("00.##");
@@ -887,13 +902,13 @@ namespace katal.conexion.model.dao
         }
         public void create(CMovimientoBanco obj, string codigoBanco, DateTime dateTime)
         {
-
+            
             string mes = dateTime.Month.ToString("00.##");
             string create = "INSERT INTO CMOV_BANCO  ([CB_C_BANCO],[CB_C_MES],[CB_C_SECUE],[CB_C_MODO],[CB_C_OPERA],[CB_D_FECHA]";
             create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_C_ANEXO]  ,[CB_C_CONVE] ,[CB_N_CAMES] ,[CB_N_TIPCA],[CB_N_MTOMN]  ,[CB_N_MTOME] ,[CB_C_CONTA]";
             create += ",[CB_A_REFER]  ,[CB_C_ESTAD] ,[CB_D_FECCOB],[CB_TIPMOV] ,[CB_MEDIO] ,[CB_DMEDIO] ,[CB_USUARIO])";
             create += $" VALUES('{codigoBanco}', '{mes}','{obj.CB_C_SECUE}','{obj.CB_C_MODO}'";
-            create += $",'{obj.CB_C_OPERA}',{this.dateFormat(obj.CB_D_FECHA)},'{obj.CB_C_TPDOC}','{obj.CB_C_DOCUM}'";
+            create += $",'{obj.CB_C_OPERA}',{this.dateFormat(obj.CB_D_FECHA)},'{obj.CB_C_TPDOC}','{obj.serie}{obj.CB_C_DOCUM}'";
             create += $",'{obj.CB_C_ANEXO}','{obj.CB_C_CONVE}',{obj.CB_N_CAMES},{obj.CB_N_TIPCA}";
             create += $",{obj.CB_N_MTOMN},{obj.CB_N_MTOME},'{obj.CB_C_CONTA}' , '{obj.CB_A_REFER}','{obj.CB_C_ESTAD}'";
             create += $",{dateFormat(obj.CB_D_FECCOB)},'{obj.CB_TIPMOV}','{obj.CB_MEDIO}','{obj.CB_DMEDIO}'";
@@ -914,8 +929,51 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
+        public void Update(CMovimientoBanco obj, string codigoBanco, DateTime dateTime)
+        {
+            string update = "UPDATE CMOV_BANCO ";
+             update += $"SET [CB_C_OPERA] = '{obj.CB_C_OPERA}', ";
+             update += $"[CB_D_FECHA] = {dateFormat( obj.CB_D_FECHA)}, ";
+             update += $"[CB_C_TPDOC] = '{obj.CB_C_TPDOC}', ";
+             update += $"[CB_C_DOCUM] = '{obj.serie}{obj.CB_C_DOCUM}', ";
+             update += $"[CB_C_ANEXO] = '{obj.CB_C_ANEXO}', ";
+             update += $"[CB_C_CONVE] = '{obj.CB_C_CONVE}', ";
+             update += $"[CB_N_CAMES] = {obj.CB_N_CAMES}, ";
+             update += $"[CB_N_TIPCA] = {obj.CB_N_TIPCA}, ";
+             update += $"[CB_N_MTOMN] = {obj.CB_N_MTOMN}, ";
+             update += $"[CB_N_MTOME] = {obj.CB_N_MTOME}, ";
+             update += $"[CB_A_REFER] = '{obj.CB_A_REFER}', ";
+             update += $"[CB_C_ESTAD] = '{obj.CB_C_ESTAD}', ";
+             update += $"[CB_D_FECCOB] = {dateFormat(obj.CB_D_FECCOB)}, ";
+             update += $"[CB_TIPMOV] = '{obj.CB_TIPMOV}', ";
+             update += $"[CB_MEDIO] = '{obj.CB_MEDIO}', ";
+             update += $"[CB_DMEDIO] = '{obj.CB_DMEDIO}', ";
+             update += $"[CB_USUARIO] = '{obj.CB_USUARIO}' ";
+            update += $"WHERE CB_C_BANCO = '{obj.CB_C_BANCO}' AND CB_C_MES = '{obj.CB_C_MES}' AND CB_C_SECUE = '{obj.CB_C_SECUE}'";
+            try
+            {           
+              
+
+                comando = new SqlCommand( conexionBDCBT( update, dateTime.Year) , objConexion.getCon());           
+                objConexion.getCon().Open();
+                
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
 
 
+
+           
+
+        }
         public void createCartera(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime,string tipoCambio, string CB_C_BANCO)
         {
             string nroDocumento = obj.serieD + " " + obj.CB_C_DOCUMD;
@@ -1398,6 +1456,136 @@ namespace katal.conexion.model.dao
             });
 
             return plantillaDetalles;
+        }
+
+
+        public ParametrosCuentas findParametrosCuentas(string TIPO_FAC)
+        {
+
+            ParametrosCuentas parametros = new ParametrosCuentas();
+            string findAll = "";
+            findAll += "Select CTA_SOLES, CTA_DOLA From PARAMETROS_CTAS Where TIPO_FAC='" + TIPO_FAC+ "'";
+            
+               try 
+                {
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
+                    objConexion.getCon().Open();
+                    SqlDataReader read = comando.ExecuteReader();
+                    if (read.Read())
+                    {                     
+                        parametros.CTA_SOLES = read["CTA_SOLES"].ToString();
+                        parametros.CTA_DOLA = read["CTA_DOLA"].ToString();                  
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    objConexion.getCon().Close();
+                    objConexion.cerrarConexion();
+                }
+            
+
+            return parametros;
+        }
+
+
+        public Cartera findCartera(string cliente, string tipdoc,string numDoc)
+        {
+
+            Cartera parametros = new Cartera();
+
+            string nroDoc = ternario(numDoc.Trim() == "", numDoc, numDoc.Substring(0, 3) + numDoc.Substring(4));
+
+            string findAll = "";
+            findAll += "SELECT CDOTIPMON,CDOFECDOC FROM CARTERA WHERE CDOCODCLI='" + cliente + "' AND ";
+            findAll +=  "CDOTIPDOC='" + tipdoc + "' AND CDONRODOC='"+nroDoc+ "'";
+
+            try
+            {
+                comando = new SqlCommand(conexionComun(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    parametros.CDOTIPMON = read["CDOTIPMON"].ToString();
+                    parametros.CDOFECDOC = Conversion.ParseDateTime( read["CDOFECDOC"].ToString());
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+
+            return parametros;
+        }
+
+        public void crearteDetailxPlantilla(PlantillaDetalle objC,int sec, string seccab,  string codigoBanco, DateTime dateTime, string anexocliente, DateTime CDOFECDOC ,string refer,string cuenta ,   string moneda, decimal valortipoCambio)
+        {
+
+            if (valortipoCambio == 0)
+            {
+                valortipoCambio = 1;
+            }
+            decimal monmn = ternarioG(moneda == "MN", objC.Importe,objC.Importe* valortipoCambio);
+            decimal monme = ternarioG(moneda == "ME", objC.Importe,objC.Importe/ valortipoCambio);
+            string mes = dateTime.Month.ToString("00.##");
+            string secd = sec.ToString("0000.##");
+            string ValCpto = "999";
+            string create = "INSERT INTO DMOV_BANCO  ([CB_C_BANCO],[CB_C_MES],[CB_C_SECDE],[CB_C_SECUE],[CB_C_MODO],[CB_C_CONCE],[CB_C_ANEXO]";
+            create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_D_FECDC]  ,[CB_A_REFER] ,[CB_C_CUENT] ,[CB_N_MTOMN]  ,[CB_N_MTOME]  )";
+            create += $" VALUES('{codigoBanco}', '{mes}','{secd}','{seccab}','I'";
+            create += $",'{ValCpto}','{anexocliente}{objC.Cliente}','{objC.TpoDoc}','{objC.Documento}'";
+            create += $",{dateFormat(CDOFECDOC)},'{refer}','{cuenta}'";
+            create += $",{monmn},{monme})";
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(create, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void UpdatePlantconDet(string keyPlan)
+        {
+           
+
+            string create = "UPDATE  Plan_Cob_Det  ";
+            create += $"SET [F_CJABCO]= 1 ";
+         
+            create += $"where   [CODDETPLA]= {keyPlan}  ";
+            try
+            {
+                comando = new SqlCommand(conexionComun(create), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         #endregion

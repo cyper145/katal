@@ -11,10 +11,10 @@ namespace katal.Controllers
         public BaseController()
         {
             if (AuthHelper.IsAuthenticated())
-            {
-                ApplicationUser user = AuthHelper.GetLoggedInUserInfo();
-                codEmpresa = user.codEmpresa;
+            {              
+                codEmpresa = GridViewHelper.codEmpresa;
             }
+            
 
         }
         protected void SafeExecute(Action method)

@@ -48,7 +48,7 @@
                                 buttonSettings.ControlStyle.CssClass = "button";
                                 buttonSettings.Width = 80;
                                 buttonSettings.Text = "Aceptar";
-                                buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranzaDetalle.Show(); }";// hacer algo mas
+                                buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranzaDetalle.Show();gvPlanillaDetalle.Refresh(); }";// hacer algo mas
                             }
                         ).Render();
                         Html.DevExpress().Label(

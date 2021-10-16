@@ -13,7 +13,7 @@ namespace katal.Model
     public static class GridViewHelper
     {
 
-
+        public static string codEmpresa= "";
         public static ApplicationUser user = new ApplicationUser();// solucion temporal
         public static List<DetalleOrdenCompra> detalles = new List<DetalleOrdenCompra>();
 
@@ -65,6 +65,7 @@ namespace katal.Model
         public static bool  salidaentrada = false;
         public static bool  habilitarDetalles = true;
         public static string  nroPlantilla = "";
+        public static string REFER = "";
 
         
         public static string TipoAnexoBanco = "";
@@ -81,7 +82,7 @@ namespace katal.Model
 
         public static string  conceptoCajaBanco = "";//codigo
         public static decimal valorTipoCambio = 0;//codigo
-
+        public  static List<PlantillaDetalle> plantillaDetalles=new List<PlantillaDetalle>();
 
 
         public static void GetDetalles()

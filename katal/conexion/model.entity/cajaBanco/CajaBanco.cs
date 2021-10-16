@@ -99,6 +99,7 @@ namespace katal.conexion.model.entity
         public DateTime CB_D_FECHA { get; set; }
         public string CB_C_TPDOC { get; set; }
         public string CB_C_DOCUM { get; set; }
+        public string serie { get; set; }// SOLO PARA USO VISUAL
         public string CB_C_ANEXO { get; set; }
         public string CB_C_CONVE { get; set; }
         public decimal CB_N_CAMES { get; set; }
@@ -121,6 +122,7 @@ namespace katal.conexion.model.entity
         public string CB_MEDIO { get; set; }
         public string CB_DMEDIO { get; set; }
         public string CB_USUARIO { get; set; }
+        public decimal montoVisual { get; set; }
 
 
         /*public string CB_C_Secue   CB_C_SECUE { get; set; }
@@ -245,4 +247,54 @@ namespace katal.conexion.model.entity
         public List<CMovimientoBanco> cMovimientoBancos;
         public List<Cobranzas> cobranzas;
     }
+    public class ParametrosCuentas
+    {
+        public string CTA_SOLES { get; set; }
+        public string CTA_DOLA { get; set; }
+    }
+    public  class Cartera
+    {
+        public string CDOTIPDOC { get; set; }
+        public string CDONRODOC { get; set; }
+        public DateTime CDOFECDOC { get; set; }
+        public string CDOFECVEN { get; set; }
+        public string CDOTDOREF { get; set; }
+        public string CDONROREF { get; set; }
+        public string CDOCODVEN { get; set; }
+        public string CDOIMPORTE { get; set; }
+        public string CDOSALDO { get; set; }
+        public string CDOTIPMON { get; set; }
+        public string CDOTIPCAM { get; set; }
+        public string CDODEBHAB { get; set; }
+        public string CDOESTADO { get; set; }
+        public string CDOFECCRE { get; set; }
+        public string CDOFECACT { get; set; }
+        public string CDOUSUARI { get; set; }
+        public string CDOCUENTA { get; set; }
+        public string CDOCOMIS { get; set; }
+        public string CDOTIPFAC { get; set; }
+        public string CDOFECREF { get; set; }
+        public string CDOCHEDIF { get; set; }
+        public string CDOSALINI { get; set; }
+        public string CDFORVEN { get; set; }
+        public string CDPUNVEN { get; set; }
+        public string COD_BANCO { get; set; }
+        public string DES_BANCO { get; set; }
+        public string CDOIMPORTEPERC { get; set; }
+        public string CDOTASAPERC { get; set; }
+        public string CDOCTAPERC { get; set; }
+        public string CDOTIPRET { get; set; }
+        public string CDOTASARET { get; set; }
+        public string CDOPERAUTO { get; set; }
+        public string CDOORICB { get; set; }
+        public string Percepcion { get; set; }
+        public string Env_CNC { get; set; }
+        public string idcartera { get; set; }
+        public string flagverificado { get; set; }
+        public string idbanco { get; set; }
+        public string fechacontrol { get; set; }
+       
+
+    }
+
 }

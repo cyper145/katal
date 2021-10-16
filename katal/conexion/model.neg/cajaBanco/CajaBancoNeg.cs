@@ -113,29 +113,107 @@ namespace katal.conexion.model.neg
             return cajaBancoDao.tipoMonedas();
         }
 
-        public void create(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
+        public decimal  createorUpdate(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
+        {
+            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(obj.CB_C_SECUE, codigoBanco, dateTime);
+            if (objnuevo != null)
+            {
+              return  Update(obj, codigoBanco, dateTime, cambioMoneda);
+            }
+            else
+            {
+              return  create(obj, codigoBanco, dateTime, cambioMoneda);
+            }
+        }
+
+
+
+
+        public decimal create(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
         {
             decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECCA, obj.CB_D_FECCA, dateTime);
             obj.CB_N_TIPCA = valortipoCambio;
             decimal cambio = Math.Round(obj.CB_N_MTOMN * valortipoCambio, 2);
-            obj.CB_N_MTOME = cajaBancoDao.ternarioG(cambioMoneda == "ME", obj.CB_N_MTOME, cambio);
-            obj.CB_N_MTOMN = cajaBancoDao.ternarioG(cambioMoneda == "MN", obj.CB_N_MTOME, cambio);
-            cajaBancoDao.create(obj, codigoBanco, dateTime);
-        }
 
+            obj.CB_N_MTOME = cajaBancoDao.ternarioG(cambioMoneda == "ME", obj.montoVisual, cambio);
+            obj.CB_N_MTOMN = cajaBancoDao.ternarioG(cambioMoneda == "MN", obj.montoVisual, cambio);
+            cajaBancoDao.create(obj, codigoBanco, dateTime);
+            return valortipoCambio;
+        }
+        public decimal Update(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
+        {
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECCA, obj.CB_D_FECCA, dateTime);
+            obj.CB_N_TIPCA = valortipoCambio;
+            decimal cambio = Math.Round(obj.CB_N_MTOMN * valortipoCambio, 2);
+
+            obj.CB_N_MTOME = cajaBancoDao.ternarioG(cambioMoneda == "ME", obj.montoVisual, cambio);
+            obj.CB_N_MTOMN = cajaBancoDao.ternarioG(cambioMoneda == "MN", obj.montoVisual, cambio);
+            cajaBancoDao.Update(obj, codigoBanco, dateTime);
+            return valortipoCambio;
+        }
         public void crearteDetail(string CB_C_SECUE, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda,string cambioMoneda)
         {
 
-            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, moneda, dateTime); 
+            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime); 
             decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECCA, objnuevo.CB_D_FECCA, dateTime);
 
                  
             cajaBancoDao.crearteDetail(objnuevo,  obj,  codigoBanco,  dateTime,  moneda, valortipoCambio);
         }
+        public void crearteDetailXplanilla(List<PlantillaDetalle> plantillaDetalles,string CB_C_SECUE, string codigoBanco, DateTime dateTime, string moneda, decimal valorTipocamvio , string REFER)
+        {
+
+            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime);
+            int sec = 1;
+
+            string doc = "";
+            string Clien = "";
+            string NUMDOC = "";
+            string AnexoCliente = cajaBancoDao.ConceptosGenerales("ANEXOCLIE"); ;
+            plantillaDetalles.ForEach(X => {
+
+                if(doc!= X.TpoDoc)
+                {
+                    doc = X.TpoDoc;
+                    Clien = X.Cliente;
+                    NUMDOC = X.Documento;
+                }
+            });
+                plantillaDetalles.ForEach(X => {
+                ParametrosCuentas parametrosCuentas = cajaBancoDao.findParametrosCuentas(X.TpoDoc);
+                Cartera cartera= cajaBancoDao.findCartera(X.Cliente, X.TpoDoc,X.Documento );
+                    string tipoMonC = "";
+                    string cuenta = "";
+                    if (cartera.CDOTIPMON != null)
+                    {
+                        tipoMonC = cartera.CDOTIPMON;
+                    }
+                    else
+                    {
+                        tipoMonC = X.Moneda;
+                    }
+                    if (tipoMonC == "MN")
+                    {
+                        cuenta = parametrosCuentas.CTA_SOLES;
+                    }
+                    else
+                    {
+                        cuenta = parametrosCuentas.CTA_DOLA;
+                    }
+                cajaBancoDao.crearteDetailxPlantilla(X, sec++, CB_C_SECUE, codigoBanco, dateTime, AnexoCliente, cartera.CDOFECDOC, REFER, cuenta, moneda, valorTipocamvio);
+                    cajaBancoDao.UpdatePlantconDet(X.DetKey.ToString()); ;
+
+
+                });
+            
+
+        }
+
+
         public void updateDetail(string CB_C_SECUE, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda, string cambioMoneda)
         {
 
-            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, moneda, dateTime);
+            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime);
             decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECCA, objnuevo.CB_D_FECCA, dateTime);
             cajaBancoDao.UpdateDetail (objnuevo, obj, codigoBanco, dateTime, moneda, valortipoCambio);
         }

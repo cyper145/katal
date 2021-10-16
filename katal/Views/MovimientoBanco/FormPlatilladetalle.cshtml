@@ -1,7 +1,7 @@
 ﻿@Html.DevExpress().PopupControl(settings =>
     {
         settings.Name = "FormPlanillaCobranzaDetalle";
-        settings.Width = 900;
+        settings.Width = 980;
 
         settings.AllowDragging = true;
         settings.CloseAction = CloseAction.CloseButton;
@@ -47,7 +47,7 @@
                                 buttonSettings.ControlStyle.CssClass = "button";
                                 buttonSettings.Width = 80;
                                 buttonSettings.Text = "Aceptar";
-                                buttonSettings.ClientSideEvents.Click = "function(s, e){ FormPlanillaCobranzaDetalle.Hide(); }";// hacer algo mas
+                                buttonSettings.ClientSideEvents.Click = "deleteSelectedRecordsMovimientoBanco";// hacer algo mas
                             }
                         ).Render();
                         Html.DevExpress().Label(

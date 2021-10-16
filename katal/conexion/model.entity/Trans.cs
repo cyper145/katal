@@ -43,4 +43,10 @@ namespace katal.conexion.model.entity
         public bool activeAnexo { get; set; }
         public decimal xnvalor { get; set; }
     }
+    public class RespuestaCreateCMBanco
+    {
+        public bool ok { get; set; }
+        public decimal tc  { get; set; }
+     
+    }
 }

@@ -113,6 +113,7 @@ namespace katal.Controllers
         {
             List<PlantillaDetalle> cobranzas = new List<PlantillaDetalle>();
             cobranzas = cajaBancoNeg.AllPlanillasDetalle(GridViewHelper.nroPlantilla);
+            GridViewHelper.plantillaDetalles = cobranzas;
             return PartialView("FormPlaniDetalleGridView", cobranzas);
         }
 
@@ -234,8 +235,17 @@ namespace katal.Controllers
 
                 return RedirectToAction("MovimientoBanco", "Report", new { codigo = codigo });// ver para requisiones
             }
+            if (customAction == "CargarDMov")
+            {
+                List<string> listcod=   codigo.Split(',').ToList();
+               List<PlantillaDetalle> plantillaDetalles=    GridViewHelper.plantillaDetalles.Where(X => listcod.Contains(X.DetKey.ToString())).ToList();
 
-            return DataRequisicionPartial();
+               cajaBancoNeg.crearteDetailXplanilla(plantillaDetalles, GridViewHelper.secuenciacab, GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco,GridViewHelper.valorTipoCambio, GridViewHelper.REFER );
+                return null;
+            }
+
+
+             return DataRequisicionPartial();
         }
         public void DeleteProduct(string NROREQUI)
         {
@@ -887,12 +897,16 @@ namespace katal.Controllers
             nodes.CB_C_BANCO = GridViewHelper.codigobanco;
             nodes.CB_C_CONTA = GridViewHelper.codigoContabilidad;
             nodes.CB_C_MES = GridViewHelper.dateTime.Month.ToString("00.##");
+           
             bool secuencia = false;
-
-            cajaBancoNeg.create(nodes, nodes.CB_C_BANCO, GridViewHelper.dateTime, GridViewHelper.monedabanco);
+            GridViewHelper.REFER = nodes.CB_A_REFER;
+            decimal Tc=    cajaBancoNeg.createorUpdate(nodes, nodes.CB_C_BANCO, GridViewHelper.dateTime, GridViewHelper.monedabanco);
+            GridViewHelper.valorTipoCambio = Tc;
             secuencia = true;
-
-            return Json(new { respuesta = secuencia }, JsonRequestBehavior.AllowGet);
+            RespuestaCreateCMBanco respuestaC = new RespuestaCreateCMBanco();
+            respuestaC.ok = secuencia;
+            respuestaC.tc = Tc;
+            return Json(new { respuesta = respuestaC }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult OnChangeConcepto()
         {

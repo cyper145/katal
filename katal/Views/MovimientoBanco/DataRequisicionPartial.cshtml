@@ -151,6 +151,7 @@
                 i.NestedExtension().TextBox(t =>
                 {
                     t.Properties.ClientSideEvents.KeyDown = "KeyDownSerie";
+                    t.Properties.MaxLength = 4;
                 });
             });
             groupItem.Items.Add(i =>
@@ -240,17 +241,41 @@
             });
             groupItem.Items.Add(i =>
             {
-                i.FieldName = "CB_N_MTOMN";
-                i.ColumnSpan = 12;
+                i.FieldName = "montoVisual";
+                i.ColumnSpan = 3;
                 i.Caption = "Monto";
-                i.Visible = false;
 
                 i.NestedExtension().TextBox(t =>
                 {
                     t.Properties.ValidationSettings.Display = Display.Dynamic;
                     t.ShowModelErrors = true;
-                    t.Width = Unit.Percentage(25);
-                    t.Properties.ClientSideEvents.KeyDown = "KeyDownMonto";
+
+                    t.Enabled = false;
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.Name = "valorCambio";
+                i.ColumnSpan = 3;
+                i.Caption = "T/C";
+
+                i.NestedExtension().TextBox(t =>
+                {
+                    t.Properties.ValidationSettings.Display = Display.Dynamic;
+                    t.ShowModelErrors = true;
+                    //  t.Width = Unit.Percentage(50);
+                    t.Enabled = false;
+                });
+            });
+            groupItem.Items.Add(i =>
+            {
+                i.FieldName = "labelmoneto";
+                i.ColumnSpan = 6;
+               
+                i.ShowCaption = DefaultBoolean.False;
+                i.NestedExtension().Label(t =>
+                {
+                   
                 });
             });
             groupItem.Items.Add(i =>

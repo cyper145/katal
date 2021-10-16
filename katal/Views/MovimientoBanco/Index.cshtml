@@ -372,9 +372,10 @@
             objeto = JSON.stringify(objeto);
             $.getJSON('/MovimientoBanco/grabar?data=' + objeto, function (resp) {
                 $.each(resp, function (k, v) {
-                    if (v) {
+                    if (v.ok) {
                         alert("cabecera guardada Correctamente");
-                      
+                        valorCambio.SetText(v.tc);
+                        valorCambio.SetEnabled(false);
                         CB_A_REFER.SetEnabled(false);
                         CB_C_MODO.SetEnabled(false);
                         gridLookupOpciones.SetEnabled(false);
@@ -394,6 +395,7 @@
                         gridLookupMedioPago.SetEnabled(false);
                         btShowModal.SetEnabled(false);
                         console.log(grid);
+
                         grid.SetEnabled(true);
                     }
                       
@@ -514,6 +516,25 @@
             });
 
         }
+        function initDetalle(s, e) {
+            console.log(s);
+            console.log(e);
+            console.log("percy");
+        }
+        function deleteSelectedRecordsMovimientoBanco() {
+            console.log("percy33");
+            
+            gvPlanillaDetalle.GetSelectedFieldValues("DetKey", getSelectedFieldValuesCallbackMovimientoBanco);
+            
+        }
+        function getSelectedFieldValuesCallbackMovimientoBanco(values) {
+            let selectedIds = values.join(',');
+            console.log(selectedIds);
+            gvPlanillaDetalle.PerformCallback({ customAction: 'CargarDMov', codigo: selectedIds });
+            FormPlanillaCobranzaDetalle.Hide();
+            FormPlanillaCobranza.Hide();
+        }
+
     </script>
 }
 @section PageToolbar {
