@@ -1722,7 +1722,7 @@ namespace katal.conexion.model.dao
                 {
                     plan = new TipoCambio();
                     plan.TIPOMON_CODIGO = read[0].ToString();
-                    plan.TIPOCAMB_FECHA = read[1].ToString();
+                    plan.TIPOCAMB_FECHA =Conversion.ParseDateTime(  read[1].ToString());
                     plan.TIPOCAMB_COMPRA = Conversion.ParseDecimal(read[2].ToString());
                     plan.TIPOCAMB_EQCOMPRA = Conversion.ParseDecimal(read[3].ToString());
                     plan.TIPOCAMB_VENTA = Conversion.ParseDecimal(read[4].ToString());

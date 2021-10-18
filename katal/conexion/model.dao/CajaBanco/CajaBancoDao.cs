@@ -847,6 +847,8 @@ namespace katal.conexion.model.dao
 
         public decimal tipoCambio(string cambio, string CC1, decimal CE, DateTime FE, DateTime FR, DateTime dateTime)
         {
+            List<TipoCambio> tipoCambio = new List<TipoCambio>();
+
             int anio = dateTime.Year;
             bool ok = true;
             string findAll = $" SELECT * FROM TIPO_CAMBIO WHERE TIPOMON_CODIGO = 'ME' AND YEAR(TIPOCAMB_FECHA)= {anio}  ORDER BY TIPOCAMB_FECHA";
@@ -854,72 +856,20 @@ namespace katal.conexion.model.dao
             try
             {
 
-                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
-                if (read.Read())
+                while (read.Read())
                 {
-                    switch (CC1)
-                    {
-                        case "ESP":
-                            if (cambio == "MN")
-                                if (CE != 0)
-                                    valor = Math.Round(1 / CE, 8);
-                                else
-                                    valor = 999999;
-                            else
-                            {
-                                valor = CE;
-                            }
-                            break;
-                        case "FEC":
-                            bool flag = false;
-                            DateTime date = Conversion.ParseDateTime(read[1].ToString());
-                            if (date.Date == FE.Date)
-                                flag = true;
-                            if (flag)
-                            {
-                                if (cambio == "ME")
-                                {
-                                    valor = Conversion.ParseDecimal(read[2].ToString());
-                                }
-                                else
-                                {
-                                    valor = Math.Round(1 / Conversion.ParseDecimal(read[2].ToString()), 8);
-                                }
-                            }
-                            else
-                                ok = false;
-                            break;
-                        case "COM":
-                        case "VTA":
-                            bool flagv = false;
-                            DateTime datev = Conversion.ParseDateTime(read[1].ToString());
-                            decimal compra = Conversion.ParseDecimal(read[2].ToString());
-                            decimal venta = Conversion.ParseDecimal(read[4].ToString());
-
-                            if (datev.Date == FR.Date)
-                                flagv = true;
-                            if (flagv)
-                            {
-                                if (cambio == "ME")
-                                {
-                                    valor = Conversion.ParseDecimal(read[2].ToString());
-                                    valor = ternarioG(CC1 == "COM", compra, venta);
-                                }
-                                else
-                                {
-                                    compra = Math.Round(1 / compra, 8);
-                                    venta = Math.Round(1 / venta, 8);
-                                    valor = ternarioG(CC1 == "COM", compra, venta);
-                                }
-                            }
-                            else
-                                ok = false;
-                            break;
-
-                    }
+                    TipoCambio tipoCambio1 = new TipoCambio();
+                    tipoCambio1.TIPOMON_CODIGO = read[0].ToString();
+                    tipoCambio1.TIPOCAMB_FECHA = Conversion.ParseDateTime( read[1].ToString());
+                    tipoCambio1.TIPOCAMB_VENTA = Conversion.ParseDecimal( read[2].ToString());
+                    tipoCambio1.TIPOCAMB_COMPRA =Conversion.ParseDecimal( read[4].ToString());
+                    tipoCambio.Add(tipoCambio1);
                 }
+
+                
 
             }
             catch (Exception)
@@ -932,6 +882,70 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
+
+            switch (CC1)
+            {
+                case "ESP":
+                    if (cambio == "MN")
+                        if (CE != 0)
+                            valor = Math.Round(1 / CE, 8);
+                        else
+                            valor = 999999;
+                    else
+                    {
+                        valor = CE;
+                    }
+                    break;
+                case "FEC":
+                    bool flag = false;
+                    TipoCambio date = tipoCambio.Find(x => x.TIPOCAMB_FECHA.Date == FE.Date);
+                    
+                    if (date!=null)
+                    {
+                        if (cambio == "ME")
+                        {
+                            valor =date.TIPOCAMB_COMPRA;
+                        }
+                        else
+                        {
+                            valor = Math.Round(1 / date.TIPOCAMB_COMPRA, 8);
+                        }
+                    }
+                    else
+                        ok = false;
+                    break;
+                case "COM":
+                case "VTA":
+                    bool flagv = false;
+
+                    TipoCambio date2 = tipoCambio.Find(x => x.TIPOCAMB_FECHA.Date == FR.Date);
+
+                    DateTime datev = date2.TIPOCAMB_FECHA;
+                    decimal compra = date2.TIPOCAMB_COMPRA;
+                    decimal venta = date2.TIPOCAMB_VENTA;
+
+                    if (datev.Date == FR.Date)
+                        flagv = true;
+                    if (flagv)
+                    {
+                        if (cambio == "ME")
+                        {
+                          
+                            valor = ternarioG(CC1 == "COM", compra, venta);
+                        }
+                        else
+                        {
+                            compra = Math.Round(1 / compra, 8);
+                            venta = Math.Round(1 / venta, 8);
+                            valor = ternarioG(CC1 == "COM", compra, venta);
+                        }
+                    }
+                    else
+                        ok = false;
+                    break;
+
+            }
+
             if (!ok)
             {
                 valor = 999999;// error

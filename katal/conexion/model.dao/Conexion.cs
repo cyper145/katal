@@ -50,8 +50,8 @@ namespace katal.conexion.model.dao
 
         private string cadenaConexion(string nameBaseDatos)
         {
-            //return $"data source = SERVIDOR; initial catalog = {nameBaseDatos}; user id = SOPORTE; password = SOPORTE";
-            return $"Data Source=DESKTOP-RT71HEQ\\SQLEXPRESS;Initial Catalog={nameBaseDatos}; Integrated Security=True";
+            return $"data source = SERVIDOR; initial catalog = {nameBaseDatos}; user id = SOPORTE; password = SOPORTE";
+            //return $"Data Source=DESKTOP-RT71HEQ\\SQLEXPRESS;Initial Catalog={nameBaseDatos}; Integrated Security=True";
         }
         public static string CadenaGeneral(string codigo, string nameBaseDatosgeneral, string tabla)
         {
