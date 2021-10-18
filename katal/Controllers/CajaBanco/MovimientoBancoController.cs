@@ -351,6 +351,7 @@ namespace katal.Controllers
             product.CB_C_CONCE = GridViewHelper.ValidarRecuperar(dataForm["gridLookupConceptoCajaBanco$State"]);
 
             product.CB_C_ANEXOD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupAnexoD$State"]);
+            
             product.TipoAnexo = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoAnexoD$State"]);
 
             product.CB_C_TPDOCD = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoDocD$State"]);
@@ -361,6 +362,8 @@ namespace katal.Controllers
             string moneda = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoMoneda$State"]);
 
             product.monedaD = moneda;
+
+            var s = dataForm["gridLookupTipoAnexoD$State"];
             decimal monto = 0;
             if (moneda == "MN")
             {
