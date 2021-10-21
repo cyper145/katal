@@ -124,6 +124,7 @@ namespace katal.conexion.model.entity
         public string CB_USUARIO { get; set; }
         public decimal montoVisual { get; set; }
         public string TipoAnexoD { get; set; }
+       
 
 
         /*public string CB_C_Secue   CB_C_SECUE { get; set; }
@@ -138,6 +139,8 @@ namespace katal.conexion.model.entity
         public string CB_A_REFER { get; set; }
         public string CB_C_NROLI { get; set; }*/
 
+        // comprobante si es salida
+        public string CORDEN { get; set; }
 
     }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using katal.conexion.model.entity;
+using System;
 using System.Data.SqlClient;
 using System.Globalization;
 
@@ -309,6 +310,117 @@ namespace katal.conexion.model.dao
 
         }
 
-        
+
+        // COMPROBANTECAB PARA CREAR NUEVO SERIE
+        public string funcAutoNum(string msAnoMesProc)
+        {
+            string cadena = "SELECT Concepto_Logico FROM CONCEPTOGRAL WHERE Concepto_Codigo='NUMEAUTO'";
+            try
+            {
+                comando = new SqlCommand(conexionComun(cadena), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                bool hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+
+                    bool codigo = Conversion.ParseBool(read[0].ToString());
+                    read.Close();
+                    cadena = "SELECT MAX(CORDEN) AS MAXORDEN FROM COMPROBANTECAB WHERE CAMESPROC = '" + msAnoMesProc + "'";
+                    comando = new SqlCommand(conexionComun(cadena), objConexion.getCon());
+                    // objConexion.getCon().Open();
+                    SqlDataReader readd = comando.ExecuteReader();
+                    bool hayRegistrosdd = readd.Read();
+                    int nextDocumet = 0;
+                    if (hayRegistrosdd)
+                    {
+                        string last = readd[0].ToString();
+                        nextDocumet = Conversion.Parseint(last) + 1;
+                    }
+                    else
+                    {
+                        nextDocumet = 1;
+                    }
+
+                    string next = nextDocumet.ToString("00000.##");
+                    /* if (codigo)
+                     {
+                         return next;
+                     }
+                     else
+                     {
+                         return "";
+                     }*/
+                    return next;
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+
+            return "";
+        }
+
+        public string ConceptosGenerales(string concepto)
+        {
+            bool hayRegistros = false;
+            string data = "";
+            ConceptosGenerales conceptos = new ConceptosGenerales();
+            string find = $"SELECT * FROM CONCEPTOS_GENERALES WHERE CONCGRAL_CODIGO = '{concepto}'";
+            try
+            {
+                comando = new SqlCommand(conexionContabilidad(find), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    conceptos.CONCGRAL_CODIGO = read[0].ToString();
+                    conceptos.CONCGRAL_DESCRIPCION = read[1].ToString();
+                    conceptos.CONCGRAL_TIPO = read[2].ToString();
+                    conceptos.CONCGRAL_CONTEC = read[3].ToString();
+                    conceptos.CONCGRAL_CONTEN = read[4].ToString();
+                    conceptos.CONCGRAL_CONTED = read[5].ToString();
+                    conceptos.CONCGRAL_CONTEL = read[6].ToString();
+                    switch (conceptos.CONCGRAL_TIPO)
+                    {
+                        case "C":
+                            data = conceptos.CONCGRAL_CONTEC;
+                            break;
+                        case "N":
+                            data = conceptos.CONCGRAL_CONTEN;
+                            break;
+                        case "L":
+                            data = conceptos.CONCGRAL_CONTEL;
+                            break;
+                        default:
+                            data = conceptos.CONCGRAL_CONTED;
+                            break;
+
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return data;
+        }
+
     }
 }

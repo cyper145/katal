@@ -70,6 +70,8 @@ namespace katal.Controllers
                 movimientoBancos = GridViewHelper.movimientoBancos;
                 movimientoBancos = movimientoBancos.Where(X => X.CB_D_FECHA >= GridViewHelper.dateRangeBanco.Start && X.CB_D_FECHA <= GridViewHelper.dateRangeBanco.End).ToList();
                 cobranzas=cajaBancoNeg.AllConbranzas(GridViewHelper.dateTime);
+
+                CMovimientoBanco d = movimientoBancos.Find(X => X.CB_C_SECUE == "0151");
             }      
             dataGeneral.cMovimientoBancos = movimientoBancos;
             dataGeneral.cobranzas = cobranzas;
@@ -360,7 +362,7 @@ namespace katal.Controllers
             product.CB_C_DESTI = GridViewHelper.ValidarRecuperar(dataForm["gridLookupCuentaDestino$State"]);
             product.CB_C_MODO = SINGSAL;
             string moneda = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoMoneda$State"]);
-
+            product.CORDEN = comprobanteNeg.funcAutoNum();
             product.monedaD = moneda;
 
             var s = dataForm["gridLookupTipoAnexoD$State"];
@@ -449,7 +451,7 @@ namespace katal.Controllers
 
             product.monedaD = moneda;
             decimal monto = 0;
-            if (moneda == "MN")
+            if (GridViewHelper.monedabanco == "MN")
             {
                 monto = product.CB_N_MTOMND;
 

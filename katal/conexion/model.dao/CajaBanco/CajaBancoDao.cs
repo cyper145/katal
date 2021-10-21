@@ -111,7 +111,7 @@ namespace katal.conexion.model.dao
                     CMovimientoBanco cajaBanco = new CMovimientoBanco();
 
                     string darse = read[0].ToString();
-                    cajaBanco.CB_C_Secue = read[nameof(cajaBanco.CB_C_Secue)].ToString();                  
+                    cajaBanco.CB_C_Secue = read[nameof(cajaBanco.CB_C_Secue)].ToString();
                     cajaBanco.Opera = read[nameof(cajaBanco.Opera)].ToString();
                     cajaBanco.docu = read[nameof(cajaBanco.docu)].ToString();
                     cajaBanco.MONTO = Conversion.ParseDecimal(read[nameof(cajaBanco.MONTO)].ToString());
@@ -146,14 +146,14 @@ namespace katal.conexion.model.dao
                         cajaBanco.CB_C_DOCUM = documento;
                     }
                     if (cajaBanco.CB_C_AnexoV.Trim() != "")
-                    {  
+                    {
                         cajaBanco.TipoAnexoD = cajaBanco.CB_C_AnexoV.Substring(0, 2);
                         cajaBanco.CB_C_ANEXO = cajaBanco.CB_C_AnexoV.Substring(2);
                     }
                     else
                     {
                         cajaBanco.TipoAnexoD = "";
-                        cajaBanco.CB_C_ANEXO ="";
+                        cajaBanco.CB_C_ANEXO = "";
 
                     }
 
@@ -173,7 +173,7 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_C_ESTAD = read[nameof(cajaBanco.CB_C_ESTAD)].ToString();
                     cajaBanco.CB_C_ESTRET = read[nameof(cajaBanco.CB_C_ESTRET)].ToString();
                     cajaBanco.CB_RETLET = read[nameof(cajaBanco.CB_RETLET)].ToString();
-                    cajaBanco.CB_D_FECCOB = Conversion.ParseDateTime( read[nameof(cajaBanco.CB_D_FECCOB)].ToString());
+                    cajaBanco.CB_D_FECCOB = Conversion.ParseDateTime(read[nameof(cajaBanco.CB_D_FECCOB)].ToString());
                     cajaBanco.CB_TRANSBCO = read[nameof(cajaBanco.CB_TRANSBCO)].ToString();
                     cajaBanco.CB_TIPMOV = read[nameof(cajaBanco.CB_TIPMOV)].ToString();
                     cajaBanco.CB_MEDIO = read[nameof(cajaBanco.CB_MEDIO)].ToString();
@@ -181,7 +181,7 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_USUARIO = read[nameof(cajaBanco.CB_USUARIO)].ToString();
                     cajaBanco.montoVisual = ternarioG(moneda == "MN", cajaBanco.CB_N_MTOMN, cajaBanco.CB_N_MTOME);
 
-                 
+
                     cajaBancos.Add(cajaBanco);
                 }
 
@@ -199,14 +199,14 @@ namespace katal.conexion.model.dao
             }
             return cajaBancos;
         }
-        public CMovimientoBanco findMovimiento( string secuencia, string banco, DateTime date)
+        public CMovimientoBanco findMovimiento(string secuencia, string banco, DateTime date)
         {
             CMovimientoBanco cajaBanco = new CMovimientoBanco();
             string mes = date.Month.ToString("00.##");
             string findAll = $"SELECT * FROM CMOV_BANCO where CB_C_BANCO='{banco}' and CB_C_MES='{mes}' and  CB_C_SECUE ='{secuencia}'";
             try
             {
-                comando = new SqlCommand(conexionBDCBT(findAll,date.Year), objConexion.getCon());
+                comando = new SqlCommand(conexionBDCBT(findAll, date.Year), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -258,7 +258,7 @@ namespace katal.conexion.model.dao
             return cajaBanco;
         }
 
-        public List<DMovimientoBanco> findDetailMovimientos(string secuencia, string banco, string moneda, DateTime dateTime, string  tipo)
+        public List<DMovimientoBanco> findDetailMovimientos(string secuencia, string banco, string moneda, DateTime dateTime, string tipo)
         {
 
             List<DMovimientoBanco> DetailMovimientos = new List<DMovimientoBanco>();
@@ -267,13 +267,13 @@ namespace katal.conexion.model.dao
             string mes = dateTime.Month.ToString("00.##");
 
             string texto = ternario(moneda == "MN", "CB_N_MTOMN  as monto", "CB_N_MTOME  as monto");
-            
+
 
 
 
 
             string findAll = $"SELECT CB_C_SecDE  as secd,CB_C_Conce+' '+D.CB_A_DESCR,Cb_C_TpDoc+LEFT(CB_C_Docum,21),{texto},CB_A_Refer as refer,*  ";
-              findAll += $"from DMOV_BANCO inner join (select CB_C_CODIG, CB_A_DESCR from [014BDCAJABANCO].[dbo].[CONCEPTO_CAJA_BANCO]  where CB_C_TIPO = 'B' and CB_C_MODO = '{tipo}') as D on DMOV_BANCO.CB_C_CONCE = D.CB_C_CODIG WHERE CB_C_Banco = '{banco}'";
+            findAll += $"from DMOV_BANCO inner join (select CB_C_CODIG, CB_A_DESCR from [014BDCAJABANCO].[dbo].[CONCEPTO_CAJA_BANCO]  where CB_C_TIPO = 'B' and CB_C_MODO = '{tipo}') as D on DMOV_BANCO.CB_C_CONCE = D.CB_C_CODIG WHERE CB_C_Banco = '{banco}'";
             findAll += $" AND  CB_C_Mes='{mes}' AND CB_C_Secue ='{secuencia}' ORDER BY CB_C_SECDE";
             try
             {
@@ -318,7 +318,7 @@ namespace katal.conexion.model.dao
                     cajaBanco.CB_C_CONCE = read[10].ToString();
 
 
-                    string CB_C_ANEXOD= read[11].ToString();
+                    string CB_C_ANEXOD = read[11].ToString();
                     if (CB_C_ANEXOD.Trim() != "")
                     {
                         cajaBanco.TipoAnexo = CB_C_ANEXOD.Substring(0, 2);
@@ -330,31 +330,31 @@ namespace katal.conexion.model.dao
                         cajaBanco.CB_C_ANEXOD = "";
 
                     }
-                   
+
                     cajaBanco.CB_C_TPDOCD = read[12].ToString();
-                   
-                    cajaBanco.CB_D_FECDC = Conversion.ParseDateTime( read[14].ToString());
+
+                    cajaBanco.CB_D_FECDC = Conversion.ParseDateTime(read[14].ToString());
                     cajaBanco.CB_A_REFERD = read[15].ToString();
                     cajaBanco.CB_C_CUENT = read[16].ToString();
                     cajaBanco.CB_C_CENCO = read[17].ToString();
                     cajaBanco.CB_C_DESTI = read[18].ToString();
-                    cajaBanco.CB_N_MTOMND =Conversion.ParseDecimal( read[19].ToString());
+                    cajaBanco.CB_N_MTOMND = Conversion.ParseDecimal(read[19].ToString());
                     cajaBanco.CB_N_MTOMED = Conversion.ParseDecimal(read[20].ToString());
-                    cajaBanco.CB_L_ANULA =  Conversion.ParseBool(  read[21].ToString());
+                    cajaBanco.CB_L_ANULA = Conversion.ParseBool(read[21].ToString());
                     cajaBanco.CB_L_PROGR = Conversion.ParseBool(read[22].ToString());
                     cajaBanco.CODDETPLA = read[23].ToString();
                     cajaBanco.CB_L_INT = Conversion.ParseBool(read[24].ToString());
-                    cajaBanco.CB_ACUENTA = read[25].ToString();                  
+                    cajaBanco.CB_ACUENTA = read[25].ToString();
                     cajaBanco.monedaD = moneda;
-                    if (tipo=="I")
+                    if (tipo == "I")
                     {
-                        cajaBanco.IS = ternarioG(cajaBanco.CB_C_MODO=="I", 0,1);
+                        cajaBanco.IS = ternarioG(cajaBanco.CB_C_MODO == "I", 0, 1);
                     }
                     else
                     {
                         cajaBanco.IS = ternarioG(cajaBanco.CB_C_MODO == "I", 1, 0);
                     }
-                        
+
                     DetailMovimientos.Add(cajaBanco);
                 }
             }
@@ -606,6 +606,8 @@ namespace katal.conexion.model.dao
             }
             return secuencia;
         }
+       
+        /*
         public string ConceptosGenerales(string concepto)
         {
             bool hayRegistros = false;
@@ -657,6 +659,8 @@ namespace katal.conexion.model.dao
             }
             return data;
         }
+       
+        */
         public List<TemporalGC> allTemporal()
         {
             List<TemporalGC> tiposcajaBancos = new List<TemporalGC>();
@@ -847,6 +851,8 @@ namespace katal.conexion.model.dao
 
         public decimal tipoCambio(string cambio, string CC1, decimal CE, DateTime FE, DateTime FR, DateTime dateTime)
         {
+            List<TipoCambio> tipoCambio = new List<TipoCambio>();
+
             int anio = dateTime.Year;
             bool ok = true;
             string findAll = $" SELECT * FROM TIPO_CAMBIO WHERE TIPOMON_CODIGO = 'ME' AND YEAR(TIPOCAMB_FECHA)= {anio}  ORDER BY TIPOCAMB_FECHA";
@@ -854,72 +860,20 @@ namespace katal.conexion.model.dao
             try
             {
 
-                comando = new SqlCommand(conexionWenco(findAll), objConexion.getCon());
+                comando = new SqlCommand(conexionContabilidad(findAll), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
-                if (read.Read())
+                while (read.Read())
                 {
-                    switch (CC1)
-                    {
-                        case "ESP":
-                            if (cambio == "MN")
-                                if (CE != 0)
-                                    valor = Math.Round(1 / CE, 8);
-                                else
-                                    valor = 999999;
-                            else
-                            {
-                                valor = CE;
-                            }
-                            break;
-                        case "FEC":
-                            bool flag = false;
-                            DateTime date = Conversion.ParseDateTime(read[1].ToString());
-                            if (date.Date == FE.Date)
-                                flag = true;
-                            if (flag)
-                            {
-                                if (cambio == "ME")
-                                {
-                                    valor = Conversion.ParseDecimal(read[2].ToString());
-                                }
-                                else
-                                {
-                                    valor = Math.Round(1 / Conversion.ParseDecimal(read[2].ToString()), 8);
-                                }
-                            }
-                            else
-                                ok = false;
-                            break;
-                        case "COM":
-                        case "VTA":
-                            bool flagv = false;
-                            DateTime datev = Conversion.ParseDateTime(read[1].ToString());
-                            decimal compra = Conversion.ParseDecimal(read[2].ToString());
-                            decimal venta = Conversion.ParseDecimal(read[4].ToString());
-
-                            if (datev.Date == FR.Date)
-                                flagv = true;
-                            if (flagv)
-                            {
-                                if (cambio == "ME")
-                                {
-                                    valor = Conversion.ParseDecimal(read[2].ToString());
-                                    valor = ternarioG(CC1 == "COM", compra, venta);
-                                }
-                                else
-                                {
-                                    compra = Math.Round(1 / compra, 8);
-                                    venta = Math.Round(1 / venta, 8);
-                                    valor = ternarioG(CC1 == "COM", compra, venta);
-                                }
-                            }
-                            else
-                                ok = false;
-                            break;
-
-                    }
+                    TipoCambio tipoCambio1 = new TipoCambio();
+                    tipoCambio1.TIPOMON_CODIGO = read[0].ToString();
+                    tipoCambio1.TIPOCAMB_FECHA = Conversion.ParseDateTime(read[1].ToString());
+                    tipoCambio1.TIPOCAMB_VENTA = Conversion.ParseDecimal(read[2].ToString());
+                    tipoCambio1.TIPOCAMB_COMPRA = Conversion.ParseDecimal(read[4].ToString());
+                    tipoCambio.Add(tipoCambio1);
                 }
+
+
 
             }
             catch (Exception)
@@ -932,6 +886,70 @@ namespace katal.conexion.model.dao
                 objConexion.getCon().Close();
                 objConexion.cerrarConexion();
             }
+
+            switch (CC1)
+            {
+                case "ESP":
+                    if (cambio == "MN")
+                        if (CE != 0)
+                            valor = Math.Round(1 / CE, 8);
+                        else
+                            valor = 999999;
+                    else
+                    {
+                        valor = CE;
+                    }
+                    break;
+                case "FEC":
+                    bool flag = false;
+                    TipoCambio date = tipoCambio.Find(x => x.TIPOCAMB_FECHA.Date == FE.Date);
+
+                    if (date != null)
+                    {
+                        if (cambio == "ME")
+                        {
+                            valor = date.TIPOCAMB_COMPRA;
+                        }
+                        else
+                        {
+                            valor = Math.Round(1 / date.TIPOCAMB_COMPRA, 8);
+                        }
+                    }
+                    else
+                        ok = false;
+                    break;
+                case "COM":
+                case "VTA":
+                    bool flagv = false;
+
+                    TipoCambio date2 = tipoCambio.Find(x => x.TIPOCAMB_FECHA.Date == FR.Date);
+
+                    DateTime datev = date2.TIPOCAMB_FECHA;
+                    decimal compra = date2.TIPOCAMB_COMPRA;
+                    decimal venta = date2.TIPOCAMB_VENTA;
+
+                    if (datev.Date == FR.Date)
+                        flagv = true;
+                    if (flagv)
+                    {
+                        if (cambio == "ME")
+                        {
+
+                            valor = ternarioG(CC1 == "COM", compra, venta);
+                        }
+                        else
+                        {
+                            compra = Math.Round(1 / compra, 8);
+                            venta = Math.Round(1 / venta, 8);
+                            valor = ternarioG(CC1 == "COM", compra, venta);
+                        }
+                    }
+                    else
+                        ok = false;
+                    break;
+
+            }
+
             if (!ok)
             {
                 valor = 999999;// error
@@ -940,7 +958,7 @@ namespace katal.conexion.model.dao
         }
         public void create(CMovimientoBanco obj, string codigoBanco, DateTime dateTime)
         {
-            
+
             string mes = dateTime.Month.ToString("00.##");
             string create = "INSERT INTO CMOV_BANCO  ([CB_C_BANCO],[CB_C_MES],[CB_C_SECUE],[CB_C_MODO],[CB_C_OPERA],[CB_D_FECHA]";
             create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_C_ANEXO]  ,[CB_C_CONVE] ,[CB_N_CAMES] ,[CB_N_TIPCA],[CB_N_MTOMN]  ,[CB_N_MTOME] ,[CB_C_CONTA]";
@@ -970,31 +988,31 @@ namespace katal.conexion.model.dao
         public void Update(CMovimientoBanco obj, string codigoBanco, DateTime dateTime)
         {
             string update = "UPDATE CMOV_BANCO ";
-             update += $"SET [CB_C_OPERA] = '{obj.CB_C_OPERA}', ";
-             update += $"[CB_D_FECHA] = {dateFormat( obj.CB_D_FECHA)}, ";
-             update += $"[CB_C_TPDOC] = '{obj.CB_C_TPDOC}', ";
-             update += $"[CB_C_DOCUM] = '{obj.serie}{obj.CB_C_DOCUM}', ";
-             update += $"[CB_C_ANEXO] = '{obj.TipoAnexoD}{obj.CB_C_ANEXO}', ";
-             update += $"[CB_C_CONVE] = '{obj.CB_C_CONVE}', ";
-             update += $"[CB_N_CAMES] = {obj.CB_N_CAMES}, ";
-             update += $"[CB_N_TIPCA] = {obj.CB_N_TIPCA}, ";
-             update += $"[CB_N_MTOMN] = {obj.CB_N_MTOMN}, ";
-             update += $"[CB_N_MTOME] = {obj.CB_N_MTOME}, ";
-             update += $"[CB_A_REFER] = '{obj.CB_A_REFER}', ";
-             update += $"[CB_C_ESTAD] = '{obj.CB_C_ESTAD}', ";
-             update += $"[CB_D_FECCOB] = {dateFormat(obj.CB_D_FECCOB)}, ";
-             update += $"[CB_TIPMOV] = '{obj.CB_TIPMOV}', ";
-             update += $"[CB_MEDIO] = '{obj.CB_MEDIO}', ";
-             update += $"[CB_DMEDIO] = '{obj.CB_DMEDIO}', ";
-             update += $"[CB_USUARIO] = '{obj.CB_USUARIO}' ";
+            update += $"SET [CB_C_OPERA] = '{obj.CB_C_OPERA}', ";
+            update += $"[CB_D_FECHA] = {dateFormat(obj.CB_D_FECHA)}, ";
+            update += $"[CB_C_TPDOC] = '{obj.CB_C_TPDOC}', ";
+            update += $"[CB_C_DOCUM] = '{obj.serie}{obj.CB_C_DOCUM}', ";
+            update += $"[CB_C_ANEXO] = '{obj.TipoAnexoD}{obj.CB_C_ANEXO}', ";
+            update += $"[CB_C_CONVE] = '{obj.CB_C_CONVE}', ";
+            update += $"[CB_N_CAMES] = {obj.CB_N_CAMES}, ";
+            update += $"[CB_N_TIPCA] = {obj.CB_N_TIPCA}, ";
+            update += $"[CB_N_MTOMN] = {obj.CB_N_MTOMN}, ";
+            update += $"[CB_N_MTOME] = {obj.CB_N_MTOME}, ";
+            update += $"[CB_A_REFER] = '{obj.CB_A_REFER}', ";
+            update += $"[CB_C_ESTAD] = '{obj.CB_C_ESTAD}', ";
+            update += $"[CB_D_FECCOB] = {dateFormat(obj.CB_D_FECCOB)}, ";
+            update += $"[CB_TIPMOV] = '{obj.CB_TIPMOV}', ";
+            update += $"[CB_MEDIO] = '{obj.CB_MEDIO}', ";
+            update += $"[CB_DMEDIO] = '{obj.CB_DMEDIO}', ";
+            update += $"[CB_USUARIO] = '{obj.CB_USUARIO}' ";
             update += $"WHERE CB_C_BANCO = '{obj.CB_C_BANCO}' AND CB_C_MES = '{obj.CB_C_MES}' AND CB_C_SECUE = '{obj.CB_C_SECUE}'";
             try
-            {           
-              
+            {
 
-                comando = new SqlCommand( conexionBDCBT( update, dateTime.Year) , objConexion.getCon());           
+
+                comando = new SqlCommand(conexionBDCBT(update, dateTime.Year), objConexion.getCon());
                 objConexion.getCon().Open();
-                
+
                 comando.ExecuteNonQuery();
             }
             catch (Exception)
@@ -1009,16 +1027,24 @@ namespace katal.conexion.model.dao
 
 
 
-           
+
 
         }
-        public void createCartera(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime,string tipoCambio, string CB_C_BANCO)
+        public void createCartera(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string tipoCambio, string CB_C_BANCO, string tipoIS, string moneda)
+
         {
             string nroDocumento = obj.serieD + " " + obj.CB_C_DOCUMD;
 
             decimal valorCambio = ternarioG(tipoCambio == "ESP", objC.CB_N_CAMES, objC.CB_N_TIPCA);
-            decimal monto= ternarioG(obj.monedaD == "MN", obj.CB_N_MTOMND, obj.CB_N_MTOMED);
+            decimal monto = ternarioG(moneda == "MN", obj.CB_N_MTOMND, obj.CB_N_MTOMED);
             nroDocumento = nroDocumento.Substring(0, 10);
+
+            if (tipoIS == "S")
+            {
+
+            }
+
+
             string SQL = "Insert Into Cartera (CDOCODCLI,CDOTIPDOC,CDONRODOC,CDOFECDOC,";
             SQL += "CDOFECVEN,CDOCODVEN,CDOIMPORTE,CDOSALDO,CDOTIPMON,";
             SQL += "CDOTIPCAM,CDODEBHAB,CDOESTADO,CDOFECCRE,CDOFECACT,CDOUSUARI,";
@@ -1028,8 +1054,8 @@ namespace katal.conexion.model.dao
             SQL += "'01'," + -1 * monto + "," + -1 * monto + ",";
             SQL += "'" + obj.monedaD + "'," + valorCambio + ",'H','V'," + dateFormat(dateTime) + ",";
 
-            SQL += "" + dateFormat(dateTime) + ",'','" + obj.CB_C_TPDOCD + "'," + -1 * monto +  ",";
-            SQL +=  "'" + obj.CB_C_CUENT + "','','"+ CB_C_BANCO + "','" + codigoBanco +"')";
+            SQL += "" + dateFormat(dateTime) + ",'','" + obj.CB_C_TPDOCD + "'," + -1 * monto + ",";
+            SQL += "'" + obj.CB_C_CUENT + "','','" + CB_C_BANCO + "','" + codigoBanco + "')";
 
             try
             {
@@ -1048,6 +1074,90 @@ namespace katal.conexion.model.dao
             }
 
         }
+
+        public void createComprobante(DateTime dateTime)
+        {
+
+            int anio = dateTime.Year;
+            string mes = dateTime.Month.ToString("00.##");
+
+            
+            string CORDEN = funcAutoNum(anio + mes);
+            string Danexo= verdata("TIPOANEX_CODIGO='" + BuscaGen("ANEXOPROV") + "' AND ANEX_CODIGO='" + Trim(Text111(3)) + "'")
+
+
+            SQL = "Insert Into COMPROBANTECAB (";
+            SQL = SQL + "CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
+            SQL = SQL + "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, ";
+            SQL = SQL + "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, ";
+            SQL = SQL + "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, ";
+            SQL = SQL + "CTDREFER, CONVERSION_CODIGO, DREGISTRO, CTIPPROV, CNRORUC, ";
+            SQL = SQL + "ESTCOMPRA, CDESTCOMP, DIASPAGO, CIGVAPLIC, CCONCEPT, ";
+            SQL = SQL + "DFECREF, NTASAIGV, NIGV, NPORCE, CCODRUC, ";
+            SQL = SQL + "LHONOR, NIR4, NIES, NTOTRH, NBASEIMP, ";
+            SQL = SQL + "NVALCIF, DCONTAB, CAMESPROC, CSALDINI,LCANJEADO,LREGCO,CONTAB,LANULA,CINT_CAJ)";
+            SQL = SQL + " Values ";
+            SQL = SQL + "('" + Ver_Data_Cam("CAMESPROC='" + Format(VGFecTrb, "YYYYMM") + "'", "COMPROBANTECAB", cConexCtaPag, 1, "MAXORDEN", "REPLICATE('0',5-LEN(MAX(CORDEN)+1))+CAST(MAX(CORDEN)+1 AS VARCHAR(30)) AS MAXORDEN") + "','" + Trim(Text111(3)) + "','" + Ver_Data_Cam("TIPOANEX_CODIGO='" + Busca_Gen("ANEXOPROV") + "' AND ANEX_CODIGO='" + Trim(Text111(3)) + "'", "ANEXO", VGDB, 1, "ANEX_DESCRIPCION", "ANEX_DESCRIPCION") + "',";
+            SQL = SQL + "'" + Text111(4) + "','" + Trim(Text111(5)) + Space(4 - Len(Trim(Text111(5)))) + "','" + Trim(Text111(6)) + "'," + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",";
+            SQL = SQL + "" + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + "," + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",'" + Text111(7) + "',";
+            SQL = SQL + "" + Text111(8) + "," + IIf(CBfrmMovBancoMes.Text2(10).Text == "ESP", CBfrmMovBancoMes.Text2(11).Text, CBfrmMovBancoMes.Text2(12).Text) + ",'" + Text111(10) + "',";
+            SQL = SQL + "'01','1'," + Text111(8) + ",'" + Ver_Data_Cam("CB_C_CODIG='" + Text111(1) + "' and CB_C_MODO='" + SINGSAL + "'", "CONCEPTO_CAJA_BANCO", VGDBC, 1, "CB_C_CUENT", "CB_C_CUENT") + "',";
+            SQL = SQL + "' ','','','','ESP'," + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",'" + Busca_Gen("ANEXOPROV") + "','" + Ver_Data_Cam("TIPOANEX_CODIGO='" + Busca_Gen("ANEXOPROV") + "' AND ANEX_CODIGO='" + Trim(Text111(3)) + "'", "ANEXO", VGDB, 1, "ANEX_RUC", "ANEX_RUC") + "',";
+            SQL = SQL + "0,'001','','N','" + Ver_Data_Cam("CB_C_CODIG='" + Text111(1) + "' and CB_C_MODO='" + SINGSAL + "'", "CONCEPTO_CAJA_BANCO INNER JOIN [" + VGEMP_CODIGO + "BDCTAPAG].dbo.GASTOS ON CB_C_CUENT=Gastos_CuentaCon", VGDBC, 1, "Gastos_Codigo", "Gastos_Codigo") + "',";
+            SQL = SQL + "" + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",0,0,0,'',0,0,0,0,0,";
+            SQL = SQL + "0," + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",'" + Format(VGFecTrb, "YYYYMM") + "',0,0,0,0,0,1)";
+            cConexCtaPag.Execute(SQL);
+        }
+
+        public void updateCartera(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string tipoCambio, string CB_C_BANCO, string tipoIS, string moneda)
+
+        {
+            string nroDocumento = obj.serieD + " " + obj.CB_C_DOCUMD;
+
+            decimal valorCambio = ternarioG(tipoCambio == "ESP", objC.CB_N_CAMES, objC.CB_N_TIPCA);
+            decimal monto = ternarioG(moneda == "MN", obj.CB_N_MTOMND, obj.CB_N_MTOMED);
+            nroDocumento = nroDocumento.Substring(0, 10);
+
+            if (tipoIS == "S")
+            {
+
+            }
+
+            string SQL = "UPDATE CARTERA SET CDOCODCLI='" + obj.CB_C_ANEXOD + "',";
+            SQL += "CDOTIPDOC='" + obj.CB_C_TPDOCD + "',";
+            SQL += "CDONRODOC='" + nroDocumento + " ',";
+            SQL += "CDOFECDOC=" + dateFormat(obj.CB_D_FECDC) + ",";
+            SQL += "CDOFECVEN=" + dateFormat(obj.CB_D_FECDC) + ",";
+            SQL += "CDOTIPMON='" + moneda + "',";
+            SQL += "CDOIMPORTE=" + - 1 * monto +",";
+            SQL += "CDOSALDO=" + -1 * monto + ",";
+            SQL += "COD_BANCO='" + CB_C_BANCO + "',DES_BANCO='" + codigoBanco + "'";
+            SQL += ",CDOSALINI=" + -1 * monto;
+            SQL += " WHERE CDONRODOC='" + nroDocumento + "' AND CDOTIPDOC='";
+            SQL += obj.CB_C_TPDOCD + "' AND CDOCODCLI='" + obj.CB_C_ANEXOD + "'";
+
+
+
+            try
+            {
+                comando = new SqlCommand(conexionComun(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+        }
+
+
+
 
         public void crearteDetail(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda, decimal valortipoCambio)
         {
@@ -1122,7 +1232,7 @@ namespace katal.conexion.model.dao
         {
             string mes = dateTime.Month.ToString("00.##");
             decimal monto = 0;
-            if (obj.monedaD == "MN")
+            if (moneda == "MN")
             {
                 monto = obj.CB_N_MTOMND;
             }
@@ -1130,6 +1240,19 @@ namespace katal.conexion.model.dao
             {
                 monto = obj.CB_N_MTOMED;
             }
+
+            if (moneda == "MN")
+            {
+                obj.CB_N_MTOMND = monto;
+                obj.CB_N_MTOMED = monto * valortipoCambio;
+
+            }
+            else
+            {
+                obj.CB_N_MTOMND = monto * valortipoCambio;
+                obj.CB_N_MTOMED = monto;
+            }
+            /*
             if (moneda == obj.monedaD)
             {
                 if (obj.monedaD == "MN")
@@ -1158,6 +1281,7 @@ namespace katal.conexion.model.dao
                     obj.CB_N_MTOMED = monto * valortipoCambio;
                 }
             }
+            */
             if (obj.serieD.Length < 4)
             {
 
@@ -1219,6 +1343,8 @@ namespace katal.conexion.model.dao
                 objConexion.cerrarConexion();
             }
         }
+
+
         #endregion
         public List<Cobranzas> AllConbranzas(DateTime dateTime)
         {

@@ -116,7 +116,7 @@ namespace katal.conexion.model.neg
         public decimal  createorUpdate(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
         {
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(obj.CB_C_SECUE, codigoBanco, dateTime);
-            if (objnuevo != null)
+            if (objnuevo.CB_C_SECUE != null)
             {
               return  Update(obj, codigoBanco, dateTime, cambioMoneda);
             }
@@ -131,7 +131,7 @@ namespace katal.conexion.model.neg
 
         public decimal create(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
         {
-            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECCA, obj.CB_D_FECCA, dateTime);
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECHA, obj.CB_D_FECHA, dateTime);
             obj.CB_N_TIPCA = valortipoCambio;
             decimal cambio = Math.Round(obj.CB_N_MTOMN * valortipoCambio, 2);
 
@@ -142,7 +142,7 @@ namespace katal.conexion.model.neg
         }
         public decimal Update(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
         {
-            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECCA, obj.CB_D_FECCA, dateTime);
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, obj.CB_C_CONVE, obj.CB_N_CAMES, obj.CB_D_FECHA, obj.CB_D_FECHA, dateTime);
             obj.CB_N_TIPCA = valortipoCambio;
             decimal cambio = Math.Round(obj.CB_N_MTOMN * valortipoCambio, 2);
 
@@ -155,9 +155,16 @@ namespace katal.conexion.model.neg
         {
 
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime); 
-            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECCA, objnuevo.CB_D_FECCA, dateTime);
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECHA, objnuevo.CB_D_FECHA, dateTime);
+            if (obj.serieD.Length < 4)
+            {
 
-                 
+                obj.serieD = cajaBancoDao.rellenar(obj.serieD, 4, obj.serieD.Length, " ", false);
+            }
+            string num_aux = obj.serieD + obj.CB_C_DOCUMD;
+           
+                // eliminar cartera //  tipodoc, numaux, cliente(anexo)
+           
             cajaBancoDao.crearteDetail(objnuevo,  obj,  codigoBanco,  dateTime,  moneda, valortipoCambio);
         }
         public void crearteDetailXplanilla(List<PlantillaDetalle> plantillaDetalles,string CB_C_SECUE, string codigoBanco, DateTime dateTime, string moneda, decimal valorTipocamvio , string REFER)
@@ -218,6 +225,18 @@ namespace katal.conexion.model.neg
 
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime);
             decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECCA, objnuevo.CB_D_FECCA, dateTime);
+
+            if (obj.serieD.Length < 4)
+            {
+
+                obj.serieD = cajaBancoDao.rellenar(obj.serieD, 4, obj.serieD.Length, " ", false);
+            }
+            string num_aux = obj.serieD + obj.CB_C_DOCUMD;
+            if (num_aux.Trim()=="")
+            {
+                // eliminar cartera // 
+            }
+
             cajaBancoDao.UpdateDetail (objnuevo, obj, codigoBanco, dateTime, moneda, valortipoCambio);
         }
 

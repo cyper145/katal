@@ -1722,7 +1722,7 @@ namespace katal.conexion.model.dao
                 {
                     plan = new TipoCambio();
                     plan.TIPOMON_CODIGO = read[0].ToString();
-                    plan.TIPOCAMB_FECHA = read[1].ToString();
+                    plan.TIPOCAMB_FECHA =Conversion.ParseDateTime(  read[1].ToString());
                     plan.TIPOCAMB_COMPRA = Conversion.ParseDecimal(read[2].ToString());
                     plan.TIPOCAMB_EQCOMPRA = Conversion.ParseDecimal(read[3].ToString());
                     plan.TIPOCAMB_VENTA = Conversion.ParseDecimal(read[4].ToString());
@@ -1915,7 +1915,7 @@ namespace katal.conexion.model.dao
         {
 
         }
-
+        /*
         public string funcAutoNum(string msAnoMesProc)
         {
             string cadena = "SELECT Concepto_Logico FROM CONCEPTOGRAL WHERE Concepto_Codigo='NUMEAUTO'";
@@ -1947,14 +1947,7 @@ namespace katal.conexion.model.dao
                     }
 
                     string next = nextDocumet.ToString("00000.##");
-                    /* if (codigo)
-                     {
-                         return next;
-                     }
-                     else
-                     {
-                         return "";
-                     }*/
+                  
                     return next;
                 }
 
@@ -1973,7 +1966,7 @@ namespace katal.conexion.model.dao
 
             return "";
         }
-
+       */
         public void delete(Comprobante obj)
         {
             throw new NotImplementedException();
