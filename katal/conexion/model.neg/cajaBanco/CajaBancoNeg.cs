@@ -151,20 +151,27 @@ namespace katal.conexion.model.neg
             cajaBancoDao.Update(obj, codigoBanco, dateTime);
             return valortipoCambio;
         }
-        public void crearteDetail(string CB_C_SECUE, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda,string cambioMoneda)
+        public void crearteDetail(string CB_C_SECUE, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda,string cambioMoneda, string CB_C_BANCO)
         {
 
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime); 
             decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECHA, objnuevo.CB_D_FECHA, dateTime);
-            if (obj.serieD.Length < 4)
+           
+            // eliminar cartera //  tipodoc, numaux, cliente(anexo)
+            if (obj.CB_C_MODO == "I")
             {
+                if (obj.serieD.Length < 4)
+                {
 
-                obj.serieD = cajaBancoDao.rellenar(obj.serieD, 4, obj.serieD.Length, " ", false);
+                    obj.serieD = cajaBancoDao.rellenar(obj.serieD, 4, obj.serieD.Length, " ", false);
+                }
+                string num_aux = obj.serieD + obj.CB_C_DOCUMD;             
+                cajaBancoDao.createCartera(obj, codigoBanco, dateTime, CB_C_BANCO, moneda, valortipoCambio);
             }
-            string num_aux = obj.serieD + obj.CB_C_DOCUMD;
-           
-                // eliminar cartera //  tipodoc, numaux, cliente(anexo)
-           
+            else
+            {
+                cajaBancoDao.AccionSalida(dateTime, obj, valortipoCambio, 1);
+            }
             cajaBancoDao.crearteDetail(objnuevo,  obj,  codigoBanco,  dateTime,  moneda, valortipoCambio);
         }
         public void crearteDetailXplanilla(List<PlantillaDetalle> plantillaDetalles,string CB_C_SECUE, string codigoBanco, DateTime dateTime, string moneda, decimal valorTipocamvio , string REFER)
@@ -208,7 +215,7 @@ namespace katal.conexion.model.neg
                         cuenta = parametrosCuentas.CTA_DOLA;
                     }
                 cajaBancoDao.crearteDetailxPlantilla(X, sec++, CB_C_SECUE, codigoBanco, dateTime, AnexoCliente, cartera.CDOFECDOC, REFER, cuenta, moneda, valorTipocamvio);
-                    cajaBancoDao.UpdatePlantconDet(X.DetKey.ToString()); ;
+                    cajaBancoDao.UpdatePlantconDet(X.DetKey.ToString(),1); ;
 
 
                 });
@@ -220,23 +227,33 @@ namespace katal.conexion.model.neg
             cajaBancoDao.UpdateMontosMbanco(dateTime, codigobanco, sec);
         }
 
-        public void updateDetail(string CB_C_SECUE, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda, string cambioMoneda)
+        public void updateDetail(string CB_C_SECUE, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string moneda, string cambioMoneda,string  CB_C_BANCO) 
         {
 
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime);
             decimal valortipoCambio = cajaBancoDao.tipoCambio(cambioMoneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECCA, objnuevo.CB_D_FECCA, dateTime);
 
-            if (obj.serieD.Length < 4)
+           
+            if (obj.CB_C_MODO == "I")
             {
+                if (obj.serieD.Length < 4)
+                {
 
-                obj.serieD = cajaBancoDao.rellenar(obj.serieD, 4, obj.serieD.Length, " ", false);
+                    obj.serieD = cajaBancoDao.rellenar(obj.serieD, 4, obj.serieD.Length, " ", false);
+                }
+                string num_aux = obj.serieD + obj.CB_C_DOCUMD;
+                if (num_aux.Trim() == "")
+                {
+                    cajaBancoDao.DeleteCartera(obj);
+                }
+
+                cajaBancoDao.updateCartera(obj, codigoBanco, CB_C_BANCO, moneda);
             }
-            string num_aux = obj.serieD + obj.CB_C_DOCUMD;
-            if (num_aux.Trim()=="")
+            else
             {
-                // eliminar cartera // 
+                cajaBancoDao.AccionSalida(dateTime, obj, valortipoCambio, 1);
             }
-
+           
             cajaBancoDao.UpdateDetail (objnuevo, obj, codigoBanco, dateTime, moneda, valortipoCambio);
         }
 
@@ -308,9 +325,112 @@ namespace katal.conexion.model.neg
             cajaBancoDao.deleteMovimientoBancoDetalle(codigobanco,dateTime, secuencia);
             cajaBancoDao.deleteMovimientoBanco(codigobanco,dateTime, secuencia);
         }
-        public void deleteDetailMovimientoBanco(string codigobanco, DateTime dateTime, string secuencia,string secuenciaD)
+        public void deleteDetailMovimientoBanco(  string codigobanco, DateTime dateTime, string secuencia,string secuenciaD, string moneda)
         {
+            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(secuencia, codigobanco, dateTime);
+            DMovimientoBanco dMovimiento = cajaBancoDao.findDetailMovimiento(secuencia, secuenciaD, codigobanco, moneda, dateTime);
+            // primero ver 
+            if (cajaBancoDao.ConceptosGenerales("OPLABCOCOB")== objnuevo.CB_C_OPERA)
+            {
+                if (dMovimiento.CODDETPLA + "" != "")
+                {
+                    cajaBancoDao.UpdatePlantconDet(dMovimiento.CODDETPLA, 0);
+                }
+                
+            }
+            if (cajaBancoDao.ConceptosGenerales("OPERPLACON") == objnuevo.CB_C_OPERA && objnuevo.CB_C_MODO=="I" )
+            {
 
+            }
+            bool SW = false;
+            if(objnuevo.CB_C_MODO == "S" && cajaBancoDao.ConceptosGenerales("OPLABCOPAG")+"" !="" )
+            {
+                SW = true;
+            }
+            if(objnuevo.CB_C_MODO == "S" && SW)
+            {
+                if (dMovimiento.CB_L_INT)
+                {
+                    CuentaxPagar cuentax = cajaBancoDao.findCuentaxPagar(Conversion.Parseint( dMovimiento.CODDETPLA));
+                    string programacion = cajaBancoDao.verdata("Concepto_Codigo='PROGRAMACION'", "ConceptoGral", 4, 0, "Concepto_Logico", dateTime);
+                    if (programacion == "S")
+                    {
+                        cajaBancoDao.updateProgramacion1(dMovimiento, cuentax);
+                        cajaBancoDao.updateProgramacion2(dMovimiento, cuentax);
+                        cajaBancoDao.updateProgramacion3(dMovimiento, cuentax);
+                        cajaBancoDao.updateProgramacionCAB(dMovimiento, cuentax);
+                        cajaBancoDao.updateCuentaxPagar(objnuevo.CB_C_SECUE, dMovimiento, cuentax, codigobanco,dateTime);
+
+                    }
+                    PagosDetalle pagosDetalle = cajaBancoDao.findPagoDetalle(dMovimiento);
+                    if (cajaBancoDao.isnull(pagosDetalle.CCODPROVE))
+                    {
+
+                        cajaBancoDao.updateProgramacionCabPago(dMovimiento, cuentax, pagosDetalle);
+                    }
+                    if (programacion == "S")
+                    {
+                        cajaBancoDao.updateComprobanteCabEstado5(dMovimiento, cuentax);
+                        cajaBancoDao.updateComprobanteCabEstado3(dMovimiento, cuentax);
+                        cajaBancoDao.updateComprobanteCabEstado1(dMovimiento, cuentax);
+
+                    }
+                    else
+                    {
+                        string restricones = cajaBancoDao.generarCondicion(dMovimiento);
+                        cajaBancoDao.updateComprobanteCabEstado5C(dMovimiento, cuentax, restricones);
+                        cajaBancoDao.updateComprobanteCabEstado3C(dMovimiento, cuentax, restricones);
+                        cajaBancoDao.updateComprobanteCabEstado1C(dMovimiento, cuentax, restricones);
+                        cajaBancoDao.updateComprobanteCabSaldo(dMovimiento, cuentax, restricones, moneda);
+                    }
+                    if (programacion == "S")
+                    {
+                        cajaBancoDao.updatePagosCab(dMovimiento, cuentax);
+
+                    }
+                    else
+                    {
+                        string tipomonm = cajaBancoDao.tipomon(dMovimiento);
+                        cajaBancoDao.updatePagosCabsinprogramacion(dMovimiento, tipomonm);
+                    }
+                    if (programacion == "S")
+                    {
+                        //eliminar 
+                        cajaBancoDao.DeletePROGCANCELXCYB(dMovimiento);
+                    }                  
+                    cajaBancoDao.DeletePAGOSDET(dMovimiento);
+                }
+            }
+
+            string tipodocu = cajaBancoDao.ConceptosGenerales("TIPDOCADE");
+            tipodocu = cajaBancoDao.ternarioG(tipodocu == "", "", tipodocu);
+            if (objnuevo.docu.Substring(0, 2) == tipodocu)
+            {
+                cajaBancoDao.updateCPADELANTADOOM(objnuevo, moneda, codigobanco, dateTime);
+            }
+            DMovimientoBanco movimientoBanco = cajaBancoDao.findDetailMovimientotipDoc(secuencia, secuenciaD, codigobanco, dateTime);
+            if (cajaBancoDao.VERIFICA_PLANILLA_COB(objnuevo.CB_C_TPDOC, objnuevo.serie+objnuevo.CB_C_DOCUM, objnuevo.CB_C_ANEXO, dateTime))
+            {
+               
+                if (!cajaBancoDao.isnull(movimientoBanco.CB_C_SECDE))
+                {
+                    if (movimientoBanco.CB_C_MODO == "I")
+                    {
+                        cajaBancoDao.DeleteCartera(movimientoBanco);
+                    }
+                }
+            }
+            
+            if (cajaBancoDao.ConceptosGenerales("CGPAGOACU").Trim()!="")
+            {
+                if (!cajaBancoDao.isnull(movimientoBanco.CB_C_SECDE))
+                {
+                    if (movimientoBanco.CB_C_MODO == "S")
+                    {
+                        cajaBancoDao.DeleteComprobante(movimientoBanco);
+                    }
+                }
+            }
             cajaBancoDao.deleteMovimientoBancoDetalleEspecifico(codigobanco, dateTime, secuencia, secuenciaD);
             
         }

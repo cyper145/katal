@@ -180,6 +180,13 @@ namespace katal.conexion.model.entity
         public int IS { get; set; }
         
         public  string TipoAnexo { get; set; }
+
+        public string CORDEN { get; set; }
+        public string CB_C_ANEXOO { get; set; }
+        public decimal monto { get; set; }
+
+
+
     }
 
     public class TemporalGC
@@ -305,5 +312,23 @@ namespace katal.conexion.model.entity
         public decimal SUMTOTALMN { get; set; }
         public decimal SUMTOTALME { get; set; }
     }
+
+
+    public class CuentaxPagar
+    {
+        public string CCODMONED { get; set; }
+        public string N_AUTONUM { get; set; }
+        public string C_CAMESPROC { get; set; }
+        public string C_CORDEN { get; set; }
+    }
+    public class PagosDetalle
+    {
+        public string CTIPPROV { get; set; }
+        public string CCODPROVE { get; set; }
+        public string TIPODOCU_CODIGO { get; set; }
+        public string CSERIE { get; set; }
+        public string CNUMERO { get; set; }      
+    }
+
 
 }

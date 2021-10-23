@@ -258,6 +258,10 @@ namespace katal.conexion.model.dao
             return cajaBanco;
         }
 
+
+
+
+
         public List<DMovimientoBanco> findDetailMovimientos(string secuencia, string banco, string moneda, DateTime dateTime, string tipo)
         {
 
@@ -370,6 +374,199 @@ namespace katal.conexion.model.dao
             }
             return DetailMovimientos;
         }
+
+
+        public DMovimientoBanco findDetailMovimiento(string secuencia, string secuenciaD, string banco, string moneda, DateTime dateTime)
+        {
+
+            DMovimientoBanco cajaBanco = new DMovimientoBanco();
+
+            int anios = dateTime.Year;
+            string mes = dateTime.Month.ToString("00.##");
+
+            string texto = ternario(moneda == "MN", "CB_N_MTOMN  as monto", "CB_N_MTOME  as monto");
+
+
+
+
+
+            string findAll = $"SELECT CB_C_SecDE  as secd,CB_C_Conce+' ',Cb_C_TpDoc+LEFT(CB_C_Docum,21),{texto},CB_A_Refer as refer,*  ";
+            findAll += $"from DMOV_BANCO    WHERE CB_C_Banco = '{banco}'";
+            findAll += $" AND  CB_C_Mes='{mes}' AND CB_C_Secue ='{secuencia}' and CB_C_SecDE='{secuenciaD}' ORDER BY CB_C_SECDE";
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(findAll, anios), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    
+                    cajaBanco.secd = read[0].ToString();
+                    cajaBanco.CB_C_Concep = read[1].ToString();
+                    cajaBanco.CB_C_docum = read[2].ToString();
+
+                    string documento = read[13].ToString();
+                    if (documento.Length > 4)
+                    {
+                        cajaBanco.serieD = documento.Substring(0, 4);
+                        cajaBanco.CB_C_DOCUMD = documento.Substring(4);
+
+                    }
+                    else
+                    {
+                        cajaBanco.serieD = "";
+                        cajaBanco.CB_C_DOCUMD = documento;
+                    }
+
+                    if (moneda == "MN")
+                    {
+                        cajaBanco.montomn = Conversion.ParseDecimal(read[3].ToString());
+                    }
+                    else
+                    {
+                        cajaBanco.montome = Conversion.ParseDecimal(read[3].ToString());
+                    }
+                    cajaBanco.CB_A_REFERD = read[4].ToString();
+
+                    cajaBanco.CB_C_BANCO = read[5].ToString();
+                    cajaBanco.CB_C_MES = read[6].ToString();
+                    cajaBanco.CB_C_SECUE = read[7].ToString();
+                    cajaBanco.CB_C_SECDE = read[8].ToString();
+                    cajaBanco.CB_C_MODO = read[9].ToString();
+                    cajaBanco.CB_C_CONCE = read[10].ToString();
+
+
+                    string CB_C_ANEXOD = read[11].ToString();
+
+                    cajaBanco.CB_C_ANEXOO = read[11].ToString();
+
+                    if (CB_C_ANEXOD.Trim() != "")
+                    {
+                        cajaBanco.TipoAnexo = CB_C_ANEXOD.Substring(0, 2);
+                        cajaBanco.CB_C_ANEXOD = CB_C_ANEXOD.Substring(2);
+                    }
+                    else
+                    {
+                        cajaBanco.TipoAnexo = "";
+                        cajaBanco.CB_C_ANEXOD = "";
+
+                    }
+
+                    cajaBanco.CB_C_TPDOCD = read[12].ToString();
+
+                    cajaBanco.CB_D_FECDC = Conversion.ParseDateTime(read[14].ToString());
+                    cajaBanco.CB_A_REFERD = read[15].ToString();
+                    cajaBanco.CB_C_CUENT = read[16].ToString();
+                    cajaBanco.CB_C_CENCO = read[17].ToString();
+                    cajaBanco.CB_C_DESTI = read[18].ToString();
+                    cajaBanco.CB_N_MTOMND = Conversion.ParseDecimal(read[19].ToString());
+                    cajaBanco.CB_N_MTOMED = Conversion.ParseDecimal(read[20].ToString());
+                    cajaBanco.CB_L_ANULA = Conversion.ParseBool(read[21].ToString());
+                    cajaBanco.CB_L_PROGR = Conversion.ParseBool(read[22].ToString());
+                    cajaBanco.CODDETPLA = read[23].ToString();
+                    cajaBanco.CB_L_INT = Conversion.ParseBool(read[24].ToString());
+                    cajaBanco.CB_ACUENTA = read[25].ToString();
+                    cajaBanco.monedaD = moneda;
+                  
+
+                    
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return cajaBanco;
+        }
+
+        public DMovimientoBanco findDetailMovimientotipDoc(string secuencia, string secuenciaD, string banco,   DateTime dateTime)
+        {
+
+            DMovimientoBanco cajaBanco = new DMovimientoBanco();
+
+            int anios = dateTime.Year; 
+            string mes = dateTime.Month.ToString("00.##");
+            string SQL = "SELECT *FROM DMOV_BANCO WHERE CB_C_BANCO = '" + banco + "' AND  CB_C_MES='" + mes + "' AND CB_C_SECUE ='" + secuencia + "' AND CB_C_SECDE='" + secuenciaD + "' AND CB_C_TPDOC='" + ConceptosGenerales("CGPAGOACU") + "'";         
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(SQL, anios), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+
+                    cajaBanco.CB_C_BANCO = read["CB_C_BANCO"].ToString();
+                    cajaBanco.CB_C_MES = read["CB_C_MES"].ToString();
+                    cajaBanco.CB_C_SECUE = read["CB_C_SECUE"].ToString();
+                    cajaBanco.CB_C_SECDE = read["CB_C_SECDE"].ToString();
+                    cajaBanco.CB_C_MODO = read["CB_C_MODO"].ToString();
+                    cajaBanco.CB_C_CONCE = read["CB_C_CONCE"].ToString();
+
+                    string CB_C_ANEXOD = read["CB_C_ANEXO"].ToString();
+
+                    cajaBanco.CB_C_ANEXOO = CB_C_ANEXOD;
+
+                    if (CB_C_ANEXOD.Trim() != "")
+                    {
+                        cajaBanco.TipoAnexo = CB_C_ANEXOD.Substring(0, 2);
+                        cajaBanco.CB_C_ANEXOD = CB_C_ANEXOD.Substring(2);
+                    }
+                    else
+                    {
+                        cajaBanco.TipoAnexo = "";
+                        cajaBanco.CB_C_ANEXOD = "";
+
+                    }
+                    cajaBanco.CB_C_TPDOCD = read["CB_C_TPDOC"].ToString();
+                    string documento = read["CB_C_DOCUM"].ToString();
+                    if (documento.Length > 4)
+                    {
+                        cajaBanco.serieD = documento.Substring(0, 4);
+                        cajaBanco.CB_C_DOCUMD = documento.Substring(4);
+
+                    }
+                    else
+                    {
+                        cajaBanco.serieD = "";
+                        cajaBanco.CB_C_DOCUMD = documento;
+                    }
+                    cajaBanco.CB_D_FECDC = Conversion.ParseDateTime(read["CB_D_FECDC"].ToString());
+                    cajaBanco.CB_A_REFERD = read["CB_A_REFER"].ToString();
+                    cajaBanco.CB_C_CUENT = read["CB_C_CUENT"].ToString();
+                    cajaBanco.CB_C_CENCO = read["CB_C_CENCO"].ToString();
+                    cajaBanco.CB_C_DESTI = read["CB_C_DESTI"].ToString();
+                    cajaBanco.CB_N_MTOMND = Conversion.ParseDecimal(read["CB_N_MTOMN"].ToString());
+                    cajaBanco.CB_N_MTOMED = Conversion.ParseDecimal(read["CB_N_MTOME"].ToString());
+                    cajaBanco.CB_L_ANULA = Conversion.ParseBool(read["CB_L_ANULA"].ToString());
+                    cajaBanco.CB_L_PROGR = Conversion.ParseBool(read["CB_L_PROGR"].ToString());
+                    cajaBanco.CODDETPLA = read["CODDETPLA"].ToString();
+                    cajaBanco.CB_L_INT = Conversion.ParseBool(read[24].ToString());
+                    cajaBanco.CB_ACUENTA = read["CB_ACUENTA"].ToString();
+                   
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return cajaBanco;
+        }
+
+                     
+
 
         public List<TipoOpcionCajaBanco> findAllTipoOpciones(string tipoIngresoSalida)
         {
@@ -1030,21 +1227,14 @@ namespace katal.conexion.model.dao
 
 
         }
-        public void createCartera(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string tipoCambio, string CB_C_BANCO, string tipoIS, string moneda)
+        public void createCartera(DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string CB_C_BANCO, string moneda, decimal valorCambio)
 
         {
             string nroDocumento = obj.serieD + " " + obj.CB_C_DOCUMD;
 
-            decimal valorCambio = ternarioG(tipoCambio == "ESP", objC.CB_N_CAMES, objC.CB_N_TIPCA);
+           
             decimal monto = ternarioG(moneda == "MN", obj.CB_N_MTOMND, obj.CB_N_MTOMED);
-            nroDocumento = nroDocumento.Substring(0, 10);
-
-            if (tipoIS == "S")
-            {
-
-            }
-
-
+            //nroDocumento = nroDocumento.Substring(0, 10);
             string SQL = "Insert Into Cartera (CDOCODCLI,CDOTIPDOC,CDONRODOC,CDOFECDOC,";
             SQL += "CDOFECVEN,CDOCODVEN,CDOIMPORTE,CDOSALDO,CDOTIPMON,";
             SQL += "CDOTIPCAM,CDODEBHAB,CDOESTADO,CDOFECCRE,CDOFECACT,CDOUSUARI,";
@@ -1056,6 +1246,123 @@ namespace katal.conexion.model.dao
 
             SQL += "" + dateFormat(dateTime) + ",'','" + obj.CB_C_TPDOCD + "'," + -1 * monto + ",";
             SQL += "'" + obj.CB_C_CUENT + "','','" + CB_C_BANCO + "','" + codigoBanco + "')";
+
+            try
+            {
+                comando = new SqlCommand(conexionComun(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception ex )
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+        }
+
+        public void createComprobante(DateTime dateTime, DMovimientoBanco obj, decimal tipoCambioValor)
+        {
+
+            int anio = dateTime.Year;
+            string mes = dateTime.Month.ToString("00.##");
+
+            decimal monto = ternarioG(obj.monedaD == "MN", obj.CB_N_MTOMND, obj.CB_N_MTOMED);
+            string CORDEN = funcAutoNum(anio + mes);
+            string Danexo = verdata("TIPOANEX_CODIGO='" + ConceptosGenerales("ANEXOPROV") + "' AND ANEX_CODIGO='" + obj.CB_C_ANEXOD + "'", "ANEXO",3,1,  "ANEX_DESCRIPCION", dateTime);
+            string Ranexo = verdata("TIPOANEX_CODIGO='" + ConceptosGenerales("ANEXOPROV") + "' AND ANEX_CODIGO='" + obj.CB_C_ANEXOD + "'", "ANEXO", 3, 1, "ANEX_RUC", dateTime);
+            string ccodConta = verdata("CB_C_CODIG='" + obj.CB_C_Concep + "' and CB_C_MODO='" + obj.IS + "'", "CONCEPTO_CAJA_BANCO", 7, 1, "CB_C_CUENT",  dateTime);
+            string CCONCEPT = verdata("CB_C_CODIG='" + obj.CB_C_Concep + "' and CB_C_MODO='" + obj.IS + "'", "CONCEPTO_CAJA_BANCO INNER JOIN [" + CodEmpresa + "BDCTAPAG].dbo.GASTOS ON CB_C_CUENT=Gastos_CuentaCon", 7, 1, "Gastos_Codigo",dateTime);
+
+
+            string  SQL = "Insert Into COMPROBANTECAB (";
+            SQL = SQL + "CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
+            SQL = SQL + "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, ";
+            SQL = SQL + "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, ";
+            SQL = SQL + "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, ";
+            SQL = SQL + "CTDREFER, CONVERSION_CODIGO, DREGISTRO, CTIPPROV, CNRORUC, ";
+            SQL = SQL + "ESTCOMPRA, CDESTCOMP, DIASPAGO, CIGVAPLIC, CCONCEPT, ";
+            SQL = SQL + "DFECREF, NTASAIGV, NIGV, NPORCE, CCODRUC, ";
+            SQL = SQL + "LHONOR, NIR4, NIES, NTOTRH, NBASEIMP, ";
+            SQL = SQL + "NVALCIF, DCONTAB, CAMESPROC, CSALDINI,LCANJEADO,LREGCO,CONTAB,LANULA,CINT_CAJ)";
+            SQL = SQL + " Values ";
+            SQL = SQL + "('" + CORDEN + "','" + obj.CB_C_ANEXOD + "','" + Danexo + "',";
+            SQL = SQL + "'" + obj.CB_C_TPDOCD + "','" + obj.serieD+ "','" + obj.CB_C_DOCUMD + "'," + dateFormat(obj.CB_D_FECDC) + ",";
+            SQL = SQL + "" + dateFormat(obj.CB_D_FECDC) + "," + dateFormat(obj.CB_D_FECDC) + ",'" + obj.monedaD + "',";
+            SQL = SQL + "" + monto + "," + tipoCambioValor + ",'" +obj.CB_A_REFERD + "',";
+            SQL = SQL + "'01','1'," + monto + ",'" + ccodConta + "',";
+            SQL = SQL + "' ','','','','ESP'," + dateFormat(obj.CB_D_FECDC) + ",'" + ConceptosGenerales("ANEXOPROV") + "','" + Ranexo + "',";
+            SQL = SQL + "0,'001','','N','" + CCONCEPT + "',";
+            SQL = SQL + "" + dateFormat(obj.CB_D_FECDC) + ",0,0,0,'',0,0,0,0,0,";
+            SQL = SQL + "0," + dateFormat(obj.CB_D_FECDC) + ",'" + anio+ mes + "',0,0,0,0,0,1)";
+
+            try
+            {
+                comando = new SqlCommand(conexionComun(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+
+
+        }
+
+
+        public void AccionSalida(DateTime dateTime, DMovimientoBanco obj, decimal tipoCambioValor, int tipo )
+        {
+
+            if (tipo == 0)
+            {
+              if(ConceptosGenerales("CGPAGOACU")== obj.CB_C_TPDOCD)
+                        {
+                            createComprobante(dateTime, obj, tipoCambioValor);
+                
+                        }
+
+            }
+            else
+            {
+                if (ConceptosGenerales("CGPAGOACU") == obj.CB_C_TPDOCD)
+                {
+
+                    string CNRODOC = obj.serieD + obj.CB_C_DOCUMD;
+
+                    string ver = verdata("ANEX_CODIGO='" + obj.CB_C_ANEXOD + "' And  TIPODOCU_CODIGO='" + obj.CB_C_TPDOCD + "' AND  CSERIE+CNUMERO='" + CNRODOC + "'", "COMPROBANTECAB", 2, 0, "", dateTime);
+
+                    if(ver == "S")
+                    {
+                        return;
+                    }
+                    DeleteComprobante(obj);
+
+                }
+            }
+          
+
+          
+
+
+
+        }
+        public void DeleteComprobante(DMovimientoBanco obj)
+
+        {
+            string CNRODOC = obj.serieD + obj.CB_C_DOCUMD;
+            string SQL = "DELETE FROM COMPROBANTECAB WHERE ANEX_CODIGO='" + obj.CB_C_ANEXOD + "' ";
+            SQL += "And  TIPODOCU_CODIGO='" + obj.CB_C_TPDOCD + "' AND  CSERIE+CNUMERO='" + CNRODOC + "'";
 
             try
             {
@@ -1075,53 +1382,39 @@ namespace katal.conexion.model.dao
 
         }
 
-        public void createComprobante(DateTime dateTime)
+        public void DeleteCartera(DMovimientoBanco obj)
+
         {
+            string CNRODOC = obj.serieD + obj.CB_C_DOCUMD;
+            string SQL = "DELETE FROM Cartera WHERE CDOTIPDOC ='" + obj.CB_C_TPDOCD + "' And  CDONRODOC='" + CNRODOC + "' And  CDOCODCLI='" + obj.CB_C_ANEXOD + "'";
+            try
+            {
+                comando = new SqlCommand(conexionComun(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
 
-            int anio = dateTime.Year;
-            string mes = dateTime.Month.ToString("00.##");
-
-            
-            string CORDEN = funcAutoNum(anio + mes);
-            string Danexo= verdata("TIPOANEX_CODIGO='" + BuscaGen("ANEXOPROV") + "' AND ANEX_CODIGO='" + Trim(Text111(3)) + "'")
-
-
-            SQL = "Insert Into COMPROBANTECAB (";
-            SQL = SQL + "CORDEN,ANEX_CODIGO,ANEX_DESCRIPCION,TIPODOCU_CODIGO,CSERIE, ";
-            SQL = SQL + "CNUMERO, DEMISION, DVENCE, DRECEPCIO, TIPOMON_CODIGO, ";
-            SQL = SQL + "NIMPORTE, TIPOCAMBIO_VALOR, CDESCRIPC, RESPONSABLE_CODIGO, CESTADO, ";
-            SQL = SQL + "NSALDO, CCODCONTA, CFORMPAGO, CSERREFER, CNUMREFER, ";
-            SQL = SQL + "CTDREFER, CONVERSION_CODIGO, DREGISTRO, CTIPPROV, CNRORUC, ";
-            SQL = SQL + "ESTCOMPRA, CDESTCOMP, DIASPAGO, CIGVAPLIC, CCONCEPT, ";
-            SQL = SQL + "DFECREF, NTASAIGV, NIGV, NPORCE, CCODRUC, ";
-            SQL = SQL + "LHONOR, NIR4, NIES, NTOTRH, NBASEIMP, ";
-            SQL = SQL + "NVALCIF, DCONTAB, CAMESPROC, CSALDINI,LCANJEADO,LREGCO,CONTAB,LANULA,CINT_CAJ)";
-            SQL = SQL + " Values ";
-            SQL = SQL + "('" + Ver_Data_Cam("CAMESPROC='" + Format(VGFecTrb, "YYYYMM") + "'", "COMPROBANTECAB", cConexCtaPag, 1, "MAXORDEN", "REPLICATE('0',5-LEN(MAX(CORDEN)+1))+CAST(MAX(CORDEN)+1 AS VARCHAR(30)) AS MAXORDEN") + "','" + Trim(Text111(3)) + "','" + Ver_Data_Cam("TIPOANEX_CODIGO='" + Busca_Gen("ANEXOPROV") + "' AND ANEX_CODIGO='" + Trim(Text111(3)) + "'", "ANEXO", VGDB, 1, "ANEX_DESCRIPCION", "ANEX_DESCRIPCION") + "',";
-            SQL = SQL + "'" + Text111(4) + "','" + Trim(Text111(5)) + Space(4 - Len(Trim(Text111(5)))) + "','" + Trim(Text111(6)) + "'," + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",";
-            SQL = SQL + "" + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + "," + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",'" + Text111(7) + "',";
-            SQL = SQL + "" + Text111(8) + "," + IIf(CBfrmMovBancoMes.Text2(10).Text == "ESP", CBfrmMovBancoMes.Text2(11).Text, CBfrmMovBancoMes.Text2(12).Text) + ",'" + Text111(10) + "',";
-            SQL = SQL + "'01','1'," + Text111(8) + ",'" + Ver_Data_Cam("CB_C_CODIG='" + Text111(1) + "' and CB_C_MODO='" + SINGSAL + "'", "CONCEPTO_CAJA_BANCO", VGDBC, 1, "CB_C_CUENT", "CB_C_CUENT") + "',";
-            SQL = SQL + "' ','','','','ESP'," + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",'" + Busca_Gen("ANEXOPROV") + "','" + Ver_Data_Cam("TIPOANEX_CODIGO='" + Busca_Gen("ANEXOPROV") + "' AND ANEX_CODIGO='" + Trim(Text111(3)) + "'", "ANEXO", VGDB, 1, "ANEX_RUC", "ANEX_RUC") + "',";
-            SQL = SQL + "0,'001','','N','" + Ver_Data_Cam("CB_C_CODIG='" + Text111(1) + "' and CB_C_MODO='" + SINGSAL + "'", "CONCEPTO_CAJA_BANCO INNER JOIN [" + VGEMP_CODIGO + "BDCTAPAG].dbo.GASTOS ON CB_C_CUENT=Gastos_CuentaCon", VGDBC, 1, "Gastos_Codigo", "Gastos_Codigo") + "',";
-            SQL = SQL + "" + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",0,0,0,'',0,0,0,0,0,";
-            SQL = SQL + "0," + IIf(MaskEdBox112(0) == "__/__/____", FechS(VGFecTrb, Sqlf), FechS(MaskEdBox112(0), Sqlf)) + ",'" + Format(VGFecTrb, "YYYYMM") + "',0,0,0,0,0,1)";
-            cConexCtaPag.Execute(SQL);
         }
 
-        public void updateCartera(CMovimientoBanco objC, DMovimientoBanco obj, string codigoBanco, DateTime dateTime, string tipoCambio, string CB_C_BANCO, string tipoIS, string moneda)
+       
+        public void updateCartera( DMovimientoBanco obj, string codigoBanco, string CB_C_BANCO,  string moneda)
 
         {
             string nroDocumento = obj.serieD + " " + obj.CB_C_DOCUMD;
 
-            decimal valorCambio = ternarioG(tipoCambio == "ESP", objC.CB_N_CAMES, objC.CB_N_TIPCA);
+         
             decimal monto = ternarioG(moneda == "MN", obj.CB_N_MTOMND, obj.CB_N_MTOMED);
-            nroDocumento = nroDocumento.Substring(0, 10);
-
-            if (tipoIS == "S")
-            {
-
-            }
+            
+           
 
             string SQL = "UPDATE CARTERA SET CDOCODCLI='" + obj.CB_C_ANEXOD + "',";
             SQL += "CDOTIPDOC='" + obj.CB_C_TPDOCD + "',";
@@ -1163,14 +1456,7 @@ namespace katal.conexion.model.dao
         {
             string mes = dateTime.Month.ToString("00.##");
             decimal monto = 0;
-            if (obj.monedaD=="MN")
-            {
-                monto = obj.CB_N_MTOMND;
-            }
-            else
-            {
-                monto = obj.CB_N_MTOMED;
-            }
+            monto = obj.monto;
             if (moneda==obj.monedaD)
             {
                 if (obj.monedaD=="MN")
@@ -1199,11 +1485,7 @@ namespace katal.conexion.model.dao
                     obj.CB_N_MTOMED = monto * valortipoCambio;
                 }
             }
-            if (obj.serieD.Length < 4)
-            {
-
-                obj.serieD = rellenar(obj.serieD, 4, obj.serieD.Length, " ", false);
-            }
+            
             string create = "INSERT INTO DMOV_BANCO  ([CB_C_BANCO],[CB_C_MES],[CB_C_SECDE],[CB_C_SECUE],[CB_C_MODO],[CB_C_CONCE],[CB_C_ANEXO]";
             create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_D_FECDC]  ,[CB_A_REFER] ,[CB_C_CUENT] ,[CB_C_DESTI],[CB_N_MTOMN]  ,[CB_N_MTOME],CB_C_CENCO  )";
             create += $" VALUES('{codigoBanco}', '{mes}','{obj.CB_C_SECDE}','{objC.CB_C_SECUE}','{obj.CB_C_MODO}'";
@@ -1232,15 +1514,8 @@ namespace katal.conexion.model.dao
         {
             string mes = dateTime.Month.ToString("00.##");
             decimal monto = 0;
-            if (moneda == "MN")
-            {
-                monto = obj.CB_N_MTOMND;
-            }
-            else
-            {
-                monto = obj.CB_N_MTOMED;
-            }
-
+            
+            monto = obj.monto; 
             if (moneda == "MN")
             {
                 obj.CB_N_MTOMND = monto;
@@ -1282,11 +1557,7 @@ namespace katal.conexion.model.dao
                 }
             }
             */
-            if (obj.serieD.Length < 4)
-            {
-
-                obj.serieD = rellenar(obj.serieD, 4, obj.serieD.Length, " ",false);
-            }
+           
             string create = "UPDATE  DMOV_BANCO SET";
             create += $"[CB_C_BANCO]= '{codigoBanco}',";
             create += $"[CB_C_MES]= '{mes}',";    
@@ -1382,10 +1653,6 @@ namespace katal.conexion.model.dao
             }
             return tipoMonedas;
         }
-
-
-      
-       
 
         public void delete(Area obj)
         {
@@ -1735,12 +2002,12 @@ namespace katal.conexion.model.dao
             }
         }
 
-        public void UpdatePlantconDet(string keyPlan)
+        public void UpdatePlantconDet(string keyPlan , int estado)
         {
            
 
             string create = "UPDATE  Plan_Cob_Det  ";
-            create += $"SET [F_CJABCO]= 1 ";
+            create += $"SET [F_CJABCO]= {estado} ";
          
             create += $"where   [CODDETPLA]= {keyPlan}  ";
             try
@@ -1818,6 +2085,617 @@ namespace katal.conexion.model.dao
             return parametros;
         }
         #endregion
+
+        #region eliminar detalle dmov
+
+        // rst_MixCtaPag.Open "SELECT D.CCODMONED, C.*  FROM PROGRXCOMPCAB C INNER JOIN PROGRAMACIONDET D " & _
+        //  "ON (C.N_AUTONUM = D.AUTONUM) WHERE D.AUTONUM = " & rst_Det!CODDETPLA, cConexCtaPag, adOpenForwardOnly, adLockReadOnly
+        public CuentaxPagar findCuentaxPagar(int CODDETPLA)
+        {
+
+            CuentaxPagar cuentax = new CuentaxPagar();
+            string findAll = $"SELECT D.CCODMONED, C.*  FROM PROGRXCOMPCAB C INNER JOIN PROGRAMACIONDET D ";
+            findAll += "ON (C.N_AUTONUM = D.AUTONUM) WHERE D.AUTONUM = "+CODDETPLA +"";
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(findAll), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+
+                    cuentax.CCODMONED = read[0].ToString();
+                    cuentax.N_AUTONUM = read[1].ToString();
+                    cuentax.C_CAMESPROC = read["C_CAMESPROC"].ToString();
+                    cuentax.C_CORDEN = read["C_CORDEN"].ToString();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return cuentax;
+        }
+
+
+        public void updateProgramacion1(DMovimientoBanco obj, CuentaxPagar CUENTA)
+        {
+
+           
+            
+
+            string data = ternario(CUENTA.CCODMONED == "MN", "NPAGAR_MN = NPAGAR_MN+" + Math.Abs (obj.CB_N_MTOMND), "NPAGAR_US = NPAGAR_US+" + Math.Abs(obj.CB_N_MTOMED));
+            string UDPATE= "UPDATE PROGRAMACIONDET SET " + data + " WHERE AUTONUM = " + CUENTA.N_AUTONUM + "";
+
+
+
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void updateProgramacion2(DMovimientoBanco obj, CuentaxPagar CUENTA)
+        {
+            string UDPATE = "UPDATE PROGRAMACIONDET SET CESTADO = '1' WHERE AUTONUM = " +CUENTA.N_AUTONUM + "";
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void updateProgramacion3(DMovimientoBanco obj, CuentaxPagar CUENTA)
+        {
+            string data = ternario(CUENTA.CCODMONED == "MN", "NSALDO_MN = NSALDO_MN+" + Math.Abs(obj.CB_N_MTOMND), "NSALDO_US = NSALDO_US+" + Math.Abs(obj.CB_N_MTOMED));
+
+
+            string UDPATE = "UPDATE PROGRAMACIONDET SET " + data + " WHERE AUTONUM = " + CUENTA.N_AUTONUM + "";
+
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        public void updateProgramacionCAB(DMovimientoBanco obj, CuentaxPagar CUENTA)
+        {
+
+            string data = ternario(CUENTA.CCODMONED == "MN", "NSALDO_MN = NSALDO_MN+" + Math.Abs(obj.CB_N_MTOMND), "NSALDO_US = NSALDO_US+" + Math.Abs(obj.CB_N_MTOMED));
+            string UDPATE = "UPDATE PROGRAMACIONCAB SET " + data + " WHERE DFECHPROG = " + dateFormat( obj.CB_D_FECDC) + "";
+
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        public void updateCuentaxPagar(string secuencia,  DMovimientoBanco obj, CuentaxPagar CUENTA, string banco, DateTime dateTime)
+        {
+
+            string mes = dateTime.Month.ToString("00.##");
+
+
+            string UDPATE = "UPDATE CTACTEPROG SET CANCELADO = '1' ,banco = '',mes = '',comprobante =''  WHERE banco='" + banco+ "' AND mes='" + mes + "'AND comprobante='" + secuencia + "'";
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+        public PagosDetalle findPagoDetalle(DMovimientoBanco obj)
+        {
+
+            string  ANEXO= ternario(obj.CB_C_ANEXOO=="" || obj.CB_C_ANEXOO ==null , "", obj.CB_C_ANEXOO);
+            string CB_C_TPDOC = ternario(obj.CB_C_TPDOCD == "" || obj.CB_C_TPDOCD == null , "", obj.CB_C_TPDOCD);
+
+
+            string SQL = "select * from PAGOSDET where CTIPPROV+CCODPROVE='" + ANEXO + "' and ";
+            SQL += "TipoDocu_Codigo='" + CB_C_TPDOC + "' and ";
+            SQL += "CSERIE='" + obj.serieD + "' and ";
+            SQL += "CNUMERO='" + obj.CB_C_DOCUMD + "'";
+
+
+            PagosDetalle cuentax = new PagosDetalle();
+            
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+
+                    cuentax.CCODPROVE = read["CCODPROVE"].ToString();
+                    cuentax.CTIPPROV = read["CTIPPROV"].ToString();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return cuentax;
+        }
+
+
+
+        public void updateProgramacionCabPago(DMovimientoBanco obj, CuentaxPagar CUENTA, PagosDetalle pagos)
+        {
+            decimal data = ternarioG(CUENTA.CCODMONED == "MN",   Math.Abs(obj.CB_N_MTOMND),  Math.Abs(obj.CB_N_MTOMED));
+            decimal TIPODOCU_CODIGO = ternarioG(isnull(pagos.TIPODOCU_CODIGO),  "", pagos.TIPODOCU_CODIGO);
+            decimal CSERIE = ternarioG(isnull(pagos.TIPODOCU_CODIGO),  "", pagos.TIPODOCU_CODIGO);
+            decimal CNUMERO = ternarioG(isnull(pagos.TIPODOCU_CODIGO),  "", pagos.TIPODOCU_CODIGO);
+         
+
+
+            string UDPATE = $"UPDATE COMPROBANTECAB SET NSALDO = NSALDO + {data} ";
+            UDPATE += ", NMONTPROG=NMONTPROG - " + data + " WHERE CTIPPROV+ANEX_cODIGO = '" + pagos.CTIPPROV + pagos.CCODPROVE + "' AND TIPODOCU_CODIGO = '" + TIPODOCU_CODIGO + "' and CSERIE='" + CSERIE + "' and CNUMERO='" + CNUMERO + "'";
+;
+
+            try
+            {
+                comando = new SqlCommand(conexionComun(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void updateComprobanteCabEstado5(DMovimientoBanco obj, CuentaxPagar CUENTA)
+        {
+            string UDPATE = "UPDATE COMPROBANTECAB SET CESTADO = '5' WHERE CAMESPROC = '" + CUENTA.C_CAMESPROC + "' AND CORDEN = '" + CUENTA.C_CORDEN + "' AND CESTADO='6'";
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        public void updateComprobanteCabEstado3(DMovimientoBanco obj, CuentaxPagar CUENTA)
+        {
+
+            string UDPATE = "UPDATE COMPROBANTECAB SET CESTADO = '3' WHERE CAMESPROC = '";
+            UDPATE += CUENTA.C_CAMESPROC + "' AND CORDEN = '" + CUENTA.C_CORDEN + "'";
+            UDPATE += " AND (NOT COMPCON IS NULL OR LTRIM(RTRIM(COMPCON)) <> '') and CESTADO = '4' ";
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void updateComprobanteCabEstado1(DMovimientoBanco obj, CuentaxPagar CUENTA)
+        {
+
+            string UDPATE = "UPDATE COMPROBANTECAB SET CESTADO = '1' WHERE CAMESPROC = '";
+            UDPATE += CUENTA.C_CAMESPROC + "' AND CORDEN = '" + CUENTA.C_CORDEN + "'";
+            UDPATE += " AND (COMPCON IS NULL OR LTRIM(RTRIM(COMPCON)) = '') and CESTADO = '4'";
+                                    
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+
+        public string generarCondicion(DMovimientoBanco obj)
+        {
+            string restriciones = "";
+            restriciones = " CTIPPROV='" + obj.TipoAnexo + "' AND ANEX_cODIGO='" + obj.CB_C_ANEXOD + "' AND ";
+            restriciones += "TIPODOCU_CODIGO='" + obj.CB_C_TPDOCD + "' AND CSERIE='" + obj.serieD + "' AND ";
+            restriciones += "CNUMERO='" + obj.CB_C_DOCUMD + "' ";
+            return restriciones;
+
+        }
+        public void updateComprobanteCabEstado5C(DMovimientoBanco obj, CuentaxPagar CUENTA ,string condicion)
+        {
+
+            string UDPATE = "UPDATE COMPROBANTECAB SET CESTADO = '5' WHERE " +condicion + " AND CESTADO='6'";
+
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void updateComprobanteCabEstado3C(DMovimientoBanco obj, CuentaxPagar CUENTA, string condicion)
+        {
+
+            string UDPATE = "UPDATE COMPROBANTECAB SET CESTADO = '3' WHERE " + condicion + " AND (NOT COMPCON IS NULL OR LTRIM(RTRIM(COMPCON)) <> '') and CESTADO = '4' ";
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        public void updateComprobanteCabEstado1C(DMovimientoBanco obj, CuentaxPagar CUENTA, string condicion)
+        {
+
+            string UDPATE = "UPDATE COMPROBANTECAB SET CESTADO = '1' WHERE " + condicion + "  AND (COMPCON IS NULL OR LTRIM(RTRIM(COMPCON)) = '') and CESTADO = '4'";
+             try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+        public void updateComprobanteCabSaldo(DMovimientoBanco obj, CuentaxPagar CUENTA, string condicion, string  moneda)
+        {
+
+            decimal data = ternarioG(moneda == "MN",  Math.Abs(obj.CB_N_MTOMND),  Math.Abs(obj.CB_N_MTOMED));
+
+
+            string UDPATE = "UPDATE COMPROBANTECAB SET NSALDO = NSALDO + " + data ;
+            UDPATE += " WHERE " + condicion + "  ";
+
+
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+        public void updatePagosCab(DMovimientoBanco obj, CuentaxPagar CUENTA)
+        {
+
+            decimal data = ternarioG(CUENTA.CCODMONED == "MN", Math.Abs(obj.CB_N_MTOMND), Math.Abs(obj.CB_N_MTOMED));
+            string UDPATE = "UPDATE PAGOSCAB SET PAGOS_TOTAL = PAGOS_TOTAL - " + data;
+            UDPATE += " WHERE PAGOS_FECHA='" + dateFormat(obj.CB_D_FECDC) + "'";
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+        public string tipomon(DMovimientoBanco obj)
+        {
+            string tipomon = ""; 
+
+            string xCad = " CTIPPROV='" + obj.TipoAnexo + "' AND ANEX_cODIGO='" + obj.CB_C_ANEXOD + "' AND ";
+            xCad += "TIPODOCU_CODIGO='" + obj.CB_C_TPDOCD+ "' AND CSERIE='" +obj.serieD + "' AND ";
+            xCad += "CNUMERO='" + obj.CB_C_DOCUMD + "' ";
+
+            string SQL = "SELECT TIPOMON_CODIGO FROM COMPROBANTECAB WHERE " +xCad;
+            PagosDetalle cuentax = new PagosDetalle();
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    tipomon = read[0].ToString();                   
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+            return tipomon;
+
+        }
+
+
+        public void updatePagosCabsinprogramacion(DMovimientoBanco obj, string moneda)
+        {
+
+            decimal data = ternarioG(moneda == "MN", Math.Abs(obj.CB_N_MTOMND), Math.Abs(obj.CB_N_MTOMED));
+            string UDPATE = "UPDATE PAGOSCAB SET PAGOS_TOTAL=PAGOS_TOTAL - " + data;
+            UDPATE += " WHERE PAGOS_FECHA=" +dateFormat(obj.CB_D_FECDC) ;
+            try
+            {
+                comando = new SqlCommand(conexionCtaPag(UDPATE), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void DeletePROGCANCELXCYB(DMovimientoBanco obj)
+        {
+            string CNRODOC = obj.serieD + obj.CB_C_DOCUMD;
+            string SQL = "DELETE FROM PROGCANCELXCYB  WHERE C_IDPROG = '" + obj.CODDETPLA +"'" ;
+          
+
+            try
+            {
+                comando = new SqlCommand(conexionComun(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+        }
+        public void DeletePAGOSDET(DMovimientoBanco obj)
+        {
+       
+            string SQL = "DELETE FROM PAGOSDET  WHERE AUTONUM = '" + obj.CODDETPLA + "'";
+            try
+            {
+                comando = new SqlCommand(conexionComun(SQL), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+        }
+        public void updateCPADELANTADOOM(CMovimientoBanco obj, string moneda, string codigoBanco, DateTime dateTime)
+        {
+            string mes = dateTime.Month.ToString("00.##");
+            string SQL = "UPDATE D SET CB_ACUENTA=0 FROM CMOV_BANCO C INNER JOIN  DMOV_BANCO D ";
+            SQL += "ON C.CB_C_BANCO=D.CB_C_BANCO AND C.CB_C_MES=D.CB_C_MES AND C.CB_C_SECUE=D.CB_C_SECUE ";
+            SQL += "WHERE C.CB_C_BANCO='" + moneda + "' AND C.CB_C_MES='" + mes + "' ";
+            SQL += "AND D.CB_C_TPDOC='" + obj.CB_C_TPDOC + "' AND D.CB_C_DOCUM='" + (obj.serie+ obj.CB_C_DOCUM).Trim() + "' AND C.CB_C_ANEXO='" + obj.TipoAnexoD + obj.CB_C_ANEXO + "'";
+
+
+
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(SQL, dateTime.Year ), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+
+        public bool VERIFICA_PLANILLA_COB(string tipodoc, string numero, string CCLI , DateTime dateTime)
+        {
+
+            bool verificar = false;
+            string SQL = "SELECT * FROM CARTERA WHERE CDOTIPDOC ='" + tipodoc + "' And  ";
+            SQL +=  "CDONRODOC='" + numero + "' And  CDOCODCLI='" + CCLI + "'";         
+            try
+            {
+                comando = new SqlCommand(conexionBDCBT(SQL, dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {                   
+                    if( read["CDOIMPORTE"].ToString() != read["CDOSALDO"].ToString()){
+                        verificar = true;
+                    }  
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+
+
+            return verificar;
+        }
+        public void updatcontabilidad(DMovimientoBanco obj, string moneda, string codigoBanco, DateTime dateTime)
+        {
+            string mes = dateTime.Month.ToString("00.##");
+            string SQL = "update CUENTA_CORRIENTE_ANEXO set CTACORANEX_CANCE = 1 where TIPCOD_ANEXO = '"+ obj.CB_C_ANEXOO;
+            SQL += "' AND PLANCTA_CODIGO = '" + obj.CB_C_CUENT + "' and ctacoranex_docum='" + obj.CB_C_TPDOCD + obj.serieD + obj.CB_C_DOCUMD + "'";
+            try
+            {
+                comando = new SqlCommand(conexionBDCONT(SQL,dateTime.Year), objConexion.getCon());
+                objConexion.getCon().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getCon().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+      
+        #endregion eliminar detalle dmov
+
+        //
+        //
+        //
+        //
 
     }
 }

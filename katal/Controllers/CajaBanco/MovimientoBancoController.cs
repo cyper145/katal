@@ -363,18 +363,19 @@ namespace katal.Controllers
             product.CB_C_MODO = SINGSAL;
             string moneda = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoMoneda$State"]);
             product.CORDEN = comprobanteNeg.funcAutoNum();
-            product.monedaD = moneda;
+            // product.monedaD = moneda;
+            product.monedaD = GridViewHelper.monedabanco;
 
             var s = dataForm["gridLookupTipoAnexoD$State"];
             decimal monto = 0;
             if (moneda == "MN")
             {
-                monto = product.CB_N_MTOMND;
+                product.monto = product.CB_N_MTOMND;
 
             }
             else
             {
-                monto= product.CB_N_MTOMED;
+                product.monto = product.CB_N_MTOMED;
 
             }
 
@@ -395,7 +396,7 @@ namespace katal.Controllers
             // GridViewHelper.movimientoBancosdetalles.Add(product); 
 
             cajaBancoNeg.crearteDetail( GridViewHelper.secuenciacab, product,
-                GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco, GridViewHelper.tipoCambioBanco);
+                GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco, GridViewHelper.tipoCambioBanco, GridViewHelper.CB_C_BANCO);
         }
 
         [ValidateInput(false)]
@@ -449,17 +450,17 @@ namespace katal.Controllers
             product.CB_C_MODO = SINGSAL;
             string moneda = GridViewHelper.ValidarRecuperar(dataForm["gridLookupTipoMoneda$State"]);
 
-            product.monedaD = moneda;
+            //product.monedaD = moneda;
+            product.monedaD = GridViewHelper.monedabanco;
             decimal monto = 0;
             if (GridViewHelper.monedabanco == "MN")
             {
-                monto = product.CB_N_MTOMND;
+                product.monto = product.CB_N_MTOMND;
 
             }
             else
             {
-                monto = product.CB_N_MTOMED;
-
+                product.monto = product.CB_N_MTOMED;
             }
 
 
@@ -481,7 +482,7 @@ namespace katal.Controllers
         {
 
             cajaBancoNeg.updateDetail(GridViewHelper.secuenciacab, product,
-               GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco, GridViewHelper.tipoCambioBanco);
+               GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco, GridViewHelper.tipoCambioBanco, GridViewHelper.CB_C_BANCO);
             // crear la logica para agregar un producto
         }
         [ValidateInput(false)]

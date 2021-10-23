@@ -91,6 +91,15 @@ namespace katal.conexion.model.dao
                 return data2;
             }
         }
+        public bool isnull(string dato)
+        {
+            bool nulo = true;
+            if (dato!="" && dato != null)
+            {
+                nulo = false;
+            }
+            return nulo;
+        }
         public dynamic ternarioG(bool verificacion, dynamic data1, dynamic data2)
         {
             if (verificacion)
