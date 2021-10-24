@@ -400,6 +400,7 @@
                         gridLookupMoneda.SetEnabled(false);
                         CB_D_FECHA.SetEnabled(false);
                         CB_D_FECCOB.SetEnabled(false);
+
                       //  CB_N_MTOMN.SetEnabled(false);
                         CB_A_REFER.SetEnabled(false);
                         gridLookupEstados.SetEnabled(false);
@@ -461,6 +462,7 @@
 
             let objeto = {
                 "CB_C_SECUE": CB_C_SECUE.GetText(),
+                "CB_N_CAMES": CB_N_CAMES.GetText(),
                 "CB_C_MODO": CB_C_MODO.GetValue(),
                 "CB_C_OPERA": gridLookupOpciones.GetValue() ? gridLookupOpciones.GetValue()[0] : null,
                 "CB_D_FECHA": CB_D_FECHA.GetValue(),
@@ -548,6 +550,7 @@
             FormPlanillaCobranzaDetalle.Hide();
             FormPlanillaCobranza.Hide();
             grid.CancelEdit();
+            grid.Refresh();
         }
         function GuardarTotal(s, e) {
             $.getJSON('/MovimientoBanco/GuardarTotal', function (resp) {

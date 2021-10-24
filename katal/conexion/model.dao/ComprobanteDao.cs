@@ -2594,7 +2594,7 @@ namespace katal.conexion.model.dao
         }
 
         // VER LA FORMA COMO USAR DE FORMA GENERAL
-        public string ConceptosGenerales(string concepto)
+        public string ConceptosGenerales2(string concepto)
         {
 
             bool hayRegistros = false;

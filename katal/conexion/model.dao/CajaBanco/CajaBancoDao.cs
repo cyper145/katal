@@ -259,9 +259,6 @@ namespace katal.conexion.model.dao
         }
 
 
-
-
-
         public List<DMovimientoBanco> findDetailMovimientos(string secuencia, string banco, string moneda, DateTime dateTime, string tipo)
         {
 
@@ -1980,11 +1977,11 @@ namespace katal.conexion.model.dao
             string secd = sec.ToString("0000.##");
             string ValCpto = "999";
             string create = "INSERT INTO DMOV_BANCO  ([CB_C_BANCO],[CB_C_MES],[CB_C_SECDE],[CB_C_SECUE],[CB_C_MODO],[CB_C_CONCE],[CB_C_ANEXO]";
-            create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_D_FECDC]  ,[CB_A_REFER] ,[CB_C_CUENT] ,[CB_N_MTOMN]  ,[CB_N_MTOME]  )";
+            create += ",[CB_C_TPDOC] ,[CB_C_DOCUM] ,[CB_D_FECDC]  ,[CB_A_REFER] ,[CB_C_CUENT] ,[CB_N_MTOMN]  ,[CB_N_MTOME], CODDETPLA, CB_L_INT )";
             create += $" VALUES('{codigoBanco}', '{mes}','{secd}','{seccab}','I'";
             create += $",'{ValCpto}','{anexocliente}{objC.Cliente}','{objC.TpoDoc}','{objC.Documento}'";
             create += $",{dateFormat(CDOFECDOC)},'{refer}','{cuenta}'";
-            create += $",{monmn},{monme})";
+            create += $",{monmn},{monme},{objC.DetKey}, '1' )";
             try
             {
                 comando = new SqlCommand(conexionBDCBT(create, dateTime.Year), objConexion.getCon());
@@ -2643,7 +2640,7 @@ namespace katal.conexion.model.dao
             SQL +=  "CDONRODOC='" + numero + "' And  CDOCODCLI='" + CCLI + "'";         
             try
             {
-                comando = new SqlCommand(conexionBDCBT(SQL, dateTime.Year), objConexion.getCon());
+                comando = new SqlCommand(conexionComun(SQL), objConexion.getCon());
                 objConexion.getCon().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 if (read.Read())

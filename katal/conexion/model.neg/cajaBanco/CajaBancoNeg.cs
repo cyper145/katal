@@ -174,11 +174,13 @@ namespace katal.conexion.model.neg
             }
             cajaBancoDao.crearteDetail(objnuevo,  obj,  codigoBanco,  dateTime,  moneda, valortipoCambio);
         }
-        public void crearteDetailXplanilla(List<PlantillaDetalle> plantillaDetalles,string CB_C_SECUE, string codigoBanco, DateTime dateTime, string moneda, decimal valorTipocamvio , string REFER)
+        public void crearteDetailXplanilla(List<PlantillaDetalle> plantillaDetalles,string CB_C_SECUE, string codigoBanco, DateTime dateTime, string moneda, string REFER)
         {
 
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime);
-            int sec = 1;
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(moneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECHA, objnuevo.CB_D_FECHA, dateTime);
+
+            int sec = Genera_Secuencia_detalle(codigoBanco, dateTime, CB_C_SECUE); 
 
             string doc = "";
             string Clien = "";
@@ -214,7 +216,7 @@ namespace katal.conexion.model.neg
                     {
                         cuenta = parametrosCuentas.CTA_DOLA;
                     }
-                cajaBancoDao.crearteDetailxPlantilla(X, sec++, CB_C_SECUE, codigoBanco, dateTime, AnexoCliente, cartera.CDOFECDOC, REFER, cuenta, moneda, valorTipocamvio);
+                cajaBancoDao.crearteDetailxPlantilla(X, sec++, CB_C_SECUE, codigoBanco, dateTime, AnexoCliente, cartera.CDOFECDOC, REFER, cuenta, tipoMonC, valortipoCambio);
                     cajaBancoDao.UpdatePlantconDet(X.DetKey.ToString(),1); ;
 
 
@@ -404,7 +406,7 @@ namespace katal.conexion.model.neg
 
             string tipodocu = cajaBancoDao.ConceptosGenerales("TIPDOCADE");
             tipodocu = cajaBancoDao.ternarioG(tipodocu == "", "", tipodocu);
-            if (objnuevo.docu.Substring(0, 2) == tipodocu)
+            if (objnuevo.CB_C_TPDOC == tipodocu)
             {
                 cajaBancoDao.updateCPADELANTADOOM(objnuevo, moneda, codigobanco, dateTime);
             }
@@ -431,6 +433,7 @@ namespace katal.conexion.model.neg
                     }
                 }
             }
+
             cajaBancoDao.deleteMovimientoBancoDetalleEspecifico(codigobanco, dateTime, secuencia, secuenciaD);
             
         }

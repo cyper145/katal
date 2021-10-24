@@ -244,9 +244,9 @@ namespace katal.Controllers
                 List<string> listcod=   codigo.Split(',').ToList();
                List<PlantillaDetalle> plantillaDetalles=    GridViewHelper.plantillaDetalles.Where(X => listcod.Contains(X.DetKey.ToString())).ToList();
 
-               cajaBancoNeg.crearteDetailXplanilla(plantillaDetalles, GridViewHelper.secuenciacab, GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco,GridViewHelper.valorTipoCambio, GridViewHelper.REFER );
+               cajaBancoNeg.crearteDetailXplanilla(plantillaDetalles, GridViewHelper.secuenciacab, GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco, GridViewHelper.REFER );
                 return null;
-            }
+            } 
 
 
              return DataRequisicionPartial();
@@ -495,7 +495,7 @@ namespace katal.Controllers
         }
         public void Delete(string secuencia)
         {
-            cajaBancoNeg.deleteDetailMovimientoBanco(GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.secuenciacab, secuencia);
+            cajaBancoNeg.deleteDetailMovimientoBanco(GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.secuenciacab, secuencia, GridViewHelper.monedabanco);
            
         }
 
