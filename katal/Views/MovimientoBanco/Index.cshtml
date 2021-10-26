@@ -111,6 +111,7 @@
         }
 
         function initSecuencia(s, e) {
+            console.log("da");
             if (CB_C_SECUE.GetText() != "") {
                 return;
             }
@@ -129,7 +130,13 @@
 
             $.getJSON('/MovimientoBanco/initSecuenciaDetalle?secuencia=' + CB_C_SECUE.GetText(), function (resp) {
                 $.each(resp, function (k, v) {
-                    CB_C_SECDE.SetText(v);
+                    CB_C_SECDE.SetText(v.CB_C_SECDE);
+                    gridLookupTipoAnexoD.SetValue(v.TipoAnexo);
+                    gridLookupAnexoD.GetGridView().Refresh();
+                    gridLookupAnexoD.SetValue(v.CB_C_ANEXOD);
+                    serieD.SetText(v.serieD);
+                    CB_C_DOCUMD.SetText(v.CB_C_DOCUMD);
+                    CB_A_REFERD.SetText(v.CB_A_REFERD);
                     CB_C_SECDE.Focus()
                     
                 });
@@ -365,6 +372,35 @@
                 btnUpdateDetalle.Focus();
             }
         }
+
+        ///
+        
+        function KeyDownAnexCuenta(s, e) {
+            let keyCode = e.htmlEvent.keyCode
+            if (keyCode == 13) {
+                gvCuentaxPagar.Refresh();
+            }
+        }
+
+        function initanexoCuenta() {
+
+            
+
+            $.getJSON('/MovimientoBanco/obtenerAnexo', function (resp) {
+                $.each(resp, function (k, v) {
+
+                    console.log(v);
+                    let arrayDeCadenas = v.split(',');
+                                
+                    gridLookupTipoAnexoCuenta.SetValue(arrayDeCadenas[0]);
+                    gridLookupAnexoCuenta.SetValue(arrayDeCadenas[1]);
+                   
+
+                });
+            });
+        }
+        
+
         function initgridDetalle() {
             
             $.getJSON('/MovimientoBanco/initgridDetalle', function (resp) {
@@ -466,6 +502,7 @@
                 "CB_C_MODO": CB_C_MODO.GetValue(),
                 "CB_C_OPERA": gridLookupOpciones.GetValue() ? gridLookupOpciones.GetValue()[0] : null,
                 "CB_D_FECHA": CB_D_FECHA.GetValue(),
+                "serie": serie.GetValue(),
                 "CB_C_DOCUM": CB_C_DOCUM.GetValue(),
                 "CB_C_TPDOC": gridLookupTipoDoc.GetValue() ? gridLookupTipoDoc.GetValue()[0] : null,
                 "CB_C_ANEXO": gridLookupAnexo.GetValue() ? gridLookupAnexo.GetValue()[0] : null,
@@ -489,19 +526,25 @@
                     $.getJSON('/MovimientoBanco/combrobarPlanilla?codigoOperacion=' + valor, function (resp) {
                         $.each(resp, function (k, v) {
 
-                            console.log(v);
-                            console.log("ratas")
                             if (v.frmLisPlaniCobranza) {
+                                grid.CancelEdit();
                                 FormPlanillaCobranza.Show();
                             }
                             if (v.frmselecfacont) {
+                                grid.CancelEdit();
                                 FormFaCont.Show();
                             }
                             if (v.frmCtasxPagarPrueba1) {
+                                grid.CancelEdit();
                                 FormCtasxPagar1.Show();
                             }
                             if (v.frmCtasxPagarPrueba2) {
-                                FormCtasxPagar2.Show();
+                                grid.CancelEdit();
+                                gvCuentaxPagar.Refresh();
+                                FormCtasxPagar2.Show();                             
+                                gridLookupTipoAnexoCuenta.GetGridView().Refresh();
+                            
+                                grid.CancelEdit();
                             }
                         });
                     }); 
@@ -565,7 +608,22 @@
             OnGridChangeOperacion(s, e);
         }
         
+        function SelectedRecordsMovimientoBancocuentas() {
+            console.log("percy33");
 
+            gvCuentaxPagar.GetSelectedFieldValues("Sec", getSelectedFieldValuesCallbackMovimientoBancocuentas);
+
+        }
+        function getSelectedFieldValuesCallbackMovimientoBancocuentas(values) {
+            let selectedIds = values.join(',');
+            console.log(selectedIds);
+            gvPlanillaDetalle.PerformCallback({ customAction: 'CargarDMovCuentas', codigo: selectedIds });
+            FormPlanillaCobranzaDetalle.Hide();
+            FormPlanillaCobranza.Hide();
+            FormCtasxPagar2.Hide();
+            grid.CancelEdit();
+            grid.Refresh();
+        }
     </script>
 }
 @section PageToolbar {

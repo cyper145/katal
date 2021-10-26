@@ -10,8 +10,10 @@
         updateToolbarButtonsState();
     }
     function onGridViewSelectionChangedCmov(s, e) {
-        console.log("hay mi pendejo");
-
+        
+        console.log(e);
+        if( e.isSelected)
+            gvCuentaxPagar.StartEditRow(gvCuentaxPagar.GetFocusedRowIndex());
     }
     function adjustGridView() {
         gridView.AdjustControl();

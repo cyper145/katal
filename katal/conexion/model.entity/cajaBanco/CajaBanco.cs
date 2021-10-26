@@ -330,5 +330,13 @@ namespace katal.conexion.model.entity
         public string CNUMERO { get; set; }      
     }
 
+    public class InitDataCMovimiento
+    {
+        public string CTIPPROV { get; set; }
+        public string CCODPROVE { get; set; }
+        public string TIPODOCU_CODIGO { get; set; }
+        public string CSERIE { get; set; }
+        public string CNUMERO { get; set; }
+    }
 
 }

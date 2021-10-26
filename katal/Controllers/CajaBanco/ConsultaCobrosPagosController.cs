@@ -571,7 +571,7 @@ namespace katal.Controllers
             string secuencia = cajaBancoNeg.Genera_Secuencia(GridViewHelper.codigobanco, GridViewHelper.dateTime);
             return Json(new { respuesta = secuencia }, JsonRequestBehavior.AllowGet);
         }
-
+      
 
 
         #endregion

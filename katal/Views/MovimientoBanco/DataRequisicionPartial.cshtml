@@ -46,6 +46,9 @@
     {
         column.FieldName = "MONTO";
         column.Caption = "Monto MN";
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        var comboBoxProperties = column.PropertiesEdit as TextBoxProperties;
+        comboBoxProperties.DisplayFormatString = "F2";
     });
     settings.Columns.Add(column =>
     {
@@ -271,11 +274,11 @@
             {
                 i.FieldName = "labelmoneto";
                 i.ColumnSpan = 6;
-               
+
                 i.ShowCaption = DefaultBoolean.False;
                 i.NestedExtension().Label(t =>
                 {
-                   
+
                 });
             });
             groupItem.Items.Add(i =>

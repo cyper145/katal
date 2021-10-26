@@ -1328,7 +1328,6 @@ C:\Users\cyper\Desktop\proyectokatal\katal\katal\bin\de\DevExpress.Spreadsheet.v
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\bin\es\DevExpress.Spreadsheet.v20.1.Core.resources.dll
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\bin\ja\DevExpress.Spreadsheet.v20.1.Core.resources.dll
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\bin\ru\DevExpress.Spreadsheet.v20.1.Core.resources.dll
-C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.csproj.AssemblyReference.cache
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.Properties.Resources.resources
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.Reports.MOVIMIENTO.resources
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.Reports.movimientosCaja.resources
@@ -1345,3 +1344,4 @@ C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.csproj.CoreComp
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.csproj.CopyComplete
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.dll
 C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.pdb
+C:\Users\cyper\Desktop\proyectokatal\katal\katal\obj\Debug\katal.csproj.AssemblyReference.cache

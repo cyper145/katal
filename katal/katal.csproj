@@ -436,6 +436,10 @@
     <Content Include="Views\MovimientoBanco\PlaniCobranza.cshtml" />
     <Content Include="Views\MovimientoBanco\PlaniCobranzaDetalle.cshtml" />
     <Content Include="Views\MovimientoBanco\FormPlaniDetalleGridView.cshtml" />
+    <Content Include="Views\MovimientoBanco\PlaniCuenta.cshtml" />
+    <Content Include="Views\MovimientoBanco\FormPlaniCuentaGridView.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectTipoAnexoCuenta.cshtml" />
+    <Content Include="Views\MovimientoBanco\MultiSelectAnexoCuenta.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

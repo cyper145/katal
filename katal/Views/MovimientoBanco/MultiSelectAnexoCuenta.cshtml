@@ -1,0 +1,45 @@
+﻿
+
+
+
+@Html.DevExpress().GridLookup(settings =>
+{
+    //settings.Properties.Caption = "Area:";
+
+    settings.Name = "gridLookupAnexoCuenta";
+    settings.GridViewProperties.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "MultiSelectAnexoCuenta", ANEX_CODIGO = Model.ANEX_CODIGO };
+
+    settings.KeyFieldName = "ANEX_CODIGO";
+
+    //settings.CommandColumn.Visible = true;
+    // settings.CommandColumn.ShowSelectCheckbox = true;
+
+    settings.Columns.Add("ANEX_CODIGO").Width = Unit.Percentage(10);
+    settings.Columns.Add("ANEX_DESCRIPCION").Width = Unit.Percentage(80);
+    //settings.Columns.Add("ANEX_RUC").Width = Unit.Percentage(10);
+
+    settings.Width = Unit.Percentage(100);
+
+    settings.Properties.SelectionMode = DevExpress.Web.GridLookupSelectionMode.Single;
+    settings.Properties.TextFormatString = "{0}-{1}";
+    settings.Properties.ClientSideEvents.KeyDown = "KeyDownAnexCuenta";
+    settings.Properties.ClientSideEvents.Init = "initanexoCuenta";
+   
+
+    settings.GridViewProperties.Settings.ShowFilterRow = true;
+    settings.GridViewProperties.Settings.ShowColumnHeaders = false;
+    settings.GridViewProperties.SettingsBehavior.EnableRowHotTrack = true;
+    //settings.GridViewProperties.Settings.ShowStatusBar = GridViewStatusBarMode.Visible;
+    settings.GridViewProperties.SettingsPager.EnableAdaptivity = true;
+    settings.GridViewProperties.SettingsPager.PageSize = 7;
+
+    //settings.GridViewClientSideEvents.RowClick = "OnGridRowResponsableClick";
+
+    settings.DataBound = (sender, e) =>
+    {
+        var gridLookup = (MVCxGridLookup)sender;
+        gridLookup.GridView.Width = Unit.Percentage(100);
+    };
+}).BindList(ViewData["AnexoCuenta"]).Bind(Model.ANEX_CODIGO).GetHtml()
+
+

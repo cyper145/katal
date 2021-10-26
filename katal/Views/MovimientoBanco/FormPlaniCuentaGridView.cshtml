@@ -1,0 +1,242 @@
+﻿
+
+@{
+    var gridView = Html.DevExpress().GridView(gridViewSettings =>
+    {
+
+
+
+        gridViewSettings.Name = "gvCuentaxPagar";
+
+        gridViewSettings.CallbackRouteValues = new { Controller = "MovimientoBanco", Action = "FormPlaniCuentaGridView" };
+        gridViewSettings.CustomActionRouteValues = new { Controller = "MovimientoBanco", Action = "GridViewCustomActionPartial" };
+        gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "MovimientoBanco", Action = "RequisicionAddNewPartial" };
+        gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MovimientoBanco", Action = "FormPlaniCuentaGridViewEdit" };
+
+        gridViewSettings.KeyFieldName = "Sec";
+        gridViewSettings.EnablePagingGestures = AutoBoolean.False;
+
+        gridViewSettings.ControlStyle.CssClass = "grid-view";
+        gridViewSettings.Width = Unit.Percentage(100);
+
+        gridViewSettings.Styles.Cell.Wrap = DefaultBoolean.False;
+        gridViewSettings.Styles.PagerBottomPanel.CssClass = "pager";
+        gridViewSettings.Styles.FocusedRow.CssClass = "focused";
+
+        gridViewSettings.SettingsBehavior.AllowFocusedRow = true;
+        gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+        gridViewSettings.SettingsBehavior.AllowEllipsisInText = true;
+        gridViewSettings.SettingsBehavior.AllowDragDrop = false;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        gridViewSettings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        gridViewSettings.SettingsEditing.EditFormColumnCount = 2;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        gridViewSettings.Settings.VerticalScrollBarMode = ScrollBarMode.Hidden;
+        gridViewSettings.Settings.HorizontalScrollBarMode = ScrollBarMode.Auto;
+        gridViewSettings.Settings.ShowHeaderFilterButton = true;
+
+        gridViewSettings.SettingsPager.PageSize = 5;
+        gridViewSettings.SettingsPager.EnableAdaptivity = true;
+
+        gridViewSettings.SettingsPager.PageSizeItemSettings.Visible = true;
+
+        gridViewSettings.SettingsExport.EnableClientSideExportAPI = true;
+        gridViewSettings.SettingsExport.ExportSelectedRowsOnly = true;
+
+        gridViewSettings.EditFormLayoutProperties.Items.AddCommandItem(itemSettings =>
+        {
+            itemSettings.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+        });
+
+        gridViewSettings.CommandColumn.Visible = true;
+        gridViewSettings.CommandColumn.ShowSelectCheckbox = true;
+        gridViewSettings.CommandColumn.SelectAllCheckboxMode = GridViewSelectAllCheckBoxMode.AllPages;
+        gridViewSettings.CommandColumn.VisibleIndex = 0;
+        gridViewSettings.CommandColumn.Width = Unit.Pixel(52);
+
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "Sec";
+
+
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "tipoanexo";
+            column.Caption = "Tipo Anexo";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "anexo";
+            column.Caption = "Anexo";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+            column.Width = Unit.Pixel(120);
+
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "tpo";
+            column.Caption = "TpoDoc.";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "ser";
+            column.Caption = "ser";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+            column.Width = Unit.Pixel(120);
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "nroDocumento";
+            column.Caption = "Nro. Documento";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "mon";
+            column.Caption = "mon";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+        });
+
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "Importe";
+            column.Caption = "Importe";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = column.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
+
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "MontoPagar";
+            column.Caption = "MontoPagar";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = column.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
+
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "cuentacontable";
+            column.Caption = "Cta. Contable";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "identificador";
+            column.Caption = "Id";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "fechaDoc";
+            column.Caption = "Fecha Doc";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "fechaVec";
+            column.Caption = "Fecha Vec.";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        });
+        gridViewSettings.Columns.Add(column =>
+        {
+            column.FieldName = "orden";
+            column.Caption = "orden";
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+        });
+
+        gridViewSettings.SetEditFormTemplateContent(c =>
+        {
+            Html.DevExpress().FormLayout(layoutSetting =>
+            {
+                layoutSetting.Name = "FormLayoutSettingcuenta";
+                layoutSetting.Width = Unit.Percentage(100);
+                layoutSetting.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+                layoutSetting.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 700;
+                layoutSetting.UseDefaultPaddings = false;
+                var groupItem = layoutSetting.Items.AddGroupItem(groupSettings =>
+                {
+                    groupSettings.Caption = "Ingresa el monto";
+                    //  groupSettings.ShowCaption = DefaultBoolean.False;
+                    groupSettings.GroupBoxDecoration = GroupBoxDecoration.Default;
+                    groupSettings.ColumnCount = 12;
+                });
+
+
+
+                groupItem.Items.Add(i =>
+                {
+                    i.FieldName = "MontoPagar";
+
+                    i.Caption = "Monto pagar";
+
+
+                    i.ColumnSpan = 12;
+                    i.NestedExtension().TextBox(t =>
+                    {
+
+                        
+                    });
+                });
+
+
+                layoutSetting.Items.Add(itemSettings =>
+                {
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                }).SetNestedContent(() =>
+                {
+                    ViewContext.Writer.Write("<div style='float:right'>");
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnUpdatecuentaDv";
+                            btnSettings.Text = "Grabar";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gvCuentaxPagar.UpdateEdit(); }";// algo mas ara pero ahorita no
+
+                        }).Render();
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnCancelcuentaDv";
+                            btnSettings.Text = "Cancel";
+                            btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px"; ;
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ gvCuentaxPagar.CancelEdit(); }";
+
+                        }).Render();
+                    ViewContext.Writer.Write("</div>");
+                });
+            }).Bind(ViewData["Object"] ?? c.DataItem).Render();
+
+        });
+
+
+        // gridViewSettings.ClientSideEvents.Init = "initDetalle";
+        //gridViewSettings.ClientSideEvents.Init = "onGridViewInit";
+        gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChangedCmov";
+        //  gridView.StartEditRow(gridView.GetFocusedRowIndex());
+        // gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
+
+
+        gridViewSettings.CellEditorInitialize = (s, e) =>
+        {
+            ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
+        };
+    });
+    if (ViewBag.GeneralError != null)
+    {
+        gridView.SetEditErrorText(ViewBag.GeneralError);
+    }
+}
+
+@gridView.Bind(Model).GetHtml()
+
+

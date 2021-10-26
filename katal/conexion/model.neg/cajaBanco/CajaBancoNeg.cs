@@ -87,6 +87,10 @@ namespace katal.conexion.model.neg
             return cajaBancoDao.Genera_Secuencia_detalle(codigoBanco, fechaoperacion, secuenciaCab);
         }
 
+        protected int Genera_Secuencia_detalleNroI(string codigoBanco, DateTime fechaoperacion, string secuenciaCab)
+        {
+            return cajaBancoDao.Genera_Secuencia_detalleNro(codigoBanco, fechaoperacion, secuenciaCab, "I");
+        }
         public List<TemporalGC> allTemporal()
         {
             return cajaBancoDao.allTemporal();
@@ -116,6 +120,17 @@ namespace katal.conexion.model.neg
         public decimal  createorUpdate(CMovimientoBanco obj, string codigoBanco, DateTime dateTime, string cambioMoneda)
         {
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(obj.CB_C_SECUE, codigoBanco, dateTime);
+
+            if (obj.serie == null)
+            {
+                obj.serie = "";
+            }
+            if (obj.serie.Length < 4)
+            {
+
+                obj.serie = cajaBancoDao.rellenar(obj.serie, 4, obj.serie.Length, " ", false);
+            }
+
             if (objnuevo.CB_C_SECUE != null)
             {
               return  Update(obj, codigoBanco, dateTime, cambioMoneda);
@@ -180,7 +195,7 @@ namespace katal.conexion.model.neg
             CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime);
             decimal valortipoCambio = cajaBancoDao.tipoCambio(moneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECHA, objnuevo.CB_D_FECHA, dateTime);
 
-            int sec = Genera_Secuencia_detalle(codigoBanco, dateTime, CB_C_SECUE); 
+            int sec = cajaBancoDao.Genera_Secuencia_detalleNro(codigoBanco, dateTime, CB_C_SECUE, "I"); 
 
             string doc = "";
             string Clien = "";
@@ -224,6 +239,64 @@ namespace katal.conexion.model.neg
             
 
         }
+
+        public void crearteDetailXplanillaCuenta(List<PlantillacuentaxPagar> plantillaDetalles, string CB_C_SECUE, string codigoBanco, DateTime dateTime, string moneda, string REFER, DateTime datecuenta,string CB_C_BANCO, string CB_C_NUMCT )
+        {
+
+            CMovimientoBanco objnuevo = cajaBancoDao.findMovimiento(CB_C_SECUE, codigoBanco, dateTime);
+            decimal valortipoCambio = cajaBancoDao.tipoCambio(moneda, objnuevo.CB_C_CONVE, objnuevo.CB_N_CAMES, objnuevo.CB_D_FECHA, objnuevo.CB_D_FECHA, dateTime);
+
+            int sec = cajaBancoDao.Genera_Secuencia_detalleNro(codigoBanco, dateTime, CB_C_SECUE,"S");
+            string CB_C_CODIG = cajaBancoDao.findConceptoCajaBancoCodigo("999");
+            string doc = "";
+            string Clien = "";
+            string NUMDOC = "";
+            string AnexoCliente = cajaBancoDao.ConceptosGenerales("ANEXOCLIE"); ;
+           
+            plantillaDetalles.ForEach(plantilla => {
+
+                comprobanteCabCuentas cuentaCompro=cajaBancoDao.findConceptoCajaBancoCodigo(plantilla);
+
+                if(!cajaBancoDao.isnull(cuentaCompro.CORDEN))
+                {
+                    cajaBancoDao.updateComprobanteCabCuenta(plantilla, cuentaCompro);
+                }
+                int vl_td = 0;
+                if (cajaBancoDao.verdata("TIPDOC_CODIGO='" + plantilla.tpo + "'", "TIPOS_DE_DOCUMENTOS", 3, 0, "", dateTime) == "S")
+                {
+                    string data = cajaBancoDao.verdata("TIPDOC_CODIGO='" + plantilla.tpo + "'", "TIPOS_DE_DOCUMENTOS", 3, 1, "TIPDOC_RESTA", dateTime);
+                    vl_td = cajaBancoDao.ternarioG(Boolean.Parse(data) == false, 0, 1);
+                }
+                string codcont = cajaBancoDao.findConceptoCajaBancoCuenta(plantilla, cuentaCompro);
+                string centrocostos = "";
+                if (!cajaBancoDao.isnull(codcont))
+                {
+                    centrocostos = cajaBancoDao.findConceptoCajaBancoCentro(cuentaCompro, codcont);
+                }
+
+                cajaBancoDao.crearteDetailCuenta(plantilla, cuentaCompro, codcont, centrocostos, codigoBanco, dateTime, CB_C_SECUE, sec++, vl_td, valortipoCambio, REFER);
+
+                if(cajaBancoDao.VerificarPagosDetalle(datecuenta)){
+                    cajaBancoDao.UpdatePagoCb(plantilla, datecuenta);
+                }
+                else
+                {
+                    cajaBancoDao.crearPagoCb(plantilla, datecuenta);
+
+                }
+
+                cajaBancoDao.crearPagoDetalle(plantilla, objnuevo, datecuenta, moneda, valortipoCambio,dateTime, CB_C_BANCO, CB_C_NUMCT);
+
+
+
+
+            });
+
+
+        }
+
+
+
         public void UpdateMontosMbanco(DateTime dateTime, string codigobanco, string sec)
         {
             cajaBancoDao.UpdateMontosMbanco(dateTime, codigobanco, sec);
@@ -321,6 +394,12 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.AllConbranzas(dateTime);
         }
+
+        public CMovimientoBanco findMovimiento(string secuencia, string codigobanco, DateTime dateTime)
+        {
+           return cajaBancoDao.findMovimiento(secuencia, codigobanco, dateTime);
+        }
+       
         public void deleteMovimientoBanco(string codigobanco, DateTime dateTime, string secuencia)
         {
 
@@ -354,40 +433,53 @@ namespace katal.conexion.model.neg
                 if (dMovimiento.CB_L_INT)
                 {
                     CuentaxPagar cuentax = cajaBancoDao.findCuentaxPagar(Conversion.Parseint( dMovimiento.CODDETPLA));
-                    string programacion = cajaBancoDao.verdata("Concepto_Codigo='PROGRAMACION'", "ConceptoGral", 4, 0, "Concepto_Logico", dateTime);
-                    if (programacion == "S")
+                    bool programacion = bool.Parse( cajaBancoDao.verdata("Concepto_Codigo='PROGRAMACION'", "ConceptoGral", 4, 1, "Concepto_Logico", dateTime));
+
+
+                    if (programacion )
                     {
-                        cajaBancoDao.updateProgramacion1(dMovimiento, cuentax);
-                        cajaBancoDao.updateProgramacion2(dMovimiento, cuentax);
-                        cajaBancoDao.updateProgramacion3(dMovimiento, cuentax);
-                        cajaBancoDao.updateProgramacionCAB(dMovimiento, cuentax);
-                        cajaBancoDao.updateCuentaxPagar(objnuevo.CB_C_SECUE, dMovimiento, cuentax, codigobanco,dateTime);
+                        if(!cajaBancoDao.isnull(cuentax.N_AUTONUM))
+                        {
+                            cajaBancoDao.updateProgramacion1(dMovimiento, cuentax);
+                            cajaBancoDao.updateProgramacion2(dMovimiento, cuentax);
+                            cajaBancoDao.updateProgramacion3(dMovimiento, cuentax);
+                            cajaBancoDao.updateProgramacionCAB(dMovimiento, cuentax);
+                            cajaBancoDao.updateCuentaxPagar(objnuevo.CB_C_SECUE, dMovimiento, cuentax, codigobanco,dateTime);
+                        }
+                        
 
                     }
                     PagosDetalle pagosDetalle = cajaBancoDao.findPagoDetalle(dMovimiento);
-                    if (cajaBancoDao.isnull(pagosDetalle.CCODPROVE))
+                    if (!cajaBancoDao.isnull(pagosDetalle.CCODPROVE))
                     {
 
                         cajaBancoDao.updateProgramacionCabPago(dMovimiento, cuentax, pagosDetalle);
                     }
-                    if (programacion == "S")
+                    if (programacion )
                     {
-                        cajaBancoDao.updateComprobanteCabEstado5(dMovimiento, cuentax);
-                        cajaBancoDao.updateComprobanteCabEstado3(dMovimiento, cuentax);
-                        cajaBancoDao.updateComprobanteCabEstado1(dMovimiento, cuentax);
-
+                        if (!cajaBancoDao.isnull(cuentax.N_AUTONUM))
+                        {
+                            cajaBancoDao.updateComprobanteCabEstado5(dMovimiento, cuentax);
+                            cajaBancoDao.updateComprobanteCabEstado3(dMovimiento, cuentax);
+                            cajaBancoDao.updateComprobanteCabEstado1(dMovimiento, cuentax);
+                        }
                     }
                     else
                     {
-                        string restricones = cajaBancoDao.generarCondicion(dMovimiento);
-                        cajaBancoDao.updateComprobanteCabEstado5C(dMovimiento, cuentax, restricones);
-                        cajaBancoDao.updateComprobanteCabEstado3C(dMovimiento, cuentax, restricones);
-                        cajaBancoDao.updateComprobanteCabEstado1C(dMovimiento, cuentax, restricones);
-                        cajaBancoDao.updateComprobanteCabSaldo(dMovimiento, cuentax, restricones, moneda);
+                       
+                            string restricones = cajaBancoDao.generarCondicion(dMovimiento);
+                            cajaBancoDao.updateComprobanteCabEstado5C(dMovimiento, restricones);
+                            cajaBancoDao.updateComprobanteCabEstado3C(dMovimiento, restricones);
+                            cajaBancoDao.updateComprobanteCabEstado1C(dMovimiento, restricones);
+                            cajaBancoDao.updateComprobanteCabSaldo(dMovimiento, restricones, moneda);
+                       
                     }
-                    if (programacion == "S")
+                    if (programacion )
                     {
-                        cajaBancoDao.updatePagosCab(dMovimiento, cuentax);
+                        if (!cajaBancoDao.isnull(cuentax.N_AUTONUM))
+                        {
+                            cajaBancoDao.updatePagosCab(dMovimiento, cuentax);
+                        }
 
                     }
                     else
@@ -395,7 +487,7 @@ namespace katal.conexion.model.neg
                         string tipomonm = cajaBancoDao.tipomon(dMovimiento);
                         cajaBancoDao.updatePagosCabsinprogramacion(dMovimiento, tipomonm);
                     }
-                    if (programacion == "S")
+                    if (programacion )
                     {
                         //eliminar 
                         cajaBancoDao.DeletePROGCANCELXCYB(dMovimiento);
@@ -442,5 +534,11 @@ namespace katal.conexion.model.neg
         {
             return cajaBancoDao.AllPlanillasDetalle(nroPlantilla);
         }
+        public List<PlantillacuentaxPagar> AllPlanillasCuentasxpagar(string tipoAnexo, string anexo, DateTime dateTime)
+        {
+            return cajaBancoDao.AllPlanillasCuentasxpagar(tipoAnexo, anexo, dateTime);
+        
+        }
+
     }
 }

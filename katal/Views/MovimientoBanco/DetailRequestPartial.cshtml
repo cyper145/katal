@@ -107,7 +107,9 @@
             column.Caption = "Monto";
             column.Width = Unit.Percentage(10);
 
-
+            column.ColumnType = MVCxGridViewColumnType.TextBox;
+            var comboBoxProperties = column.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
         });
     }
     else
@@ -118,7 +120,8 @@
             column.Caption = "Monto";
             column.Width = Unit.Percentage(10);
             column.ColumnType = MVCxGridViewColumnType.TextBox;
-
+            var comboBoxProperties = column.PropertiesEdit as TextBoxProperties;
+            comboBoxProperties.DisplayFormatString = "F2";
 
         });
     }
@@ -231,7 +234,7 @@
                 {
                     t.Properties.ClientSideEvents.KeyDown = "KeyDownSerieD";
                     t.Properties.MaxLength = 4;
-                  
+
                 });
             });
             groupItem.Items.Add(i =>

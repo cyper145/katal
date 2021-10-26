@@ -66,4 +66,44 @@ namespace katal.conexion.model.entity
         public decimal Importe { get; set; }
         public int DetKey { get; set; }
     }
+
+    public class comprobanteCabCuentas
+    {
+        public string SERIEA { get; set; }
+        public string NUMEROA { get; set; }
+        public string TIPOPROVA { get; set; }
+        public string ANEX_DESCRIPCION { get; set; }
+        public string CCODPROVE { get; set; }
+        public string CCODDOCUM { get; set; }
+        public string CCODMONED { get; set; }
+        public decimal NPAGAR_MN { get; set; }
+        public decimal NPAGAR_US { get; set; }
+        public string CCODCONTA { get; set; }
+        public DateTime DEMISION { get; set; }
+        public DateTime DVENCE { get; set; }
+        public string CORDEN { get; set; }
+        public string AUTONUM { get; set; }
+        public string DESCRIPCION { get; set; }
+
+
+    }
+
+    public class PlantillacuentaxPagar
+    {
+        public string Sec { get; set; }
+        public string tipoanexo { get; set; }
+        public string anexo { get; set; }
+        public string tpo { get; set; }
+        public string ser { get; set; }
+        public string nroDocumento { get; set; }
+        public string mon { get; set; }
+        public decimal Importe { get; set; }
+        public decimal MontoPagar { get; set; }
+        public string cuentacontable { get; set; }
+        public string identificador { get; set; }
+        public DateTime fechaDoc { get; set; }
+        public DateTime fechaVec { get; set; }
+        public string orden { get; set; }
+    }
+
 }

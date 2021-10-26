@@ -57,6 +57,7 @@ namespace katal.Model
         public static string codigobanco = "";
         public static string codigoContabilidad = "";
         public static string CB_C_BANCO = "";
+        public static string CB_C_NUMCT = "";
         public static string secuenciacab = "";
         public static string monedabanco = "";
         public static string tipoCambioBanco = "";
@@ -70,11 +71,16 @@ namespace katal.Model
         
         public static string TipoAnexoBanco = "";
         public static string TipoAnexoBancoDetalle = "";
+        public static string TipoAnexoBancoCuenta = "";
+        public static string AnexoCuenta = "";
 
         public static DateRangePickerModel dateRange = new DateRangePickerModel();
         public static DateRangePickerModel dateRangeBanco = new DateRangePickerModel();
         public static DateTime dateTime = DateTime.Now;
+        public static DateTime dateTimecuenta;
 
+        public static List<PlantillacuentaxPagar> plantillacuentaxPagars = new List<PlantillacuentaxPagar>();
+        
         // SOLO 
         public static List<CMovimientoBanco> movimientoBancos = new List<CMovimientoBanco>();
         public static List<DMovimientoBanco> movimientoBancosdetalles = new List<DMovimientoBanco>();

@@ -246,10 +246,24 @@ namespace katal.Controllers
 
                cajaBancoNeg.crearteDetailXplanilla(plantillaDetalles, GridViewHelper.secuenciacab, GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco, GridViewHelper.REFER );
                 return null;
-            } 
+            }
+
+            if(customAction== "CargarDMovCuentas")
+            {
+                List<string> listcodcuentas = codigo.Split(',').ToList();
+                List<PlantillacuentaxPagar> plantillaDetalles = GridViewHelper.plantillacuentaxPagars.Where(X => listcodcuentas.Contains(X.Sec.ToString())).ToList();
+                
+
+                cajaBancoNeg.crearteDetailXplanillaCuenta(plantillaDetalles, GridViewHelper.secuenciacab, GridViewHelper.codigobanco, GridViewHelper.dateTime, GridViewHelper.monedabanco, GridViewHelper.REFER, GridViewHelper.dateTimecuenta,GridViewHelper.CB_C_BANCO, GridViewHelper.CB_C_NUMCT);
+
+                GridViewHelper.plantillacuentaxPagars =new List<PlantillacuentaxPagar>();
+                
+                  return null;
+            }
 
 
-             return DataRequisicionPartial();
+
+            return DataRequisicionPartial();
         }
         public void DeleteProduct(string NROREQUI)
         {
@@ -299,6 +313,11 @@ namespace katal.Controllers
             if (CB_C_SECUE != "-1")
             {
                 GridViewHelper.secuenciacab = CB_C_SECUE;
+                CMovimientoBanco movimientoBanco = cajaBancoNeg.findMovimiento(CB_C_SECUE, GridViewHelper.codigobanco, GridViewHelper.dateTime);
+                GridViewHelper.REFER = movimientoBanco.CB_A_REFER;
+                GridViewHelper.AnexoCuenta = movimientoBanco.CB_C_ANEXO;
+                GridViewHelper.TipoAnexoBancoCuenta = movimientoBanco.TipoAnexoD;
+
                 GridViewHelper.movimientoBancosdetalles = cajaBancoNeg.findDetailMovimientos(CB_C_SECUE, GridViewHelper.codigobanco, GridViewHelper.monedabanco, GridViewHelper.dateTime, GridViewHelper.TipoOpcion);
                 GridViewHelper.habilitarDetalles = true;
             }
@@ -316,6 +335,10 @@ namespace katal.Controllers
             if (CB_C_SECUE != "-1")
             {
                 GridViewHelper.secuenciacab = CB_C_SECUE;
+                CMovimientoBanco movimientoBanco = cajaBancoNeg.findMovimiento(CB_C_SECUE, GridViewHelper.codigobanco, GridViewHelper.dateTime);
+                GridViewHelper.REFER = movimientoBanco.CB_A_REFER;
+                GridViewHelper.AnexoCuenta = movimientoBanco.CB_C_ANEXO;
+                GridViewHelper.TipoAnexoBancoCuenta = movimientoBanco.TipoAnexoD;
                 GridViewHelper.movimientoBancosdetalles = cajaBancoNeg.findDetailMovimientos(CB_C_SECUE, GridViewHelper.codigobanco, GridViewHelper.monedabanco, GridViewHelper.dateTime,GridViewHelper.TipoOpcion);
             }
          
@@ -565,6 +588,7 @@ namespace katal.Controllers
                             GridViewHelper.monedabanco = cajaBanco.CB_C_MONED;
                             GridViewHelper.activeData = true;
                             GridViewHelper.codigoContabilidad = cajaBanco.CB_C_CUENT;
+                            GridViewHelper.CB_C_NUMCT = cajaBanco.CB_C_NUMCT;
                             GridViewHelper.CB_C_BANCO = cajaBanco.CB_C_BANCO;
                            
                             GridViewHelper.dateTime = DateTime.Parse(Request.Params["Proceso"]);
@@ -777,8 +801,22 @@ namespace katal.Controllers
         public JsonResult initSecuenciaDetalle(string secuencia)
         {
 
-            string secuenciaDetalle = cajaBancoNeg.Genera_Secuencia_detalle(GridViewHelper.codigobanco, GridViewHelper.dateTime, secuencia);
-            return Json(new { respuesta = secuenciaDetalle }, JsonRequestBehavior.AllowGet);
+            DMovimientoBanco dMovimientoBanco = new DMovimientoBanco();
+            dMovimientoBanco.CB_C_SECDE  = cajaBancoNeg.Genera_Secuencia_detalle(GridViewHelper.codigobanco, GridViewHelper.dateTime, secuencia);
+
+            CMovimientoBanco cMovimientoBanco = cajaBancoNeg.findMovimiento(GridViewHelper.secuenciacab, GridViewHelper.codigobanco, GridViewHelper.dateTime);
+            dMovimientoBanco.TipoAnexo = cMovimientoBanco.TipoAnexoD;
+            GridViewHelper.TipoAnexoBancoDetalle = dMovimientoBanco.TipoAnexo;
+
+            dMovimientoBanco.CB_C_ANEXOD = cMovimientoBanco.CB_C_ANEXO;
+            dMovimientoBanco.serieD = cMovimientoBanco.serie;
+            dMovimientoBanco.CB_C_DOCUMD = cMovimientoBanco.CB_C_DOCUM;
+            dMovimientoBanco.CB_A_REFERD = cMovimientoBanco.CB_A_REFER;
+
+
+
+
+            return Json(new { respuesta = dMovimientoBanco }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult initgridDetalle()
         {
@@ -920,6 +958,8 @@ namespace katal.Controllers
             RespuestaCreateCMBanco respuestaC = new RespuestaCreateCMBanco();
             respuestaC.ok = secuencia;
             respuestaC.tc = Tc;
+            GridViewHelper.dateTimecuenta = nodes.CB_D_FECHA;
+
             return Json(new { respuesta = respuestaC }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult OnChangeConcepto()
@@ -988,7 +1028,7 @@ namespace katal.Controllers
                         SW = true;
                     }
                 });
-                bool darle = Boolean.Parse(cajaBancoNeg.verDataProgramacion(GridViewHelper.dateTime));
+                bool darle =  cajaBancoNeg.verDataProgramacion(GridViewHelper.dateTime)=="S"? true:false;
                 if (darle)
                 {
                     flagForForm.frmCtasxPagarPrueba1 = true;
@@ -1008,8 +1048,160 @@ namespace katal.Controllers
            
             return Json(new { respuesta = salidaentrada }, JsonRequestBehavior.AllowGet);
         }
-        
 
+
+        #endregion
+
+
+        #region PRA CUENTA POR PAGAR 2
+        public ActionResult PlaniCuenta()
+        {
+            List<PlantillacuentaxPagar > cuentas = new List<PlantillacuentaxPagar>();
+            
+            CMovimientoBanco movimientoBanco = cajaBancoNeg.findMovimiento(GridViewHelper.secuenciacab, GridViewHelper.codigobanco, GridViewHelper.dateTime);
+            cuentas = cajaBancoNeg.AllPlanillasCuentasxpagar(movimientoBanco.TipoAnexoD, movimientoBanco.CB_C_ANEXO, GridViewHelper.dateTime);
+            GridViewHelper.plantillacuentaxPagars = cuentas;
+
+            return PartialView("PlaniCuenta", GridViewHelper.plantillacuentaxPagars);
+        }
+
+        public ActionResult FormPlaniCuentaGridView()
+        {
+            if (GridViewHelper.plantillacuentaxPagars.Count == 0)
+            {
+                List<PlantillacuentaxPagar> cuentas = new List<PlantillacuentaxPagar>();
+
+                CMovimientoBanco movimientoBanco = cajaBancoNeg.findMovimiento(GridViewHelper.secuenciacab, GridViewHelper.codigobanco, GridViewHelper.dateTime);
+                cuentas = cajaBancoNeg.AllPlanillasCuentasxpagar(GridViewHelper.TipoAnexoBancoCuenta, GridViewHelper.AnexoCuenta, GridViewHelper.dateTime);
+                GridViewHelper.plantillacuentaxPagars = cuentas;
+            }
+            return PartialView("FormPlaniCuentaGridView", GridViewHelper.plantillacuentaxPagars);
+        }
+        public ActionResult MultiSelectTipoAnexoCuenta(FormCollection data, string TIPOANEX_CODIGO = "-1")
+        {
+
+            ViewData["TipoAnexoCuenta"] = anexoNeg.findAll();
+
+            if (GridViewHelper.TipoAnexoBancoCuenta !="" && TIPOANEX_CODIGO=="-1" )
+            {
+                TIPOANEX_CODIGO = GridViewHelper.TipoAnexoBancoCuenta;
+            }
+            if (data != null)
+            {
+                string dar = data["gridLookupTipoAnexoCuenta$State"];
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        string tipoAnexo = nodes.selectedKeyValues[0];
+
+                        GridViewHelper.TipoAnexoBancoCuenta = tipoAnexo;
+
+                        ViewData["AnexoCuenta"] = anexoNeg.findAllAnexo(GridViewHelper.TipoAnexoBancoCuenta);
+                    }
+                }
+
+
+            }
+            if (TIPOANEX_CODIGO == "-1") { 
+            
+                TIPOANEX_CODIGO = "-1";
+           
+            }
+           
+            return PartialView("MultiSelectTipoAnexoCuenta", new TipoAnexo() { TIPOANEX_CODIGO = TIPOANEX_CODIGO });
+
+        }
+        public ActionResult MultiSelectAnexoCuenta(FormCollection data, string ANEX_CODIGO = "-1" )
+        {
+            if (GridViewHelper.TipoAnexoBancoCuenta == "")
+            {
+                ViewData["AnexoCuenta"] = new List<Anexo>();
+            }
+            else
+            {
+                List<Anexo> list = anexoNeg.findAllAnexo(GridViewHelper.TipoAnexoBancoCuenta);
+                ViewData["AnexoCuenta"] = list;
+            }
+            if (GridViewHelper.AnexoCuenta != "" && ANEX_CODIGO == "-1")
+            {
+                ANEX_CODIGO = GridViewHelper.AnexoCuenta;
+            }
+
+
+            if (data != null)
+            {
+                string dar = data["gridLookupAnexoCuenta$State"];
+                string ver = HttpUtility.HtmlDecode(dar);
+                if (ver != null)
+                {
+                    Trans nodes = JsonConvert.DeserializeObject<Trans>(ver);
+                    // Array codigo = nodes["selectedKeyValues"] ;
+                    if (nodes.selectedKeyValues != null)
+                    {
+                        string tipoAnexo = nodes.selectedKeyValues[0];
+
+                        GridViewHelper.AnexoCuenta = tipoAnexo;
+                        GridViewHelper.plantillacuentaxPagars = cajaBancoNeg.AllPlanillasCuentasxpagar(GridViewHelper.TipoAnexoBancoCuenta, GridViewHelper.AnexoCuenta, GridViewHelper.dateTime);
+                        
+                    }
+                }
+                
+
+            }
+
+            if (ANEX_CODIGO == "-1")
+            {
+                ANEX_CODIGO = "-1";
+            }
+            
+            return PartialView("MultiSelectAnexoCuenta", new Anexo() { ANEX_CODIGO = ANEX_CODIGO });
+
+        }
+
+
+        //FormPlaniCuentaGridViewEdit
+
+
+        [ValidateInput(false)]
+        public ActionResult FormPlaniCuentaGridViewEdit(PlantillacuentaxPagar product, FormCollection dataForm)
+        {
+            PlantillacuentaxPagar productentero = GridViewHelper.plantillacuentaxPagars.Find(X => X.Sec == product.Sec);
+            if (product.MontoPagar > productentero.Importe)
+            {
+                ViewData["EditError"] = "El monto excede al importe por pagar ";
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                SafeExecute(() => UpdateCuenta(product));
+                else
+                ViewData["EditError"] = "Please, correct all errors.";
+            }
+            
+
+            return FormPlaniCuentaGridView();
+        }
+        public void UpdateCuenta(PlantillacuentaxPagar product)
+        {
+            decimal monto = product.MontoPagar;
+            product = GridViewHelper.plantillacuentaxPagars.Find(X => X.Sec == product.Sec);
+            product.MontoPagar = monto;
+
+          //  DetalleRequisicion detalleOrdenCompra = GridViewHelper.detalleRequisicions.Find(element => element.codpro == product.codpro);
+            
+            // crear la logica para agregar un producto
+        }
+
+        public JsonResult obtenerAnexo()
+        {
+            string anexo =GridViewHelper.TipoAnexoBancoCuenta+","+ GridViewHelper.AnexoCuenta;
+
+            return Json(new { respuesta = anexo }, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
     }

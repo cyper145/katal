@@ -1,87 +1,67 @@
-﻿
-
-
-
+﻿@using katal.Model
 @Html.DevExpress().PopupControl(
     settings =>
     {
         settings.Name = "FormCtasxPagar2";
-        settings.Width = 550;
+        settings.Width = 1200;
+
+
         settings.AllowDragging = true;
         settings.CloseAction = CloseAction.CloseButton;
         settings.CloseOnEscape = true;
         settings.PopupAnimationType = AnimationType.None;
-        settings.HeaderText = "Programacion";
+        settings.HeaderText = "Listado de Plantilla de Cobranza";
         settings.Modal = true;
         settings.AutoUpdatePosition = true;
         settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
         settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+       
         settings.SetContent(() =>
         {
 
-
             @Html.DevExpress().FormLayout(s =>
             {
-                s.Name = "ModalModeFormLayout3";
+                s.Name = "ModalModeFormLayoutcuentas2";
                 s.RequiredMarkDisplayMode = RequiredMarkMode.None;
                 s.Width = Unit.Percentage(100);
                 s.Height = Unit.Percentage(100);
                 s.ColumnCount = 6;
                 s.NestedExtensionWidth = Unit.Percentage(100);
                 s.Items.Add(i =>
-                {
-                    i.Name = "DDetraccion3";
-                    i.Caption = "Afecto";
-                    i.ColumnSpan = 3;
-                    i.NestedExtension().ComboBox(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                        t.SelectedIndex = 0;
-                        t.Properties.ValueType = typeof(string);
-                        t.Properties.Items.Add("SI", "1");
-                        t.Properties.Items.Add("NO ", "0");
 
+                {
+                    i.Name = "TipoAnexo_Cuenta";
+                    i.Caption = "Anexo";
+                    i.ColumnSpan = 3;
+                    i.SetNestedContent(() =>
+                    {
+
+                        Html.RenderAction("MultiSelectTipoAnexoCuenta");
 
                     });
                 });
                 s.Items.Add(i =>
                 {
-                    i.FieldName = "DTasa3";
+                    i.FieldName = "CB_C_ANEXO_Cuenta";
+                    i.ShowCaption = DefaultBoolean.False;
                     i.ColumnSpan = 3;
-                    i.Caption = "Tasa(%)";
-                    i.NestedExtension().TextBox(t =>
+                    i.SetNestedContent(() =>
                     {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
+
+                        Html.RenderAction("MultiSelectAnexoCuenta");
                     });
                 });
-                s.Items.Add(i =>
+
+
+                s.Items.Add(itemSettings =>
                 {
-                    i.FieldName = "DDocumento3";
-                    i.ColumnSpan = 3;
-                    i.Caption = "Documento";
-                    i.NestedExtension().TextBox(t =>
+                    itemSettings.ColumnSpan = 6;
+                    itemSettings.ShowCaption = DefaultBoolean.False;
+                    itemSettings.SetNestedContent(() =>
                     {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
+                        Html.RenderAction("PlaniCuenta");
                     });
                 });
-                s.Items.Add(i =>
-                {
-                    i.FieldName = "DFecha3";
-                    i.ColumnSpan = 3;
-                    i.Caption = "Fecha";
-                    i.NestedExtension().DateEdit(t =>
-                    {
-                        t.Properties.ValidationSettings.Display = Display.Dynamic;
-                        t.ShowModelErrors = true;
-                       // t.Properties.ClientSideEvents.ValueChanged = "OnChangeDfecha";
-                    });
-                });
-
-
-
                 s.Items.Add(i =>
                 {
                     i.ColumnSpan = 6;
@@ -92,19 +72,37 @@
                         Html.DevExpress().Button(
                             buttonSettings =>
                             {
-                                buttonSettings.Name = "btnTraccion3";
+                                buttonSettings.Name = "btnAceptarcxp2";
                                 buttonSettings.ControlStyle.CssClass = "button";
                                 buttonSettings.Width = 80;
                                 buttonSettings.Text = "Aceptar";
-                                buttonSettings.ClientSideEvents.Click = "function(s, e){ FormCtasxPagar2.Hide(); }";
+                                buttonSettings.ClientSideEvents.Click =  "SelectedRecordsMovimientoBancocuentas";// PARA CREAR DE UNA VEZ LAS SALIDAS
                             }
                         ).Render();
+                        Html.DevExpress().Label(
+                           buttonSettings =>
+                           {
+                               buttonSettings.Width = Unit.Pixel(10);
+                           }
+                       ).Render();
+
+                        Html.DevExpress().Button(
+                           buttonSettings =>
+                           {
+                               buttonSettings.Name = "btnCancelarcxp2";
+                               buttonSettings.ControlStyle.CssClass = "button";
+                               buttonSettings.Width = 80;
+                               buttonSettings.Text = "Cancelar";
+                               buttonSettings.ClientSideEvents.Click = "function(s, e){ FormCtasxPagar2.Hide(); }";
+                           }
+                       ).Render();
+
                     });
                 });
             }).Render();
 
         });
 
-        // settings.ClientSideEvents.CloseUp = "function(s, e){ ASPxClientEdit.ClearEditorsInContainer(null, '', true); }";
+        //GetCobranza()
     }).GetHtml()
 
