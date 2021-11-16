@@ -106,19 +106,17 @@
 
                //group.HeaderStyle.w = true;
 
-               group.HeaderImage.Url = "~/Content/Images/caja-banco.svg";
-
-               group.HeaderImage.Height = Unit.Pixel(20);
+            
 
                if (roleNeg.moduloAsigned(modulos, "cotizaciones"))
                {
-                   var dar=  group.Items.Add("Movimientos", "ratas", "~/Content/Images/dinero.svg", "MovimientoBanco");
+                   var dar=  group.Items.Add("Movimientos", "ratas", "", "MovimientoBanco");
                    dar.Image.Height= Unit.Pixel(25);
 
                }
                if (roleNeg.moduloAsigned(modulos, "consulta-cobros"))
                {
-                   var dar = group.Items.Add("Consulta de cobros y Pagos", "ratas", "~/Content/Images/dinero.svg", "ConsultaCobrosPagos");
+                   var dar = group.Items.Add("Consulta de cobros y Pagos", "ratas", "", "ConsultaCobrosPagos");
                    dar.Image.Height = Unit.Pixel(25);
 
                }

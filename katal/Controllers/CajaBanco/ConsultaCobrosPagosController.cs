@@ -16,10 +16,7 @@ namespace katal.Controllers
     {
         private OrdenCompraNeg userNeg;
         private RequisicionCompraNeg requisicionNeg;
-        private ProveedorNeg proveedorNeg;
-        private ArticuloNeg articuloNeg;
         private AreaNeg areaNeg;
-        private ResponsableCmpNeg responsable;
         private RequisicionCompra requisicionCompra;
         // nuevos
         private CajaBancoNeg cajaBancoNeg;
@@ -30,9 +27,6 @@ namespace katal.Controllers
         {
             requisicionNeg = new RequisicionCompraNeg(codEmpresa);
             userNeg = new OrdenCompraNeg(codEmpresa);
-            articuloNeg = new ArticuloNeg(codEmpresa);
-            proveedorNeg = new ProveedorNeg(codEmpresa);
-            responsable = new ResponsableCmpNeg(codEmpresa);
             areaNeg = new AreaNeg(codEmpresa);
             cajaBancoNeg = new CajaBancoNeg(codEmpresa);
             anexoNeg = new TipoAnexoNeg(codEmpresa);
